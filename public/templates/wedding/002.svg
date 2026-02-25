@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+
+  <!-- static_text: never edited by user -->
+  <g id="static_text">
+    <text transform="translate(132.8 132.5) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="32.5"><tspan x="0" y="0">!</tspan><tspan x="7.5" y="0">מזל טוב</tspan></text>
+    <text transform="translate(127.7 178.6) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.9"><tspan x="0" y="0">בכבוד רב הננו להזמינכם</tspan></text>
+    <text transform="translate(146.4 203.9) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.9"><tspan x="0" y="0">לשמחת נישואי בננו</tspan></text>
+    <text transform="translate(135.8 281.2) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.9"><tspan x="0" y="0">אשר יתקיימו בעזרת ה׳</tspan></text>
+    <text transform="translate(145.3 358.6) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.9"><tspan x="0" y="0">ונזכה כולנו לראות</tspan><tspan x="-39.9" y="14.3">בנין עדי עד על יסודי התורה והיראה</tspan></text>
+  </g>
+
+  <!-- name: editable — person's full name -->
+  <g id="name">
+    <text transform="translate(112.3 232.8) scale(.9 1)" fill="#6f5e51" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="14.3"><tspan x="0" y="0">מרדכי בן הרה״ג ר׳ ישראל</tspan></text>
+  </g>
+
+  <!-- date: editable — date line -->
+  <g id="date">
+    <text transform="translate(114 303.5) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.9"><tspan x="0" y="0" xml:space="preserve">יום ב׳  לחודש אדרצ, שנת תשפ״ו</tspan></text>
+  </g>
+
+  <!-- time: editable — time line -->
+  <g id="time">
+    <text transform="translate(154.5 323.3) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.9"><tspan x="0" y="0" xml:space="preserve">  </tspan><tspan x="6.9" y="0">7:00</tspan><tspan x="28.1" y="0">בשעה </tspan></text>
+  </g>
+
+  <!-- name_signature: editable — short signing name -->
+  <g id="name_signature">
+    <text transform="translate(160.1 394.5) rotate(-1.1) scale(.9 1)" fill="#998881" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.3"><tspan x="0" y="0">מוטי ראטה</tspan></text>
+  </g>
+
+</svg>
