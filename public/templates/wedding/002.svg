@@ -8,6 +8,7 @@
     <text transform="translate(146.4 203.9) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.9"><tspan x="0" y="0">לשמחת נישואי בננו</tspan></text>
     <text transform="translate(135.8 281.2) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.9"><tspan x="0" y="0">אשר יתקיימו בעזרת ה׳</tspan></text>
     <text transform="translate(145.3 358.6) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.9"><tspan x="0" y="0">ונזכה כולנו לראות</tspan><tspan x="-39.9" y="14.3">בנין עדי עד על יסודי התורה והיראה</tspan></text>
+    <text transform="translate(154.5 323.3) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.9"><tspan x="0" y="0" xml:space="preserve">  </tspan><tspan x="6.9" y="0">7:00</tspan><tspan x="28.1" y="0">בשעה </tspan></text>
   </g>
 
   <!-- name: editable — person's full name -->
@@ -18,11 +19,6 @@
   <!-- date: editable — date line -->
   <g id="date">
     <text transform="translate(114 303.5) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.9"><tspan x="0" y="0" xml:space="preserve">יום ב׳  לחודש אדרצ, שנת תשפ״ו</tspan></text>
-  </g>
-
-  <!-- time: editable — time line -->
-  <g id="time">
-    <text transform="translate(154.5 323.3) scale(.9 1)" fill="#917460" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.9"><tspan x="0" y="0" xml:space="preserve">  </tspan><tspan x="6.9" y="0">7:00</tspan><tspan x="28.1" y="0">בשעה </tspan></text>
   </g>
 
   <!-- name_signature: editable — short signing name -->
