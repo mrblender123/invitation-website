@@ -3,6 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+interface SimchaSelectorProps {
+  forceOpen?: boolean;
+  onClose?: () => void;
+  hideButton?: boolean;
+}
+
 const SIMCHAS = [
   {
     key: 'Wedding',
@@ -67,7 +73,7 @@ function SimchaCard({ simcha, onClick }: { simcha: typeof SIMCHAS[0]; onClick: (
   );
 }
 
-export default function SimchaSelector() {
+export default function SimchaSelector({ forceOpen, onClose, hideButton }: SimchaSelectorProps = {}) {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false); // controls CSS transition
   const bloomRef = useRef<HTMLDivElement>(null);
@@ -81,8 +87,13 @@ export default function SimchaSelector() {
 
   const closeModal = () => {
     setVisible(false);
-    setTimeout(() => setOpen(false), 280);
+    setTimeout(() => { setOpen(false); onClose?.(); }, 280);
   };
+
+  // Open when forceOpen prop becomes true
+  useEffect(() => {
+    if (forceOpen) openModal();
+  }, [forceOpen]);
 
   // Close on Escape
   useEffect(() => {
@@ -103,7 +114,7 @@ export default function SimchaSelector() {
   return (
     <>
       {/* CTA button */}
-      <div style={{ position: 'relative', display: 'inline-block' }}>
+      <div style={{ position: 'relative', display: hideButton ? 'none' : 'inline-block' }}>
         <button
           className="silver-btn"
           style={{ padding: '1.1rem 3.5rem', fontSize: '1.05rem' }}

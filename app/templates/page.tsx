@@ -8,6 +8,7 @@ import InvitationCard from '../components/InvitationCard';
 import SvgCardPreview from '../components/SvgCardPreview';
 import VirtualKeyboard from '../components/VirtualKeyboard';
 import { useAuth } from '../components/AuthProvider';
+import SimchaSelector from '../components/SimchaSelector';
 import type { Template } from '@/lib/templates';
 
 type CartItem = {
@@ -149,6 +150,7 @@ function TemplatesContent() {
   const [cartCount, setCartCount] = useState(0);
   const [savedToCart, setSavedToCart] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1200);
+  const [simchaOpen, setSimchaOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -324,7 +326,7 @@ function TemplatesContent() {
           /* ── Gallery view ── */
           <>
             <button
-              onClick={() => router.push('/')}
+              onClick={() => setSimchaOpen(true)}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 background: 'transparent', border: 'none', cursor: 'pointer',
@@ -333,6 +335,7 @@ function TemplatesContent() {
             >
               ← Change Simcha
             </button>
+            <SimchaSelector forceOpen={simchaOpen} onClose={() => setSimchaOpen(false)} hideButton />
 
             <div style={{ marginBottom: 48 }}>
               <p style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 12 }}>
