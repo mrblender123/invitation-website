@@ -24,7 +24,7 @@ export default function Home() {
         <HeroHeading />
 
         <p style={{ fontSize: 18, lineHeight: 1.7, color: 'rgba(255,255,255,0.5)', maxWidth: 520, margin: '0 auto 40px' }}>
-          Generate AI backgrounds, craft custom typography, and export print-ready designs — all in one place.
+          Celebrate Your Simcha<br />Create and send invitations with ease.
         </p>
 
         <div style={{ display: 'flex', justifyContent: 'center' }}>
