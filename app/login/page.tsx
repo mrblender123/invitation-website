@@ -37,7 +37,7 @@ export default function LoginPage() {
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
       }}>
         <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 26, fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>
-          Welcome back
+          Welcome
         </h1>
         <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', marginBottom: 28, textAlign: 'center' }}>
           Sign in to save and manage your invitation designs.
