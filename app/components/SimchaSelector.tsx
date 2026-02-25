@@ -66,9 +66,6 @@ function SimchaCard({ simcha, onClick }: { simcha: typeof SIMCHAS[0]; onClick: (
       <span style={{ fontFamily: 'var(--font-playfair)', fontSize: 18, fontWeight: 700, letterSpacing: '-0.01em' }}>
         {simcha.label}
       </span>
-      <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>
-        {simcha.description}
-      </span>
     </button>
   );
 }
