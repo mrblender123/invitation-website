@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import html2canvas from 'html2canvas';
@@ -13,7 +13,7 @@ const DEFAULT_CONFINEMENTS: Confinements = {
   preset: 'Classic Elegant',
 };
 
-export default function Studio() {
+function StudioContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, loading: authLoading, accessToken } = useAuth();
@@ -422,5 +422,17 @@ export default function Studio() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function Studio() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: '100vh', background: '#09090b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14 }}>Loading…</p>
+      </div>
+    }>
+      <StudioContent />
+    </Suspense>
   );
 }
