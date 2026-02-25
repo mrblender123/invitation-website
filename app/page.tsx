@@ -50,18 +50,18 @@ export default function Home() {
           {[
             {
               icon: '✦',
-              title: 'AI-Generated Backgrounds',
-              description: 'Describe your vibe and watch Stable Diffusion create a one-of-a-kind background tailored to your event.',
+              title: 'Simple',
+              description: 'Pick a design you love.',
             },
             {
               icon: '◈',
-              title: 'Full Typography Control',
-              description: 'Pick fonts, sizes, colors, and positions independently for every text element on the card.',
+              title: 'Easy',
+              description: 'Customize it quickly.',
             },
             {
               icon: '⬇',
-              title: 'Export Instantly',
-              description: 'Download a high-resolution PNG with a single click — ready for print, email, or social.',
+              title: 'Done',
+              description: 'Send and celebrate.',
             },
           ].map(({ icon, title, description }) => (
             <div key={title} style={{
