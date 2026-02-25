@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import LandingHeader from './components/LandingHeader';
 import HeroHeading from './components/HeroHeading';
 import SimchaSelector from './components/SimchaSelector';
 import SplashAnimation from './components/SplashAnimation';
+import CTAButton from './components/CTAButton';
 
 export default function Home() {
   return (
@@ -84,9 +84,7 @@ export default function Home() {
           <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.45)', marginBottom: 32 }}>
             Open the studio and create your first invitation in minutes.
           </p>
-          <Link href="/new" className="silver-btn">
-            Open Studio
-          </Link>
+          <CTAButton />
         </div>
       </section>
 
