@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <text transform="translate(116.6 248.1) scale(.9 1)" fill="#ddcb8b" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="11.6"><tspan x="0" y="0" xml:space="preserve">יום ב׳  לחודש אדרצ, שנת תשפ״ו</tspan></text>
-  <text transform="translate(111.7 157.7) scale(.9 1)" fill="#ddcb8b" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="40.6"><tspan x="0" y="0">וואך נאכט</tspan></text>
-  <text transform="translate(134.3 224.5) scale(.9 1)" fill="#ddcb8b" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="11.6"><tspan x="0" y="0">אשר יתקיימו בעזרת ה׳</tspan></text>
-  <text transform="translate(115 201.6) scale(.9 1)" fill="#ddcb8b" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="13.9"><tspan x="0" y="0">מרדכי בן הרה״ג ר׳ ישראל</tspan></text>
-  <text transform="translate(157.4 266.5) scale(.9 1)" fill="#ddcb8b" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="11.6"><tspan x="0" y="0">מוטי ראטה</tspan></text>
+
+  <!-- static_text: never edited by user -->
+  <g id="static_text">
+    <text transform="translate(111.7 157.7) scale(.9 1)" fill="#ddcb8b" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="40.6"><tspan x="0" y="0">וואך נאכט</tspan></text>
+    <text transform="translate(134.3 224.5) scale(.9 1)" fill="#ddcb8b" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.6"><tspan x="0" y="0">אשר יתקיימו בעזרת ה׳</tspan></text>
+  </g>
+
+  <!-- name: editable — person's full name -->
+  <g id="name">
+    <text transform="translate(115 201.6) scale(.9 1)" fill="#ddcb8b" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="13.9"><tspan x="0" y="0">מרדכי בן הרה״ג ר׳ ישראל</tspan></text>
+  </g>
+
+  <!-- date: editable — date line -->
+  <g id="date">
+    <text transform="translate(116.6 248.1) scale(.9 1)" fill="#ddcb8b" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.6"><tspan x="0" y="0" xml:space="preserve">יום ב׳  לחודש אדרצ, שנת תשפ״ו</tspan></text>
+  </g>
+
+  <!-- name_signature: editable — short signing name -->
+  <g id="name_signature">
+    <text transform="translate(157.4 266.5) scale(.9 1)" fill="#ddcb8b" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="11.6"><tspan x="0" y="0">מוטי ראטה</tspan></text>
+  </g>
+
 </svg>
