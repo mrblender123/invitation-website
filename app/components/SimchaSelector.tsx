@@ -19,13 +19,13 @@ const SIMCHAS = [
   {
     key: 'Bar Mitzvah',
     label: 'Bar Mitzvah',
-    icon: '✡',
+    icon: '13',
     description: 'Coming-of-age celebration',
   },
   {
     key: 'Vach Nacht',
     label: 'Vach Nacht',
-    icon: '🕯',
+    icon: '👶',
     description: 'Traditional bris eve gathering',
   },
   {
@@ -62,7 +62,7 @@ function SimchaCard({ simcha, onClick }: { simcha: typeof SIMCHAS[0]; onClick: (
         width: '100%',
       }}
     >
-      <span style={{ fontSize: 32 }}>{simcha.icon}</span>
+      <span style={{ fontSize: simcha.icon === '13' ? 28 : 32, fontFamily: simcha.icon === '13' ? 'var(--font-playfair)' : undefined, fontWeight: simcha.icon === '13' ? 700 : undefined }}>{simcha.icon}</span>
       <span style={{ fontFamily: 'var(--font-playfair)', fontSize: 18, fontWeight: 700, letterSpacing: '-0.01em' }}>
         {simcha.label}
       </span>
