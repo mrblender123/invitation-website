@@ -1,7 +1,6 @@
 import LandingHeader from './components/LandingHeader';
 import HeroHeading from './components/HeroHeading';
 import SimchaSelector from './components/SimchaSelector';
-import SplashAnimation from './components/SplashAnimation';
 import CTAButton from './components/CTAButton';
 import TemplateShowcase from './components/TemplateShowcase';
 
@@ -9,7 +8,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#09090b] text-white" style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif' }}>
 
-      <SplashAnimation />
       <LandingHeader />
 
       {/* Hero */}
