@@ -25,13 +25,13 @@ const SIMCHAS = [
   {
     key: 'Vach Nacht',
     label: 'Vach Nacht',
-    icon: '👶',
+    icon: '👶🏻',
     description: 'Traditional bris eve gathering',
   },
   {
     key: 'Vort',
     label: 'Vort',
-    icon: '💫',
+    icon: '🥂',
     description: "L'chaim & engagement party",
   },
 ];

@@ -3,6 +3,7 @@ import HeroHeading from './components/HeroHeading';
 import SimchaSelector from './components/SimchaSelector';
 import SplashAnimation from './components/SplashAnimation';
 import CTAButton from './components/CTAButton';
+import TemplateShowcase from './components/TemplateShowcase';
 
 export default function Home() {
   return (
@@ -69,6 +70,8 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <TemplateShowcase />
 
       {/* CTA banner */}
       <section style={{ padding: '0 24px 120px' }}>
