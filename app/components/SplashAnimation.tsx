@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useAuth } from './AuthProvider';
 
 const ICONS = [
   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C9.5 2 7 4 7 8c0 3.5 3 6.5 4 8v5l-1 1h4l-1-1v-5c1-1.5 4-4.5 4-8 0-4-2.5-6-5-6z"/><path d="M11 16h2"/></svg>`,
@@ -8,10 +9,14 @@ const ICONS = [
 ];
 
 export default function SplashAnimation() {
+  const { loading } = useAuth();
   const [gone, setGone] = useState(false);
   const [fading, setFading] = useState(false);
   const emitterRef = useRef<HTMLDivElement>(null);
+  const mountTime = useRef(Date.now());
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // Spawn particles while visible
   useEffect(() => {
     const emitter = emitterRef.current;
     if (!emitter) return;
@@ -56,13 +61,26 @@ export default function SplashAnimation() {
     };
 
     for (let i = 0; i < 8; i++) spawnIcon();
-    const interval = setInterval(spawnIcon, 300);
+    intervalRef.current = setInterval(spawnIcon, 300);
 
-    const t1 = setTimeout(() => setFading(true), 2500);
-    const t2 = setTimeout(() => { clearInterval(interval); setGone(true); }, 3000);
-
-    return () => { clearInterval(interval); clearTimeout(t1); clearTimeout(t2); };
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, []);
+
+  // Dismiss when auth finishes loading, but show for at least 1.5s
+  useEffect(() => {
+    if (!loading && !fading && !gone) {
+      const elapsed = Date.now() - mountTime.current;
+      const remaining = Math.max(0, 1500 - elapsed);
+
+      const t1 = setTimeout(() => setFading(true), remaining);
+      const t2 = setTimeout(() => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        setGone(true);
+      }, remaining + 500);
+
+      return () => { clearTimeout(t1); clearTimeout(t2); };
+    }
+  }, [loading]);
 
   if (gone) return null;
 
