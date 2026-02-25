@@ -2,11 +2,13 @@ import Link from 'next/link';
 import LandingHeader from './components/LandingHeader';
 import HeroHeading from './components/HeroHeading';
 import SimchaSelector from './components/SimchaSelector';
+import SplashAnimation from './components/SplashAnimation';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#09090b] text-white" style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif' }}>
 
+      <SplashAnimation />
       <LandingHeader />
 
       {/* Hero */}
