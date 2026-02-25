@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from './AuthProvider';
+
 import UserMenu from './UserMenu';
 
 export default function LandingHeader() {
@@ -22,19 +23,7 @@ export default function LandingHeader() {
           <a href="#features" className="nav-features" style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', textDecoration: 'none' }}>
             About
           </a>
-{!loading && (
-            user ? (
-              <UserMenu />
-            ) : (
-              <Link href="/login" style={{
-                fontSize: 14, fontWeight: 600, padding: '8px 18px', borderRadius: 8,
-                background: 'linear-gradient(135deg, #a1a1aa, #e4e4e7)',
-                color: '#fff', textDecoration: 'none',
-              }}>
-                Sign In
-              </Link>
-            )
-          )}
+{!loading && user && <UserMenu />}
         </nav>
       </div>
     </header>
