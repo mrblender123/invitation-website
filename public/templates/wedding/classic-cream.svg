@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 444 589" preserveAspectRatio="xMidYMid meet">
+  <!-- static_text: always shown, not editable by user -->
+  <g id="static_text" data-name="static text">
+    <text transform="translate(222 232)" text-anchor="middle" font-family="'Stam Ashkenaz CLM', serif" font-weight="500" font-size="50" direction="rtl">
+      <tspan x="0" y="0">מזל טוב</tspan>
+    </text>
+  </g>
+
+  <!-- ocasion: editable — user types the occasion name -->
+  <g id="ocasion">
+    <text transform="translate(222 270)" text-anchor="middle" font-family="'Secular One', sans-serif" font-size="26" direction="rtl" unicode-bidi="embed">
+      <tspan x="0" y="0">סיום מסכת פסחים</tspan>
+    </text>
+  </g>
+
+  <!-- name: editable — user types their name -->
+  <g id="name">
+    <text transform="translate(222 340)" text-anchor="middle" font-family="'Secular One', sans-serif" font-size="22" direction="rtl" unicode-bidi="embed">
+      <tspan x="0" y="0">מוטי ראטה</tspan>
+    </text>
+  </g>
+
+  <!-- date: editable — user types the date -->
+  <g id="date">
+    <text transform="translate(222 380)" text-anchor="middle" font-family="'Secular One', sans-serif" font-size="18" direction="rtl" unicode-bidi="embed">
+      <tspan x="0" y="0">מאנטאג פרשת תרומה</tspan>
+    </text>
+  </g>
+</svg>
