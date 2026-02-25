@@ -50,12 +50,16 @@ export default function AdminPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this invitation?')) return;
     setDeletingId(id);
-    await fetch('/api/admin/invitations', {
+    const res = await fetch('/api/admin/invitations', {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
     });
-    setInvitations(prev => prev.filter(i => i.id !== id));
+    if (res.ok) {
+      setInvitations(prev => prev.filter(i => i.id !== id));
+    } else {
+      alert('Failed to delete invitation.');
+    }
     setDeletingId(null);
   };
 

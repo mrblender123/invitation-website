@@ -103,7 +103,8 @@ export default function TemplateShowcase() {
   useEffect(() => {
     fetch('/api/templates')
       .then(r => r.json())
-      .then(({ templates: data }) => setTemplates(data ?? []));
+      .then(({ templates: data }) => setTemplates(data ?? []))
+      .catch(() => {});
   }, []);
 
   if (templates.length === 0) return null;

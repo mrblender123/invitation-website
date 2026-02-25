@@ -18,10 +18,6 @@ export async function GET(req: NextRequest) {
 
   const admin = createServiceClient();
 
-  const { count: totalUsers } = await admin
-    .from('invitations')
-    .select('user_id', { count: 'exact', head: true });
-
   const { count: totalInvitations } = await admin
     .from('invitations')
     .select('*', { count: 'exact', head: true });

@@ -229,7 +229,8 @@ function TemplatesContent() {
   const handleSaveForLater = () => {
     if (!selected) return;
     const cartRaw = localStorage.getItem('invitia-cart');
-    const cart: CartItem[] = cartRaw ? JSON.parse(cartRaw) : [];
+    let cart: CartItem[] = [];
+    try { cart = cartRaw ? JSON.parse(cartRaw) : []; } catch { cart = []; }
     const item: CartItem = {
       id: `${selected.id}-${Date.now()}`,
       templateId: selected.id,
