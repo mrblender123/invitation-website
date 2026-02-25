@@ -182,7 +182,7 @@ export default function SimchaSelector({ forceOpen, onClose, hideButton }: Simch
                 <SimchaCard
                   key={s.key}
                   simcha={s}
-                  onClick={() => router.push(`/templates?category=${encodeURIComponent(s.key)}`)}
+                  onClick={() => { closeModal(); router.push(`/templates?category=${encodeURIComponent(s.key)}`); }}
                 />
               ))}
             </div>
