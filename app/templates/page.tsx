@@ -479,13 +479,6 @@ function TemplatesContent() {
 
               {/* Edit panel */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                <p style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 8 }}>
-                  {selected.category}
-                </p>
-                <h2 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(22px, 3vw, 32px)', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: 32, color: '#fff' }}>
-                  {selected.name}
-                </h2>
-
                 {/* Text inputs — dynamic for SVG templates, legacy for InvitationCard */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 32 }}>
                   {selected.fields ? (
