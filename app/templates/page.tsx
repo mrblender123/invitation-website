@@ -486,7 +486,6 @@ function TemplatesContent() {
                       const isActive = activeField?.id === field.id;
                       return (
                       <div key={field.id} style={{ position: 'relative' }}>
-                        <label style={labelStyle}>{field.label}</label>
                         <div
                           style={{ position: 'relative' }}
                           onMouseEnter={() => setHoveredField(field.id)}
@@ -566,7 +565,6 @@ function TemplatesContent() {
                   ) : (
                     <>
                       <div>
-                        <label style={labelStyle}>Event Title</label>
                         <input
                           style={inputStyle}
                           placeholder="e.g. Sarah & David's Wedding"
@@ -575,7 +573,6 @@ function TemplatesContent() {
                         />
                       </div>
                       <div>
-                        <label style={labelStyle}>Host Name</label>
                         <input
                           style={inputStyle}
                           placeholder="e.g. The Cohen Family"
@@ -584,7 +581,6 @@ function TemplatesContent() {
                         />
                       </div>
                       <div>
-                        <label style={labelStyle}>Date & Time</label>
                         <input
                           style={inputStyle}
                           placeholder="e.g. Sunday, June 15 · 6:00 PM"
