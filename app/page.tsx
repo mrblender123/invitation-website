@@ -11,16 +11,6 @@ export default function Home() {
 
       {/* Hero */}
       <section style={{ maxWidth: 1100, margin: '0 auto', padding: '120px 24px 100px', textAlign: 'center' }}>
-        <div style={{
-          display: 'inline-block', marginBottom: 24,
-          padding: '5px 14px', borderRadius: 99,
-          border: '1px solid rgba(161,161,170,0.35)',
-          background: 'rgba(161,161,170,0.08)',
-          fontSize: 13, color: '#a1a1aa', fontWeight: 500, letterSpacing: '0.03em',
-        }}>
-          AI-Powered Invitation Design
-        </div>
-
         <HeroHeading />
 
         <p style={{ fontSize: 18, lineHeight: 1.7, color: 'rgba(255,255,255,0.5)', maxWidth: 520, margin: '0 auto 40px' }}>
