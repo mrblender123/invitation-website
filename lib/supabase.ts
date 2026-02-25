@@ -13,6 +13,15 @@ export function createAuthenticatedClient(accessToken: string) {
   });
 }
 
+/** Server-only admin client using the service role key.
+ *  Bypasses RLS — never expose this to the browser. */
+export function createServiceClient() {
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  return createClient(url, serviceKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+}
+
 export type InvitationSettings = {
   bg: string;
   overlayOpacity?: number;
