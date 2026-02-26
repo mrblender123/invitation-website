@@ -48,7 +48,7 @@ function SimchaCard({ simcha, onClick }: { simcha: typeof SIMCHAS[0]; onClick: (
         background: hovered ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0.04)',
         border: hovered ? '1px solid rgba(161,161,170,0.4)' : '1px solid rgba(255,255,255,0.1)',
         borderRadius: 16,
-        padding: '28px 20px',
+        padding: 20,
         cursor: 'pointer',
         textAlign: 'center',
         transition: 'background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s',
@@ -58,8 +58,10 @@ function SimchaCard({ simcha, onClick }: { simcha: typeof SIMCHAS[0]; onClick: (
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        justifyContent: 'center',
         gap: 10,
         width: '100%',
+        aspectRatio: '1 / 1',
       }}
     >
       <span style={{ fontSize: simcha.icon === '13' ? 28 : 32, fontFamily: simcha.icon === '13' ? 'var(--font-playfair)' : undefined, fontWeight: simcha.icon === '13' ? 700 : undefined }}>{simcha.icon}</span>
@@ -164,16 +166,17 @@ export default function SimchaSelector({ forceOpen, onClose, hideButton }: Simch
             }}
           >
             {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
+            <div style={{ position: 'relative', textAlign: 'center', marginBottom: 28 }}>
               <p style={{
                 fontSize: 12, fontWeight: 600, letterSpacing: '0.12em',
-                color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', margin: 0,
+                color: '#fff', textTransform: 'uppercase', margin: 0,
               }}>
                 What is the Simcha?
               </p>
               <button
                 onClick={closeModal}
                 style={{
+                  position: 'absolute', top: '50%', right: 0, transform: 'translateY(-50%)',
                   background: 'none', border: 'none', cursor: 'pointer',
                   color: 'rgba(255,255,255,0.35)', fontSize: 20, lineHeight: 1,
                   padding: '2px 6px', borderRadius: 6,
