@@ -13,7 +13,6 @@ function injectFieldValues(
   svgText: string,
   fields: SvgField[],
   values: Record<string, string>,
-  canvasWidth: number,
 ): string {
   const parser = new DOMParser();
   const doc = parser.parseFromString(svgText, 'image/svg+xml');
@@ -23,30 +22,16 @@ function injectFieldValues(
   root.setAttribute('width', '100%');
   root.setAttribute('height', '100%');
 
-  const cx = canvasWidth / 2;
-
   for (const field of fields) {
     const group = doc.getElementById(field.id);
     if (!group) continue;
 
-    const textEl = group.querySelector('text');
     const tspan = group.querySelector('tspan');
-    if (!tspan || !textEl) continue;
+    if (!tspan) continue;
 
     const value = values[field.id];
     if (value !== undefined && value !== '') {
       tspan.textContent = value;
-
-      // Center the text horizontally: move translate-x to canvas center,
-      // keep translate-y and any scale() intact.
-      const transform = textEl.getAttribute('transform') ?? '';
-      const newTransform = transform.replace(
-        /translate\(([^,)\s]+)[\s,]+([^)]+)\)/,
-        (_match, _x, y) => `translate(${cx} ${y})`,
-      );
-      textEl.setAttribute('transform', newTransform || `translate(${cx} 0)`);
-      textEl.setAttribute('text-anchor', 'middle');
-      tspan.setAttribute('x', '0');
     }
   }
 
@@ -77,7 +62,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
 
   const injectedSvg =
     svgContent && template.fields
-      ? injectFieldValues(svgContent, template.fields, fieldValues, canvasWidth)
+      ? injectFieldValues(svgContent, template.fields, fieldValues)
       : svgContent;
 
   return (
