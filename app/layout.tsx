@@ -6,51 +6,51 @@ import { AuthProvider } from "./components/AuthProvider";
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
-  display: "swap",
+  display: "block",   // hold text invisible until font ready — no swap flash
 });
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  display: "swap",
+  display: "fallback", // 100ms hold, 3s swap window — minimal flash
 });
 
 const dancingScript = Dancing_Script({
   variable: "--font-dancing-script",
   subsets: ["latin"],
-  display: "swap",
+  display: "fallback",
 });
 
 const lora = Lora({
   variable: "--font-lora",
   subsets: ["latin"],
-  display: "swap",
+  display: "fallback",
 });
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin"],
-  display: "swap",
+  display: "fallback",
 });
 
 const oswald = Oswald({
   variable: "--font-oswald",
   subsets: ["latin"],
-  display: "swap",
+  display: "fallback",
 });
 
 const secularOne = Secular_One({
   variable: "--font-secular-one",
   subsets: ["latin", "hebrew"],
   weight: "400",
-  display: "swap",
+  display: "fallback",
 });
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
   subsets: ["latin"],
   weight: ["500", "600"],
-  display: "swap",
+  display: "fallback",
 });
 
 export const metadata: Metadata = {
