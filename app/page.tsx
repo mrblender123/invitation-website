@@ -9,25 +9,25 @@ export default function Home() {
     <div className="min-h-screen bg-[#09090b] text-white" style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', position: 'relative', overflow: 'hidden' }}>
 
       {/* ── Ambient gradient orbs ── */}
-      {/* Top-left purple orb */}
+      {/* Top-left white orb */}
       <div aria-hidden="true" style={{
         position: 'absolute', top: '-10%', left: '-12%',
         width: 700, height: 700, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
         filter: 'blur(60px)', pointerEvents: 'none', zIndex: 0,
       }} />
-      {/* Top-right warm gold orb */}
+      {/* Top-right white orb */}
       <div aria-hidden="true" style={{
         position: 'absolute', top: '-8%', right: '-14%',
         width: 650, height: 650, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(212,175,55,0.14) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)',
         filter: 'blur(70px)', pointerEvents: 'none', zIndex: 0,
       }} />
-      {/* Center subtle white bloom */}
+      {/* Center white bloom */}
       <div aria-hidden="true" style={{
         position: 'absolute', top: '5%', left: '50%', transform: 'translateX(-50%)',
         width: 800, height: 400, borderRadius: '50%',
-        background: 'radial-gradient(ellipse, rgba(255,255,255,0.04) 0%, transparent 70%)',
+        background: 'radial-gradient(ellipse, rgba(255,255,255,0.06) 0%, transparent 70%)',
         filter: 'blur(40px)', pointerEvents: 'none', zIndex: 0,
       }} />
 
