@@ -36,8 +36,8 @@ function injectFieldValues(
     if (!tspan) continue;
 
     const value = values[field.id];
-    if (value !== undefined && value !== '') {
-      tspan.textContent = value;
+    if (value !== undefined) {
+      tspan.textContent = value; // '' clears the text; undefined keeps SVG placeholder
     }
   }
 
