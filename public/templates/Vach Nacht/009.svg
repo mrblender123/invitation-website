@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 595.3 841.9">
+
+  <g id="date_vach">
+    <text transform="translate(222.6 418.1) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="8"><tspan x="0" y="0">שתתקיים אי''ה למחרתו ביום ה׳</tspan></text>
+  </g>
+
+  <g id="date_bris">
+    <text transform="translate(250.2 505.5) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="8"><tspan x="0" y="0">שתתקיים אי''ה למחרתו ביום ה׳</tspan></text>
+  </g>
+
+  <g id="synagogue_vach">
+    <text transform="translate(240 449.3) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="Arvo, Arvo" font-size="8"><tspan x="0" y="0">2267 56TH STREET</tspan></text>
+  </g>
+
+  <g id="synagogue_bris">
+    <text transform="translate(263.8 527.4) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="Arvo, Arvo" font-size="8"><tspan x="0" y="0">2267 56TH STREET</tspan></text>
+  </g>
+
+  <g id="host_house">
+    <text transform="translate(244.4 434.4) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="14.9"><tspan x="0" y="0">בבית מו״ח</tspan></text>
+  </g>
+
+  <g id="host_welcome">
+    <text transform="translate(277 554.8) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="10"><tspan x="0" y="0">המצפה לקבל פניכם</tspan></text>
+  </g>
+
+  <g id="father_name">
+    <text transform="translate(298.5 612.3) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="10"><tspan x="0" y="0">ב"ר שלמה הי"ו</tspan></text>
+  </g>
+
+  <g id="grandfather_name">
+    <text transform="translate(290.4 627) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="10"><tspan x="0" y="0">חתן ר' זרח ניישטיין הי"ו</tspan></text>
+  </g>
+
+  <g id="invite_text">
+    <text transform="translate(167.9 351) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="8"><tspan x="0" y="0">מע''כ לבוא להשתתף בשמחת</tspan></text>
+  </g>
+
+  <g id="praise">
+    <text transform="translate(156.7 304) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="14.9"><tspan x="0" y="0">ברוב שבח והודאה להשי״ת</tspan></text>
+  </g>
+
+  <g id="birth_text">
+    <text transform="translate(153.3 333) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="20"><tspan x="0" y="0">בהולדת בני נ״י למזל טוב</tspan></text>
+  </g>
+
+  <g id="invite_intro">
+    <text transform="translate(241.8 329.6) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="8"><tspan x="0" y="0">אתכבד בזה להזמין את כל</tspan></text>
+  </g>
+
+  <g id="title">
+    <text transform="translate(184 396.7) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="38.8"><tspan x="0" y="0">וואך נאכט</tspan></text>
+  </g>
+
+  <g id="bris_title">
+    <text transform="translate(240.1 487.3) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="23"><tspan x="0" y="0"> </tspan><tspan x="6.7" y="0">ברית מילה</tspan></text>
+  </g>
+
+  <g id="synagogue_name">
+    <text transform="translate(262.3 514.1) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="8"><tspan x="0" y="0">בביהמ''ד נחלת סקווירא</tspan></text>
+  </g>
+
+  <g id="baby_name">
+    <text transform="translate(259.1 596.6) rotate(-15.9) scale(.9 1)" fill="#415d71" font-family="GveretLevinAlefAlefAlef-Regular, 'Gveret Levin AlefAlefAlef'" font-size="24"><tspan x="0" y="0">משה יוסף שווארץ</tspan></text>
+  </g>
+
+</svg>
