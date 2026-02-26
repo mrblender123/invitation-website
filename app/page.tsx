@@ -6,12 +6,35 @@ import TemplateShowcase from './components/TemplateShowcase';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#09090b] text-white" style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif' }}>
+    <div className="min-h-screen bg-[#09090b] text-white" style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', position: 'relative', overflow: 'hidden' }}>
+
+      {/* ── Ambient gradient orbs ── */}
+      {/* Top-left purple orb */}
+      <div aria-hidden="true" style={{
+        position: 'absolute', top: '-10%', left: '-12%',
+        width: 700, height: 700, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%)',
+        filter: 'blur(60px)', pointerEvents: 'none', zIndex: 0,
+      }} />
+      {/* Top-right warm gold orb */}
+      <div aria-hidden="true" style={{
+        position: 'absolute', top: '-8%', right: '-14%',
+        width: 650, height: 650, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(212,175,55,0.14) 0%, transparent 70%)',
+        filter: 'blur(70px)', pointerEvents: 'none', zIndex: 0,
+      }} />
+      {/* Center subtle white bloom */}
+      <div aria-hidden="true" style={{
+        position: 'absolute', top: '5%', left: '50%', transform: 'translateX(-50%)',
+        width: 800, height: 400, borderRadius: '50%',
+        background: 'radial-gradient(ellipse, rgba(255,255,255,0.04) 0%, transparent 70%)',
+        filter: 'blur(40px)', pointerEvents: 'none', zIndex: 0,
+      }} />
 
       <LandingHeader />
 
       {/* Hero */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '120px 24px 100px', textAlign: 'center' }}>
+      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '120px 24px 100px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <HeroHeading />
 
         <p style={{ fontSize: 18, lineHeight: 1.7, color: 'rgba(255,255,255,0.5)', maxWidth: 520, margin: '0 auto 40px' }}>
@@ -25,7 +48,7 @@ export default function Home() {
 
 
       {/* Features */}
-      <section id="features" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px 120px' }}>
+      <section id="features" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px 120px', position: 'relative', zIndex: 1 }}>
         <p style={{ textAlign: 'center', fontSize: 13, fontWeight: 500, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 16 }}>
           Everything you need
         </p>
