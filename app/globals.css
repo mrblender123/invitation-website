@@ -30,21 +30,38 @@
   font-family: 'Secular One';
   src: url('/fonts/SecularOne-Regular.ttf') format('truetype');
   font-weight: 400;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
   font-family: 'Stam Ashkenaz CLM';
   src: url('/fonts/Stam Ashkenaz CLM Medium.ttf') format('truetype');
   font-weight: 500;
-  font-display: swap;
+  font-display: block;
 }
 
 @font-face {
   font-family: 'Gveret Levin AlefAlefAlef';
   src: url('/fonts/GveretLevinAlefAlefAlef-Regular.ttf') format('truetype');
   font-weight: 400;
-  font-display: swap;
+  font-display: block;
+}
+
+/* ── Template fonts (self-hosted so SVG text renders correctly on all devices) ── */
+@font-face {
+  font-family: 'Arvo';
+  src: url('/fonts/Arvo-400-Latin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Arvo';
+  src: url('/fonts/Arvo-700-Latin.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
 }
 
 :root {
