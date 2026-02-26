@@ -92,6 +92,13 @@ export default function SimchaSelector({ forceOpen, onClose, hideButton }: Simch
     if (forceOpen) openModal();
   }, [forceOpen]);
 
+  // Lock background scroll while modal is open
+  useEffect(() => {
+    if (!open) return;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, [open]);
+
   // Close on Escape
   useEffect(() => {
     if (!open) return;

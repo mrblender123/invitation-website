@@ -516,7 +516,7 @@ function TemplatesContent() {
                               direction: field.rtl ? 'rtl' : 'ltr',
                               borderColor: isActive ? 'rgba(255,255,255,0.45)' : undefined,
                             }}
-                            placeholder={field.placeholder}
+                            placeholder={clearedFields.has(field.id) ? '' : field.placeholder}
                             value={fieldValues[field.id] ?? ''}
                             onFocus={() => setActiveField({ id: field.id, rtl: field.rtl ?? false })}
                             onBlur={() => setActiveField(null)}

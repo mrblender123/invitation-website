@@ -174,7 +174,24 @@ body {
   padding: 64px 40px;
 }
 
+/* Category grid */
+.category-grid {
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+}
+
 @media (max-width: 640px) {
+  /* Category grid — 2 columns on phone */
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .category-section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
   /* Hero */
   .hero-section {
     padding: 64px 20px 52px;

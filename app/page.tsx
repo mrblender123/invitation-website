@@ -3,6 +3,7 @@ import HeroHeading from './components/HeroHeading';
 import SimchaSelector from './components/SimchaSelector';
 import CTAButton from './components/CTAButton';
 import TemplateShowcase from './components/TemplateShowcase';
+import CategoryGrid from './components/CategoryGrid';
 
 export default function Home() {
   return (
@@ -46,6 +47,8 @@ export default function Home() {
         </div>
       </section>
 
+
+      <CategoryGrid />
 
       {/* Features */}
       <section id="features" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px 120px', position: 'relative', zIndex: 1 }}>
