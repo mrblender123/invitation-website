@@ -11,9 +11,11 @@ export default function LandingHeader() {
   return (
     <header style={{
       position: 'sticky', top: 0, zIndex: 50,
-      borderBottom: '1px solid rgba(255,255,255,0.06)',
-      background: 'rgba(9,9,11,0.80)',
-      backdropFilter: 'blur(12px)',
+      background: 'linear-gradient(to bottom, rgba(9,9,11,0.85) 0%, rgba(9,9,11,0) 100%)',
+      backdropFilter: 'blur(8px)',
+      WebkitBackdropFilter: 'blur(8px)',
+      maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+      WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
     }}>
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none' }}>
