@@ -11,21 +11,21 @@ export default function Home() {
       {/* ── Ambient gradient orbs ── */}
       {/* Top-left white orb */}
       <div aria-hidden="true" style={{
-        position: 'absolute', top: 0, left: '-12%',
+        position: 'absolute', top: '-10%', left: '-12%',
         width: 700, height: 700, borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
         filter: 'blur(60px)', pointerEvents: 'none', zIndex: 0,
       }} />
       {/* Top-right white orb */}
       <div aria-hidden="true" style={{
-        position: 'absolute', top: 0, right: '-14%',
+        position: 'absolute', top: '-8%', right: '-14%',
         width: 650, height: 650, borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)',
         filter: 'blur(70px)', pointerEvents: 'none', zIndex: 0,
       }} />
       {/* Center white bloom */}
       <div aria-hidden="true" style={{
-        position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
+        position: 'absolute', top: '5%', left: '50%', transform: 'translateX(-50%)',
         width: 800, height: 400, borderRadius: '50%',
         background: 'radial-gradient(ellipse, rgba(255,255,255,0.06) 0%, transparent 70%)',
         filter: 'blur(40px)', pointerEvents: 'none', zIndex: 0,
