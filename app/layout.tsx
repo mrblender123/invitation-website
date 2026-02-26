@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Dancing_Script, Lora, Montserrat, Oswald, Secular_One } from "next/font/google";
+import { Playfair_Display, Inter, Dancing_Script, Lora, Montserrat, Oswald, Secular_One, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./components/AuthProvider";
 
@@ -46,6 +46,13 @@ const secularOne = Secular_One({
   display: "swap",
 });
 
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Invitia — AI-Powered Invitation Design",
   description: "Generate AI backgrounds, craft custom typography, and export print-ready invitations — all in one place.",
@@ -62,7 +69,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable} ${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable}`}>
+    <html lang="en" className={`${playfair.variable} ${inter.variable} ${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable} ${plusJakartaSans.variable}`}>
       <body className="antialiased"><AuthProvider>{children}</AuthProvider></body>
     </html>
   );
