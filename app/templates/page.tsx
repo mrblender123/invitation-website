@@ -151,6 +151,7 @@ function TemplatesContent() {
   const [savedToCart, setSavedToCart] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1200);
   const [simchaOpen, setSimchaOpen] = useState(false);
+  const [showAllFields, setShowAllFields] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -480,9 +481,24 @@ function TemplatesContent() {
               {/* Edit panel */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {/* Text inputs — dynamic for SVG templates, legacy for InvitationCard */}
+                {selected.fields?.some(f => f.optional) && (
+                  <button
+                    onClick={() => setShowAllFields(v => !v)}
+                    style={{
+                      alignSelf: 'flex-start', marginBottom: 16,
+                      background: showAllFields ? 'rgba(255,255,255,0.1)' : 'transparent',
+                      border: '1px solid rgba(255,255,255,0.15)',
+                      borderRadius: 8, padding: '6px 14px',
+                      fontSize: 12, color: 'rgba(255,255,255,0.6)',
+                      cursor: 'pointer', letterSpacing: '0.04em',
+                    }}
+                  >
+                    {showAllFields ? '− Hide extra fields' : '+ Show all fields'}
+                  </button>
+                )}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 32 }}>
                   {selected.fields ? (
-                    selected.fields.map(field => {
+                    selected.fields.filter(f => !f.optional || showAllFields).map(field => {
                       const isActive = activeField?.id === field.id;
                       return (
                       <div key={field.id} style={{ position: 'relative' }}>

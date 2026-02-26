@@ -22,6 +22,12 @@ function injectFieldValues(
   root.setAttribute('width', '100%');
   root.setAttribute('height', '100%');
 
+  // Strip * from all group IDs so getElementById works with clean IDs
+  doc.querySelectorAll('g[id]').forEach(g => {
+    const id = g.getAttribute('id') ?? '';
+    if (id.includes('*')) g.setAttribute('id', id.replace(/\*/g, ''));
+  });
+
   for (const field of fields) {
     const group = doc.getElementById(field.id);
     if (!group) continue;

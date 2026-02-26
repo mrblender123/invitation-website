@@ -18,6 +18,7 @@ export type SvgField = {
   label: string;       // shown in the editor UI
   placeholder: string; // default text hint
   rtl?: boolean;       // true for Hebrew / Arabic text
+  optional?: boolean;  // hidden by default; shown when "Show all fields" is on
 };
 
 export type Template = {

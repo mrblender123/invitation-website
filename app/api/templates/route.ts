@@ -42,7 +42,9 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
     const attrs = m[1];
     const idMatch = attrs.match(/\bid="([^"]+)"/);
     if (!idMatch) continue;
-    const gId = idMatch[1];
+    const rawId = idMatch[1];
+    const isOptional = rawId.includes('*');
+    const gId = rawId.replace(/\*/g, ''); // strip asterisks for clean ID
 
     // Skip system / static groups
     if (seenIds.has(gId)) continue;
@@ -55,7 +57,7 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
     const tspanMatch = afterTag.match(/<tspan[^>]*>([^<]*)</);
     const placeholder = tspanMatch?.[1]?.trim() ?? '';
 
-    fields.push({ id: gId, label: idToLabel(gId), placeholder, rtl: true });
+    fields.push({ id: gId, label: idToLabel(gId), placeholder, rtl: true, ...(isOptional && { optional: true }) });
   }
 
   return {
