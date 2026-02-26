@@ -1,5 +1,30 @@
 @import "tailwindcss";
 
+/* ── Self-hosted UI fonts (reliable on all devices incl. iPhone) ── */
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/fonts/PlayfairDisplay-700-Latin.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('/fonts/PlusJakartaSans-Latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: block;
+}
+
 /* ── Custom Hebrew fonts (self-hosted for html2canvas compatibility) ── */
 @font-face {
   font-family: 'Secular One';
@@ -25,6 +50,10 @@
 :root {
   --background: #09090b;
   --foreground: #ffffff;
+  /* Font family variables — point to self-hosted fonts */
+  --font-playfair: 'Playfair Display', serif;
+  --font-inter: 'Inter', system-ui, sans-serif;
+  --font-plus-jakarta: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
 body {
