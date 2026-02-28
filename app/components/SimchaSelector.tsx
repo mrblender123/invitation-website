@@ -10,30 +10,14 @@ interface SimchaSelectorProps {
 }
 
 const SIMCHAS = [
-  {
-    key: 'Wedding',
-    label: 'Wedding',
-    icon: '💍',
-    description: 'Chuppah, reception & celebration',
-  },
-  {
-    key: 'Bar Mitzvah',
-    label: 'Bar Mitzvah',
-    icon: '13',
-    description: 'Coming-of-age celebration',
-  },
-  {
-    key: 'Vach Nacht',
-    label: 'Vach Nacht',
-    icon: '👶🏻',
-    description: 'Traditional bris eve gathering',
-  },
-  {
-    key: 'Vort',
-    label: 'Vort',
-    icon: '🥂',
-    description: "L'chaim & engagement party",
-  },
+  { key: "It's a Boy",    label: "It's a Boy",   icon: '💙', description: 'Bris & baby boy celebration' },
+  { key: "It's a Girl",   label: "It's a Girl",  icon: '🎀', description: 'Baby girl celebration' },
+  { key: 'Upsherin',      label: 'Upsherin',     icon: '✂️', description: 'First haircut celebration' },
+  { key: 'Bar Mitzvah',   label: 'Bar Mitzvah',  icon: '13', description: 'Coming-of-age celebration' },
+  { key: 'Tenoyim',       label: 'Tenoyim',      icon: '📜', description: 'Engagement contract signing' },
+  { key: 'Vort',          label: 'Vort',         icon: '🥂', description: 'Engagement celebration' },
+  { key: 'Wedding',       label: 'Wedding',      icon: '💍', description: 'Chuppah & reception' },
+  { key: 'Sheva Brachos', label: 'Sheva Brachos',icon: '🍷', description: 'Seven blessings celebration' },
 ];
 
 function SimchaCard({ simcha, onClick }: { simcha: typeof SIMCHAS[0]; onClick: () => void }) {
@@ -47,8 +31,8 @@ function SimchaCard({ simcha, onClick }: { simcha: typeof SIMCHAS[0]; onClick: (
       style={{
         background: hovered ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0.04)',
         border: hovered ? '1px solid rgba(161,161,170,0.4)' : '1px solid rgba(255,255,255,0.1)',
-        borderRadius: 16,
-        padding: 20,
+        borderRadius: 14,
+        padding: '14px 8px',
         cursor: 'pointer',
         textAlign: 'center',
         transition: 'background 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s',
@@ -59,13 +43,13 @@ function SimchaCard({ simcha, onClick }: { simcha: typeof SIMCHAS[0]; onClick: (
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 10,
+        gap: 8,
         width: '100%',
         aspectRatio: '1 / 1',
       }}
     >
-      <span style={{ fontSize: simcha.icon === '13' ? 28 : 32, fontFamily: simcha.icon === '13' ? 'var(--font-playfair)' : undefined, fontWeight: simcha.icon === '13' ? 700 : undefined }}>{simcha.icon}</span>
-      <span style={{ fontFamily: 'var(--font-playfair)', fontSize: 18, fontWeight: 700, letterSpacing: '-0.01em' }}>
+      <span style={{ fontSize: simcha.icon === '13' ? 22 : 26, fontFamily: simcha.icon === '13' ? 'var(--font-playfair)' : undefined, fontWeight: simcha.icon === '13' ? 700 : undefined, lineHeight: 1 }}>{simcha.icon}</span>
+      <span style={{ fontFamily: 'var(--font-playfair)', fontSize: 13, fontWeight: 700, letterSpacing: '-0.01em', lineHeight: 1.3 }}>
         {simcha.label}
       </span>
     </button>
@@ -152,13 +136,14 @@ export default function SimchaSelector({ forceOpen, onClose, hideButton }: Simch
           {/* Panel */}
           <div
             onClick={e => e.stopPropagation()}
+            className="simcha-panel"
             style={{
               background: 'rgba(15,15,17,0.95)',
               border: '1px solid rgba(255,255,255,0.1)',
               borderRadius: 24,
-              padding: '40px 36px',
+              padding: '32px 28px',
               width: '100%',
-              maxWidth: 560,
+              maxWidth: 580,
               boxShadow: '0 40px 120px rgba(0,0,0,0.8)',
               opacity: visible ? 1 : 0,
               transform: visible ? 'scale(1) translateY(0)' : 'scale(0.95) translateY(16px)',
@@ -187,7 +172,7 @@ export default function SimchaSelector({ forceOpen, onClose, hideButton }: Simch
             </div>
 
             {/* Cards grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+            <div className="simcha-grid" style={{ display: 'grid', gap: 10 }}>
               {SIMCHAS.map(s => (
                 <SimchaCard
                   key={s.key}

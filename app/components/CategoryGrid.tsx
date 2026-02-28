@@ -4,10 +4,14 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 const CATEGORIES = [
-  { key: 'Wedding',    label: 'Wedding',    icon: '💍', description: 'Chuppah, reception & celebration' },
-  { key: 'Bar Mitzvah', label: 'Bar Mitzvah', icon: '13', description: 'Coming-of-age celebration' },
-  { key: 'Vach Nacht', label: 'Vach Nacht', icon: '👶🏻', description: 'Traditional bris eve gathering' },
-  { key: 'Vort',      label: 'Vort',       icon: '🥂', description: "L'chaim & engagement party" },
+  { key: "It's a Boy",    label: "It's a Boy",   icon: '💙', description: 'Bris & baby boy celebration' },
+  { key: "It's a Girl",   label: "It's a Girl",  icon: '🎀', description: 'Baby girl celebration' },
+  { key: 'Upsherin',      label: 'Upsherin',     icon: '✂️', description: 'First haircut celebration' },
+  { key: 'Bar Mitzvah',   label: 'Bar Mitzvah',  icon: '13', description: 'Coming-of-age celebration' },
+  { key: 'Tenoyim',       label: 'Tenoyim',      icon: '📜', description: 'Engagement contract signing' },
+  { key: 'Vort',          label: 'Vort',         icon: '🥂', description: 'Engagement celebration' },
+  { key: 'Wedding',       label: 'Wedding',      icon: '💍', description: 'Chuppah & reception' },
+  { key: 'Sheva Brachos', label: 'Sheva Brachos',icon: '🍷', description: 'Seven blessings celebration' },
 ];
 
 function CategoryCard({ category }: { category: typeof CATEGORIES[0] }) {

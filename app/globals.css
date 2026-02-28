@@ -180,6 +180,11 @@ body {
   width: 100%;
 }
 
+/* Simcha selector popup grid */
+.simcha-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
 @media (max-width: 640px) {
   /* Category grid — 2 columns on phone */
   .category-grid {
@@ -190,6 +195,16 @@ body {
   .category-section {
     padding-left: 16px !important;
     padding-right: 16px !important;
+  }
+
+  /* Simcha popup — 2 columns, compact padding, scrollable */
+  .simcha-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .simcha-panel {
+    padding: 24px 16px !important;
+    max-height: 85vh;
+    overflow-y: auto;
   }
 
   /* Hero */
