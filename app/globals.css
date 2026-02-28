@@ -164,6 +164,18 @@ body {
   animation: bloom 0.8s cubic-bezier(0.2, 1, 0.5, 1) forwards;
 }
 
+/* ── Invitation marquee carousel ── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 35s linear infinite;
+  will-change: transform;
+}
+
+
 /* ── Responsive ── */
 
 /* Landing hero — use CSS classes so media queries can override without inline conflicts */
@@ -185,6 +197,10 @@ body {
   grid-template-columns: repeat(4, 1fr);
 }
 
+.simcha-card {
+  aspect-ratio: 1 / 1;
+}
+
 @media (max-width: 640px) {
   /* Category grid — 2 columns on phone */
   .category-grid {
@@ -197,14 +213,25 @@ body {
     padding-right: 16px !important;
   }
 
-  /* Simcha popup — 2 columns, compact padding, scrollable */
+  /* Simcha popup — 4×2 grid on phone */
+  .simcha-overlay {
+    align-items: center !important;
+    padding: 16px !important;
+  }
   .simcha-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px !important;
   }
   .simcha-panel {
-    padding: 24px 16px !important;
-    max-height: 85vh;
+    padding: 20px 12px !important;
+    max-height: calc(100vh - 32px);
     overflow-y: auto;
+  }
+  .simcha-card {
+    padding: 8px 4px !important;
+    aspect-ratio: auto;   /* CSS wins now — no inline override */
+    min-height: 60px;
+    gap: 4px !important;
   }
 
   /* Hero */

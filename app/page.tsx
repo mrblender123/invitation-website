@@ -2,8 +2,8 @@ import LandingHeader from './components/LandingHeader';
 import HeroHeading from './components/HeroHeading';
 import SimchaSelector from './components/SimchaSelector';
 import CTAButton from './components/CTAButton';
-import TemplateShowcase from './components/TemplateShowcase';
 import CategoryGrid from './components/CategoryGrid';
+import InvitationCarousel from './components/InvitationCarousel';
 
 export default function Home() {
   return (
@@ -95,7 +95,7 @@ export default function Home() {
         </div>
       </section>
 
-      <TemplateShowcase />
+      <InvitationCarousel />
 
       {/* CTA banner */}
       <section style={{ padding: '0 24px 120px' }}>

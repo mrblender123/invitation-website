@@ -28,6 +28,7 @@ function SimchaCard({ simcha, onClick }: { simcha: typeof SIMCHAS[0]; onClick: (
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      className="simcha-card"
       style={{
         background: hovered ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0.04)',
         border: hovered ? '1px solid rgba(161,161,170,0.4)' : '1px solid rgba(255,255,255,0.1)',
@@ -45,7 +46,6 @@ function SimchaCard({ simcha, onClick }: { simcha: typeof SIMCHAS[0]; onClick: (
         justifyContent: 'center',
         gap: 8,
         width: '100%',
-        aspectRatio: '1 / 1',
       }}
     >
       <span style={{ fontSize: simcha.icon === '13' ? 22 : 26, fontFamily: simcha.icon === '13' ? 'var(--font-playfair)' : undefined, fontWeight: simcha.icon === '13' ? 700 : undefined, lineHeight: 1 }}>{simcha.icon}</span>
@@ -120,6 +120,7 @@ export default function SimchaSelector({ forceOpen, onClose, hideButton }: Simch
       {open && (
         <div
           onClick={closeModal}
+          className="simcha-overlay"
           style={{
             position: 'fixed',
             inset: 0,
@@ -128,8 +129,9 @@ export default function SimchaSelector({ forceOpen, onClose, hideButton }: Simch
             alignItems: 'center',
             justifyContent: 'center',
             padding: 24,
-            background: visible ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0)',
+            background: visible ? 'rgba(0,0,0,0.75)' : 'rgba(0,0,0,0)',
             backdropFilter: visible ? 'blur(8px)' : 'blur(0px)',
+            WebkitBackdropFilter: visible ? 'blur(8px)' : 'blur(0px)',
             transition: 'background 0.28s, backdrop-filter 0.28s',
           }}
         >
@@ -138,7 +140,7 @@ export default function SimchaSelector({ forceOpen, onClose, hideButton }: Simch
             onClick={e => e.stopPropagation()}
             className="simcha-panel"
             style={{
-              background: 'rgba(15,15,17,0.95)',
+              background: '#0f0f11',
               border: '1px solid rgba(255,255,255,0.1)',
               borderRadius: 24,
               padding: '32px 28px',
