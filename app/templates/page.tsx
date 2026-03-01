@@ -8,7 +8,6 @@ import InvitationCard from '../components/InvitationCard';
 import SvgCardPreview from '../components/SvgCardPreview';
 import VirtualKeyboard from '../components/VirtualKeyboard';
 import { useAuth } from '../components/AuthProvider';
-import SimchaSelector from '../components/SimchaSelector';
 import type { Template } from '@/lib/templates';
 
 type CartItem = {
@@ -150,7 +149,6 @@ function TemplatesContent() {
   const [cartCount, setCartCount] = useState(0);
   const [savedToCart, setSavedToCart] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1200);
-  const [simchaOpen, setSimchaOpen] = useState(false);
   const [showAllFields, setShowAllFields] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -328,16 +326,15 @@ function TemplatesContent() {
           /* ── Gallery view ── */
           <>
             <button
-              onClick={() => setSimchaOpen(true)}
+              onClick={() => router.back()}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 background: 'transparent', border: 'none', cursor: 'pointer',
                 color: 'rgba(255,255,255,0.4)', fontSize: 14, padding: '0 0 36px',
               }}
             >
-              ← Change Simcha
+              ← Back
             </button>
-            <SimchaSelector forceOpen={simchaOpen} onClose={() => setSimchaOpen(false)} hideButton />
 
             <div style={{ marginBottom: 48 }}>
               <p style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 12 }}>
@@ -346,9 +343,6 @@ function TemplatesContent() {
               <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 10px' }}>
                 {category ? `${category} Invitations` : 'Ready-Made Invitations'}
               </h1>
-              <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.4)', margin: 0 }}>
-                Pick a design, fill in your details, and download — no account needed.
-              </p>
             </div>
 
             {loadingTemplates ? (

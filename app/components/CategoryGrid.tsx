@@ -49,11 +49,8 @@ function CategoryCard({ category }: { category: typeof CATEGORIES[0] }) {
       }}>
         {category.icon}
       </span>
-      <span style={{ fontSize: 15, fontWeight: 600, color: '#fff', marginBottom: 6 }}>
+      <span style={{ fontSize: 17, fontWeight: 600, color: '#fff' }}>
         {category.label}
-      </span>
-      <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>
-        {category.description}
       </span>
     </Link>
   );
