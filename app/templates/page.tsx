@@ -8,7 +8,7 @@ import InvitationCard from '../components/InvitationCard';
 import SvgCardPreview from '../components/SvgCardPreview';
 import VirtualKeyboard from '../components/VirtualKeyboard';
 import { useAuth } from '../components/AuthProvider';
-import { CATEGORY_SUBS } from '@/lib/categories';
+import { CATEGORY_SUBS, SUB_DISPLAY_NAMES } from '@/lib/categories';
 import type { Template } from '@/lib/templates';
 
 type CartItem = {
@@ -377,7 +377,7 @@ function TemplatesContent() {
                       transition: 'all 0.15s',
                     }}
                   >
-                    {sub}
+                    {SUB_DISPLAY_NAMES[sub] ?? sub}
                   </button>
                 ))}
               </div>

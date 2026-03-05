@@ -1,5 +1,10 @@
+// Maps URL-safe subfolder names to their human-readable display label
+export const SUB_DISPLAY_NAMES: Record<string, string> = {
+  'Vachnacht-Bris': 'Vachnacht + Bris',
+};
+
 export const CATEGORY_SUBS: Record<string, string[]> = {
-  "It's a Boy":    ['Shulem Zucher', 'Vachnacht', 'Vachnacht + Bris', 'Bris', 'Pidyon Haben', "Shlishi L'milah"],
+  "It's a Boy":    ['Shulem Zucher', 'Vachnacht', 'Vachnacht-Bris', 'Bris', 'Pidyon Haben', "Shlishi L'milah"],
   "It's a Girl":   [],
   'Upsherin':      [],
   'Bar Mitzvah':   [],
