@@ -155,6 +155,13 @@ function TemplatesContent() {
   const [showAllFields, setShowAllFields] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
+  // Draft modal state
+  const [showDraftModal, setShowDraftModal] = useState(false);
+  const [draftEmail, setDraftEmail] = useState('');
+  const [draftSending, setDraftSending] = useState(false);
+  const [draftSent, setDraftSent] = useState(false);
+  const [draftError, setDraftError] = useState('');
+
   useEffect(() => {
     const update = () => setWindowWidth(window.innerWidth);
     update();
@@ -230,23 +237,33 @@ function TemplatesContent() {
 
   const handleSaveForLater = () => {
     if (!selected) return;
-    const cartRaw = localStorage.getItem('invitia-cart');
-    let cart: CartItem[] = [];
-    try { cart = cartRaw ? JSON.parse(cartRaw) : []; } catch { cart = []; }
-    const item: CartItem = {
-      id: `${selected.id}-${Date.now()}`,
-      templateId: selected.id,
-      templateName: selected.name,
-      category: selected.category,
-      thumbnailSrc: selected.thumbnailSrc,
-      fieldValues,
-      savedAt: Date.now(),
-    };
-    cart.push(item);
-    localStorage.setItem('invitia-cart', JSON.stringify(cart));
-    setCartCount(cart.length);
-    setSavedToCart(true);
-    setTimeout(() => setSavedToCart(false), 2000);
+    setDraftEmail('');
+    setDraftSent(false);
+    setDraftError('');
+    setShowDraftModal(true);
+  };
+
+  const handleSendDraft = async () => {
+    if (!selected || !draftEmail.trim()) return;
+    setDraftSending(true);
+    setDraftError('');
+    try {
+      const res = await fetch('/api/drafts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ templateId: selected.id, fieldValues, email: draftEmail.trim() }),
+      });
+      if (!res.ok) {
+        const d = await res.json();
+        setDraftError(d.error ?? 'Something went wrong. Please try again.');
+      } else {
+        setDraftSent(true);
+      }
+    } catch {
+      setDraftError('Network error. Please try again.');
+    } finally {
+      setDraftSending(false);
+    }
   };
 
   const handleOpenInStudio = () => {
@@ -467,6 +484,7 @@ function TemplatesContent() {
                   template={selected}
                   fieldValues={fieldValues}
                   scale={cardScale}
+                  activeFieldId={activeField?.id}
                 />
               ) : (
                 <div style={{
@@ -685,15 +703,15 @@ function TemplatesContent() {
                       style={{
                         flex: 1, padding: '11px 0', borderRadius: 8,
                         fontWeight: 600, fontSize: 14,
-                        background: savedToCart ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
-                        color: savedToCart ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.65)',
-                        border: `1px solid ${savedToCart ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.15)'}`,
+                        background: 'rgba(255,255,255,0.05)',
+                        color: 'rgba(255,255,255,0.65)',
+                        border: '1px solid rgba(255,255,255,0.15)',
                         cursor: 'pointer',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                         transition: 'all 0.2s',
                       }}
                     >
-                      {savedToCart ? '✓ Saved' : '🛒 Save for Later'}
+                      {'📩 Save for Later'}
                     </button>
                   </div>
 
@@ -723,6 +741,107 @@ function TemplatesContent() {
           </>
         )}
       </div>
+
+      {/* Save for Later — email draft modal */}
+      {showDraftModal && (
+        <div
+          onClick={e => { if (e.target === e.currentTarget) setShowDraftModal(false); }}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 200,
+            background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: 24,
+          }}
+        >
+          <div style={{
+            background: '#111113',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: 16,
+            padding: '36px 32px',
+            width: '100%',
+            maxWidth: 420,
+            position: 'relative',
+          }}>
+            {/* Close */}
+            <button
+              onClick={() => setShowDraftModal(false)}
+              style={{
+                position: 'absolute', top: 16, right: 16,
+                background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)',
+                fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 4,
+              }}
+            >
+              ×
+            </button>
+
+            {draftSent ? (
+              /* Success state */
+              <div style={{ textAlign: 'center', padding: '8px 0' }}>
+                <p style={{ fontSize: 36, marginBottom: 16 }}>📬</p>
+                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#fff', margin: '0 0 10px' }}>Check your inbox</h2>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', margin: '0 0 28px', lineHeight: 1.6 }}>
+                  We sent a link to <strong style={{ color: 'rgba(255,255,255,0.8)' }}>{draftEmail}</strong>.
+                  Your draft will be available for 7 days.
+                </p>
+                <button
+                  onClick={() => setShowDraftModal(false)}
+                  style={{
+                    padding: '11px 28px', borderRadius: 8, fontWeight: 600, fontSize: 14,
+                    background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
+                    color: '#fff', cursor: 'pointer',
+                  }}
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              /* Input state */
+              <>
+                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#fff', margin: '0 0 8px' }}>Save your draft</h2>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', margin: '0 0 28px', lineHeight: 1.6 }}>
+                  Enter your email and we&apos;ll send you a link to continue editing.
+                  The link expires after <strong style={{ color: '#f0d060' }}>7 days</strong>.
+                </p>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={draftEmail}
+                    onChange={e => setDraftEmail(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') handleSendDraft(); }}
+                    autoFocus
+                    style={{
+                      ...inputStyle,
+                      fontSize: 15,
+                      padding: '12px 16px',
+                    }}
+                  />
+
+                  {draftError && (
+                    <p style={{ fontSize: 13, color: '#f87171', margin: 0 }}>{draftError}</p>
+                  )}
+
+                  <button
+                    onClick={handleSendDraft}
+                    disabled={draftSending || !draftEmail.trim()}
+                    style={{
+                      padding: '13px 0', borderRadius: 8, fontWeight: 700, fontSize: 15,
+                      background: 'linear-gradient(135deg, #b8973a 0%, #f0d060 50%, #b8973a 100%)',
+                      color: '#1a1200', border: 'none',
+                      cursor: draftSending || !draftEmail.trim() ? 'not-allowed' : 'pointer',
+                      opacity: draftSending || !draftEmail.trim() ? 0.6 : 1,
+                      transition: 'opacity 0.15s',
+                    }}
+                  >
+                    {draftSending ? 'Sending…' : 'Send me the link'}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -7,6 +7,7 @@ type Props = {
   template: Template;
   fieldValues: Record<string, string>;
   scale?: number;
+  activeFieldId?: string | null;
 };
 
 // Reuse a single canvas element for all measurements (lightweight, no GPU alloc)
@@ -35,6 +36,7 @@ function injectFieldValues(
   svgText: string,
   fields: SvgField[],
   values: Record<string, string>,
+  activeFieldId?: string | null,
 ): string {
   const parser = new DOMParser();
   const doc = parser.parseFromString(svgText, 'image/svg+xml');
@@ -100,6 +102,27 @@ function injectFieldValues(
     }
   }
 
+  // Highlight the active field and dim all others
+  if (activeFieldId) {
+    for (const field of fields) {
+      const group = doc.getElementById(field.id);
+      if (!group) continue;
+      group.setAttribute('data-field-state', field.id === activeFieldId ? 'active' : 'other');
+    }
+
+    const style = doc.createElementNS('http://www.w3.org/2000/svg', 'style');
+    style.textContent = `
+      [data-field-state="active"] text {
+        filter: drop-shadow(0 0 6px rgba(255,240,100,0.9)) drop-shadow(0 0 2px rgba(255,255,255,0.8));
+      }
+      [data-field-state="other"] {
+        opacity: 0.15;
+        transition: opacity 0.25s;
+      }
+    `;
+    root.insertBefore(style, root.firstChild);
+  }
+
   return new XMLSerializer().serializeToString(root);
 }
 
@@ -111,7 +134,7 @@ function injectFieldValues(
  * The outer div clips it down to the scaled display size.
  */
 const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview(
-  { template, fieldValues, scale = 1 },
+  { template, fieldValues, scale = 1, activeFieldId },
   ref,
 ) {
   const { canvasWidth, canvasHeight } = template.style;
@@ -127,7 +150,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
 
   const injectedSvg =
     svgContent && template.fields
-      ? injectFieldValues(svgContent, template.fields, fieldValues)
+      ? injectFieldValues(svgContent, template.fields, fieldValues, activeFieldId)
       : svgContent;
 
   return (
