@@ -118,12 +118,65 @@ export default function Home() {
       {/* Footer */}
       <footer style={{
         borderTop: '1px solid rgba(255,255,255,0.06)',
-        padding: '28px 24px',
-        textAlign: 'center',
-        fontSize: 13,
-        color: 'rgba(255,255,255,0.2)',
+        padding: '48px 24px 32px',
+        fontFamily: 'var(--font-inter), system-ui, sans-serif',
       }}>
-        © {new Date().getFullYear()} Invitia · Built with Next.js & Stable Diffusion
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: 40, marginBottom: 40 }}>
+
+            {/* Brand */}
+            <div style={{ maxWidth: 260 }}>
+              <p style={{ fontFamily: 'var(--font-playfair)', fontSize: 22, fontWeight: 700, color: '#fff', margin: '0 0 10px' }}>
+                Invitia
+              </p>
+              <p style={{ fontSize: 13, lineHeight: 1.7, color: 'rgba(255,255,255,0.35)', margin: 0 }}>
+                Beautiful invitation designs for every simcha. Customize, download, and share in minutes.
+              </p>
+            </div>
+
+            {/* Links */}
+            <div style={{ display: 'flex', gap: 56, flexWrap: 'wrap' }}>
+              <div>
+                <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', margin: '0 0 14px' }}>
+                  Browse
+                </p>
+                {["It's a Boy", "It's a Girl", 'Bar Mitzvah', 'Wedding', 'Vort'].map(cat => (
+                  <a key={cat} href={`/templates?category=${encodeURIComponent(cat)}`} className="footer-link">
+                    {cat}
+                  </a>
+                ))}
+              </div>
+              <div>
+                <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', margin: '0 0 14px' }}>
+                  More
+                </p>
+                {[
+                  { label: 'Templates', href: '/templates' },
+                  { label: 'Studio', href: '/studio' },
+                  { label: 'Cart', href: '/cart' },
+                ].map(({ label, href }) => (
+                  <a key={label} href={href} className="footer-link">
+                    {label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div style={{
+            borderTop: '1px solid rgba(255,255,255,0.06)',
+            paddingTop: 20,
+            display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 8,
+          }}>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', margin: 0 }}>
+              © {new Date().getFullYear()} Invitia. All rights reserved.
+            </p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.15)', margin: 0 }}>
+              Built with Next.js
+            </p>
+          </div>
+        </div>
       </footer>
 
     </div>

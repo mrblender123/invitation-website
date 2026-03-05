@@ -352,7 +352,7 @@ function TemplatesContent() {
             {subs.length > 0 && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 40 }}>
                 <button
-                  onClick={() => router.push(`/templates?category=${encodeURIComponent(category!)}`)}
+                  onClick={() => router.replace(`/templates?category=${encodeURIComponent(category!)}`)}
                   style={{
                     padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 500, cursor: 'pointer',
                     border: '1px solid',
@@ -367,7 +367,7 @@ function TemplatesContent() {
                 {subs.map(sub => (
                   <button
                     key={sub}
-                    onClick={() => router.push(`/templates?category=${encodeURIComponent(category!)}&subcategory=${encodeURIComponent(sub)}`)}
+                    onClick={() => router.replace(`/templates?category=${encodeURIComponent(category!)}&subcategory=${encodeURIComponent(sub)}`)}
                     style={{
                       padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 500, cursor: 'pointer',
                       border: '1px solid',
