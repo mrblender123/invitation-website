@@ -1,11 +1,11 @@
 'use client';
 
 const IMAGES = [
-  '/templates/Vach Nacht/009.png',
-  '/templates/Vach Nacht/01111.png',
-  '/templates/Vach Nacht/099.png',
-  '/templates/Vach Nacht/222.png',
-  '/templates/Vach Nacht/333.png',
+  "/templates/It's a boy/Vachnacht/009.png",
+  "/templates/It's a boy/Vachnacht/01111.png",
+  "/templates/It's a boy/Vachnacht/099.png",
+  "/templates/It's a boy/Vachnacht/222.png",
+  "/templates/It's a boy/Vachnacht/333.png",
   '/templates/Vort/22.png',
   '/templates/wedding/001.png',
   '/templates/wedding/002.png',
@@ -16,11 +16,10 @@ const IMAGES = [
 ];
 
 const CARD_W = 160;
-const CARD_H = 224; // 160 × 504/360
+const CARD_H = 224;
 const GAP    = 16;
 
 export default function InvitationCarousel() {
-  // Duplicate once — track = 2× images, animation slides exactly -50% for seamless loop
   const track = [...IMAGES, ...IMAGES];
 
   return (
@@ -35,28 +34,26 @@ export default function InvitationCarousel() {
       {/* Fade edges */}
       <div aria-hidden="true" style={{
         position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2,
-        background: 'linear-gradient(to right, #09090b 0%, transparent 8%, transparent 92%, #09090b 100%)',
+        background: 'linear-gradient(to right, #09090b 0%, transparent 12%, transparent 88%, #09090b 100%)',
       }} />
 
       <div
         className="marquee-track"
-        style={{
-          display: 'flex',
-          gap: GAP,
-          width: 'max-content',
-        }}
+        style={{ display: 'flex', gap: GAP, width: 'max-content' }}
       >
         {track.map((src, i) => (
           <div
             key={i}
             style={{
+              position: 'relative',
               width: CARD_W,
               height: CARD_H,
               flexShrink: 0,
-              borderRadius: 12,
+              borderRadius: 18,
               overflow: 'hidden',
-              border: '1px solid rgba(255,255,255,0.1)',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+              /* liquid glass border */
+              border: '1px solid rgba(255,255,255,0.22)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)',
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -68,6 +65,24 @@ export default function InvitationCarousel() {
               style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
               draggable={false}
             />
+
+            {/* glass sheen overlay */}
+            <div aria-hidden="true" style={{
+              position: 'absolute',
+              inset: 0,
+              borderRadius: 18,
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.03) 40%, transparent 60%)',
+              pointerEvents: 'none',
+            }} />
+
+            {/* specular highlight strip at top */}
+            <div aria-hidden="true" style={{
+              position: 'absolute',
+              top: 0, left: '10%',
+              width: '80%', height: 1,
+              background: 'rgba(255,255,255,0.35)',
+              pointerEvents: 'none',
+            }} />
           </div>
         ))}
       </div>

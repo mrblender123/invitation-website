@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "check-templates": "node scripts/check-templates.mjs"
+    "check-templates": "node scripts/check-templates.mjs",
+    "wrap-svg": "node scripts/wrap-svg.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.97.0",

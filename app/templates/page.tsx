@@ -8,6 +8,7 @@ import InvitationCard from '../components/InvitationCard';
 import SvgCardPreview from '../components/SvgCardPreview';
 import VirtualKeyboard from '../components/VirtualKeyboard';
 import { useAuth } from '../components/AuthProvider';
+import { CATEGORY_SUBS } from '@/lib/categories';
 import type { Template } from '@/lib/templates';
 
 type CartItem = {
@@ -136,7 +137,9 @@ function TemplatesContent() {
   const router = useRouter();
   const { user } = useAuth();
   const searchParams = useSearchParams();
-  const category = searchParams.get('category');
+  const category    = searchParams.get('category');
+  const subcategory = searchParams.get('subcategory');
+  const subs        = category ? (CATEGORY_SUBS[category] ?? []) : [];
 
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loadingTemplates, setLoadingTemplates] = useState(true);
@@ -336,7 +339,7 @@ function TemplatesContent() {
               ← Back
             </button>
 
-            <div style={{ marginBottom: 48 }}>
+            <div style={{ marginBottom: subs.length > 0 ? 24 : 48 }}>
               <p style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 12 }}>
                 {category ?? 'Templates'}
               </p>
@@ -345,12 +348,48 @@ function TemplatesContent() {
               </h1>
             </div>
 
+            {/* Sub-category filter tabs */}
+            {subs.length > 0 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 40 }}>
+                <button
+                  onClick={() => router.push(`/templates?category=${encodeURIComponent(category!)}`)}
+                  style={{
+                    padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 500, cursor: 'pointer',
+                    border: '1px solid',
+                    borderColor: !subcategory ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.12)',
+                    background: !subcategory ? 'rgba(255,255,255,0.1)' : 'transparent',
+                    color: !subcategory ? '#fff' : 'rgba(255,255,255,0.45)',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  All
+                </button>
+                {subs.map(sub => (
+                  <button
+                    key={sub}
+                    onClick={() => router.push(`/templates?category=${encodeURIComponent(category!)}&subcategory=${encodeURIComponent(sub)}`)}
+                    style={{
+                      padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 500, cursor: 'pointer',
+                      border: '1px solid',
+                      borderColor: subcategory === sub ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.12)',
+                      background: subcategory === sub ? 'rgba(255,255,255,0.1)' : 'transparent',
+                      color: subcategory === sub ? '#fff' : 'rgba(255,255,255,0.45)',
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    {sub}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {loadingTemplates ? (
               <div style={{ textAlign: 'center', padding: '80px 0' }}>
                 <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)' }}>Loading templates…</p>
               </div>
             ) : (() => {
-              const filtered = category ? templates.filter(t => t.category === category) : templates;
+              const filtered = (category ? templates.filter(t => t.category === category) : templates)
+                .filter(t => !subcategory || t.subcategory === subcategory);
               return filtered.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '80px 0', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: 20 }}>
                   <p style={{ fontSize: 22, marginBottom: 12 }}>🎨</p>
@@ -407,9 +446,11 @@ function TemplatesContent() {
 
             {(() => {
               const isMobile = windowWidth < 900;
+              const MAX_H = 720; // max display height in editor
+              const scaleByH = MAX_H / selected.style.canvasHeight;
               const cardScale = isMobile
-                ? Math.min(EDITOR_SCALE, (windowWidth - 32) / selected.style.canvasWidth)
-                : EDITOR_SCALE;
+                ? Math.min(scaleByH, (windowWidth - 32) / selected.style.canvasWidth)
+                : Math.min(EDITOR_SCALE, scaleByH);
               return (
             <div style={{
               display: 'grid',
@@ -490,7 +531,13 @@ function TemplatesContent() {
                     {showAllFields ? '− Hide extra fields' : '+ Show all fields'}
                   </button>
                 )}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginBottom: 32 }}>
+                <div style={{
+                  display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32,
+                  maxHeight: 420, overflowY: 'auto', overflowX: 'hidden',
+                  paddingRight: 6,
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: 'rgba(255,255,255,0.12) transparent',
+                }}>
                   {selected.fields ? (
                     selected.fields.filter(f => !f.optional || showAllFields).map(field => {
                       const isActive = activeField?.id === field.id;
@@ -508,7 +555,8 @@ function TemplatesContent() {
                               paddingRight: 30,
                               textAlign: 'center',
                               direction: field.rtl ? 'rtl' : 'ltr',
-                              borderColor: isActive ? 'rgba(255,255,255,0.45)' : undefined,
+                                  borderColor: isActive ? 'rgba(255,255,255,0.45)' : field.optional ? 'rgba(160,130,70,0.4)' : undefined,
+                              background: field.optional ? 'rgba(140,110,50,0.07)' : '#09090b',
                             }}
                             placeholder={clearedFields.has(field.id) ? '' : field.placeholder}
                             value={fieldValues[field.id] ?? ''}
@@ -521,40 +569,38 @@ function TemplatesContent() {
                               }
                             }}
                           />
-                          {/* Clear / Reload — visible only when active or hovered */}
-                          {(isActive || hoveredField === field.id) && (
-                            <button
-                              onMouseDown={e => {
-                                e.preventDefault();
-                                if (clearedFields.has(field.id)) {
-                                  setFieldValues(v => ({ ...v, [field.id]: field.placeholder }));
-                                  setClearedFields(s => { const n = new Set(s); n.delete(field.id); return n; });
-                                } else {
-                                  setFieldValues(v => ({ ...v, [field.id]: '' }));
-                                  setClearedFields(s => new Set(s).add(field.id));
-                                }
-                              }}
-                              title={clearedFields.has(field.id) ? 'Restore default' : 'Clear field'}
-                              style={{
-                                position: 'absolute',
-                                left: 8,
-                                top: '50%',
-                                transform: 'translateY(-50%)',
-                                width: 16, height: 16,
-                                borderRadius: '50%',
-                                border: 'none',
-                                background: 'none',
-                                color: clearedFields.has(field.id) ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.25)',
-                                fontSize: 14,
-                                cursor: 'pointer',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                padding: 0,
-                                lineHeight: 1,
-                              }}
-                            >
-                              {clearedFields.has(field.id) ? '↺' : '×'}
-                            </button>
-                          )}
+                          {/* Clear / Reload — always visible */}
+                          <button
+                            onMouseDown={e => {
+                              e.preventDefault();
+                              if (clearedFields.has(field.id)) {
+                                setFieldValues(v => ({ ...v, [field.id]: field.placeholder }));
+                                setClearedFields(s => { const n = new Set(s); n.delete(field.id); return n; });
+                              } else {
+                                setFieldValues(v => ({ ...v, [field.id]: '' }));
+                                setClearedFields(s => new Set(s).add(field.id));
+                              }
+                            }}
+                            title={clearedFields.has(field.id) ? 'Restore default' : 'Clear field'}
+                            style={{
+                              position: 'absolute',
+                              left: 8,
+                              top: '50%',
+                              transform: 'translateY(-50%)',
+                              width: 16, height: 16,
+                              borderRadius: '50%',
+                              border: 'none',
+                              background: 'none',
+                              color: '#fff',
+                              fontSize: 14,
+                              cursor: 'pointer',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              padding: 0,
+                              lineHeight: 1,
+                            }}
+                          >
+                            {clearedFields.has(field.id) ? '↺' : '×'}
+                          </button>
                         </div>
                         {isActive && (
                           <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 50 }}>

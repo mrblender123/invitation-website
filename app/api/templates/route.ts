@@ -2,9 +2,11 @@ import { NextResponse } from 'next/server';
 import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 import type { Template, SvgField } from '@/lib/templates';
+import { FOLDER_TO_CATEGORY } from '@/lib/categories';
 
-/** "bar-mitzvah" → "Bar Mitzvah" */
+/** "bar-mitzvah" → "Bar Mitzvah", with override map for special chars */
 function folderToCategory(folder: string): string {
+  if (FOLDER_TO_CATEGORY[folder]) return FOLDER_TO_CATEGORY[folder];
   return folder.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
@@ -80,36 +82,71 @@ export async function GET() {
       const folder     = entry.name;
       const category   = folderToCategory(folder);
       const folderPath = path.join(templatesDir, folder);
-      const files      = await readdir(folderPath);
+      const files      = await readdir(folderPath, { withFileTypes: true });
 
-      // Pair each image with its SVG (same stem)
-      const imageFiles = files
-        .filter(f => /\.(png|jpg|jpeg)$/i.test(f))
-        .sort();
+      // Check if this folder contains sub-folders (sub-categories)
+      const subDirs  = files.filter(f => f.isDirectory());
+      const imgFiles = files.filter(f => !f.isDirectory() && /\.(png|jpg|jpeg)$/i.test(f.name));
 
-      for (const imgFile of imageFiles) {
-        const stem    = imgFile.replace(/\.(png|jpg|jpeg)$/i, '');
-        const svgFile = files.find(f => f.toLowerCase() === `${stem.toLowerCase()}.svg`);
+      if (subDirs.length > 0) {
+        // 2-level structure: category/subcategory/images
+        for (const subDir of subDirs.sort((a, b) => a.name.localeCompare(b.name))) {
+          const subcategory   = subDir.name.trim(); // trim any accidental leading/trailing spaces
+          const subFolderPath = path.join(folderPath, subDir.name);
+          const subFiles      = await readdir(subFolderPath);
+          const subImgFiles   = subFiles.filter(f => /\.(png|jpg|jpeg)$/i.test(f)).sort();
 
-        const id           = `${folder}-${stem}`;
-        const thumbnailSrc = `/templates/${folder}/${imgFile}`;
+          for (const imgFile of subImgFiles) {
+            const stem    = imgFile.replace(/\.(png|jpg|jpeg)$/i, '');
+            const svgFile = subFiles.find(f => f.toLowerCase() === `${stem.toLowerCase()}.svg`);
+            const id           = `${folder}-${subDir.name}-${stem}`;
+            const thumbnailSrc = `/templates/${folder}/${subDir.name}/${imgFile}`;
 
-        let svgData: Partial<Template> = { style: { canvasWidth: 444, canvasHeight: 630 } };
+            let svgData: Partial<Template> = { style: { canvasWidth: 444, canvasHeight: 630 } };
+            if (svgFile) {
+              const svgPath   = path.join(subFolderPath, svgFile);
+              const svgPublic = `/templates/${folder}/${subDir.name}/${svgFile}`;
+              const content   = await readFile(svgPath, 'utf-8');
+              svgData = parseSvg(content, svgPublic);
+            }
 
-        if (svgFile) {
-          const svgPath   = path.join(folderPath, svgFile);
-          const svgPublic = `/templates/${folder}/${svgFile}`;
-          const content   = await readFile(svgPath, 'utf-8');
-          svgData = parseSvg(content, svgPublic);
+            templates.push({
+              id,
+              name: stemToName(stem),
+              category,
+              subcategory,
+              thumbnailSrc,
+              ...svgData,
+            } as Template);
+          }
         }
+      } else {
+        // Flat structure: category/images (legacy / no sub-categories)
+        const flatImgFiles = imgFiles.map(f => f.name).sort();
+        const flatFileNames = files.map(f => f.name);
 
-        templates.push({
-          id,
-          name: stemToName(stem),
-          category,
-          thumbnailSrc,
-          ...svgData,
-        } as Template);
+        for (const imgFile of flatImgFiles) {
+          const stem    = imgFile.replace(/\.(png|jpg|jpeg)$/i, '');
+          const svgFile = flatFileNames.find(f => f.toLowerCase() === `${stem.toLowerCase()}.svg`);
+          const id           = `${folder}-${stem}`;
+          const thumbnailSrc = `/templates/${folder}/${imgFile}`;
+
+          let svgData: Partial<Template> = { style: { canvasWidth: 444, canvasHeight: 630 } };
+          if (svgFile) {
+            const svgPath   = path.join(folderPath, svgFile);
+            const svgPublic = `/templates/${folder}/${svgFile}`;
+            const content   = await readFile(svgPath, 'utf-8');
+            svgData = parseSvg(content, svgPublic);
+          }
+
+          templates.push({
+            id,
+            name: stemToName(stem),
+            category,
+            thumbnailSrc,
+            ...svgData,
+          } as Template);
+        }
       }
     }
 

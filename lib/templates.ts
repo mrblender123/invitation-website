@@ -25,6 +25,7 @@ export type Template = {
   id: string;
   name: string;
   category: string;
+  subcategory?: string;
   thumbnailSrc: string;
   textSvg?: string;    // path to SVG text overlay in /public/templates/{category}/
   fields?: SvgField[]; // auto-discovered from SVG <g id> elements

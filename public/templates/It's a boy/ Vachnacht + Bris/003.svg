@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 864 1216">
+
+  <!-- EDITABLE: invitation body text -->
+  <g id="body_praise*" opacity=".6">
+    <text transform="translate(312 303.4) rotate(.4) scale(.9 1)" fill="#415d72" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="25.5"><tspan x="0" y="0">ברוב שבח והודאה להשי״ת</tspan></text>
+  </g>
+  <g id="body_birth*" opacity=".6">
+    <text transform="translate(292.1 346.3) rotate(.4) scale(.9 1)" fill="#415d72" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="34.3"><tspan x="0" y="0">בהולדת בני נ״י למזל טוב</tspan></text>
+  </g>
+  <g id="body_invite_right*" opacity=".6">
+    <text transform="translate(295.4 378.7) rotate(.4) scale(.9 1)" fill="#415d72" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="13.7"><tspan x="0" y="0">אתכבד בזה להזמין את כל</tspan></text>
+  </g>
+  <g id="body_invite_left*" opacity=".6">
+    <text transform="translate(437.6 380.7) rotate(.4) scale(.9 1)" fill="#415d72" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="13.7"><tspan x="0" y="0">מע''כ לבוא להשתתף בשמחת</tspan></text>
+  </g>
+
+  <!-- EDITABLE: Vach Nacht header -->
+  <g id="vachnacht_header*" opacity=".6">
+    <text transform="translate(256 495.1) rotate(.4) scale(.9 1)" fill="#415d72" font-family="forma-djr-hebrew-banner" font-size="130" font-weight="400" letter-spacing="-5"><tspan x="0" y="0">וואך נאכט</tspan></text>
+  </g>
+
+  <!-- EDITABLE: Vachnacht date -->
+  <g id="vachnacht_date" opacity=".6">
+    <text transform="translate(361.1 549.7) rotate(.4) scale(.9 1)" fill="#415d72" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="13.7"><tspan x="0" y="0">שתתקיים אי''ה למחרתו ביום ה׳</tspan></text>
+  </g>
+
+  <!-- EDITABLE: "at the home of" -->
+  <g id="at_home_of*" opacity=".6">
+    <text transform="translate(399.6 572) rotate(.4) scale(.9 1)" fill="#415d72" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="18"><tspan x="0" y="0">בבית מו״ח</tspan></text>
+  </g>
+
+  <!-- EDITABLE: Vachnacht address -->
+  <g id="vachnacht_address" opacity=".6">
+    <text transform="translate(372.3 591.8) rotate(.4) scale(.9 1)" fill="#415d72" font-family="Arvo, Arvo" font-size="13.7"><tspan x="0" y="0">2267 56TH STREET</tspan></text>
+  </g>
+
+  <!-- EDITABLE: Bris Milah header -->
+  <g id="bris_header*" opacity=".6">
+    <text transform="translate(369.3 634.2) rotate(.4) scale(.9 1)" fill="#415d72" font-family="forma-djr-hebrew-banner" font-size="39.5" font-weight="400" letter-spacing="-1.5"><tspan x="0" y="0">ברית מילה</tspan></text>
+  </g>
+
+  <!-- EDITABLE: Bris date -->
+  <g id="bris_date" opacity=".6">
+    <text transform="translate(361.8 662.2) rotate(.4) scale(.9 1)" fill="#415d72" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="13.7"><tspan x="0" y="0">שתתקיים אי''ה למחרתו ביום ה׳</tspan></text>
+  </g>
+
+  <!-- EDITABLE: Bris location -->
+  <g id="bris_location" opacity=".6">
+    <text transform="translate(377.7 682.2) rotate(.4) scale(.9 1)" fill="#415d72" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="13.7"><tspan x="0" y="0">בביהמ''ד נחלת סקווירא</tspan></text>
+  </g>
+
+  <!-- EDITABLE: "awaiting to welcome you" -->
+  <g id="awaiting_you*" opacity=".6">
+    <text transform="translate(374.8 737.8) rotate(.4) scale(.9 1)" fill="#415d72" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="17.2"><tspan x="0" y="0">המצפה לקבל פניכם</tspan></text>
+  </g>
+
+  <!-- EDITABLE: Father name (large) -->
+  <g id="father_name" opacity=".6">
+    <text transform="translate(349 782.8) rotate(.4) scale(.9 1)" fill="#415d72" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="36"><tspan x="0" y="0">מרדכי ראטה</tspan></text>
+  </g>
+
+  <!-- EDITABLE: Host name -->
+  <g id="host_name" opacity=".6">
+    <text transform="translate(410 799.6) rotate(.4) scale(.9 1)" fill="#415d72" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="9"><tspan x="0" y="0">ב"ר שלמה הי"ו</tspan></text>
+  </g>
+
+  <!-- EDITABLE: Grandfather name -->
+  <g id="grandfather_name" opacity=".6">
+    <text transform="translate(396.2 811.3) rotate(.4) scale(.9 1)" fill="#415d72" font-family="GveretLevinAlefAlefAlef-Regular, &apos;Gveret Levin AlefAlefAlef&apos;" font-size="9"><tspan x="0" y="0">חתן ר' זרח ניישטיין הי"ו</tspan></text>
+  </g>
+
+</svg>

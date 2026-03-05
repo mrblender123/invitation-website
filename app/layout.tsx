@@ -52,6 +52,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable}`}>
+      <head>
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link rel="stylesheet" href="https://use.typekit.net/hat2kft.css" />
+      </head>
       <body className="antialiased"><AuthProvider>{children}</AuthProvider></body>
     </html>
   );
