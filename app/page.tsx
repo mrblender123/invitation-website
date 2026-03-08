@@ -43,12 +43,14 @@ export default function Home() {
         </p>
 
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <SimchaSelector />
+          <SimchaSelector scrollTo="categories" />
         </div>
       </section>
 
 
-      <CategoryGrid />
+      <div id="categories">
+        <CategoryGrid />
+      </div>
 
       {/* Features */}
       <section id="features" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px 120px', position: 'relative', zIndex: 1 }}>
@@ -153,7 +155,6 @@ export default function Home() {
                 {[
                   { label: 'Templates', href: '/templates' },
                   { label: 'Studio', href: '/studio' },
-                  { label: 'Cart', href: '/cart' },
                 ].map(({ label, href }) => (
                   <a key={label} href={href} className="footer-link">
                     {label}

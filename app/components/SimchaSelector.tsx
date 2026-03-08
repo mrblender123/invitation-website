@@ -7,6 +7,7 @@ interface SimchaSelectorProps {
   forceOpen?: boolean;
   onClose?: () => void;
   hideButton?: boolean;
+  scrollTo?: string; // element id to scroll to instead of opening modal
 }
 
 const SIMCHAS = [
@@ -56,7 +57,7 @@ function SimchaCard({ simcha, onClick }: { simcha: typeof SIMCHAS[0]; onClick: (
   );
 }
 
-export default function SimchaSelector({ forceOpen, onClose, hideButton }: SimchaSelectorProps = {}) {
+export default function SimchaSelector({ forceOpen, onClose, hideButton, scrollTo }: SimchaSelectorProps = {}) {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false); // controls CSS transition
   const bloomRef = useRef<HTMLDivElement>(null);
@@ -109,7 +110,9 @@ export default function SimchaSelector({ forceOpen, onClose, hideButton }: Simch
           className="silver-btn"
           style={{ padding: '1.1rem 3.5rem', fontSize: '1.05rem' }}
           onMouseDown={triggerBloom}
-          onClick={openModal}
+          onClick={scrollTo
+            ? () => { triggerBloom(); document.getElementById(scrollTo)?.scrollIntoView({ behavior: 'smooth' }); }
+            : openModal}
         >
           Let&apos;s Get Started
         </button>

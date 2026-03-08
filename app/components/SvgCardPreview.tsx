@@ -184,6 +184,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
           {/* SVG text overlay */}
           {injectedSvg && (
             <div
+              data-svg-overlay="true"
               style={{
                 position: 'absolute',
                 inset: 0,

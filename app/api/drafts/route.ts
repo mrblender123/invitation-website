@@ -21,14 +21,19 @@ export async function POST(req: NextRequest) {
       .select('token')
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('[drafts] Supabase insert error:', error);
+      return NextResponse.json({ error: `DB error: ${error.message}` }, { status: 500 });
+    }
 
     const token = data.token as string;
     const draftUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://invitia.co'}/draft/${token}`;
 
+    console.log('[drafts] Sending email to:', email, 'url:', draftUrl);
+
     // Send email via Resend
-    await resend.emails.send({
-      from: 'Invitia <noreply@invitia.co>',
+    const { data: emailData, error: emailError } = await resend.emails.send({
+      from: process.env.RESEND_FROM ?? 'Invitia <onboarding@resend.dev>',
       to: email,
       subject: 'Your invitation draft is saved',
       html: `
@@ -48,6 +53,12 @@ export async function POST(req: NextRequest) {
       `,
     });
 
+    if (emailError) {
+      console.error('[drafts] Resend error:', emailError);
+      return NextResponse.json({ error: `Email error: ${emailError.message}` }, { status: 500 });
+    }
+
+    console.log('[drafts] Email sent, id:', emailData?.id);
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('[POST /api/drafts]', err);

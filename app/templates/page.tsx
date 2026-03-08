@@ -11,18 +11,92 @@ import { useAuth } from '../components/AuthProvider';
 import { CATEGORY_SUBS, SUB_DISPLAY_NAMES } from '@/lib/categories';
 import type { Template } from '@/lib/templates';
 
-type CartItem = {
-  id: string;
-  templateId: string;
-  templateName: string;
-  category: string;
-  thumbnailSrc: string;
-  fieldValues: Record<string, string>;
-  savedAt: number;
-};
-
 const THUMB_TARGET_H = 264;
 const EDITOR_SCALE = 1.15;
+
+/**
+ * Draws SVG <text> elements directly onto a canvas using ctx.fillText().
+ * This uses the browser's loaded font system (including Typekit), unlike
+ * drawing SVG as <img> which is sandboxed and can't access external fonts.
+ */
+function renderSvgTextToCanvas(
+  ctx: CanvasRenderingContext2D,
+  svgEl: SVGElement,
+  canvasWidth: number,
+  canvasHeight: number,
+) {
+  const vbParts = (svgEl.getAttribute('viewBox') ?? '').trim().split(/[\s,]+/).map(Number);
+  const svgW = vbParts[2] > 0 ? vbParts[2] : canvasWidth;
+  const svgH = vbParts[3] > 0 ? vbParts[3] : canvasHeight;
+  const kx = canvasWidth / svgW;
+  const ky = canvasHeight / svgH;
+
+  function parseTransform(t: string) {
+    const txM = t.match(/translate\(\s*([\d.+-]+)(?:[,\s]+([\d.+-]+))?\s*\)/);
+    const rotM = t.match(/rotate\(\s*([\d.+-]+)/);
+    const scM  = t.match(/scale\(\s*([\d.+-]+)(?:[,\s]+([\d.+-]+))?\s*\)/);
+    return {
+      tx:  txM ? parseFloat(txM[1]) : 0,
+      ty:  txM?.[2] ? parseFloat(txM[2]) : 0,
+      rot: rotM ? parseFloat(rotM[1]) * Math.PI / 180 : 0,
+      sx:  scM ? parseFloat(scM[1]) : 1,
+      sy:  scM?.[2] ? parseFloat(scM[2]) : (scM ? parseFloat(scM[1]) : 1),
+    };
+  }
+
+  for (const textEl of Array.from(svgEl.querySelectorAll('text'))) {
+    // Accumulate opacity up through parent groups
+    let opacity = 1;
+    let node: Element | null = textEl;
+    while (node && node !== svgEl) {
+      const op = (node as SVGElement).getAttribute('opacity');
+      if (op !== null) opacity *= parseFloat(op);
+      node = node.parentElement;
+    }
+    if (opacity <= 0) continue;
+
+    const rawFamily = (textEl.getAttribute('font-family') ?? 'sans-serif')
+      .replace(/['"]/g, '').split(',')[0].trim();
+    const fontSize   = parseFloat(textEl.getAttribute('font-size')   ?? '12');
+    const fontWeight = textEl.getAttribute('font-weight') ?? '400';
+    const fill       = textEl.getAttribute('fill')        ?? '#000';
+    const anchor     = textEl.getAttribute('text-anchor') ?? 'start';
+    const ls         = parseFloat(textEl.getAttribute('letter-spacing') ?? '0');
+
+    const { tx, ty, rot, sx, sy } = parseTransform(textEl.getAttribute('transform') ?? '');
+
+    let currentY = 0;
+    for (const tspan of Array.from(textEl.querySelectorAll('tspan'))) {
+      const text = tspan.textContent ?? '';
+      if (!text) continue;
+
+      const xAttr  = tspan.getAttribute('x');
+      const yAttr  = tspan.getAttribute('y');
+      const dyAttr = tspan.getAttribute('dy');
+      const x = xAttr  !== null ? parseFloat(xAttr)  : 0;
+      if (yAttr  !== null) currentY = parseFloat(yAttr);
+      if (dyAttr !== null) currentY += parseFloat(dyAttr);
+
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      ctx.scale(kx, ky);
+      ctx.translate(tx, ty);
+      if (rot) ctx.rotate(rot);
+      ctx.scale(sx, sy);
+
+      ctx.font         = `${fontWeight} ${fontSize}px "${rawFamily}"`;
+      ctx.fillStyle    = fill;
+      ctx.textAlign    = anchor === 'middle' ? 'center' : anchor === 'end' ? 'right' : 'left';
+      ctx.textBaseline = 'alphabetic';
+      if (!isNaN(ls) && 'letterSpacing' in ctx) {
+        (ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${ls}px`;
+      }
+
+      ctx.fillText(text, x, currentY);
+      ctx.restore();
+    }
+  }
+}
 
 function TemplateThumbnail({ template, onClick, targetW }: { template: Template; onClick: () => void; targetW?: number }) {
   const [hovered, setHovered] = useState(false);
@@ -149,9 +223,7 @@ function TemplatesContent() {
   const [activeField, setActiveField] = useState<{ id: string; rtl: boolean } | null>(null);
   const [clearedFields, setClearedFields] = useState<Set<string>>(new Set());
   const [hoveredField, setHoveredField] = useState<string | null>(null);
-  const [cartCount, setCartCount] = useState(0);
-  const [savedToCart, setSavedToCart] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(1200);
+const [windowWidth, setWindowWidth] = useState(1200);
   const [showAllFields, setShowAllFields] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -167,14 +239,6 @@ function TemplatesContent() {
     update();
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
-  }, []);
-
-  // Read initial cart count from localStorage
-  useEffect(() => {
-    const raw = localStorage.getItem('invitia-cart');
-    if (raw) {
-      try { setCartCount(JSON.parse(raw).length); } catch {}
-    }
   }, []);
 
   // Fetch templates from the API (auto-discovered from public/templates/*/)
@@ -213,7 +277,40 @@ function TemplatesContent() {
   };
 
   const generateBlob = async (): Promise<Blob | null> => {
-    if (!cardRef.current) return null;
+    if (!cardRef.current || !selected) return null;
+
+    // SVG templates: bypass html2canvas (can't access cross-origin Typekit font).
+    // Instead, composite the PNG background + SVG overlay on a native canvas.
+    if (selected.textSvg) {
+      const { canvasWidth, canvasHeight } = selected.style;
+      const canvas = document.createElement('canvas');
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+      const ctx = canvas.getContext('2d')!;
+
+      // 1. Draw PNG background
+      await new Promise<void>(resolve => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => { ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight); resolve(); };
+        img.onerror = () => resolve();
+        img.src = selected.thumbnailSrc;
+      });
+
+      // 2. Draw text directly using canvas API — uses the browser's loaded fonts
+      //    (SVG-as-img is sandboxed and can't access Typekit)
+      await document.fonts.ready;
+      const overlayDiv = cardRef.current.querySelector('[data-svg-overlay="true"]');
+      const svgEl = overlayDiv?.querySelector('svg');
+      if (svgEl) {
+        renderSvgTextToCanvas(ctx, svgEl as SVGElement, canvasWidth, canvasHeight);
+      }
+
+      return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    }
+
+    // Legacy (non-SVG) templates: use html2canvas
+    await document.fonts.ready;
     const canvas = await html2canvas(cardRef.current, { useCORS: true, scale: 2 });
     return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
   };
@@ -235,8 +332,38 @@ function TemplatesContent() {
     }
   };
 
-  const handleSaveForLater = () => {
+  const handleSaveForLater = async () => {
     if (!selected) return;
+
+    // Logged-in: skip modal, send directly using their account email
+    if (user?.email) {
+      setDraftSending(true);
+      setDraftError('');
+      try {
+        const res = await fetch('/api/drafts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ templateId: selected.id, fieldValues, email: user.email }),
+        });
+        if (!res.ok) {
+          const d = await res.json();
+          setDraftError(d.error ?? 'Something went wrong.');
+          setShowDraftModal(true);
+        } else {
+          setDraftEmail(user.email);
+          setDraftSent(true);
+          setShowDraftModal(true);
+        }
+      } catch {
+        setDraftError('Network error. Please try again.');
+        setShowDraftModal(true);
+      } finally {
+        setDraftSending(false);
+      }
+      return;
+    }
+
+    // Not logged in: show email modal
     setDraftEmail('');
     setDraftSent(false);
     setDraftError('');
@@ -312,30 +439,7 @@ function TemplatesContent() {
           <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none' }}>
             Invitia
           </Link>
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            {cartCount > 0 && (
-              <Link
-                href="/cart"
-                style={{
-                  position: 'relative',
-                  display: 'flex', alignItems: 'center', gap: 6,
-                  color: 'rgba(255,255,255,0.65)', fontSize: 22,
-                  textDecoration: 'none',
-                }}
-              >
-                🛒
-                <span style={{
-                  position: 'absolute', top: -6, right: -8,
-                  background: '#f0d060', color: '#1a1200',
-                  fontSize: 10, fontWeight: 700,
-                  width: 16, height: 16, borderRadius: '50%',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>
-                  {cartCount}
-                </span>
-              </Link>
-            )}
-          </nav>
+          <nav style={{ display: 'flex', alignItems: 'center', gap: 16 }} />
         </div>
       </header>
 
@@ -800,7 +904,6 @@ function TemplatesContent() {
                 <h2 style={{ fontSize: 20, fontWeight: 700, color: '#fff', margin: '0 0 8px' }}>Save your draft</h2>
                 <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', margin: '0 0 28px', lineHeight: 1.6 }}>
                   Enter your email and we&apos;ll send you a link to continue editing.
-                  The link expires after <strong style={{ color: '#f0d060' }}>7 days</strong>.
                 </p>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
