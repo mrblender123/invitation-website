@@ -82,6 +82,7 @@ function injectFieldValues(
     // For positioned designs: keep placeholder at original SVG position,
     // but center once the user has typed a value (avoids RTL overflow).
     if (originalAnchor !== 'middle' && !hasUserValue) continue;
+    if (textEl.getAttribute('data-no-center') === 'true') continue;
 
     textEl.setAttribute('text-anchor', 'middle');
 
