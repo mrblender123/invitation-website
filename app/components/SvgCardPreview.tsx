@@ -76,11 +76,12 @@ function injectFieldValues(
     if (svgWidth <= 0 || tspanCount > 1) continue;
 
     const originalAnchor = textEl.getAttribute('text-anchor') ?? 'start';
+    const hasUserValue = value !== undefined && value !== '';
 
-    // Only auto-center text that was explicitly designed as centered (text-anchor="middle").
-    // For left/start-anchored text, keep the original transform so deliberately
-    // off-center designs render exactly as the designer intended.
-    if (originalAnchor !== 'middle') continue;
+    // For explicitly-centered designs (text-anchor="middle"): always re-center.
+    // For positioned designs: keep placeholder at original SVG position,
+    // but center once the user has typed a value (avoids RTL overflow).
+    if (originalAnchor !== 'middle' && !hasUserValue) continue;
 
     const transform = textEl.getAttribute('transform') ?? '';
     const rotateMatch = transform.match(/rotate\(\s*([\d.+-]+)/);
