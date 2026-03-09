@@ -94,21 +94,19 @@ function injectFieldValues(
     textEl.setAttribute('text-anchor', 'middle');
 
     const transform = textEl.getAttribute('transform') ?? '';
-    const rotateMatch = transform.match(/rotate\(\s*([\d.+-]+)/);
-    const rotation = rotateMatch ? Math.abs(parseFloat(rotateMatch[1])) : 0;
-    const sxMatch = transform.match(/scale\(\s*([\d.+-]+)/);
-    const sx = sxMatch ? parseFloat(sxMatch[1]) : 1;
+    const fontFamily = textEl.getAttribute('font-family') ?? 'sans-serif';
+    const fontSize = parseFloat(textEl.getAttribute('font-size') ?? '12');
 
-    if (rotation < 2) {
-      // Non-rotated centered text: keep centered at the card's horizontal midpoint
+    if (originalAnchor === 'middle') {
+      // Explicitly centered design: keep text at the card's horizontal midpoint.
+      const sxMatch = transform.match(/scale\(\s*([\d.+-]+)/);
+      const sx = sxMatch ? parseFloat(sxMatch[1]) : 1;
       const txMatch = transform.match(/translate\(\s*([\d.+-]+)/);
       const tx = txMatch ? parseFloat(txMatch[1]) : 0;
       const localCenterX = sx > 0 ? (svgWidth / 2 - tx) / sx : svgWidth / 2;
       tspan.setAttribute('x', String(Math.round(localCenterX * 10) / 10));
     } else {
-      // Rotated centered text: keep new text centered at the same canvas point as the original.
-      const fontFamily = textEl.getAttribute('font-family') ?? 'sans-serif';
-      const fontSize = parseFloat(textEl.getAttribute('font-size') ?? '12');
+      // Positioned design: center new text at the same point as the original placeholder.
       const originalWidth = measureTextWidth(originalText, fontFamily, fontSize);
       const localCenterX = originalWidth / 2;
       tspan.setAttribute('x', String(Math.round(localCenterX * 10) / 10));
