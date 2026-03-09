@@ -67,8 +67,13 @@ function injectFieldValues(
     const value = values[field.id];
     if (value === undefined) continue;
 
-    // Capture original text BEFORE overwriting (needed to compute original center)
+    // Capture original SVG text before any mutation
     const originalText = (tspan.textContent ?? '').trim();
+
+    // If value matches the original SVG placeholder text, leave the field completely
+    // untouched — let the SVG render at its designed position with no adjustments.
+    if (value === originalText) continue;
+
     tspan.textContent = value; // '' clears the text
 
     // Skip multi-tspan elements — centering logic only handles single-tspan fields
@@ -76,11 +81,10 @@ function injectFieldValues(
     if (svgWidth <= 0 || tspanCount > 1) continue;
 
     const originalAnchor = textEl.getAttribute('text-anchor') ?? 'start';
-    const hasUserValue = value !== undefined && value !== '';
+    const hasUserValue = value !== '';
 
     // For explicitly-centered designs (text-anchor="middle"): always re-center.
-    // For positioned designs: keep placeholder at original SVG position,
-    // but center once the user has typed a value (avoids RTL overflow).
+    // For positioned designs: keep at original SVG position until user types something.
     if (originalAnchor !== 'middle' && !hasUserValue) continue;
 
     textEl.setAttribute('text-anchor', 'middle');
