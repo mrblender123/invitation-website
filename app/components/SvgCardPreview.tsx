@@ -83,6 +83,8 @@ function injectFieldValues(
     // but center once the user has typed a value (avoids RTL overflow).
     if (originalAnchor !== 'middle' && !hasUserValue) continue;
 
+    textEl.setAttribute('text-anchor', 'middle');
+
     const transform = textEl.getAttribute('transform') ?? '';
     const rotateMatch = transform.match(/rotate\(\s*([\d.+-]+)/);
     const rotation = rotateMatch ? Math.abs(parseFloat(rotateMatch[1])) : 0;
