@@ -2,9 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: NextRequest) {
+  const resend = new Resend(process.env.RESEND_API_KEY ?? '');
   try {
     const { templateId, fieldValues, email } = await req.json();
 
@@ -27,13 +26,13 @@ export async function POST(req: NextRequest) {
     }
 
     const token = data.token as string;
-    const draftUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://invitia.co'}/draft/${token}`;
+    const draftUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://pintle.co'}/draft/${token}`;
 
     console.log('[drafts] Sending email to:', email, 'url:', draftUrl);
 
     // Send email via Resend
     const { data: emailData, error: emailError } = await resend.emails.send({
-      from: process.env.RESEND_FROM ?? 'Invitia <onboarding@resend.dev>',
+      from: process.env.RESEND_FROM ?? 'Pintle <onboarding@resend.dev>',
       to: email,
       subject: 'Your invitation draft is saved',
       html: `
