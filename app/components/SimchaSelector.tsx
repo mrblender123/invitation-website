@@ -49,7 +49,7 @@ function SimchaCard({ simcha, onClick }: { simcha: typeof SIMCHAS[0]; onClick: (
         width: '100%',
       }}
     >
-      <span style={{ fontSize: simcha.icon === '13' ? 22 : 26, fontFamily: simcha.icon === '13' ? 'var(--font-playfair)' : undefined, fontWeight: simcha.icon === '13' ? 700 : undefined, lineHeight: 1 }}>{simcha.icon}</span>
+      <span style={{ fontSize: simcha.icon === '13' ? 22 : 26, fontFamily: simcha.icon === '13' ? 'var(--font-playfair)' : undefined, fontWeight: simcha.icon === '13' ? 700 : undefined, lineHeight: 1, display: 'inline-block', transform: hovered ? 'scale(1.35) rotate(-8deg)' : 'scale(1) rotate(0deg)', transition: 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)' }}>{simcha.icon}</span>
       <span style={{ fontFamily: 'var(--font-playfair)', fontSize: 13, fontWeight: 700, letterSpacing: '-0.01em', lineHeight: 1.3 }}>
         {simcha.label}
       </span>

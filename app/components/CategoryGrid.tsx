@@ -40,12 +40,15 @@ function CategoryCard({ category }: { category: typeof CATEGORIES[0] }) {
       }}
     >
       <span style={{
-        fontSize: category.icon === '13' ? 28 : 36,
+        fontSize: category.icon === '13' ? 40 : 52,
         fontFamily: category.icon === '13' ? 'var(--font-playfair)' : undefined,
         fontWeight: category.icon === '13' ? 700 : undefined,
         color: category.icon === '13' ? '#fff' : undefined,
         marginBottom: 14,
         lineHeight: 1,
+        display: 'inline-block',
+        transform: hovered ? 'scale(1.35) rotate(-8deg)' : 'scale(1) rotate(0deg)',
+        transition: 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
       }}>
         {category.icon}
       </span>

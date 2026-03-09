@@ -22,9 +22,9 @@ export default function LandingHeader() {
           Invitia
         </Link>
         <nav className="landing-nav" style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-          <a href="#features" className="nav-features" style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', textDecoration: 'none' }}>
+          <Link href="/about" style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', textDecoration: 'none' }}>
             About
-          </a>
+          </Link>
 {!loading && user && <UserMenu />}
         </nav>
       </div>

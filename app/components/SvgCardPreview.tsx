@@ -113,10 +113,10 @@ function injectFieldValues(
     const style = doc.createElementNS('http://www.w3.org/2000/svg', 'style');
     style.textContent = `
       [data-field-state="active"] text {
-        filter: drop-shadow(0 0 6px rgba(255,240,100,0.9)) drop-shadow(0 0 2px rgba(255,255,255,0.8));
+        filter: drop-shadow(0 0 3px rgba(255,255,255,0.35));
       }
       [data-field-state="other"] {
-        opacity: 0.15;
+        opacity: 0.3;
         transition: opacity 0.25s;
       }
     `;
