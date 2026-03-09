@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+  <g id="address" opacity=".6">
+    <text transform="translate(204.7 483.1) rotate(.4) scale(.9 1)" fill="#fff" font-family="'Secular One'" font-size="11"><tspan x="0" y="0">2267 56TH STREET</tspan></text>
+  </g>
+  <g id="father_name" opacity=".6">
+    <text transform="translate(204.3 468.5) rotate(.4) scale(.9 1)" fill="#fff" font-family="'Secular One'" font-size="30.5"><tspan x="0" y="0">מרדכי ראטה</tspan></text>
+  </g>
+  <g id="awaiting_you*" opacity=".6">
+    <text transform="translate(242.1 444.3) rotate(.4) scale(.9 1)" fill="#fff" font-family="'Gveret Levin AlefAlefAlef'" font-size="14.5"><tspan x="0" y="0">המצפה לקבל פניכם</tspan></text>
+  </g>
+</svg>
