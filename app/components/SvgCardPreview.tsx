@@ -75,25 +75,27 @@ function injectFieldValues(
     const tspanCount = textEl.querySelectorAll('tspan').length;
     if (svgWidth <= 0 || tspanCount > 1) continue;
 
+    const originalAnchor = textEl.getAttribute('text-anchor') ?? 'start';
+
+    // Only auto-center text that was explicitly designed as centered (text-anchor="middle").
+    // For left/start-anchored text, keep the original transform so deliberately
+    // off-center designs render exactly as the designer intended.
+    if (originalAnchor !== 'middle') continue;
+
     const transform = textEl.getAttribute('transform') ?? '';
     const rotateMatch = transform.match(/rotate\(\s*([\d.+-]+)/);
     const rotation = rotateMatch ? Math.abs(parseFloat(rotateMatch[1])) : 0;
     const sxMatch = transform.match(/scale\(\s*([\d.+-]+)/);
     const sx = sxMatch ? parseFloat(sxMatch[1]) : 1;
 
-    textEl.setAttribute('text-anchor', 'middle');
-
     if (rotation < 2) {
-      // Non-rotated text: center at the card's horizontal midpoint
+      // Non-rotated centered text: keep centered at the card's horizontal midpoint
       const txMatch = transform.match(/translate\(\s*([\d.+-]+)/);
       const tx = txMatch ? parseFloat(txMatch[1]) : 0;
       const localCenterX = sx > 0 ? (svgWidth / 2 - tx) / sx : svgWidth / 2;
       tspan.setAttribute('x', String(Math.round(localCenterX * 10) / 10));
     } else {
-      // Rotated text: keep new text centered at the same canvas point as the original.
-      // Measure the original text width in local SVG units (canvas px ≈ SVG user units).
-      // The original text started at local x=0, so its center was at x = originalWidth/2.
-      // Setting text-anchor="middle" with that x keeps the visual center unchanged.
+      // Rotated centered text: keep new text centered at the same canvas point as the original.
       const fontFamily = textEl.getAttribute('font-family') ?? 'sans-serif';
       const fontSize = parseFloat(textEl.getAttribute('font-size') ?? '12');
       const originalWidth = measureTextWidth(originalText, fontFamily, fontSize);
