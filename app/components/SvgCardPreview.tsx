@@ -85,16 +85,13 @@ function injectFieldValues(
 
     // For explicitly-centered designs (text-anchor="middle"): always re-center.
     // For positioned designs: keep at original SVG position until user types something.
+    // data-no-center: text content was already updated above — keep all
+    // SVG positioning attributes exactly as designed, no centering at all.
+    if (textEl.getAttribute('data-no-center') === 'true') continue;
+
     if (originalAnchor !== 'middle' && !hasUserValue) continue;
 
     textEl.setAttribute('text-anchor', 'middle');
-
-    // data-no-center: center around the field's own designed position (tspan x=0),
-    // not around the card's horizontal midpoint.
-    if (textEl.getAttribute('data-no-center') === 'true') {
-      tspan.setAttribute('x', '0');
-      continue;
-    }
 
     const transform = textEl.getAttribute('transform') ?? '';
     const rotateMatch = transform.match(/rotate\(\s*([\d.+-]+)/);
