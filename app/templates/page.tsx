@@ -248,9 +248,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
       .then(({ templates: data }) => {
         setTemplates(data ?? []);
         // Check if we need to reload a saved design
-        const raw = localStorage.getItem('invitia-template-load');
+        const raw = localStorage.getItem('pintle-template-load');
         if (!raw) return;
-        localStorage.removeItem('invitia-template-load');
+        localStorage.removeItem('pintle-template-load');
         try {
           const { templateId, fieldValues: saved } = JSON.parse(raw);
           const template = (data ?? []).find((t: Template) => t.id === templateId);
@@ -282,28 +282,36 @@ const [windowWidth, setWindowWidth] = useState(1200);
     // SVG templates: bypass html2canvas (can't access cross-origin Typekit font).
     // Instead, composite the PNG background + SVG overlay on a native canvas.
     if (selected.textSvg) {
+      // Load the PNG first so we can use its native resolution for the output canvas
+      const img = await new Promise<HTMLImageElement>(resolve => {
+        const i = new Image();
+        i.crossOrigin = 'anonymous';
+        i.onload = () => resolve(i);
+        i.onerror = () => resolve(i);
+        i.src = selected.thumbnailSrc;
+      });
+
+      // Use the PNG's native pixel dimensions — falls back to SVG viewBox size
       const { canvasWidth, canvasHeight } = selected.style;
+      const outW = img.naturalWidth  || canvasWidth;
+      const outH = img.naturalHeight || canvasHeight;
+
       const canvas = document.createElement('canvas');
-      canvas.width = canvasWidth;
-      canvas.height = canvasHeight;
+      canvas.width  = outW;
+      canvas.height = outH;
       const ctx = canvas.getContext('2d')!;
 
-      // 1. Draw PNG background
-      await new Promise<void>(resolve => {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => { ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight); resolve(); };
-        img.onerror = () => resolve();
-        img.src = selected.thumbnailSrc;
-      });
+      // 1. Draw PNG background at full native resolution
+      ctx.drawImage(img, 0, 0, outW, outH);
 
       // 2. Draw text directly using canvas API — uses the browser's loaded fonts
       //    (SVG-as-img is sandboxed and can't access Typekit)
+      //    renderSvgTextToCanvas scales by outW/svgViewBoxW automatically
       await document.fonts.ready;
       const overlayDiv = cardRef.current.querySelector('[data-svg-overlay="true"]');
       const svgEl = overlayDiv?.querySelector('svg');
       if (svgEl) {
-        renderSvgTextToCanvas(ctx, svgEl as SVGElement, canvasWidth, canvasHeight);
+        renderSvgTextToCanvas(ctx, svgEl as SVGElement, outW, outH);
       }
 
       return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
@@ -421,7 +429,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
       canvasWidth: style.canvasWidth,
       canvasHeight: style.canvasHeight,
     };
-    localStorage.setItem('invitia-state', JSON.stringify(state));
+    localStorage.setItem('pintle-state', JSON.stringify(state));
     router.push('/studio?load=1');
   };
 
@@ -437,7 +445,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none' }}>
-            Invitia
+            Pintle
           </Link>
           <nav style={{ display: 'flex', alignItems: 'center', gap: 16 }} />
         </div>
