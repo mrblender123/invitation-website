@@ -15,7 +15,6 @@ export function fireConfetti(originX = 0.5, originY = 0.5) {
     gravity: 1.4,
     drift: 0,
     shapes: ['circle'],
-    opacity: 0.6,
   });
 }
 
