@@ -82,9 +82,15 @@ function injectFieldValues(
     // For positioned designs: keep placeholder at original SVG position,
     // but center once the user has typed a value (avoids RTL overflow).
     if (originalAnchor !== 'middle' && !hasUserValue) continue;
-    if (textEl.getAttribute('data-no-center') === 'true') continue;
 
     textEl.setAttribute('text-anchor', 'middle');
+
+    // data-no-center: center around the field's own designed position (tspan x=0),
+    // not around the card's horizontal midpoint.
+    if (textEl.getAttribute('data-no-center') === 'true') {
+      tspan.setAttribute('x', '0');
+      continue;
+    }
 
     const transform = textEl.getAttribute('transform') ?? '';
     const rotateMatch = transform.match(/rotate\(\s*([\d.+-]+)/);
