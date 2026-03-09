@@ -11,7 +11,7 @@ interface SimchaSelectorProps {
 }
 
 const SIMCHAS = [
-  { key: "It's a Boy",    label: "It's a Boy",   icon: '💙', description: 'Bris & baby boy celebration' },
+  { key: "It's a Boy",    label: "It's a Boy",   icon: '👶🏻', description: 'Bris & baby boy celebration' },
   { key: "It's a Girl",   label: "It's a Girl",  icon: '🎀', description: 'Baby girl celebration' },
   { key: 'Upsherin',      label: 'Upsherin',     icon: '✂️', description: 'First haircut celebration' },
   { key: 'Bar Mitzvah',   label: 'Bar Mitzvah',  icon: '13', description: 'Coming-of-age celebration' },
