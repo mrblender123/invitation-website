@@ -1,5 +1,5 @@
+import Image from 'next/image';
 import LandingHeader from './components/LandingHeader';
-import HeroHeading from './components/HeroHeading';
 import SimchaSelector from './components/SimchaSelector';
 import CTAButton from './components/CTAButton';
 import CategoryGrid from './components/CategoryGrid';
@@ -7,7 +7,7 @@ import InvitationCarousel from './components/InvitationCarousel';
 
 export default function Home() {
   return (
-    <div className="min-h-screen" style={{ background: 'var(--background)', color: 'var(--foreground)', fontFamily: 'var(--font-inter), system-ui, sans-serif', position: 'relative', overflow: 'hidden' }}>
+    <div className="min-h-screen" style={{ background: 'var(--background)', color: 'var(--foreground)', fontFamily: 'var(--font-inter), system-ui, sans-serif', position: 'relative', overflowX: 'hidden' }}>
 
       {/* ── Ambient gradient orbs ── */}
       {/* Top-left warm orb */}
@@ -32,11 +32,22 @@ export default function Home() {
         filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0,
       }} />
 
-      <LandingHeader />
+      <LandingHeader liquid />
 
       {/* Hero */}
-      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '120px 24px 100px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-        <HeroHeading />
+      <section style={{ maxWidth: 1100, margin: '0 auto', padding: '120px 24px 60px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+
+        {/* Banner */}
+        <div style={{ width: '100%', borderRadius: 20, overflow: 'hidden', margin: '0 0 40px' }}>
+          <Image
+            src="/banner.png"
+            alt="Pintle banner"
+            width={1400}
+            height={500}
+            style={{ width: '100%', height: 'auto', display: 'block' }}
+            priority
+          />
+        </div>
 
         <p style={{ fontSize: 18, lineHeight: 1.7, color: 'var(--muted)', maxWidth: 520, margin: '0 auto 40px' }}>
           Celebrate Your Simcha<br />Create and send invitations with ease.

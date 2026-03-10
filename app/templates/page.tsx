@@ -570,7 +570,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 background: 'transparent', border: 'none', cursor: 'pointer',
-                color: 'var(--muted)', fontSize: 14, padding: '0 0 40px',
+                color: 'var(--foreground)', fontSize: 14, padding: '0 0 40px',
               }}
             >
               ← Back to Templates
@@ -657,7 +657,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                       background: showAllFields ? 'rgba(0,0,0,0.06)' : 'transparent',
                       border: '1px solid rgba(0,0,0,0.12)',
                       borderRadius: 8, padding: '6px 14px',
-                      fontSize: 12, color: 'var(--muted)',
+                      fontSize: 12, color: 'var(--foreground)',
                       cursor: 'pointer', letterSpacing: '0.04em',
                     }}
                   >
@@ -818,15 +818,15 @@ const [windowWidth, setWindowWidth] = useState(1200);
                       style={{
                         flex: 1, padding: '11px 0', borderRadius: 8,
                         fontWeight: 600, fontSize: 14,
-                        background: 'rgba(0,0,0,0.03)',
-                        color: 'var(--muted)',
-                        border: '1px solid rgba(0,0,0,0.12)',
+                        background: 'rgba(0,0,0,0.06)',
+                        color: 'var(--foreground)',
+                        border: '1px solid rgba(0,0,0,0.1)',
                         cursor: 'pointer',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                         transition: 'all 0.2s',
                       }}
                     >
-                      {'📩 Save for Later'}
+                      Save for Later
                     </button>
                   </div>
 

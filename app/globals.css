@@ -207,6 +207,16 @@ body {
   aspect-ratio: 1 / 1;
 }
 
+/* Mobile nav helpers */
+.hamburger-btn { display: none !important; }
+.category-subbar { display: block; }
+
+@media (max-width: 640px) {
+  .hamburger-btn { display: flex !important; }
+  .category-subbar { display: none !important; }
+  .landing-nav { display: none !important; }
+}
+
 @media (max-width: 640px) {
   /* Category grid — 2 columns on phone */
   .category-grid {

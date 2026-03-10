@@ -41,8 +41,8 @@ export default function FaqAccordion() {
             key={i}
             style={{
               borderRadius: 14,
-              border: '1px solid rgba(255,255,255,0.07)',
-              background: isOpen ? 'rgba(255,255,255,0.04)' : 'transparent',
+              border: '1px solid var(--border)',
+              background: isOpen ? 'rgba(0,0,0,0.03)' : 'transparent',
               transition: 'background 0.2s',
               overflow: 'hidden',
             }}
@@ -60,13 +60,13 @@ export default function FaqAccordion() {
                 border: 'none',
                 cursor: 'pointer',
                 textAlign: 'left',
-                color: '#fff',
+                color: 'var(--foreground)',
               }}
             >
               <span style={{ fontSize: 15, fontWeight: 600, lineHeight: 1.4 }}>{faq.q}</span>
               <span style={{
                 fontSize: 18,
-                color: 'rgba(255,255,255,0.35)',
+                color: 'var(--muted)',
                 flexShrink: 0,
                 transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
                 transition: 'transform 0.22s cubic-bezier(0.2,0,0.2,1)',
@@ -82,7 +82,7 @@ export default function FaqAccordion() {
               overflow: 'hidden',
               transition: 'max-height 0.28s cubic-bezier(0.2,0,0.2,1)',
             }}>
-              <p style={{ margin: 0, padding: '0 28px 22px', fontSize: 15, lineHeight: 1.75, color: 'rgba(255,255,255,0.45)' }}>
+              <p style={{ margin: 0, padding: '0 28px 22px', fontSize: 15, lineHeight: 1.75, color: 'var(--muted)' }}>
                 {faq.a}
               </p>
             </div>
