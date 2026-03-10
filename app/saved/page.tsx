@@ -32,14 +32,14 @@ export default function SavedPage() {
   const handleLoad = (inv: Invitation) => {
     if (inv.settings.isTemplate && inv.settings.templateId) {
       // Template-based design: reopen in the template editor
-      localStorage.setItem('invitia-template-load', JSON.stringify({
+      localStorage.setItem('pintle-template-load', JSON.stringify({
         templateId: inv.settings.templateId,
         fieldValues: inv.settings.fieldValues ?? {},
       }));
       router.push('/templates');
     } else {
       // Studio-based design: reopen in the AI studio
-      localStorage.setItem('invitia-state', JSON.stringify({
+      localStorage.setItem('pintle-state', JSON.stringify({
         data: {
           eventTitle: inv.event_title,
           hostName: inv.host_name,
@@ -75,7 +75,7 @@ export default function SavedPage() {
       }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none' }}>
-            Invitia
+            Pintle
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <Link href="/gallery" style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>

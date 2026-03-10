@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-const COLORS = ['#e0e0e0', '#d4af37', '#fdfbf7'];
+const COLORS = ['#9ca3af', '#d4af37', '#6366f1'];
 
 class Particle {
   x: number; y: number;
@@ -117,7 +117,7 @@ export default function HeroHeading() {
           lineHeight: 1.1,
           letterSpacing: '-0.02em',
           marginBottom: 24,
-          color: '#d1d1d1',
+          color: '#3f3f46',
           textAlign: 'center',
           cursor: 'default',
           userSelect: 'none',
@@ -125,8 +125,8 @@ export default function HeroHeading() {
           position: 'relative',
           zIndex: 2,
         }}
-        onMouseOver={e => (e.currentTarget.style.color = '#fdfbf7')}
-        onMouseOut={e => (e.currentTarget.style.color = '#d1d1d1')}
+        onMouseOver={e => (e.currentTarget.style.color = '#18181b')}
+        onMouseOut={e => (e.currentTarget.style.color = '#3f3f46')}
       >
         Invitations that leave<br />a lasting impression
       </h1>

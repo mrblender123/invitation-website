@@ -16,7 +16,7 @@ export default function DraftPage() {
         if (res.status === 410) { setStatus('expired'); return; }
         if (!res.ok) { const d = await res.json(); setErrorMsg(d.error ?? 'Unknown error'); setStatus('error'); return; }
         const { templateId, fieldValues } = await res.json();
-        localStorage.setItem('invitia-template-load', JSON.stringify({ templateId, fieldValues }));
+        localStorage.setItem('pintle-template-load', JSON.stringify({ templateId, fieldValues }));
         router.replace('/templates');
       })
       .catch(err => { setErrorMsg(String(err)); setStatus('error'); });

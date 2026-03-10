@@ -84,7 +84,7 @@ function StudioContent() {
   // Load saved design from localStorage when ?load=1
   useEffect(() => {
     if (searchParams.get('load') !== '1') return;
-    const raw = localStorage.getItem('invitia-state');
+    const raw = localStorage.getItem('pintle-state');
     if (!raw) return;
     const s = JSON.parse(raw);
     if (s.data) setData(s.data);
@@ -158,7 +158,7 @@ function StudioContent() {
   };
 
   const handleGoToExport = () => {
-    localStorage.setItem('invitia-state', JSON.stringify({ data, ...settings, canvasWidth: canvasSize.width, canvasHeight: canvasSize.height }));
+    localStorage.setItem('pintle-state', JSON.stringify({ data, ...settings, canvasWidth: canvasSize.width, canvasHeight: canvasSize.height }));
     router.push('/export');
   };
 
@@ -211,7 +211,7 @@ function StudioContent() {
         padding: '0 20px', gap: 14, zIndex: 40,
       }}>
         <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none' }}>
-          Invitia
+          Pintle
         </Link>
         <div style={{ width: 1, height: 18, background: 'rgba(255,255,255,0.1)' }} />
         <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Studio</span>
