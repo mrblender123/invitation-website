@@ -13,7 +13,7 @@ export async function GET() {
     const kitCss = await fetch('https://use.typekit.net/hat2kft.css', {
       headers: {
         'User-Agent': 'Mozilla/5.0',
-        'Referer': process.env.NEXT_PUBLIC_APP_URL ?? 'https://invitia.co',
+        'Referer': process.env.NEXT_PUBLIC_APP_URL ?? 'https://pintle.co',
       },
     }).then(r => r.text());
 
@@ -35,7 +35,7 @@ export async function GET() {
 
       try {
         const fontBuffer = await fetch(urlMatch[1], {
-          headers: { 'Referer': process.env.NEXT_PUBLIC_APP_URL ?? 'https://invitia.co' },
+          headers: { 'Referer': process.env.NEXT_PUBLIC_APP_URL ?? 'https://pintle.co' },
         }).then(r => r.arrayBuffer());
 
         const base64 = Buffer.from(fontBuffer).toString('base64');

@@ -187,11 +187,11 @@ function TemplateThumbnail({ template, onClick, targetW }: { template: Template;
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
-  background: '#09090b',
-  border: '1px solid rgba(255,255,255,0.12)',
+  background: '#ffffff',
+  border: '1px solid rgba(0,0,0,0.12)',
   borderRadius: 8,
   padding: '10px 14px',
-  color: '#fff',
+  color: '#18181b',
   fontSize: 14,
   outline: 'none',
   boxSizing: 'border-box',
@@ -200,7 +200,7 @@ const inputStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   fontSize: 12,
-  color: 'rgba(255,255,255,0.4)',
+  color: 'rgba(0,0,0,0.4)',
   letterSpacing: '0.06em',
   textTransform: 'uppercase',
   display: 'block',
@@ -434,17 +434,20 @@ const [windowWidth, setWindowWidth] = useState(1200);
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#09090b', color: '#fff', fontFamily: 'var(--font-inter), system-ui, sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)', fontFamily: 'var(--font-inter), system-ui, sans-serif' }}>
 
       {/* Header */}
-      <header style={{
-        position: 'sticky', top: 0, zIndex: 50,
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-        background: 'rgba(9,9,11,0.85)',
-        backdropFilter: 'blur(12px)',
-      }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none' }}>
+      <header>
+        <div style={{
+          maxWidth: 1200,
+          margin: '0 auto',
+          height: 56,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 24px',
+        }}>
+          <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--foreground)', textDecoration: 'none' }}>
             Pintle
           </Link>
           <nav style={{ display: 'flex', alignItems: 'center', gap: 16 }} />
@@ -452,7 +455,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
       </header>
 
       {/* Content */}
-      <div className="page-content" style={{ maxWidth: 1200, margin: '0 auto', padding: '56px 24px 80px' }}>
+      <div className="page-content" style={{ maxWidth: 1200, margin: '0 auto', padding: '44px 24px 80px' }}>
 
         {selected === null ? (
           /* ── Gallery view ── */
@@ -462,14 +465,14 @@ const [windowWidth, setWindowWidth] = useState(1200);
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 background: 'transparent', border: 'none', cursor: 'pointer',
-                color: 'rgba(255,255,255,0.4)', fontSize: 14, padding: '0 0 36px',
+                color: 'var(--muted)', fontSize: 14, padding: '0 0 36px',
               }}
             >
               ← Back
             </button>
 
             <div style={{ marginBottom: subs.length > 0 ? 24 : 48 }}>
-              <p style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 12 }}>
+              <p style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.12em', color: 'var(--muted-faint)', textTransform: 'uppercase', marginBottom: 12 }}>
                 {category ?? 'Templates'}
               </p>
               <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 10px' }}>
@@ -485,9 +488,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   style={{
                     padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 500, cursor: 'pointer',
                     border: '1px solid',
-                    borderColor: !subcategory ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.12)',
-                    background: !subcategory ? 'rgba(255,255,255,0.1)' : 'transparent',
-                    color: !subcategory ? '#fff' : 'rgba(255,255,255,0.45)',
+                    borderColor: !subcategory ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.1)',
+                    background: !subcategory ? 'rgba(0,0,0,0.08)' : 'transparent',
+                    color: !subcategory ? 'var(--foreground)' : 'var(--muted)',
                     transition: 'all 0.15s',
                   }}
                 >
@@ -500,9 +503,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     style={{
                       padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 500, cursor: 'pointer',
                       border: '1px solid',
-                      borderColor: subcategory === sub ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.12)',
-                      background: subcategory === sub ? 'rgba(255,255,255,0.1)' : 'transparent',
-                      color: subcategory === sub ? '#fff' : 'rgba(255,255,255,0.45)',
+                      borderColor: subcategory === sub ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.1)',
+                      background: subcategory === sub ? 'rgba(0,0,0,0.08)' : 'transparent',
+                      color: subcategory === sub ? 'var(--foreground)' : 'var(--muted)',
                       transition: 'all 0.15s',
                     }}
                   >
@@ -514,18 +517,18 @@ const [windowWidth, setWindowWidth] = useState(1200);
 
             {loadingTemplates ? (
               <div style={{ textAlign: 'center', padding: '80px 0' }}>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)' }}>Loading templates…</p>
+                <p style={{ fontSize: 14, color: 'var(--muted-faint)' }}>Loading templates…</p>
               </div>
             ) : (() => {
               const filtered = (category ? templates.filter(t => t.category === category) : templates)
                 .filter(t => !subcategory || t.subcategory === subcategory);
               return filtered.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '80px 0', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: 20 }}>
+                <div style={{ textAlign: 'center', padding: '80px 0', border: '1px dashed rgba(0,0,0,0.12)', borderRadius: 20 }}>
                   <p style={{ fontSize: 22, marginBottom: 12 }}>🎨</p>
-                  <p style={{ fontSize: 16, fontWeight: 600, color: 'rgba(255,255,255,0.6)', marginBottom: 8 }}>
+                  <p style={{ fontSize: 16, fontWeight: 600, color: 'var(--muted)', marginBottom: 8 }}>
                     {category ? `No ${category} templates yet` : 'Templates coming soon'}
                   </p>
-                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.3)', marginBottom: 28 }}>
+                  <p style={{ fontSize: 14, color: 'var(--muted-faint)', marginBottom: 28 }}>
                     Check back shortly — we&apos;re adding designs now.
                   </p>
                 </div>
@@ -547,8 +550,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                       <div key={template.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, width: cardW }}>
                         <TemplateThumbnail template={template} onClick={() => handleSelectTemplate(template)} targetW={mobileCardW} />
                         <div style={{ width: '100%', textAlign: 'center' }}>
-                          <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 600, color: 'rgba(255,255,255,0.8)', margin: '0 0 2px' }}>{template.name}</p>
-                          <p style={{ fontSize: isMobileGallery ? 10 : 11, color: 'rgba(255,255,255,0.35)', margin: 0 }}>{template.category}</p>
+                          <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 600, color: 'var(--foreground)', margin: '0 0 2px' }}>{template.name}</p>
+                          <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 500, color: 'var(--muted)', margin: 0 }}>$19.99</p>
                         </div>
                       </div>
                     );
@@ -567,7 +570,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 background: 'transparent', border: 'none', cursor: 'pointer',
-                color: 'rgba(255,255,255,0.45)', fontSize: 14, padding: '0 0 40px',
+                color: 'var(--muted)', fontSize: 14, padding: '0 0 40px',
               }}
             >
               ← Back to Templates
@@ -651,10 +654,10 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     onClick={() => setShowAllFields(v => !v)}
                     style={{
                       alignSelf: 'flex-start', marginBottom: 16,
-                      background: showAllFields ? 'rgba(255,255,255,0.1)' : 'transparent',
-                      border: '1px solid rgba(255,255,255,0.15)',
+                      background: showAllFields ? 'rgba(0,0,0,0.06)' : 'transparent',
+                      border: '1px solid rgba(0,0,0,0.12)',
                       borderRadius: 8, padding: '6px 14px',
-                      fontSize: 12, color: 'rgba(255,255,255,0.6)',
+                      fontSize: 12, color: 'var(--muted)',
                       cursor: 'pointer', letterSpacing: '0.04em',
                     }}
                   >
@@ -666,7 +669,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   maxHeight: 420, overflowY: 'auto', overflowX: 'hidden',
                   paddingRight: 6,
                   scrollbarWidth: 'thin',
-                  scrollbarColor: 'rgba(255,255,255,0.12) transparent',
+                  scrollbarColor: 'rgba(0,0,0,0.12) transparent',
                 }}>
                   {selected.fields ? (
                     selected.fields.filter(f => !f.optional || showAllFields).map(field => {
@@ -685,8 +688,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                               paddingRight: 30,
                               textAlign: 'center',
                               direction: field.rtl ? 'rtl' : 'ltr',
-                                  borderColor: isActive ? 'rgba(255,255,255,0.45)' : field.optional ? 'rgba(160,130,70,0.4)' : undefined,
-                              background: field.optional ? 'rgba(140,110,50,0.07)' : '#09090b',
+                                  borderColor: isActive ? 'rgba(0,0,0,0.4)' : field.optional ? 'rgba(160,130,70,0.5)' : undefined,
+                              background: field.optional ? 'rgba(255,245,210,0.5)' : '#ffffff',
                             }}
                             placeholder={clearedFields.has(field.id) ? '' : field.placeholder}
                             value={fieldValues[field.id] ?? ''}
@@ -721,7 +724,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                               borderRadius: '50%',
                               border: 'none',
                               background: 'none',
-                              color: '#fff',
+                              color: 'var(--muted)',
                               fontSize: 14,
                               cursor: 'pointer',
                               display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -815,9 +818,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
                       style={{
                         flex: 1, padding: '11px 0', borderRadius: 8,
                         fontWeight: 600, fontSize: 14,
-                        background: 'rgba(255,255,255,0.05)',
-                        color: 'rgba(255,255,255,0.65)',
-                        border: '1px solid rgba(255,255,255,0.15)',
+                        background: 'rgba(0,0,0,0.03)',
+                        color: 'var(--muted)',
+                        border: '1px solid rgba(0,0,0,0.12)',
                         cursor: 'pointer',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                         transition: 'all 0.2s',
@@ -832,8 +835,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                       onClick={handleOpenInStudio}
                       style={{
                         padding: '11px 0', borderRadius: 8, fontWeight: 600, fontSize: 14,
-                        background: 'transparent', color: 'rgba(255,255,255,0.55)',
-                        border: '1px solid rgba(255,255,255,0.15)', cursor: 'pointer',
+                        background: 'transparent', color: 'var(--muted)',
+                        border: '1px solid rgba(0,0,0,0.12)', cursor: 'pointer',
                         width: '100%',
                       }}
                     >
@@ -842,7 +845,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   )}
                 </div>
 
-                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', marginTop: 20 }}>
+                <p style={{ fontSize: 12, color: 'var(--muted-faint)', marginTop: 20 }}>
                   {selected.textSvg
                     ? 'Tap a field above to edit it.'
                     : 'Want fonts, colors, and positioning control? Use the full studio.'}
@@ -866,20 +869,21 @@ const [windowWidth, setWindowWidth] = useState(1200);
           }}
         >
           <div style={{
-            background: '#111113',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: '#ffffff',
+            border: '1px solid rgba(0,0,0,0.08)',
             borderRadius: 16,
             padding: '36px 32px',
             width: '100%',
             maxWidth: 420,
             position: 'relative',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.12)',
           }}>
             {/* Close */}
             <button
               onClick={() => setShowDraftModal(false)}
               style={{
                 position: 'absolute', top: 16, right: 16,
-                background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)',
+                background: 'none', border: 'none', color: 'var(--muted)',
                 fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 4,
               }}
             >
@@ -890,17 +894,17 @@ const [windowWidth, setWindowWidth] = useState(1200);
               /* Success state */
               <div style={{ textAlign: 'center', padding: '8px 0' }}>
                 <p style={{ fontSize: 36, marginBottom: 16 }}>📬</p>
-                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#fff', margin: '0 0 10px' }}>Check your inbox</h2>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', margin: '0 0 28px', lineHeight: 1.6 }}>
-                  We sent a link to <strong style={{ color: 'rgba(255,255,255,0.8)' }}>{draftEmail}</strong>.
+                <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', margin: '0 0 10px' }}>Check your inbox</h2>
+                <p style={{ fontSize: 14, color: 'var(--muted)', margin: '0 0 28px', lineHeight: 1.6 }}>
+                  We sent a link to <strong style={{ color: 'var(--foreground)' }}>{draftEmail}</strong>.
                   Your draft will be available for 7 days.
                 </p>
                 <button
                   onClick={() => setShowDraftModal(false)}
                   style={{
                     padding: '11px 28px', borderRadius: 8, fontWeight: 600, fontSize: 14,
-                    background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)',
-                    color: '#fff', cursor: 'pointer',
+                    background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.12)',
+                    color: 'var(--foreground)', cursor: 'pointer',
                   }}
                 >
                   Done
@@ -909,8 +913,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
             ) : (
               /* Input state */
               <>
-                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#fff', margin: '0 0 8px' }}>Save your draft</h2>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', margin: '0 0 28px', lineHeight: 1.6 }}>
+                <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', margin: '0 0 8px' }}>Save your draft</h2>
+                <p style={{ fontSize: 14, color: 'var(--muted)', margin: '0 0 28px', lineHeight: 1.6 }}>
                   Enter your email and we&apos;ll send you a link to continue editing.
                 </p>
 
@@ -961,8 +965,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
 export default function TemplatesPage() {
   return (
     <Suspense fallback={
-      <div style={{ minHeight: '100vh', background: '#09090b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 14 }}>Loading…</p>
+      <div style={{ minHeight: '100vh', background: 'var(--background)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: 'var(--muted-faint)', fontSize: 14 }}>Loading…</p>
       </div>
     }>
       <TemplatesContent />

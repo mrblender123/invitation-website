@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 const FAQS = [
   {
-    q: 'Is Invitia free to use?',
+    q: 'Is Pintle free to use?',
     a: 'Yes — browsing templates and customizing your invitation is completely free. You can download your finished design at no cost.',
   },
   {

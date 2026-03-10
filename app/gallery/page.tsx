@@ -123,7 +123,7 @@ export default function GalleryPage() {
   }, [accessToken]);
 
   const loadIntoStudio = (inv: Invitation, dest: '/studio' | '/export') => {
-    localStorage.setItem('invitia-state', JSON.stringify({
+    localStorage.setItem('pintle-state', JSON.stringify({
       data: { eventTitle: inv.event_title, hostName: inv.host_name, dateTime: inv.date_time },
       ...inv.settings,
     }));
@@ -144,7 +144,7 @@ export default function GalleryPage() {
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none' }}>
-            Invitia
+            Pintle
           </Link>
           <nav style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
             <Link href="/saved" style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>

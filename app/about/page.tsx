@@ -3,7 +3,7 @@ import LandingHeader from '../components/LandingHeader';
 import FaqAccordion from '../components/FaqAccordion';
 
 export const metadata = {
-  title: 'About — Invitia',
+  title: 'About — Pintle',
   description: 'Simple. Easy. Done. Create beautiful Jewish celebration invitations in minutes.',
 };
 
@@ -38,7 +38,7 @@ export default function AboutPage() {
       {/* Hero */}
       <section style={{ maxWidth: 720, margin: '0 auto', padding: '100px 24px 80px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 20 }}>
-          About Invitia
+          About Pintle
         </p>
         <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.1, margin: '0 0 28px' }}>
           Simple.{' '}
@@ -46,7 +46,7 @@ export default function AboutPage() {
           Done.
         </h1>
         <p style={{ fontSize: 18, lineHeight: 1.75, color: 'rgba(255,255,255,0.45)', maxWidth: 500, margin: '0 auto' }}>
-          Invitia was built for the Jewish community — so anyone can create a beautiful, meaningful invitation for their simcha without any design experience.
+          Pintle was built for the Jewish community — so anyone can create a beautiful, meaningful invitation for their simcha without any design experience.
         </p>
       </section>
 
@@ -132,7 +132,7 @@ export default function AboutPage() {
       {/* Footer */}
       <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '32px 24px', textAlign: 'center' }}>
         <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', margin: 0 }}>
-          © {new Date().getFullYear()} Invitia. All rights reserved.
+          © {new Date().getFullYear()} Pintle. All rights reserved.
         </p>
       </footer>
 

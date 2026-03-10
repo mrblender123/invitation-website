@@ -36,7 +36,7 @@ const secularOne = Secular_One({
 
 
 export const metadata: Metadata = {
-  title: "Invitia — AI-Powered Invitation Design",
+  title: "Pintle — AI-Powered Invitation Design",
   description: "Generate AI backgrounds, craft custom typography, and export print-ready invitations — all in one place.",
 };
 

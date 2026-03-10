@@ -2,30 +2,51 @@
 
 import Link from 'next/link';
 import { useAuth } from './AuthProvider';
-
 import UserMenu from './UserMenu';
 
 export default function LandingHeader() {
   const { user, loading } = useAuth();
 
   return (
-    <header style={{
-      position: 'sticky', top: 0, zIndex: 50,
-      background: 'linear-gradient(to bottom, rgba(9,9,11,0.85) 0%, rgba(9,9,11,0) 100%)',
-      backdropFilter: 'blur(8px)',
-      WebkitBackdropFilter: 'blur(8px)',
-      maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-      WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
-    }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none' }}>
-          Invitia
+    <header>
+      <div style={{
+        maxWidth: 1100,
+        margin: '0 auto',
+        height: 56,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 24px',
+      }}>
+        <Link
+          href="/"
+          style={{
+            fontFamily: 'var(--font-playfair)',
+            fontSize: 20,
+            fontWeight: 700,
+            letterSpacing: '-0.02em',
+            color: 'var(--foreground)',
+            textDecoration: 'none',
+          }}
+        >
+          Pintle
         </Link>
-        <nav className="landing-nav" style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-          <Link href="/about" style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', textDecoration: 'none' }}>
+
+        <nav className="landing-nav" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+          <Link
+            href="/about"
+            style={{
+              fontSize: 14,
+              color: 'var(--muted)',
+              textDecoration: 'none',
+              transition: 'color 0.18s',
+            }}
+            onMouseOver={e => (e.currentTarget.style.color = 'var(--foreground)')}
+            onMouseOut={e => (e.currentTarget.style.color = 'var(--muted)')}
+          >
             About
           </Link>
-{!loading && user && <UserMenu />}
+          {!loading && user && <UserMenu />}
         </nav>
       </div>
     </header>

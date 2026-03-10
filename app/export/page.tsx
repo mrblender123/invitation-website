@@ -5,7 +5,7 @@ import Link from 'next/link';
 import InvitationCard from '../components/InvitationCard';
 import { useAuth } from '../components/AuthProvider';
 
-type InvitiaState = {
+type PintleState = {
   data: { eventTitle: string; hostName: string; dateTime: string };
   bg: string;
   overlayOpacity: number;
@@ -25,7 +25,7 @@ export default function ExportPage() {
   const router = useRouter();
   const { accessToken } = useAuth();
   const cardRef = useRef<HTMLDivElement>(null);
-  const [state, setState] = useState<InvitiaState | null>(null);
+  const [state, setState] = useState<PintleState | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
 
@@ -37,7 +37,7 @@ export default function ExportPage() {
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
-    const raw = localStorage.getItem('invitia-state');
+    const raw = localStorage.getItem('pintle-state');
     if (!raw) { router.replace('/studio'); return; }
     const parsed = JSON.parse(raw);
     setState(parsed);
@@ -192,7 +192,7 @@ export default function ExportPage() {
       }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none' }}>
-            Invitia
+            Pintle
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <Link href="/saved" style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>Saved Designs</Link>

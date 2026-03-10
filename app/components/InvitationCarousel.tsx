@@ -26,7 +26,7 @@ export default function InvitationCarousel() {
     <section style={{ padding: '0 0 100px', overflow: 'hidden', position: 'relative', zIndex: 1 }}>
       <p style={{
         textAlign: 'center', fontSize: 13, fontWeight: 500, letterSpacing: '0.1em',
-        color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 48,
+        color: 'var(--muted-faint)', textTransform: 'uppercase', marginBottom: 48,
       }}>
         Browse our collection
       </p>
@@ -34,7 +34,7 @@ export default function InvitationCarousel() {
       {/* Fade edges */}
       <div aria-hidden="true" style={{
         position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2,
-        background: 'linear-gradient(to right, #09090b 0%, transparent 12%, transparent 88%, #09090b 100%)',
+        background: 'linear-gradient(to right, #f8f7f4 0%, transparent 12%, transparent 88%, #f8f7f4 100%)',
       }} />
 
       <div

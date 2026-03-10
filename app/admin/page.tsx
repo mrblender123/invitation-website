@@ -101,7 +101,7 @@ export default function AdminPage() {
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ fontFamily: 'var(--font-playfair)', fontSize: 18, fontWeight: 700 }}>
-            Invitia <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 13, fontWeight: 400, fontFamily: 'var(--font-inter)' }}>/ Admin</span>
+            Pintle <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 13, fontWeight: 400, fontFamily: 'var(--font-inter)' }}>/ Admin</span>
           </span>
           <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>{user.email}</span>
         </div>

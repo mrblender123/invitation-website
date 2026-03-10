@@ -30,11 +30,17 @@ function CategoryCard({ category }: { category: typeof CATEGORIES[0] }) {
         textAlign: 'center',
         textDecoration: 'none',
         aspectRatio: '1 / 1',
-        background: hovered ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0.04)',
-        border: hovered ? '1px solid rgba(161,161,170,0.4)' : '1px solid rgba(255,255,255,0.08)',
+        background: hovered ? 'rgba(255,255,255,0.78)' : 'rgba(255,255,255,0.58)',
+        backdropFilter: 'blur(14px) saturate(1.4)',
+        WebkitBackdropFilter: 'blur(14px) saturate(1.4)',
+        border: '1px solid rgba(255,255,255,0.82)',
+        borderBottomColor: 'rgba(0,0,0,0.06)',
         borderRadius: 20,
         padding: 20,
-        transition: 'background 0.2s, border-color 0.2s, transform 0.2s',
+        boxShadow: hovered
+          ? 'inset 0 1px 0 rgba(255,255,255,0.92), 0 8px 28px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05)'
+          : 'inset 0 1px 0 rgba(255,255,255,0.88), 0 2px 10px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.04)',
+        transition: 'background 0.22s, box-shadow 0.22s, transform 0.22s',
         transform: hovered ? 'translateY(-4px)' : 'none',
         cursor: 'pointer',
       }}
@@ -43,7 +49,7 @@ function CategoryCard({ category }: { category: typeof CATEGORIES[0] }) {
         fontSize: category.icon === '13' ? 40 : 52,
         fontFamily: category.icon === '13' ? 'var(--font-playfair)' : undefined,
         fontWeight: category.icon === '13' ? 700 : undefined,
-        color: category.icon === '13' ? '#fff' : undefined,
+        color: category.icon === '13' ? 'var(--foreground)' : undefined,
         marginBottom: 14,
         lineHeight: 1,
         display: 'inline-block',
@@ -52,7 +58,7 @@ function CategoryCard({ category }: { category: typeof CATEGORIES[0] }) {
       }}>
         {category.icon}
       </span>
-      <span style={{ fontSize: 17, fontWeight: 600, color: '#fff' }}>
+      <span style={{ fontSize: 17, fontWeight: 600, color: 'var(--foreground)' }}>
         {category.label}
       </span>
     </Link>
@@ -62,12 +68,12 @@ function CategoryCard({ category }: { category: typeof CATEGORIES[0] }) {
 export default function CategoryGrid() {
   return (
     <section className="category-section" style={{ width: '100%', maxWidth: 1100, margin: '0 auto', padding: '0 24px 100px', position: 'relative', zIndex: 1, boxSizing: 'border-box' }}>
-      <p style={{ textAlign: 'center', fontSize: 13, fontWeight: 500, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginBottom: 16 }}>
+      <p style={{ textAlign: 'center', fontSize: 13, fontWeight: 500, letterSpacing: '0.1em', color: 'var(--muted-faint)', textTransform: 'uppercase', marginBottom: 16 }}>
         Browse by occasion
       </p>
       <h2 style={{
         fontFamily: 'var(--font-playfair)', fontSize: 'clamp(26px, 4vw, 42px)', fontWeight: 700,
-        textAlign: 'center', letterSpacing: '-0.02em', marginBottom: 48, color: '#fff',
+        textAlign: 'center', letterSpacing: '-0.02em', marginBottom: 48, color: 'var(--foreground)',
       }}>
         What's the Simcha?
       </h2>
