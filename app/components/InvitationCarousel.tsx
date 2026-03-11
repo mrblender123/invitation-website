@@ -1,11 +1,7 @@
 'use client';
 
 const IMAGES = [
-  "/templates/It's a boy/Vachnacht/009.png",
   "/templates/It's a boy/Vachnacht/01111.png",
-  "/templates/It's a boy/Vachnacht/099.png",
-  "/templates/It's a boy/Vachnacht/222.png",
-  "/templates/It's a boy/Vachnacht/333.png",
   '/templates/Vort/22.png',
   '/templates/wedding/001.png',
   '/templates/wedding/002.png',

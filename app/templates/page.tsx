@@ -120,9 +120,9 @@ function TemplateThumbnail({ template, onClick, targetW }: { template: Template;
         cursor: 'pointer',
         flexShrink: 0,
         boxShadow: hovered
-          ? '0 24px 60px rgba(0,0,0,0.8), 0 0 32px rgba(255,255,255,0.08)'
-          : '0 8px 32px rgba(0,0,0,0.5)',
-        transition: 'box-shadow 0.8s cubic-bezier(0.2,0,0.2,1), transform 0.8s cubic-bezier(0.2,0,0.2,1)',
+          ? '0 6px 20px rgba(0,0,0,0.10)'
+          : '0 2px 8px rgba(0,0,0,0.06)',
+        transition: 'box-shadow 0.2s, transform 0.2s',
         transform: hovered ? 'translateY(-2px)' : 'none',
       }}
     >
@@ -152,16 +152,6 @@ function TemplateThumbnail({ template, onClick, targetW }: { template: Template;
         </div>
       )}
 
-      {/* Hover name overlay */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%)',
-        display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
-        padding: 12, opacity: hovered ? 1 : 0, transition: 'opacity 0.2s', pointerEvents: 'none',
-      }}>
-        <p style={{ fontSize: 13, fontWeight: 700, color: '#fff', margin: 0, fontFamily: 'var(--font-playfair)' }}>{template.name}</p>
-        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', margin: '2px 0 0' }}>{template.category}</p>
-      </div>
 
       {/* Platinum border + inner glow */}
       <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 10 }}
@@ -547,7 +537,31 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     const ts = mobileCardW ? mobileCardW / template.style.canvasWidth : THUMB_TARGET_H / template.style.canvasHeight;
                     const cardW = mobileCardW ?? Math.round(template.style.canvasWidth * ts);
                     return (
-                      <div key={template.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, width: cardW }}>
+                      <div key={template.id} style={{
+                        display: 'flex', flexDirection: 'column', alignItems: 'center',
+                        gap: 10, width: cardW,
+                        background: 'rgba(255,255,255,0.62)',
+                        backdropFilter: 'blur(14px) saturate(1.5)',
+                        WebkitBackdropFilter: 'blur(14px) saturate(1.5)',
+                        border: '1px solid rgba(255,255,255,0.82)',
+                        borderBottom: '1px solid rgba(0,0,0,0.07)',
+                        borderRadius: 16,
+                        padding: isMobileGallery ? 8 : 12,
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                      }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.82)';
+                        e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.95), 0 8px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06)';
+                        e.currentTarget.style.transform = 'translateY(-3px)';
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.background = 'rgba(255,255,255,0.62)';
+                        e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)';
+                        e.currentTarget.style.transform = 'none';
+                      }}
+                      >
                         <TemplateThumbnail template={template} onClick={() => handleSelectTemplate(template)} targetW={mobileCardW} />
                         <div style={{ width: '100%', textAlign: 'center' }}>
                           <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 600, color: 'var(--foreground)', margin: '0 0 2px' }}>{template.name}</p>

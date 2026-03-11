@@ -55,6 +55,8 @@ export default function RootLayout({
       <head>
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link rel="stylesheet" href="https://use.typekit.net/hat2kft.css" />
+        {/* Force light mode — clear any stale dark theme from localStorage */}
+        <script dangerouslySetInnerHTML={{ __html: `localStorage.setItem('theme','light');document.documentElement.removeAttribute('data-theme');` }} />
       </head>
       <body className="antialiased"><AuthProvider>{children}</AuthProvider></body>
     </html>

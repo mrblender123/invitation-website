@@ -30,11 +30,17 @@ function CategoryCard({ category }: { category: typeof CATEGORIES[0] }) {
         textAlign: 'center',
         textDecoration: 'none',
         aspectRatio: '1 / 1',
-        background: hovered ? 'var(--card-hover)' : 'var(--card-bg)',
-        border: hovered ? '1px solid rgba(0,0,0,0.18)' : '1px solid var(--border)',
+        background: hovered ? 'rgba(255,255,255,0.82)' : 'rgba(255,255,255,0.62)',
+        backdropFilter: 'blur(14px) saturate(1.5)',
+        WebkitBackdropFilter: 'blur(14px) saturate(1.5)',
+        border: hovered ? '1px solid rgba(255,255,255,0.95)' : '1px solid rgba(255,255,255,0.82)',
+        borderBottom: hovered ? '1px solid rgba(0,0,0,0.09)' : '1px solid rgba(0,0,0,0.07)',
         borderRadius: 20,
         padding: 20,
-        transition: 'background 0.2s, border-color 0.2s, transform 0.2s',
+        boxShadow: hovered
+          ? 'inset 0 1px 0 rgba(255,255,255,0.95), 0 8px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06)'
+          : 'inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
+        transition: 'all 0.2s',
         transform: hovered ? 'translateY(-4px)' : 'none',
         cursor: 'pointer',
       }}

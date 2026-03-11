@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useAuth } from './AuthProvider';
 import UserMenu from './UserMenu';
@@ -50,11 +51,15 @@ export default function LandingHeader({ liquid }: { liquid?: boolean }) {
                 onClick={() => setMenuOpen(o => !o)}
                 aria-label="Open menu"
                 style={{
-                  background: 'rgba(0,0,0,0.06)',
-                  border: '1px solid rgba(0,0,0,0.08)',
-                  borderRadius: 10,
+                  background: 'rgba(255,255,255,0.62)',
+                  backdropFilter: 'blur(14px) saturate(1.5)',
+                  WebkitBackdropFilter: 'blur(14px) saturate(1.5)',
+                  border: '1px solid rgba(255,255,255,0.82)',
+                  borderBottom: '1px solid rgba(0,0,0,0.07)',
+                  borderRadius: 999,
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 8px rgba(0,0,0,0.06)',
                   cursor: 'pointer',
-                  width: 36, height: 36,
+                  width: 38, height: 38,
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -68,18 +73,15 @@ export default function LandingHeader({ liquid }: { liquid?: boolean }) {
               </button>
             )}
 
-            <Link
-              href="/"
-              style={{
-                fontFamily: 'var(--font-playfair)',
-                fontSize: 20,
-                fontWeight: 700,
-                letterSpacing: '-0.02em',
-                color: 'var(--foreground)',
-                textDecoration: 'none',
-              }}
-            >
-              Pintle
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+              <Image
+                src="/logo-009.png"
+                alt="Pintle"
+                width={100}
+                height={36}
+                style={{ height: 36, width: 'auto', display: 'block' }}
+                unoptimized
+              />
             </Link>
           </div>
 

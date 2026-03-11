@@ -46,6 +46,7 @@ export default function Home() {
             height={500}
             style={{ width: '100%', height: 'auto', display: 'block' }}
             priority
+            unoptimized
           />
         </div>
 
@@ -97,12 +98,16 @@ export default function Home() {
             <div key={title} style={{
               padding: '32px 28px',
               borderRadius: 16,
-              border: '1px solid var(--border)',
-              background: 'var(--card-bg)',
+              background: 'rgba(255,255,255,0.62)',
+              backdropFilter: 'blur(14px) saturate(1.5)',
+              WebkitBackdropFilter: 'blur(14px) saturate(1.5)',
+              border: '1px solid rgba(255,255,255,0.82)',
+              borderBottom: '1px solid rgba(0,0,0,0.07)',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
             }}>
-              <div style={{ fontSize: 22, marginBottom: 16, color: 'var(--muted)' }}>{icon}</div>
-              <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 10, color: 'var(--foreground)' }}>{title}</h3>
-              <p style={{ fontSize: 14, lineHeight: 1.7, color: 'var(--muted)' }}>{description}</p>
+              <div style={{ fontSize: 26, marginBottom: 14, textAlign: 'center' }}>{icon}</div>
+              <h3 style={{ fontFamily: 'var(--font-playfair)', fontSize: 22, fontWeight: 700, marginBottom: 8, color: 'var(--foreground)', textAlign: 'center', letterSpacing: '-0.01em' }}>{title}</h3>
+              <p style={{ fontSize: 14, lineHeight: 1.7, color: 'var(--muted)', textAlign: 'center', margin: 0 }}>{description}</p>
             </div>
           ))}
         </div>
@@ -165,7 +170,6 @@ export default function Home() {
                 </p>
                 {[
                   { label: 'Templates', href: '/templates' },
-                  { label: 'Studio', href: '/studio' },
                 ].map(({ label, href }) => (
                   <a key={label} href={href} className="footer-link">
                     {label}
