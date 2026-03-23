@@ -9,6 +9,7 @@ import SvgCardPreview from '../components/SvgCardPreview';
 import VirtualKeyboard from '../components/VirtualKeyboard';
 import { useAuth } from '../components/AuthProvider';
 import { CATEGORY_SUBS, SUB_DISPLAY_NAMES } from '@/lib/categories';
+import GlassPill from '../components/GlassPill';
 import type { Template } from '@/lib/templates';
 
 const THUMB_TARGET_H = 264;
@@ -203,6 +204,7 @@ function TemplatesContent() {
   const searchParams = useSearchParams();
   const category    = searchParams.get('category');
   const subcategory = searchParams.get('subcategory');
+  const templateParam = searchParams.get('template');
   const subs        = category ? (CATEGORY_SUBS[category] ?? []) : [];
 
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -216,6 +218,8 @@ function TemplatesContent() {
 const [windowWidth, setWindowWidth] = useState(1200);
   const [showAllFields, setShowAllFields] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const openingVirtualKeyboard = useRef(false);
 
   // Draft modal state
   const [showDraftModal, setShowDraftModal] = useState(false);
@@ -237,6 +241,11 @@ const [windowWidth, setWindowWidth] = useState(1200);
       .then(r => r.json())
       .then(({ templates: data }) => {
         setTemplates(data ?? []);
+        // Auto-select template from URL param
+        if (templateParam) {
+          const t = (data ?? []).find((t: Template) => t.id === templateParam);
+          if (t) { setSelected(t); return; }
+        }
         // Check if we need to reload a saved design
         const raw = localStorage.getItem('pintle-template-load');
         if (!raw) return;
@@ -461,46 +470,20 @@ const [windowWidth, setWindowWidth] = useState(1200);
               ← Back
             </button>
 
-            <div style={{ marginBottom: subs.length > 0 ? 24 : 48 }}>
-              <p style={{ fontSize: 12, fontWeight: 500, letterSpacing: '0.12em', color: 'var(--muted-faint)', textTransform: 'uppercase', marginBottom: 12 }}>
-                {category ?? 'Templates'}
-              </p>
-              <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 10px' }}>
-                {category ? `${category} Invitations` : 'Ready-Made Invitations'}
-              </h1>
-            </div>
 
             {/* Sub-category filter tabs */}
             {subs.length > 0 && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 40 }}>
-                <button
-                  onClick={() => router.replace(`/templates?category=${encodeURIComponent(category!)}`)}
-                  style={{
-                    padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 500, cursor: 'pointer',
-                    border: '1px solid',
-                    borderColor: !subcategory ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.1)',
-                    background: !subcategory ? 'rgba(0,0,0,0.08)' : 'transparent',
-                    color: !subcategory ? 'var(--foreground)' : 'var(--muted)',
-                    transition: 'all 0.15s',
-                  }}
-                >
-                  All
-                </button>
+                <GlassPill
+                  text="All"
+                  href={`/templates?category=${encodeURIComponent(category!)}`}
+                />
                 {subs.map(sub => (
-                  <button
+                  <GlassPill
                     key={sub}
-                    onClick={() => router.replace(`/templates?category=${encodeURIComponent(category!)}&subcategory=${encodeURIComponent(sub)}`)}
-                    style={{
-                      padding: '6px 16px', borderRadius: 999, fontSize: 13, fontWeight: 500, cursor: 'pointer',
-                      border: '1px solid',
-                      borderColor: subcategory === sub ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.1)',
-                      background: subcategory === sub ? 'rgba(0,0,0,0.08)' : 'transparent',
-                      color: subcategory === sub ? 'var(--foreground)' : 'var(--muted)',
-                      transition: 'all 0.15s',
-                    }}
-                  >
-                    {SUB_DISPLAY_NAMES[sub] ?? sub}
-                  </button>
+                    text={SUB_DISPLAY_NAMES[sub] ?? sub}
+                    href={`/templates?category=${encodeURIComponent(category!)}&subcategory=${encodeURIComponent(sub)}`}
+                  />
                 ))}
               </div>
             )}
@@ -546,7 +529,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
                         border: '1px solid rgba(255,255,255,0.82)',
                         borderBottom: '1px solid rgba(0,0,0,0.07)',
                         borderRadius: 16,
-                        padding: isMobileGallery ? 8 : 12,
+                        padding: 0,
+                        paddingBottom: isMobileGallery ? 8 : 12,
+                        overflow: 'hidden',
                         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
                         cursor: 'pointer',
                         transition: 'all 0.2s',
@@ -563,8 +548,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                       }}
                       >
                         <TemplateThumbnail template={template} onClick={() => handleSelectTemplate(template)} targetW={mobileCardW} />
-                        <div style={{ width: '100%', textAlign: 'center' }}>
-                          <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 600, color: 'var(--foreground)', margin: '0 0 2px' }}>{template.name}</p>
+                        <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `0 ${isMobileGallery ? 8 : 12}px` }}>
+                          <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 600, color: 'var(--foreground)', margin: 0 }}>{template.name}</p>
                           <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 500, color: 'var(--muted)', margin: 0 }}>$19.99</p>
                         </div>
                       </div>
@@ -695,27 +680,63 @@ const [windowWidth, setWindowWidth] = useState(1200);
                           onMouseEnter={() => setHoveredField(field.id)}
                           onMouseLeave={() => setHoveredField(null)}
                         >
-                          <input
-                            style={{
-                              ...inputStyle,
-                              paddingLeft: 30,
-                              paddingRight: 30,
-                              textAlign: 'center',
-                              direction: field.rtl ? 'rtl' : 'ltr',
-                                  borderColor: isActive ? 'rgba(0,0,0,0.4)' : field.optional ? 'rgba(160,130,70,0.5)' : undefined,
-                              background: field.optional ? 'rgba(255,245,210,0.5)' : '#ffffff',
-                            }}
-                            placeholder={clearedFields.has(field.id) ? '' : field.placeholder}
-                            value={fieldValues[field.id] ?? ''}
-                            onFocus={() => setActiveField({ id: field.id, rtl: field.rtl ?? false })}
-                            onBlur={() => setActiveField(null)}
-                            onChange={e => {
-                              setFieldValues(v => ({ ...v, [field.id]: e.target.value }));
-                              if (clearedFields.has(field.id) && e.target.value !== '') {
-                                setClearedFields(s => { const n = new Set(s); n.delete(field.id); return n; });
-                              }
-                            }}
-                          />
+                            <input
+                              ref={el => { inputRefs.current[field.id] = el; }}
+                              style={{
+                                ...inputStyle,
+                                paddingLeft: 30,
+                                paddingRight: windowWidth < 768 ? 34 : 30,
+                                textAlign: 'center',
+                                direction: field.rtl ? 'rtl' : 'ltr',
+                                borderColor: isActive ? 'rgba(0,0,0,0.4)' : field.optional ? 'rgba(160,130,70,0.5)' : undefined,
+                                background: field.optional ? 'rgba(255,245,210,0.5)' : '#ffffff',
+                              }}
+                              placeholder={clearedFields.has(field.id) ? '' : field.placeholder}
+                              value={fieldValues[field.id] ?? ''}
+                              onFocus={() => setActiveField({ id: field.id, rtl: field.rtl ?? false })}
+                              onBlur={() => {
+                                if (openingVirtualKeyboard.current) {
+                                  openingVirtualKeyboard.current = false;
+                                  return;
+                                }
+                                setActiveField(null);
+                              }}
+                              onChange={e => {
+                                setFieldValues(v => ({ ...v, [field.id]: e.target.value }));
+                                if (clearedFields.has(field.id) && e.target.value !== '') {
+                                  setClearedFields(s => { const n = new Set(s); n.delete(field.id); return n; });
+                                }
+                              }}
+                            />
+                          {/* Keyboard trigger — phone only */}
+                          {windowWidth < 768 && (
+                            <button
+                              onPointerDown={e => {
+                                e.preventDefault();
+                                openingVirtualKeyboard.current = true;
+                                inputRefs.current[field.id]?.blur();
+                                setActiveField({ id: field.id, rtl: field.rtl ?? false });
+                              }}
+                              title="Open keyboard"
+                              style={{
+                                position: 'absolute',
+                                right: 8,
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                width: 22, height: 22,
+                                borderRadius: 6,
+                                border: isActive ? '1px solid rgba(0,0,0,0.2)' : '1px solid rgba(0,0,0,0.10)',
+                                background: isActive ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.04)',
+                                color: 'var(--muted)',
+                                fontSize: 13,
+                                cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                padding: 0, lineHeight: 1,
+                              }}
+                            >
+                              ⌨
+                            </button>
+                          )}
                           {/* Clear / Reload — always visible */}
                           <button
                             onMouseDown={e => {

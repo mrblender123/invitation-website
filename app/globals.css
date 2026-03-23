@@ -289,3 +289,20 @@ body {
     gap: 6px !important;
   }
 }
+
+
+/* Header responsive */
+.header-pills { display: flex; }
+.header-hamburger { display: none; }
+@media (max-width: 768px) {
+  .header-pills { display: none; }
+  .header-hamburger { display: flex; }
+}
+.header-hamburger-hide { display: block; }
+@media (max-width: 768px) {
+  .header-hamburger-hide { display: none; }
+}
+
+@media (max-width: 768px) {
+  .home-category-rows { display: none; }
+}

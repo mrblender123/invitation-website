@@ -4,6 +4,8 @@ import path from 'path';
 import type { Template, SvgField } from '@/lib/templates';
 import { FOLDER_TO_CATEGORY } from '@/lib/categories';
 
+export const dynamic = 'force-dynamic';
+
 /** "bar-mitzvah" → "Bar Mitzvah", with override map for special chars */
 function folderToCategory(folder: string): string {
   if (FOLDER_TO_CATEGORY[folder]) return FOLDER_TO_CATEGORY[folder];
