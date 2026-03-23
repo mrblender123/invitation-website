@@ -176,6 +176,15 @@ export default function GlassPill({
         opacity: isPressed ? 0.70 : 1,
         transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s',
       }}>
+        {emoji && (
+          <span style={{
+            fontSize: isNumeric ? '1rem' : '1.1rem',
+            fontFamily: isNumeric ? 'var(--font-playfair)' : undefined,
+            fontWeight: isNumeric ? 700 : undefined,
+            lineHeight: 1,
+            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.15))',
+          }}>{emoji}</span>
+        )}
         <span style={{
           fontSize: fullWidth ? '0.94rem' : '0.88rem',
           fontWeight: 700,
@@ -187,15 +196,6 @@ export default function GlassPill({
         }}>
           {text}
         </span>
-        {emoji && (
-          <span style={{
-            fontSize: isNumeric ? '1rem' : '1.1rem',
-            fontFamily: isNumeric ? 'var(--font-playfair)' : undefined,
-            fontWeight: isNumeric ? 700 : undefined,
-            lineHeight: 1,
-            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.15))',
-          }}>{emoji}</span>
-        )}
         {hasDropdown && (
           <svg
             width="14" height="14"

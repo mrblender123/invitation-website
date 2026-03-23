@@ -9,6 +9,9 @@ export default function Home() {
       <div aria-hidden="true" style={{ position: 'fixed', top: '-10%', left: '-12%', width: 700, height: 700, borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,210,255,0.18) 0%, transparent 70%)', filter: 'blur(70px)', pointerEvents: 'none', zIndex: 0 }} />
       <div aria-hidden="true" style={{ position: 'fixed', top: '-8%', right: '-14%', width: 650, height: 650, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,220,180,0.18) 0%, transparent 70%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
       <div aria-hidden="true" style={{ position: 'fixed', top: '40%', left: '50%', transform: 'translateX(-50%)', width: 900, height: 500, borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(220,215,255,0.10) 0%, transparent 70%)', filter: 'blur(60px)', pointerEvents: 'none', zIndex: 0 }} />
+      {/* Bottom corner gradients */}
+      <div aria-hidden="true" style={{ position: 'fixed', bottom: '-5%', left: '-8%', width: 600, height: 500, background: 'radial-gradient(ellipse at bottom left, rgba(180,200,255,0.22) 0%, transparent 65%)', filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0 }} />
+      <div aria-hidden="true" style={{ position: 'fixed', bottom: '-5%', right: '-8%', width: 600, height: 500, background: 'radial-gradient(ellipse at bottom right, rgba(255,200,220,0.18) 0%, transparent 65%)', filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0 }} />
 
 <LandingHeader />
 <div style={{ position: 'relative', zIndex: 1 }}>
