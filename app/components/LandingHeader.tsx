@@ -7,7 +7,7 @@ const CATEGORIES = [
   { key: "It's a Boy",    emoji: '👶🏻', subcategories: ['Bris', 'Pidyon Haben', "Shlishi L'milah", 'Shulem Zucher', 'Vachnacht', 'Vachnacht-Bris'] },
   { key: "It's a Girl",   emoji: '🎀' },
   { key: 'Upsherin',      emoji: '✂️' },
-  { key: 'Bar Mitzvah',   emoji: '13' },
+  { key: 'Bar Mitzvah',   emoji: '⓭' },
   { key: 'Tenoyim',       emoji: '📜' },
   { key: 'Vort',          emoji: '🥂' },
   { key: 'Wedding',       emoji: '💍' },
@@ -17,6 +17,7 @@ const CATEGORIES = [
 export default function LandingHeader() {
   const [scrollVelocity, setScrollVelocity] = useState(0);
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -26,6 +27,7 @@ export default function LandingHeader() {
       const currentScrollY = window.scrollY;
       const diff = currentScrollY - lastScrollY;
       setScrollVelocity(Math.min(Math.abs(diff) * 0.05, 1));
+      setScrolled(currentScrollY > 20);
       lastScrollY = currentScrollY;
 
       if (Math.abs(diff) > 25) setActiveCategory(null);
@@ -61,6 +63,8 @@ export default function LandingHeader() {
         justifyContent: 'space-between',
         padding: '0 48px',
         pointerEvents: 'none',
+        transform: scrolled ? 'translateY(-100%)' : 'translateY(0)',
+        transition: 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
       }}>
         <a href="/" style={{
           pointerEvents: 'auto',
@@ -102,31 +106,31 @@ export default function LandingHeader() {
       {/* Sticky category pills — in page flow, sticks below the fixed header */}
       <div style={{
         position: 'sticky',
-        top: 64,
+        top: scrolled ? 0 : 64,
+        transition: 'top 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
         zIndex: 50,
         overflow: 'visible',
-        padding: '12px 16px 16px',
+        padding: '12px 24px 16px',
         pointerEvents: 'none',
       }}>
         <div style={{
-          maxWidth: 1600,
+          maxWidth: 1100,
           margin: '0 auto',
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'center',
-          gap: 12,
+          gap: 8,
           overflow: 'visible',
           pointerEvents: 'auto',
         }}>
           {CATEGORIES.map((cat, i) => (
-            <div key={cat.key} style={{ flex: '1 1 130px', maxWidth: 190, minWidth: 120, overflow: 'visible' }}>
+            <div key={cat.key} style={{ flex: '0 0 auto', overflow: 'visible' }}>
               <GlassPill
                 text={cat.key}
                 emoji={cat.emoji}
                 href={`/templates?category=${encodeURIComponent(cat.key)}`}
                 velocity={scrollVelocity}
                 subcategories={cat.subcategories}
-                fullWidth
                 isOpen={activeCategory === i}
                 onToggle={() => setActiveCategory(activeCategory === i ? null : i)}
               />

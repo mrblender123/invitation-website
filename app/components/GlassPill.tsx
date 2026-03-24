@@ -6,17 +6,19 @@ import Link from 'next/link';
 interface GlassPillProps {
   text: string;
   emoji?: string;
-  href: string;
+  href?: string;
+  onClick?: () => void;
   velocity?: number;
   subcategories?: string[];
   fullWidth?: boolean;
   isOpen?: boolean;
   onToggle?: () => void;
+  disabled?: boolean;
 }
 
 export default function GlassPill({
-  text, emoji, href, velocity = 0, subcategories, fullWidth,
-  isOpen: controlledOpen, onToggle,
+  text, emoji, href, onClick, velocity = 0, subcategories, fullWidth,
+  isOpen: controlledOpen, onToggle, disabled,
 }: GlassPillProps) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -57,17 +59,20 @@ export default function GlassPill({
   };
 
   const handleClick = () => {
+    if (disabled) return;
     if (isControlled && onToggle) {
       onToggle();
     } else if (hasDropdown) {
       setInternalOpen(o => !o);
+    } else if (onClick) {
+      onClick();
     }
   };
 
   const absVelocity = Math.abs(velocity);
   const cappedVelocity = Math.min(absVelocity, 0.1);
   const interactionScale = isPressed ? 0.92 : isHovered ? 1.06 : 1.0;
-  const isNumeric = emoji === '13';
+  const isNumeric = emoji === '⓭';
 
   const pillEl = (
     <div
@@ -83,8 +88,9 @@ export default function GlassPill({
         minHeight: fullWidth ? 44 : undefined,
         padding: fullWidth ? '10px 16px' : '9px 16px',
         borderRadius: 9999,
-        cursor: 'pointer',
+        cursor: disabled ? 'not-allowed' : 'pointer',
         userSelect: 'none',
+        opacity: disabled ? 0.5 : undefined,
         display: 'flex',
         alignItems: 'center',
         justifyContent: fullWidth ? 'center' : undefined,
@@ -171,7 +177,8 @@ export default function GlassPill({
       {/* 7. Content */}
       <div style={{
         position: 'relative', zIndex: 30,
-        display: 'flex', alignItems: 'center', gap: 6,
+        display: 'flex', alignItems: 'center',
+        gap: 6,
         transform: isPressed ? 'scale(0.90)' : 'scale(1)',
         opacity: isPressed ? 0.70 : 1,
         transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s',
@@ -224,13 +231,13 @@ export default function GlassPill({
   );
 
   return (
-    <div style={{ position: 'relative', width: fullWidth ? '100%' : undefined, overflow: 'visible' }}>
-      {hasDropdown ? (
-        <div onClick={handleClick} style={{ cursor: 'pointer' }}>
+    <div style={{ position: 'relative', width: fullWidth ? '100%' : 'fit-content', overflow: 'visible' }}>
+      {hasDropdown || onClick ? (
+        <div onClick={handleClick} style={{ cursor: disabled ? 'not-allowed' : 'pointer', width: fullWidth ? '100%' : 'fit-content' }}>
           {pillEl}
         </div>
       ) : (
-        <Link href={href} style={{ textDecoration: 'none' }}>
+        <Link href={href ?? '/'} style={{ textDecoration: 'none' }}>
           {pillEl}
         </Link>
       )}
@@ -259,7 +266,7 @@ export default function GlassPill({
             style={{
               padding: '10px 20px', borderRadius: 9999,
               fontSize: 13, fontWeight: 700, fontStyle: 'italic',
-              color: '#334155', textDecoration: 'none', whiteSpace: 'nowrap', display: 'block',
+              color: '#334155', textDecoration: 'none', whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center',
               transition: 'background 0.15s, color 0.15s, transform 0.15s',
             }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.80)'; e.currentTarget.style.color = 'rgb(59,130,246)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
@@ -274,7 +281,7 @@ export default function GlassPill({
               style={{
                 padding: '10px 20px', borderRadius: 9999,
                 fontSize: 13, fontWeight: 700, fontStyle: 'italic',
-                color: '#334155', textDecoration: 'none', whiteSpace: 'nowrap', display: 'block',
+                color: '#334155', textDecoration: 'none', whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center',
                 transition: `background 0.15s ${idx * 30}ms, color 0.15s, transform 0.15s`,
               }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.80)'; e.currentTarget.style.color = 'rgb(59,130,246)'; e.currentTarget.style.transform = 'scale(1.05)'; }}

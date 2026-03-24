@@ -18,7 +18,7 @@ const CATEGORY_META: { key: string; icon: string }[] = [
   { key: "It's a Boy",    icon: '👶🏻' },
   { key: "It's a Girl",   icon: '🎀' },
   { key: 'Upsherin',      icon: '✂️' },
-  { key: 'Bar Mitzvah',   icon: '13' },
+  { key: 'Bar Mitzvah',   icon: '⓭' },
   { key: 'Tenoyim',       icon: '📜' },
   { key: 'Vort',          icon: '🥂' },
   { key: 'Wedding',       icon: '💍' },
@@ -78,13 +78,13 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
           display: 'flex', alignItems: 'center', gap: 8,
         }}>
           <span style={{
-            fontSize: CATEGORY_ICON[category] === '13' ? 24 : 32,
-            fontFamily: CATEGORY_ICON[category] === '13' ? 'var(--font-playfair)' : undefined,
-            fontWeight: CATEGORY_ICON[category] === '13' ? 700 : undefined,
+            fontSize: CATEGORY_ICON[category] === '⓭' ? 24 : 32,
+            fontFamily: CATEGORY_ICON[category] === '⓭' ? 'var(--font-playfair)' : undefined,
+            fontWeight: CATEGORY_ICON[category] === '⓭' ? 700 : undefined,
             lineHeight: 1,
             verticalAlign: 'middle',
             position: 'relative',
-            top: CATEGORY_ICON[category] === '13' ? '-1px' : undefined,
+            top: CATEGORY_ICON[category] === '⓭' ? '-1px' : undefined,
           }}>
             {CATEGORY_ICON[category] ?? ''}
           </span>

@@ -1,6 +1,6 @@
-import Link from 'next/link';
 import LandingHeader from '../components/LandingHeader';
 import FaqAccordion from '../components/FaqAccordion';
+import GlassPill from '../components/GlassPill';
 
 export const metadata = {
   title: 'About — Pintle',
@@ -115,13 +115,7 @@ export default function AboutPage() {
           <p style={{ fontSize: 15, color: 'var(--muted)', marginBottom: 32 }}>
             Browse templates for every simcha and have your invitation ready in minutes.
           </p>
-          <Link
-            href="/templates"
-            className="silver-btn"
-            style={{ padding: '0.95rem 3rem', fontSize: '1rem', textDecoration: 'none', display: 'inline-block' }}
-          >
-            Browse Templates
-          </Link>
+          <GlassPill text="Browse Templates" href="/templates" />
         </div>
       </section>
 

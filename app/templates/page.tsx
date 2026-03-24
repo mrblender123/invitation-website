@@ -459,16 +459,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
         {selected === null ? (
           /* ── Gallery view ── */
           <>
-            <button
-              onClick={() => router.back()}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                background: 'transparent', border: 'none', cursor: 'pointer',
-                color: 'var(--muted)', fontSize: 14, padding: '0 0 36px',
-              }}
-            >
-              ← Back
-            </button>
+            <div style={{ marginBottom: 36 }}>
+              <GlassPill text="← Back" onClick={() => router.back()} />
+            </div>
 
 
             {/* Sub-category filter tabs */}
@@ -564,16 +557,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
           /* ── Editor view ── */
           <>
             {/* Back button */}
-            <button
-              onClick={() => setSelected(null)}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                background: 'transparent', border: 'none', cursor: 'pointer',
-                color: 'var(--foreground)', fontSize: 14, padding: '0 0 40px',
-              }}
-            >
-              ← Back to Templates
-            </button>
+            <div style={{ marginBottom: 40, display: 'inline-block' }}>
+              <GlassPill text="← Back" onClick={() => router.back()} />
+            </div>
 
             {(() => {
               const isMobile = windowWidth < 900;
@@ -649,19 +635,12 @@ const [windowWidth, setWindowWidth] = useState(1200);
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {/* Text inputs — dynamic for SVG templates, legacy for InvitationCard */}
                 {selected.fields?.some(f => f.optional) && (
-                  <button
-                    onClick={() => setShowAllFields(v => !v)}
-                    style={{
-                      alignSelf: 'flex-start', marginBottom: 16,
-                      background: showAllFields ? 'rgba(0,0,0,0.06)' : 'transparent',
-                      border: '1px solid rgba(0,0,0,0.12)',
-                      borderRadius: 8, padding: '6px 14px',
-                      fontSize: 12, color: 'var(--foreground)',
-                      cursor: 'pointer', letterSpacing: '0.04em',
-                    }}
-                  >
-                    {showAllFields ? '− Hide extra fields' : '+ Show all fields'}
-                  </button>
+                  <div style={{ alignSelf: 'flex-start', marginBottom: 16 }}>
+                    <GlassPill
+                      text={showAllFields ? '− Hide extra fields' : '+ Show all fields'}
+                      onClick={() => setShowAllFields(v => !v)}
+                    />
+                  </div>
                 )}
                 <div style={{
                   display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32,
@@ -818,65 +797,29 @@ const [windowWidth, setWindowWidth] = useState(1200);
 
                 {/* Actions */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  <button
+                  <GlassPill
+                    text={isDownloading ? 'Preparing…' : '⬇ Download PNG'}
                     onClick={handleDownload}
                     disabled={isDownloading}
-                    className="silver-btn"
-                    style={{
-                      padding: '12px 0', fontSize: 15, fontWeight: 600,
-                      opacity: isDownloading ? 0.6 : 1,
-                      cursor: isDownloading ? 'wait' : 'pointer',
-                      width: '100%',
-                    }}
-                  >
-                    {isDownloading ? 'Preparing…' : '⬇ Download PNG'}
-                  </button>
+                    fullWidth
+                  />
 
                   {/* Buy + Save for Later row */}
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <button
-                      style={{
-                        flex: 1, padding: '11px 0', borderRadius: 8,
-                        fontWeight: 700, fontSize: 14,
-                        background: 'linear-gradient(135deg, #b8973a 0%, #f0d060 50%, #b8973a 100%)',
-                        color: '#1a1200',
-                        border: 'none',
-                        cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                        letterSpacing: '0.02em',
-                      }}
-                    >
-                      Buy
-                    </button>
-                    <button
-                      onClick={handleSaveForLater}
-                      style={{
-                        flex: 1, padding: '11px 0', borderRadius: 8,
-                        fontWeight: 600, fontSize: 14,
-                        background: 'rgba(0,0,0,0.06)',
-                        color: 'var(--foreground)',
-                        border: '1px solid rgba(0,0,0,0.1)',
-                        cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                        transition: 'all 0.2s',
-                      }}
-                    >
-                      Save for Later
-                    </button>
+                    <div style={{ flex: 1 }}>
+                      <GlassPill text="Buy" fullWidth />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <GlassPill text="Save for Later" onClick={handleSaveForLater} fullWidth />
+                    </div>
                   </div>
 
                   {!selected.textSvg && (
-                    <button
+                    <GlassPill
+                      text={user ? 'Customize in Studio →' : 'Open in Studio →'}
                       onClick={handleOpenInStudio}
-                      style={{
-                        padding: '11px 0', borderRadius: 8, fontWeight: 600, fontSize: 14,
-                        background: 'transparent', color: 'var(--muted)',
-                        border: '1px solid rgba(0,0,0,0.12)', cursor: 'pointer',
-                        width: '100%',
-                      }}
-                    >
-                      {user ? 'Customize further in Studio →' : 'Open in Studio (sign in required) →'}
-                    </button>
+                      fullWidth
+                    />
                   )}
                 </div>
 
@@ -934,16 +877,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   We sent a link to <strong style={{ color: 'var(--foreground)' }}>{draftEmail}</strong>.
                   Your draft will be available for 7 days.
                 </p>
-                <button
-                  onClick={() => setShowDraftModal(false)}
-                  style={{
-                    padding: '11px 28px', borderRadius: 8, fontWeight: 600, fontSize: 14,
-                    background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.12)',
-                    color: 'var(--foreground)', cursor: 'pointer',
-                  }}
-                >
-                  Done
-                </button>
+                <GlassPill text="Done" onClick={() => setShowDraftModal(false)} />
               </div>
             ) : (
               /* Input state */
@@ -972,20 +906,12 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     <p style={{ fontSize: 13, color: '#f87171', margin: 0 }}>{draftError}</p>
                   )}
 
-                  <button
+                  <GlassPill
+                    text={draftSending ? 'Sending…' : 'Send me the link'}
                     onClick={handleSendDraft}
                     disabled={draftSending || !draftEmail.trim()}
-                    style={{
-                      padding: '13px 0', borderRadius: 8, fontWeight: 700, fontSize: 15,
-                      background: 'linear-gradient(135deg, #b8973a 0%, #f0d060 50%, #b8973a 100%)',
-                      color: '#1a1200', border: 'none',
-                      cursor: draftSending || !draftEmail.trim() ? 'not-allowed' : 'pointer',
-                      opacity: draftSending || !draftEmail.trim() ? 0.6 : 1,
-                      transition: 'opacity 0.15s',
-                    }}
-                  >
-                    {draftSending ? 'Sending…' : 'Send me the link'}
-                  </button>
+                    fullWidth
+                  />
                 </div>
               </>
             )}
