@@ -90,13 +90,12 @@ export default function GlassPill({
         borderRadius: 9999,
         cursor: disabled ? 'not-allowed' : 'pointer',
         userSelect: 'none',
-        opacity: disabled ? 0.5 : undefined,
         display: 'flex',
         alignItems: 'center',
         justifyContent: fullWidth ? 'center' : undefined,
         overflow: 'visible',
         zIndex: 50,
-        opacity: scrollOpacity,
+        opacity: disabled ? 0.5 : scrollOpacity,
         pointerEvents: scrollOpacity < 0.1 ? 'none' : 'auto',
         transform: `scale(${interactionScale + cappedVelocity * 0.08}) translateY(${scrollOffset}px)`,
         transition: isPressed
@@ -262,7 +261,7 @@ export default function GlassPill({
           boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
         }}>
           <Link
-            href={href}
+            href={href ?? '/'}
             style={{
               padding: '10px 20px', borderRadius: 9999,
               fontSize: 13, fontWeight: 700, fontStyle: 'italic',
