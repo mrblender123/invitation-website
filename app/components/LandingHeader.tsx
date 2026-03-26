@@ -18,6 +18,14 @@ export default function LandingHeader() {
   const [scrollVelocity, setScrollVelocity] = useState(0);
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(1200);
+
+  useEffect(() => {
+    const update = () => setWindowWidth(window.innerWidth);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -124,13 +132,14 @@ export default function LandingHeader() {
           pointerEvents: 'auto',
         }}>
           {CATEGORIES.map((cat, i) => (
-            <div key={cat.key} style={{ flex: '0 0 auto', overflow: 'visible' }}>
+            <div key={cat.key} style={{ flex: windowWidth < 640 ? '0 0 calc(50% - 4px)' : '0 0 auto', overflow: 'visible' }}>
               <GlassPill
                 text={cat.key}
                 emoji={cat.emoji}
                 href={`/templates?category=${encodeURIComponent(cat.key)}`}
                 velocity={scrollVelocity}
                 subcategories={cat.subcategories}
+                fullWidth={windowWidth < 640}
                 isOpen={activeCategory === i}
                 onToggle={() => setActiveCategory(activeCategory === i ? null : i)}
               />
