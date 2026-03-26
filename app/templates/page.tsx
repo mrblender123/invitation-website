@@ -6,8 +6,8 @@ import Link from 'next/link';
 import html2canvas from 'html2canvas';
 import InvitationCard from '../components/InvitationCard';
 import SvgCardPreview from '../components/SvgCardPreview';
-import VirtualKeyboard from '../components/VirtualKeyboard';
 import { useAuth } from '../components/AuthProvider';
+import VirtualKeyboard from '../components/VirtualKeyboard';
 import { CATEGORY_SUBS, SUB_DISPLAY_NAMES } from '@/lib/categories';
 import GlassPill from '../components/GlassPill';
 import type { Template } from '@/lib/templates';
@@ -219,7 +219,6 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [showAllFields, setShowAllFields] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
-  const openingVirtualKeyboard = useRef(false);
 
   // Draft modal state
   const [showDraftModal, setShowDraftModal] = useState(false);
@@ -664,7 +663,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                               style={{
                                 ...inputStyle,
                                 paddingLeft: 30,
-                                paddingRight: windowWidth < 768 ? 34 : 30,
+                                paddingRight: 30,
                                 textAlign: 'center',
                                 direction: field.rtl ? 'rtl' : 'ltr',
                                 borderColor: isActive ? 'rgba(0,0,0,0.4)' : field.optional ? 'rgba(160,130,70,0.5)' : undefined,
@@ -673,13 +672,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                               placeholder={clearedFields.has(field.id) ? '' : field.placeholder}
                               value={fieldValues[field.id] ?? ''}
                               onFocus={() => setActiveField({ id: field.id, rtl: field.rtl ?? false })}
-                              onBlur={() => {
-                                if (openingVirtualKeyboard.current) {
-                                  openingVirtualKeyboard.current = false;
-                                  return;
-                                }
-                                setActiveField(null);
-                              }}
+                              onBlur={() => setActiveField(null)}
                               onChange={e => {
                                 setFieldValues(v => ({ ...v, [field.id]: e.target.value }));
                                 if (clearedFields.has(field.id) && e.target.value !== '') {
@@ -687,35 +680,6 @@ const [windowWidth, setWindowWidth] = useState(1200);
                                 }
                               }}
                             />
-                          {/* Keyboard trigger — phone only */}
-                          {windowWidth < 768 && (
-                            <button
-                              onPointerDown={e => {
-                                e.preventDefault();
-                                openingVirtualKeyboard.current = true;
-                                inputRefs.current[field.id]?.blur();
-                                setActiveField({ id: field.id, rtl: field.rtl ?? false });
-                              }}
-                              title="Open keyboard"
-                              style={{
-                                position: 'absolute',
-                                right: 8,
-                                top: '50%',
-                                transform: 'translateY(-50%)',
-                                width: 22, height: 22,
-                                borderRadius: 6,
-                                border: isActive ? '1px solid rgba(0,0,0,0.2)' : '1px solid rgba(0,0,0,0.10)',
-                                background: isActive ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.04)',
-                                color: 'var(--muted)',
-                                fontSize: 13,
-                                cursor: 'pointer',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                padding: 0, lineHeight: 1,
-                              }}
-                            >
-                              ⌨
-                            </button>
-                          )}
                           {/* Clear / Reload — always visible */}
                           <button
                             onMouseDown={e => {
@@ -749,7 +713,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                             {clearedFields.has(field.id) ? '↺' : '×'}
                           </button>
                         </div>
-                        {isActive && (
+                        {isActive && windowWidth >= 768 && (
                           <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 50 }}>
                             <VirtualKeyboard
                               lang={field.rtl ? 'he' : 'en'}
