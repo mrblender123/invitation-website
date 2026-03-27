@@ -122,8 +122,8 @@ export default function GlassPill({
         opacity: isHovered ? 0.50 : 0.20,
         transition: 'opacity 700ms',
       }}>
-        <div style={{ position: 'absolute', inset: '0 auto 0 -8px', width: 40, background: 'rgba(59,130,246,0.20)' }} />
-        <div style={{ position: 'absolute', inset: '0 -8px 0 auto', width: 40, background: 'rgba(236,72,153,0.20)' }} />
+        <div style={{ position: 'absolute', inset: '0 auto 0 -8px', width: 40, background: 'rgba(148,163,184,0.25)' }} />
+        <div style={{ position: 'absolute', inset: '0 -8px 0 auto', width: 40, background: 'rgba(203,213,225,0.25)' }} />
       </div>
       {/* 2. Base glass body */}
       <div style={{
@@ -131,9 +131,9 @@ export default function GlassPill({
         background: active ? 'rgba(148,163,184,0.18)' : 'rgba(255,255,255,0.50)',
         backdropFilter: 'blur(60px)',
         WebkitBackdropFilter: 'blur(60px)',
-        border: isPressed ? '1.5px solid rgba(59,130,246,0.30)' : active ? '1.5px solid rgba(148,163,184,0.60)' : '1.5px solid rgba(255,255,255,0.90)',
+        border: isPressed ? '1.5px solid rgba(148,163,184,0.50)' : active ? '1.5px solid rgba(148,163,184,0.60)' : '1.5px solid rgba(255,255,255,0.90)',
         boxShadow: isPressed
-          ? 'inset 0 8px 20px rgba(59,130,246,0.15), inset 0 -2px 10px rgba(255,255,255,0.9)'
+          ? 'inset 0 8px 20px rgba(148,163,184,0.20), inset 0 -2px 10px rgba(255,255,255,0.9)'
           : active
           ? 'inset 0 8px 20px rgba(148,163,184,0.15), inset 0 -4px 12px rgba(255,255,255,0.9)'
           : 'inset 0 12px 24px rgba(255,255,255,1), inset 0 -10px 20px rgba(0,0,0,0.05), 0 10px 30px -10px rgba(0,0,0,0.10)',
@@ -142,7 +142,7 @@ export default function GlassPill({
       {/* 3. Click bubble */}
       <div style={{
         position: 'absolute', inset: 0, borderRadius: 9999,
-        background: 'rgba(59,130,246,0.10)',
+        background: 'rgba(148,163,184,0.20)',
         filter: 'blur(16px)',
         opacity: isPressed ? 1 : 0,
         transition: 'opacity 300ms',
@@ -170,7 +170,7 @@ export default function GlassPill({
       }}>
         <div style={{
           position: 'absolute', width: 160, height: 160, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(59,130,246,0.4) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(148,163,184,0.4) 0%, transparent 70%)',
           left: mousePosition.x - 80, top: mousePosition.y - 80,
           filter: 'blur(36px)',
           opacity: isHovered && !isPressed ? 0.8 : 0,
@@ -211,7 +211,7 @@ export default function GlassPill({
             width="14" height="14"
             viewBox="0 0 24 24"
             fill="none"
-            stroke={dropOpen ? 'rgba(59,130,246,0.8)' : 'rgba(100,116,139,0.7)'}
+            stroke={dropOpen ? 'rgba(100,116,139,0.9)' : 'rgba(100,116,139,0.7)'}
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -272,7 +272,7 @@ export default function GlassPill({
               color: '#334155', textDecoration: 'none', whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center',
               transition: 'background 0.15s, color 0.15s, transform 0.15s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.80)'; e.currentTarget.style.color = 'rgb(59,130,246)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.80)'; e.currentTarget.style.color = 'rgb(71,85,105)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; e.currentTarget.style.transform = 'scale(1)'; }}
           >
             All {text}
@@ -287,7 +287,7 @@ export default function GlassPill({
                 color: '#334155', textDecoration: 'none', whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center',
                 transition: `background 0.15s ${idx * 30}ms, color 0.15s, transform 0.15s`,
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.80)'; e.currentTarget.style.color = 'rgb(59,130,246)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.80)'; e.currentTarget.style.color = 'rgb(71,85,105)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; e.currentTarget.style.transform = 'scale(1)'; }}
             >
               {sub}
