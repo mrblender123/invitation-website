@@ -469,12 +469,14 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 <GlassPill
                   text="All"
                   href={`/templates?category=${encodeURIComponent(category!)}`}
+                  active={!subcategory}
                 />
                 {subs.map(sub => (
                   <GlassPill
                     key={sub}
                     text={SUB_DISPLAY_NAMES[sub] ?? sub}
                     href={`/templates?category=${encodeURIComponent(category!)}&subcategory=${encodeURIComponent(sub)}`}
+                    active={subcategory === sub}
                   />
                 ))}
               </div>
