@@ -15,11 +15,12 @@ interface GlassPillProps {
   onToggle?: () => void;
   disabled?: boolean;
   active?: boolean;
+  replace?: boolean;
 }
 
 export default function GlassPill({
   text, emoji, href, onClick, velocity = 0, subcategories, fullWidth,
-  isOpen: controlledOpen, onToggle, disabled, active,
+  isOpen: controlledOpen, onToggle, disabled, active, replace,
 }: GlassPillProps) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -239,7 +240,7 @@ export default function GlassPill({
           {pillEl}
         </div>
       ) : (
-        <Link href={href ?? '/'} style={{ textDecoration: 'none' }}>
+        <Link href={href ?? '/'} replace={replace} style={{ textDecoration: 'none' }}>
           {pillEl}
         </Link>
       )}

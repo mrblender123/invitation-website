@@ -470,6 +470,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   text="All"
                   href={`/templates?category=${encodeURIComponent(category!)}`}
                   active={!subcategory}
+                  replace
                 />
                 {subs.map(sub => (
                   <GlassPill
@@ -477,6 +478,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     text={SUB_DISPLAY_NAMES[sub] ?? sub}
                     href={`/templates?category=${encodeURIComponent(category!)}&subcategory=${encodeURIComponent(sub)}`}
                     active={subcategory === sub}
+                    replace
                   />
                 ))}
               </div>
