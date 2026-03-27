@@ -128,14 +128,14 @@ export default function GlassPill({
       {/* 2. Base glass body */}
       <div style={{
         position: 'absolute', inset: 0, borderRadius: 9999,
-        background: active ? 'rgba(59,130,246,0.10)' : 'rgba(255,255,255,0.50)',
+        background: active ? 'rgba(148,163,184,0.18)' : 'rgba(255,255,255,0.50)',
         backdropFilter: 'blur(60px)',
         WebkitBackdropFilter: 'blur(60px)',
-        border: isPressed ? '1.5px solid rgba(59,130,246,0.30)' : active ? '1.5px solid rgba(59,130,246,0.40)' : '1.5px solid rgba(255,255,255,0.90)',
+        border: isPressed ? '1.5px solid rgba(59,130,246,0.30)' : active ? '1.5px solid rgba(148,163,184,0.60)' : '1.5px solid rgba(255,255,255,0.90)',
         boxShadow: isPressed
           ? 'inset 0 8px 20px rgba(59,130,246,0.15), inset 0 -2px 10px rgba(255,255,255,0.9)'
           : active
-          ? 'inset 0 8px 20px rgba(59,130,246,0.10), inset 0 -4px 12px rgba(255,255,255,0.9)'
+          ? 'inset 0 8px 20px rgba(148,163,184,0.15), inset 0 -4px 12px rgba(255,255,255,0.9)'
           : 'inset 0 12px 24px rgba(255,255,255,1), inset 0 -10px 20px rgba(0,0,0,0.05), 0 10px 30px -10px rgba(0,0,0,0.10)',
         transition: 'box-shadow 300ms, border 300ms',
       }} />
@@ -200,7 +200,7 @@ export default function GlassPill({
           fontWeight: 700,
           fontStyle: 'italic',
           letterSpacing: '-0.01em',
-          color: active ? 'rgb(59,130,246)' : '#0f172a',
+          color: active ? 'rgb(71,85,105)' : '#0f172a',
           lineHeight: 1,
           whiteSpace: 'nowrap',
         }}>
