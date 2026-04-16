@@ -72,24 +72,11 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 24px', marginBottom: 12,
       }}>
-        <h2 style={{
-          fontSize: 18, fontWeight: 700,
-          color: 'var(--foreground)', margin: 0,
-          display: 'flex', alignItems: 'center', gap: 8,
-        }}>
-          <span style={{
-            fontSize: CATEGORY_ICON[category] === '⓭' ? 24 : 32,
-            fontFamily: CATEGORY_ICON[category] === '⓭' ? 'var(--font-playfair)' : undefined,
-            fontWeight: CATEGORY_ICON[category] === '⓭' ? 700 : undefined,
-            lineHeight: 1,
-            verticalAlign: 'middle',
-            position: 'relative',
-            top: CATEGORY_ICON[category] === '⓭' ? '-1px' : undefined,
-          }}>
-            {CATEGORY_ICON[category] ?? ''}
-          </span>
-          {category}
-        </h2>
+        <GlassPill
+          text={category}
+          emoji={CATEGORY_ICON[category]}
+          href={`/templates?category=${encodeURIComponent(category)}`}
+        />
         <GlassPill
           text="View all →"
           href={`/templates?category=${encodeURIComponent(category)}`}
