@@ -9,8 +9,8 @@ export async function GET() {
   }
 
   try {
-    // Fetch the Typekit CSS (kit hat2kft)
-    const kitCss = await fetch('https://use.typekit.net/hat2kft.css', {
+    // Fetch the Typekit CSS (kit clg1fwd — contains forma-djr-hebrew-banner + schablona)
+    const kitCss = await fetch('https://use.typekit.net/clg1fwd.css', {
       headers: {
         'User-Agent': 'Mozilla/5.0',
         'Referer': process.env.NEXT_PUBLIC_APP_URL ?? 'https://pintle.co',
@@ -21,10 +21,11 @@ export async function GET() {
     const faceRegex = /@font-face\s*\{[^}]+\}/g;
     const allFaces = kitCss.match(faceRegex) ?? [];
 
-    // Keep only forma-djr-hebrew-banner faces
-    const targetFaces = allFaces.filter(f =>
-      f.toLowerCase().includes('forma-djr-hebrew-banner')
-    );
+    // Keep forma-djr-hebrew-banner and schablona faces
+    const targetFaces = allFaces.filter(f => {
+      const lower = f.toLowerCase();
+      return lower.includes('forma-djr-hebrew-banner') || lower.includes('schablona');
+    });
 
     const embeddedFaces: string[] = [];
 
