@@ -155,7 +155,19 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
     if (!template.textSvg) return;
     fetch(template.textSvg)
       .then(r => r.text())
-      .then(text => setSvgContent(text))
+      .then(async text => {
+        // If the SVG imports a Typekit kit, replace it with embedded base64 fonts
+        // so the font renders reliably without domain whitelisting or load-order issues.
+        if (text.includes('use.typekit.net')) {
+          try {
+            const { css } = await fetch('/api/font-embed').then(r => r.json());
+            if (css) {
+              text = text.replace(/@import url\(["']?[^"')]*use\.typekit\.net[^"')]*["']?\)\s*;?/g, css);
+            }
+          } catch { /* fall back to @import as-is */ }
+        }
+        setSvgContent(text);
+      })
       .catch(() => setSvgContent(null));
   }, [template.textSvg]);
 
