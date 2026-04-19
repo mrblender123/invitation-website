@@ -156,19 +156,29 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
     fetch(template.textSvg)
       .then(r => r.text())
       .then(async text => {
-        // If the SVG imports a Typekit kit, replace the @import with actual @font-face
-        // rules fetched directly from the browser. This avoids @import-in-SVG which
-        // browsers often ignore, and avoids server-side font-file download issues.
+        // If the SVG imports a Typekit kit, load the fonts at the document level.
+        // @font-face inside SVG <style> is ignored by browsers — fonts must be
+        // declared in the document head to be usable by inline SVG text elements.
         const typekitMatch = text.match(/@import url\(["']?(https:\/\/use\.typekit\.net\/[^"')]+)["']?\)/);
         if (typekitMatch) {
           try {
             const kitCss = await fetch(typekitMatch[1]).then(r => r.text());
-            // Extract only @font-face blocks (drop @charset, media queries, etc.)
             const faces = kitCss.match(/@font-face\s*\{[^}]+\}/g)?.join('\n') ?? '';
             if (faces) {
-              text = text.replace(/@import url\(["']?[^"')]*use\.typekit\.net[^"')]*["']?\)\s*;?/g, faces);
+              // Remove the @import from the SVG (no longer needed)
+              text = text.replace(/@import url\(["']?[^"')]*use\.typekit\.net[^"')]*["']?\)\s*;?/g, '');
+              // Inject @font-face rules into the document head if not already there
+              const styleId = 'typekit-faces';
+              if (!document.getElementById(styleId)) {
+                const styleEl = document.createElement('style');
+                styleEl.id = styleId;
+                styleEl.textContent = faces;
+                document.head.appendChild(styleEl);
+              }
+              // Wait for the fonts to finish loading before rendering the SVG
+              await document.fonts.ready;
             }
-          } catch { /* fall back to @import as-is */ }
+          } catch { /* proceed without custom font */ }
         }
         setSvgContent(text);
       })
