@@ -1,3 +1,4 @@
+@import url("https://use.typekit.net/clg1fwd.css");
 @import "tailwindcss";
 
 /* ── Self-hosted UI fonts (reliable on all devices incl. iPhone) ── */
@@ -65,7 +66,7 @@
 }
 
 :root {
-  --background: #fdfcfa;
+  --background: #ffffff;
   --foreground: #18181b;
   --muted: rgba(0,0,0,0.42);
   --muted-faint: rgba(0,0,0,0.28);
