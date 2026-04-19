@@ -8,12 +8,16 @@ export async function GET() {
     return NextResponse.json({ css: cachedCss });
   }
 
+  const apiKey = process.env.ADOBE_FONTS_API_KEY;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://pintle.co';
+
   try {
     // Fetch the Typekit CSS (kit clg1fwd — contains forma-djr-hebrew-banner + schablona)
     const kitCss = await fetch('https://use.typekit.net/clg1fwd.css', {
       headers: {
         'User-Agent': 'Mozilla/5.0',
-        'Referer': process.env.NEXT_PUBLIC_APP_URL ?? 'https://pintle.co',
+        'Referer': appUrl,
+        ...(apiKey ? { 'X-Typekit-Token': apiKey } : {}),
       },
     }).then(r => r.text());
 
@@ -36,7 +40,10 @@ export async function GET() {
 
       try {
         const fontBuffer = await fetch(urlMatch[1], {
-          headers: { 'Referer': process.env.NEXT_PUBLIC_APP_URL ?? 'https://pintle.co' },
+          headers: {
+            'Referer': appUrl,
+            ...(apiKey ? { 'X-Typekit-Token': apiKey } : {}),
+          },
         }).then(r => r.arrayBuffer());
 
         const base64 = Buffer.from(fontBuffer).toString('base64');
