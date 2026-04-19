@@ -175,8 +175,17 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
                 styleEl.textContent = faces;
                 document.head.appendChild(styleEl);
               }
-              // Wait for the fonts to finish loading before rendering the SVG
-              await document.fonts.ready;
+              // Extract font-family names and explicitly load each one.
+              // document.fonts.ready resolves immediately if already settled,
+              // so we must use fonts.load() to trigger + await specific fonts.
+              const families = [...faces.matchAll(/font-family\s*:\s*["']?([^"';,\n]+)["']?/gi)]
+                .map(m => m[1].trim());
+              const weights = [...faces.matchAll(/font-weight\s*:\s*([^\s;]+)/gi)]
+                .map(m => m[1].trim());
+              const loadPromises = families.map((fam, i) =>
+                document.fonts.load(`${weights[i] ?? '400'} 1em "${fam}"`).catch(() => null)
+              );
+              await Promise.all(loadPromises);
             }
           } catch { /* proceed without custom font */ }
         }
