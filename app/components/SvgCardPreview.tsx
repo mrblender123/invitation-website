@@ -156,13 +156,17 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
     fetch(template.textSvg)
       .then(r => r.text())
       .then(async text => {
-        // If the SVG imports a Typekit kit, replace it with embedded base64 fonts
-        // so the font renders reliably without domain whitelisting or load-order issues.
-        if (text.includes('use.typekit.net')) {
+        // If the SVG imports a Typekit kit, replace the @import with actual @font-face
+        // rules fetched directly from the browser. This avoids @import-in-SVG which
+        // browsers often ignore, and avoids server-side font-file download issues.
+        const typekitMatch = text.match(/@import url\(["']?(https:\/\/use\.typekit\.net\/[^"')]+)["']?\)/);
+        if (typekitMatch) {
           try {
-            const { css } = await fetch('/api/font-embed').then(r => r.json());
-            if (css) {
-              text = text.replace(/@import url\(["']?[^"')]*use\.typekit\.net[^"')]*["']?\)\s*;?/g, css);
+            const kitCss = await fetch(typekitMatch[1]).then(r => r.text());
+            // Extract only @font-face blocks (drop @charset, media queries, etc.)
+            const faces = kitCss.match(/@font-face\s*\{[^}]+\}/g)?.join('\n') ?? '';
+            if (faces) {
+              text = text.replace(/@import url\(["']?[^"')]*use\.typekit\.net[^"')]*["']?\)\s*;?/g, faces);
             }
           } catch { /* fall back to @import as-is */ }
         }
