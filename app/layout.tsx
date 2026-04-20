@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Dancing_Script, Lora, Montserrat, Oswald, Secular_One } from "next/font/google";
+import { Dancing_Script, Heebo, Lora, Montserrat, Oswald, Secular_One } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./components/AuthProvider";
 
@@ -34,6 +34,13 @@ const secularOne = Secular_One({
   display: "fallback",
 });
 
+const heebo = Heebo({
+  variable: "--font-heebo",
+  subsets: ["latin", "hebrew"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  display: "block",
+});
+
 
 export const metadata: Metadata = {
   title: "Pintle — AI-Powered Invitation Design",
@@ -51,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable}`}>
+    <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable} ${heebo.variable}`}>
       <head>
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link rel="stylesheet" href="https://use.typekit.net/hat2kft.css" />
