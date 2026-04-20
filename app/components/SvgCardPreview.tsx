@@ -150,27 +150,13 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
 ) {
   const { canvasWidth, canvasHeight } = template.style;
   const [svgContent, setSvgContent] = useState<string | null>(null);
-  const [fontsLoaded, setFontsLoaded] = useState(false);
-
-  // Load Adobe Fonts (Typekit kit clg1fwd) once, independently of SVG fetch.
-  // The SVG overlay is only rendered once this resolves so text uses the
-  // correct font from the first paint — no flash of unstyled text.
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const WebFont = require('webfontloader');
-    WebFont.load({
-      typekit: { id: 'clg1fwd' },
-      active:   () => setFontsLoaded(true),
-      inactive: () => setFontsLoaded(true), // render anyway if kit is blocked
-    });
-  }, []);
 
   useEffect(() => {
     if (!template.textSvg) return;
     fetch(template.textSvg)
       .then(r => r.text())
       .then(text => {
-        // Strip @import — fonts are loaded via WebFontLoader above
+        // Strip any @import rules — fonts are loaded via the page's CSS
         text = text.replace(/@import url\([^)]+\)\s*;?/g, '');
         setSvgContent(text);
       })
@@ -210,8 +196,8 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
             crossOrigin="anonymous"
           />
 
-          {/* SVG text overlay — only render after fonts are loaded */}
-          {injectedSvg && fontsLoaded && (
+          {/* SVG text overlay */}
+          {injectedSvg && (
             <div
               data-svg-overlay="true"
               style={{
