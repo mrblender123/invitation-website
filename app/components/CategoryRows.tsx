@@ -73,12 +73,12 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
         padding: '0 24px', marginBottom: 12,
       }}>
         <h2 style={{
-          fontSize: 18, fontWeight: 700,
+          fontSize: 16, fontWeight: 700,
           color: 'var(--foreground)', margin: 0,
           display: 'flex', alignItems: 'center', gap: 8,
         }}>
           <span style={{
-            fontSize: CATEGORY_ICON[category] === '⓭' ? 24 : 32,
+            fontSize: CATEGORY_ICON[category] === '⓭' ? 24 : 20,
             fontFamily: CATEGORY_ICON[category] === '⓭' ? 'var(--font-playfair)' : undefined,
             fontWeight: CATEGORY_ICON[category] === '⓭' ? 700 : undefined,
             lineHeight: 1,

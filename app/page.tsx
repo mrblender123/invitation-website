@@ -12,6 +12,9 @@ export default function Home() {
       {/* Bottom corner gradients */}
       <div aria-hidden="true" style={{ position: 'fixed', bottom: '-5%', left: '-8%', width: 600, height: 500, background: 'radial-gradient(ellipse at bottom left, rgba(180,200,255,0.22) 0%, transparent 65%)', filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0 }} />
       <div aria-hidden="true" style={{ position: 'fixed', bottom: '-5%', right: '-8%', width: 600, height: 500, background: 'radial-gradient(ellipse at bottom right, rgba(255,200,220,0.18) 0%, transparent 65%)', filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0 }} />
+      {/* Side vignettes — tweak width (how far it reaches in) and opacity (how dark) */}
+      <div aria-hidden="true" style={{ position: 'fixed', top: 0, left: 0, width: 120, height: '100%', background: 'linear-gradient(to right, rgba(30, 30, 30, 0.12), transparent)', pointerEvents: 'none', zIndex: 0 }} />
+      <div aria-hidden="true" style={{ position: 'fixed', top: 0, right: 0, width: 120, height: '100%', background: 'linear-gradient(to left, rgba(0,0,0,0.12), transparent)', pointerEvents: 'none', zIndex: 0 }} />
 
 <LandingHeader />
 <div style={{ position: 'relative', zIndex: 1 }}>

@@ -159,31 +159,19 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
         // If the SVG imports a Typekit kit, load the fonts at the document level.
         // @font-face inside SVG <style> is ignored by browsers — fonts must be
         // declared in the document head to be usable by inline SVG text elements.
-        const typekitMatch = text.match(/@import url\(["']?(https:\/\/use\.typekit\.net\/[^"')]+)["']?\)/);
-        if (typekitMatch) {
-          // Remove @import from SVG — we load the kit via a <link> tag instead,
-          // which is the most reliable way to register @font-face rules.
+        if (text.includes('use.typekit.net')) {
+          // Remove the @import from the SVG — WebFontLoader handles loading instead
           text = text.replace(/@import url\(["']?[^"')]*use\.typekit\.net[^"')]*["']?\)\s*;?/g, '');
-          try {
-            const linkId = 'typekit-link';
-            if (!document.getElementById(linkId)) {
-              // Add the kit as a <link> stylesheet and wait for it to load
-              await new Promise<void>(resolve => {
-                const link = document.createElement('link');
-                link.id = linkId;
-                link.rel = 'stylesheet';
-                link.href = typekitMatch[1];
-                link.onload = () => resolve();
-                link.onerror = () => resolve();
-                document.head.appendChild(link);
-              });
-            }
-            // Explicitly trigger + await each font file download
-            const allFonts = [...document.fonts];
-            await Promise.all(
-              allFonts.map(f => document.fonts.load(`${f.weight} 1em "${f.family}"`).catch(() => null))
-            );
-          } catch { /* proceed without custom font */ }
+          // Use WebFontLoader to load the Typekit kit — the official Adobe method
+          await new Promise<void>(resolve => {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const WebFont = require('webfontloader');
+            WebFont.load({
+              typekit: { id: 'fjv7kfq' },
+              active: () => resolve(),
+              inactive: () => resolve(), // resolve even on failure so SVG still renders
+            });
+          });
         }
         setSvgContent(text);
       })
