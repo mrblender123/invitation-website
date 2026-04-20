@@ -161,32 +161,28 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
         // declared in the document head to be usable by inline SVG text elements.
         const typekitMatch = text.match(/@import url\(["']?(https:\/\/use\.typekit\.net\/[^"')]+)["']?\)/);
         if (typekitMatch) {
+          // Remove @import from SVG — we load the kit via a <link> tag instead,
+          // which is the most reliable way to register @font-face rules.
+          text = text.replace(/@import url\(["']?[^"')]*use\.typekit\.net[^"')]*["']?\)\s*;?/g, '');
           try {
-            const kitCss = await fetch(typekitMatch[1]).then(r => r.text());
-            const faces = kitCss.match(/@font-face\s*\{[^}]+\}/g)?.join('\n') ?? '';
-            if (faces) {
-              // Remove the @import from the SVG (no longer needed)
-              text = text.replace(/@import url\(["']?[^"')]*use\.typekit\.net[^"')]*["']?\)\s*;?/g, '');
-              // Inject @font-face rules into the document head if not already there
-              const styleId = 'typekit-faces';
-              if (!document.getElementById(styleId)) {
-                const styleEl = document.createElement('style');
-                styleEl.id = styleId;
-                styleEl.textContent = faces;
-                document.head.appendChild(styleEl);
-              }
-              // Extract font-family names and explicitly load each one.
-              // document.fonts.ready resolves immediately if already settled,
-              // so we must use fonts.load() to trigger + await specific fonts.
-              const families = [...faces.matchAll(/font-family\s*:\s*["']?([^"';,\n]+)["']?/gi)]
-                .map(m => m[1].trim());
-              const weights = [...faces.matchAll(/font-weight\s*:\s*([^\s;]+)/gi)]
-                .map(m => m[1].trim());
-              const loadPromises = families.map((fam, i) =>
-                document.fonts.load(`${weights[i] ?? '400'} 1em "${fam}"`).catch(() => null)
-              );
-              await Promise.all(loadPromises);
+            const linkId = 'typekit-link';
+            if (!document.getElementById(linkId)) {
+              // Add the kit as a <link> stylesheet and wait for it to load
+              await new Promise<void>(resolve => {
+                const link = document.createElement('link');
+                link.id = linkId;
+                link.rel = 'stylesheet';
+                link.href = typekitMatch[1];
+                link.onload = () => resolve();
+                link.onerror = () => resolve();
+                document.head.appendChild(link);
+              });
             }
+            // Explicitly trigger + await each font file download
+            const allFonts = [...document.fonts];
+            await Promise.all(
+              allFonts.map(f => document.fonts.load(`${f.weight} 1em "${f.family}"`).catch(() => null))
+            );
           } catch { /* proceed without custom font */ }
         }
         setSvgContent(text);
