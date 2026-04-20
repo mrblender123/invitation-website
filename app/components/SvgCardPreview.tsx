@@ -167,7 +167,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
             // eslint-disable-next-line @typescript-eslint/no-require-imports
             const WebFont = require('webfontloader');
             WebFont.load({
-              typekit: { id: 'fjv7kfq' },
+              typekit: { id: 'clg1fwd' },
               active: () => resolve(),
               inactive: () => resolve(), // resolve even on failure so SVG still renders
             });

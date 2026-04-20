@@ -13,7 +13,7 @@ export async function GET() {
 
   try {
     // Fetch the Typekit CSS (kit clg1fwd — contains forma-djr-hebrew-banner + schablona)
-    const kitCss = await fetch('https://use.typekit.net/fjv7kfq.css', {
+    const kitCss = await fetch('https://use.typekit.net/clg1fwd.css', {
       headers: {
         'User-Agent': 'Mozilla/5.0',
         'Referer': appUrl,
