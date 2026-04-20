@@ -150,29 +150,28 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
 ) {
   const { canvasWidth, canvasHeight } = template.style;
   const [svgContent, setSvgContent] = useState<string | null>(null);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  // Load Adobe Fonts (Typekit kit clg1fwd) once, independently of SVG fetch.
+  // The SVG overlay is only rendered once this resolves so text uses the
+  // correct font from the first paint — no flash of unstyled text.
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const WebFont = require('webfontloader');
+    WebFont.load({
+      typekit: { id: 'clg1fwd' },
+      active:   () => setFontsLoaded(true),
+      inactive: () => setFontsLoaded(true), // render anyway if kit is blocked
+    });
+  }, []);
 
   useEffect(() => {
     if (!template.textSvg) return;
     fetch(template.textSvg)
       .then(r => r.text())
-      .then(async text => {
-        // If the SVG imports a Typekit kit, load the fonts at the document level.
-        // @font-face inside SVG <style> is ignored by browsers — fonts must be
-        // declared in the document head to be usable by inline SVG text elements.
-        if (text.includes('use.typekit.net')) {
-          // Remove the @import from the SVG — WebFontLoader handles loading instead
-          text = text.replace(/@import url\(["']?[^"')]*use\.typekit\.net[^"')]*["']?\)\s*;?/g, '');
-          // Use WebFontLoader to load the Typekit kit — the official Adobe method
-          await new Promise<void>(resolve => {
-            // eslint-disable-next-line @typescript-eslint/no-require-imports
-            const WebFont = require('webfontloader');
-            WebFont.load({
-              typekit: { id: 'clg1fwd' },
-              active: () => resolve(),
-              inactive: () => resolve(), // resolve even on failure so SVG still renders
-            });
-          });
-        }
+      .then(text => {
+        // Strip @import — fonts are loaded via WebFontLoader above
+        text = text.replace(/@import url\([^)]+\)\s*;?/g, '');
         setSvgContent(text);
       })
       .catch(() => setSvgContent(null));
@@ -211,8 +210,8 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
             crossOrigin="anonymous"
           />
 
-          {/* SVG text overlay */}
-          {injectedSvg && (
+          {/* SVG text overlay — only render after fonts are loaded */}
+          {injectedSvg && fontsLoaded && (
             <div
               data-svg-overlay="true"
               style={{
