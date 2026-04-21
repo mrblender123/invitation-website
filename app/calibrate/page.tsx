@@ -171,7 +171,7 @@ dateX:  ${coords.date.x},  dateY:  ${coords.date.y},`;
         >
           {/* The PNG at exact canvas size */}
           <img
-            src={template.thumbnailSrc}
+            src={template.backgroundSrc}
             alt={template.name}
             style={{ width: '100%', height: '100%', display: 'block', pointerEvents: 'none' }}
             draggable={false}

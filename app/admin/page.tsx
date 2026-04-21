@@ -25,9 +25,9 @@ export default function AdminPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!loading && (!user || user.email !== ADMIN_EMAIL)) {
-      router.replace('/');
-    }
+    if (loading) return;
+    if (!user) { router.replace('/login'); return; }
+    if (user.email !== ADMIN_EMAIL) router.replace('/');
   }, [user, loading, router]);
 
   useEffect(() => {
@@ -111,9 +111,22 @@ export default function AdminPage() {
         <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 32, fontWeight: 700, letterSpacing: '-0.02em', marginBottom: 8 }}>
           Admin Panel
         </h1>
-        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)', marginBottom: 40 }}>
+        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.35)', marginBottom: 24 }}>
           Full visibility into users and invitations.
         </p>
+        <div style={{ marginBottom: 40 }}>
+          <a
+            href="/admin/template-editor"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '10px 20px', borderRadius: 10, fontSize: 13, fontWeight: 600,
+              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+              color: '#fff', textDecoration: 'none',
+            }}
+          >
+            Template Editor →
+          </a>
+        </div>
 
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 48 }}>

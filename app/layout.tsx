@@ -43,8 +43,8 @@ const heebo = Heebo({
 
 
 export const metadata: Metadata = {
-  title: "Pintle — AI-Powered Invitation Design",
-  description: "Generate AI backgrounds, craft custom typography, and export print-ready invitations — all in one place.",
+  title: "Pintle — Custom Invitation Design",
+  description: "Create beautiful custom invitations with unique backgrounds, typography, and layouts — all in one place.",
 };
 
 export const viewport = {

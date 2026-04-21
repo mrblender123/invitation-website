@@ -6,7 +6,7 @@ export type Confinements = {
   preset: string;
 };
 
-export const AI_PRESETS = [
+export const BACKGROUND_PRESETS = [
   { label: 'Classic Elegant', description: 'Traditional Hebrew wedding style' },
   { label: 'Modern Minimalist', description: 'Clean, contemporary lines' },
   { label: 'Floral & Romantic', description: 'Soft blooms, pastel garden' },
@@ -286,10 +286,10 @@ export default function Sidebar({
 
       <div className="border-t border-gray-700" />
 
-      {/* AI confinements */}
+      {/* Background style */}
       <div className="flex flex-col gap-3">
-        <p className="text-xs uppercase text-gray-500 tracking-widest">AI Background Style</p>
-        {AI_PRESETS.map((p) => {
+        <p className="text-xs uppercase text-gray-500 tracking-widest">Background Style</p>
+        {BACKGROUND_PRESETS.map((p) => {
           const selected = confinements.preset === p.label;
           return (
             <button
@@ -327,7 +327,7 @@ export default function Sidebar({
             Generating…
           </span>
         ) : (
-          '✨ Generate AI Background'
+          '✨ Generate Background'
         )}
       </button>
     </div>

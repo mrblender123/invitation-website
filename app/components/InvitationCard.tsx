@@ -58,7 +58,7 @@ export default function InvitationCard({
   return (
     <div style={{ width: canvasWidth, height: canvasHeight, overflow: 'hidden', position: 'relative', borderRadius: '16px', backgroundColor: '#1a1a1a' }}>
 
-      {/* 1. AI BACKGROUND LAYER */}
+      {/* 1. BACKGROUND LAYER */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         {backgroundImage ? (
           <>

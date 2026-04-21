@@ -83,35 +83,41 @@ function injectFieldValues(
     const originalAnchor = textEl.getAttribute('text-anchor') ?? 'start';
     const hasUserValue = value !== '';
 
-    // For explicitly-centered designs (text-anchor="middle"): always re-center.
-    // For positioned designs: keep at original SVG position until user types something.
-    // data-no-center: text content was already updated above — keep all
-    // SVG positioning attributes exactly as designed, no centering at all.
+    // data-no-center: content was already updated — preserve all SVG positioning exactly.
     if (textEl.getAttribute('data-no-center') === 'true') continue;
 
+    // For positioned (start) designs: only apply centering once the user has typed something.
     if (originalAnchor !== 'middle' && !hasUserValue) continue;
 
     textEl.setAttribute('text-anchor', 'middle');
 
-    const transform = textEl.getAttribute('transform') ?? '';
     const fontFamily = textEl.getAttribute('font-family') ?? 'sans-serif';
     const fontSize = parseFloat(textEl.getAttribute('font-size') ?? '12');
 
     if (originalAnchor === 'middle') {
-      // Explicitly centered design: keep text at the card's horizontal midpoint.
-      const sxMatch = transform.match(/scale\(\s*([\d.+-]+)/);
-      const sx = sxMatch ? parseFloat(sxMatch[1]) : 1;
-      const txMatch = transform.match(/translate\(\s*([\d.+-]+)/);
-      const tx = txMatch ? parseFloat(txMatch[1]) : 0;
-      const localCenterX = sx > 0 ? (svgWidth / 2 - tx) / sx : svgWidth / 2;
-      tspan.setAttribute('x', String(Math.round(localCenterX * 10) / 10));
+      // Text was already centered at its translate-X — just keep tspan at x=0.
+      tspan.setAttribute('x', '0');
     } else {
-      // Positioned design: center new text at the same point as the original placeholder.
+      // Positioned design: center the new text at the same visual midpoint as the
+      // original placeholder (translate-X + scale * originalWidth/2).
       const originalWidth = measureTextWidth(originalText, fontFamily, fontSize);
-      const localCenterX = originalWidth / 2;
-      tspan.setAttribute('x', String(Math.round(localCenterX * 10) / 10));
+      tspan.setAttribute('x', String(Math.round((originalWidth / 2) * 10) / 10));
     }
   }
+
+  // Map font-family names to next/font CSS variables so the self-hosted fonts
+  // are actually used (SVG presentation attributes reference the plain name like
+  // "Heebo" but next/font loads it under a scoped name only accessible via var()).
+  const fontMapStyle = doc.createElementNS('http://www.w3.org/2000/svg', 'style');
+  fontMapStyle.textContent = `
+    [font-family="Heebo"]          { font-family: var(--font-heebo, Heebo), sans-serif; }
+    [font-family="Secular One"]    { font-family: var(--font-secular-one, "Secular One"), sans-serif; }
+    [font-family="Dancing Script"] { font-family: var(--font-dancing-script, "Dancing Script"), cursive; }
+    [font-family="Lora"]           { font-family: var(--font-lora, Lora), serif; }
+    [font-family="Montserrat"]     { font-family: var(--font-montserrat, Montserrat), sans-serif; }
+    [font-family="Oswald"]         { font-family: var(--font-oswald, Oswald), sans-serif; }
+  `;
+  root.insertBefore(fontMapStyle, root.firstChild);
 
   // Highlight the active field and dim all others
   if (activeFieldId) {
@@ -187,7 +193,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
 
           {/* PNG background */}
           <img
-            src={template.thumbnailSrc}
+            src={template.backgroundSrc}
             alt={template.name}
             width={canvasWidth}
             height={canvasHeight}

@@ -93,16 +93,22 @@ export async function GET() {
       if (subDirs.length > 0) {
         // 2-level structure: category/subcategory/images
         for (const subDir of subDirs.sort((a, b) => a.name.localeCompare(b.name))) {
-          const subcategory   = subDir.name.trim(); // trim any accidental leading/trailing spaces
+          const subcategory   = subDir.name.trim();
           const subFolderPath = path.join(folderPath, subDir.name);
           const subFiles      = await readdir(subFolderPath);
-          const subImgFiles   = subFiles.filter(f => /\.(png|jpg|jpeg)$/i.test(f)).sort();
+          // Exclude *-thumb.* / *_thumb.* / * thumb.* files — they're thumbnails, not standalone templates
+          const subImgFiles   = subFiles.filter(f => /\.(png|jpg|jpeg)$/i.test(f) && !/[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f)).sort();
 
           for (const imgFile of subImgFiles) {
-            const stem    = imgFile.replace(/\.(png|jpg|jpeg)$/i, '');
-            const svgFile = subFiles.find(f => f.toLowerCase() === `${stem.toLowerCase()}.svg`);
-            const id           = `${folder}-${subDir.name}-${stem}`;
-            const thumbnailSrc = `/templates/${folder}/${subDir.name}/${imgFile}`;
+            const stem      = imgFile.replace(/\.(png|jpg|jpeg)$/i, '');
+            const ext       = imgFile.match(/\.(png|jpg|jpeg)$/i)![0];
+            const svgFile   = subFiles.find(f => f.toLowerCase() === `${stem.toLowerCase()}.svg`);
+            const thumbFile = subFiles.find(f => /[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f) && f.toLowerCase().replace(/[-_ ]thumb\.(png|jpg|jpeg)$/i, '') === stem.toLowerCase());
+            const id            = `${folder}-${subDir.name}-${stem}`;
+            const backgroundSrc = `/templates/${folder}/${subDir.name}/${imgFile}`;
+            const thumbnailSrc  = thumbFile
+              ? `/templates/${folder}/${subDir.name}/${thumbFile}`
+              : backgroundSrc;
 
             let svgData: Partial<Template> = { style: { canvasWidth: 444, canvasHeight: 630 } };
             if (svgFile) {
@@ -118,20 +124,27 @@ export async function GET() {
               category,
               subcategory,
               thumbnailSrc,
+              backgroundSrc,
               ...svgData,
             } as Template);
           }
         }
       } else {
         // Flat structure: category/images (legacy / no sub-categories)
-        const flatImgFiles = imgFiles.map(f => f.name).sort();
+        // Exclude *-thumb.* / *_thumb.* / * thumb.* files
+        const flatImgFiles = imgFiles.filter(f => !/[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f.name)).map(f => f.name).sort();
         const flatFileNames = files.map(f => f.name);
 
         for (const imgFile of flatImgFiles) {
-          const stem    = imgFile.replace(/\.(png|jpg|jpeg)$/i, '');
-          const svgFile = flatFileNames.find(f => f.toLowerCase() === `${stem.toLowerCase()}.svg`);
-          const id           = `${folder}-${stem}`;
-          const thumbnailSrc = `/templates/${folder}/${imgFile}`;
+          const stem      = imgFile.replace(/\.(png|jpg|jpeg)$/i, '');
+          const ext       = imgFile.match(/\.(png|jpg|jpeg)$/i)![0];
+          const svgFile   = flatFileNames.find(f => f.toLowerCase() === `${stem.toLowerCase()}.svg`);
+          const thumbFile = flatFileNames.find(f => /[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f) && f.toLowerCase().replace(/[-_ ]thumb\.(png|jpg|jpeg)$/i, '') === stem.toLowerCase());
+          const id            = `${folder}-${stem}`;
+          const backgroundSrc = `/templates/${folder}/${imgFile}`;
+          const thumbnailSrc  = thumbFile
+            ? `/templates/${folder}/${thumbFile}`
+            : backgroundSrc;
 
           let svgData: Partial<Template> = { style: { canvasWidth: 444, canvasHeight: 630 } };
           if (svgFile) {
@@ -146,6 +159,7 @@ export async function GET() {
             name: stemToName(stem),
             category,
             thumbnailSrc,
+            backgroundSrc,
             ...svgData,
           } as Template);
         }

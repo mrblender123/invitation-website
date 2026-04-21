@@ -4,10 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from './AuthProvider';
 
+const ADMIN_EMAIL = 'bycheshin@gmail.com';
+
 export default function UserMenu() {
   const { user, signOut } = useAuth();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const isAdmin = user?.email === ADMIN_EMAIL;
 
   if (!user) return null;
 
@@ -67,6 +70,20 @@ export default function UserMenu() {
               <p style={{ fontSize: 13, fontWeight: 600, color: '#fff', margin: 0 }}>{name}</p>
               <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', margin: '2px 0 0', wordBreak: 'break-all' }}>{user.email}</p>
             </div>
+            {isAdmin && (
+              <button
+                onClick={() => { setOpen(false); router.push('/admin'); }}
+                style={{
+                  width: '100%', textAlign: 'left', padding: '9px 12px',
+                  background: 'none', border: 'none', borderRadius: 7,
+                  fontSize: 13, color: 'rgba(255,255,255,0.65)', cursor: 'pointer',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; }}
+              >
+                Admin Panel
+              </button>
+            )}
             <button
               onClick={handleSignOut}
               style={{

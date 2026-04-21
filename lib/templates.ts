@@ -26,7 +26,8 @@ export type Template = {
   name: string;
   category: string;
   subcategory?: string;
-  thumbnailSrc: string;
+  thumbnailSrc: string;  // shown in listings (may be a separate -thumb.png)
+  backgroundSrc: string; // full-resolution PNG used as the editor background
   textSvg?: string;    // path to SVG text overlay in /public/templates/{category}/
   fields?: SvgField[]; // auto-discovered from SVG <g id> elements
   style: TemplateStyle;

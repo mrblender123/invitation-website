@@ -45,6 +45,18 @@ function renderSvgTextToCanvas(
     };
   }
 
+  // Walk up from el to stopAt to find nearest ancestor with given attribute
+  function inheritAttr(el: Element, attr: string, stopAt: Element): string | null {
+    let n: Element | null = el;
+    while (n) {
+      const v = n.getAttribute(attr);
+      if (v !== null) return v;
+      if (n === stopAt) break;
+      n = n.parentElement;
+    }
+    return null;
+  }
+
   for (const textEl of Array.from(svgEl.querySelectorAll('text'))) {
     // Accumulate opacity up through parent groups
     let opacity = 1;
@@ -58,18 +70,20 @@ function renderSvgTextToCanvas(
 
     const rawFamily = (textEl.getAttribute('font-family') ?? 'sans-serif')
       .replace(/['"]/g, '').split(',')[0].trim();
-    const fontSize   = parseFloat(textEl.getAttribute('font-size')   ?? '12');
     const fontWeight = textEl.getAttribute('font-weight') ?? '400';
-    const fill       = textEl.getAttribute('fill')        ?? '#000';
     const anchor     = textEl.getAttribute('text-anchor') ?? 'start';
     const ls         = parseFloat(textEl.getAttribute('letter-spacing') ?? '0');
 
     const { tx, ty, rot, sx, sy } = parseTransform(textEl.getAttribute('transform') ?? '');
 
+    // Only process leaf tspans so nested font-size/fill on outer tspans is inherited correctly
+    const allTspans = Array.from(textEl.querySelectorAll('tspan'));
+    const leafTspans = allTspans.filter(ts => ts.querySelector('tspan') === null);
+
     let currentY = 0;
-    for (const tspan of Array.from(textEl.querySelectorAll('tspan'))) {
+    for (const tspan of leafTspans) {
       const text = tspan.textContent ?? '';
-      if (!text) continue;
+      if (!text.trim()) continue;
 
       const xAttr  = tspan.getAttribute('x');
       const yAttr  = tspan.getAttribute('y');
@@ -77,6 +91,10 @@ function renderSvgTextToCanvas(
       const x = xAttr  !== null ? parseFloat(xAttr)  : 0;
       if (yAttr  !== null) currentY = parseFloat(yAttr);
       if (dyAttr !== null) currentY += parseFloat(dyAttr);
+
+      // Inherit font-size and fill: tspan → parent tspans → text element
+      const fontSize = parseFloat(inheritAttr(tspan, 'font-size', textEl) ?? '12');
+      const fill     = inheritAttr(tspan, 'fill', textEl) ?? '#000';
 
       ctx.save();
       ctx.globalAlpha = opacity;
@@ -286,7 +304,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
         i.crossOrigin = 'anonymous';
         i.onload = () => resolve(i);
         i.onerror = () => resolve(i);
-        i.src = selected.thumbnailSrc;
+        i.src = selected.backgroundSrc;
       });
 
       // Use the PNG's native pixel dimensions — falls back to SVG viewBox size
@@ -408,7 +426,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
         hostName: fieldValues.hostName ?? fieldValues[selected.fields?.[1]?.id ?? ''] ?? '',
         dateTime: fieldValues.dateTime ?? fieldValues[selected.fields?.[2]?.id ?? ''] ?? '',
       },
-      bg: selected.thumbnailSrc,
+      bg: selected.backgroundSrc,
       overlayOpacity: style.overlayOpacity ?? 0,
       glowIntensity: style.glowIntensity ?? 0,
       vignetteIntensity: style.vignetteIntensity ?? 0,
@@ -606,7 +624,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                         eventTitle={fieldValues.eventTitle ?? ''}
                         hostName={fieldValues.hostName ?? ''}
                         dateTime={fieldValues.dateTime ?? ''}
-                        backgroundImage={selected.thumbnailSrc}
+                        backgroundImage={selected.backgroundSrc}
                         overlayOpacity={selected.style.overlayOpacity ?? 0}
                         glowIntensity={selected.style.glowIntensity ?? 0}
                         vignetteIntensity={selected.style.vignetteIntensity ?? 0}
