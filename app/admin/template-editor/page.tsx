@@ -131,11 +131,13 @@ export default function TemplateEditorPage() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [snapActive, setSnapActive] = useState<{ x: boolean; y: boolean }>({ x: false, y: false });
   const [showGuides, setShowGuides] = useState(true);
+  const [showDots, setShowDots] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState('');
   const [renamingIdx, setRenamingIdx] = useState<number | null>(null);
   const [marquee, setMarquee] = useState<Marquee | null>(null);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
+  const [search, setSearch] = useState('');
   const canvasRef = useRef<HTMLDivElement>(null);
 
   // Refs for undo (avoid stale closures)
@@ -487,11 +489,24 @@ export default function TemplateEditorPage() {
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
 
         {/* Left: template list */}
-        <div style={{ width: 240, borderRight: border, overflowY: 'auto', padding: '8px 0' }}>
+        <div style={{ width: 240, borderRight: border, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ padding: '8px 10px 4px', flexShrink: 0 }}>
+            <input
+              type="text"
+              placeholder="Search templates…"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{ width: '100%', boxSizing: 'border-box', padding: '6px 10px', borderRadius: 6, border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.06)', color: '#fff', fontSize: 13, outline: 'none' }}
+            />
+          </div>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '4px 0' }}>
           {templates.length === 0 && <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.2)', padding: '16px' }}>Loading…</p>}
           {(() => {
+            const filteredTemplates = search.trim()
+              ? templates.filter(t => [t.name, t.category, t.subcategory ?? ''].some(s => s.toLowerCase().includes(search.toLowerCase())))
+              : templates;
             const cats = new Map<string, Map<string, Template[]>>();
-            for (const t of templates) {
+            for (const t of filteredTemplates) {
               if (!cats.has(t.category)) cats.set(t.category, new Map());
               const sub = t.subcategory ?? '';
               const catMap = cats.get(t.category)!;
@@ -579,22 +594,24 @@ export default function TemplateEditorPage() {
               );
             });
           })()}
+          </div>
         </div>
 
-        {/* Right: editor */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '32px 40px', display: 'flex', gap: 40, alignItems: 'flex-start' }}>
+        {/* Center: workspace */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: 0, background: '#1a1a1a', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
 
           {!selected && <div style={{ color: 'rgba(255,255,255,0.2)', fontSize: 15, margin: 'auto', paddingTop: 80 }}>Select a template to start editing</div>}
 
           {selected && (
-            <>
-              {/* Card */}
-              <div style={{ flexShrink: 0 }}>
+              <div style={{ background: '#3a3a3a', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8 }}>
                   <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
                     Click · Shift+click · drag to box-select · ⌘A all · arrow keys · ⌘Z undo
                   </span>
-                  <button onClick={() => setShowGuides(v => !v)} style={{ marginLeft: 'auto', fontSize: 11, padding: '3px 10px', borderRadius: 6, background: showGuides ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>
+                  <button onClick={() => setShowDots(v => !v)} style={{ marginLeft: 'auto', fontSize: 11, padding: '3px 10px', borderRadius: 6, background: showDots ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>
+                    {showDots ? 'Hide dots' : 'Show dots'}
+                  </button>
+                  <button onClick={() => setShowGuides(v => !v)} style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, background: showGuides ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>
                     {showGuides ? 'Hide guides' : 'Show guides'}
                   </button>
                 </div>
@@ -664,7 +681,7 @@ export default function TemplateEditorPage() {
                   })()}
 
                   {/* Layer handles */}
-                  {layers.map((layer, idx) => {
+                  {showDots && layers.map((layer, idx) => {
                     const isActive = dragging?.handleIdx === idx;
                     const isSel = selection.has(idx);
                     const isHov = hoveredIdx === idx;
@@ -700,9 +717,13 @@ export default function TemplateEditorPage() {
                   })}
                 </div>
               </div>
+          )}
+        </div>
 
-              {/* Right panel */}
-              <div style={{ minWidth: 280 }}>
+        {/* Right panel */}
+        <div style={{ width: 300, borderLeft: border, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+          {selected && (
+            <div style={{ padding: '12px 16px' }}>
 
                 {/* Alignment toolbar */}
                 <div style={{ marginBottom: 20 }}>
@@ -864,7 +885,6 @@ export default function TemplateEditorPage() {
                   })}
                 </div>
               </div>
-            </>
           )}
         </div>
       </div>
