@@ -36,6 +36,15 @@ type GuideDrag = { axis: 'x' | 'y'; startMouse: number; startGuide: number };
 
 type Marquee = { x1: number; y1: number; x2: number; y2: number }; // in SVG units
 
+type ImageOverlay = {
+  id: string;
+  src: string;       // base64 data URL
+  x: number;         // SVG-unit position (center x)
+  y: number;         // SVG-unit position (center y)
+  w: number;         // SVG-unit width
+  h: number;         // SVG-unit height
+};
+
 // ─── SVG helpers ──────────────────────────────────────────────────────────────
 
 function parseLayers(svgText: string): Layer[] {
@@ -56,7 +65,7 @@ function parseLayers(svgText: string): Layer[] {
   return layers;
 }
 
-function buildSvgForSave(svgSource: string, layers: Layer[]): string {
+function buildSvgForSave(svgSource: string, layers: Layer[], imageOverlays: ImageOverlay[]): string {
   const doc = new DOMParser().parseFromString(svgSource, 'image/svg+xml');
   doc.querySelectorAll('text').forEach((textEl, idx) => {
     const layer = layers[idx];
@@ -77,6 +86,17 @@ function buildSvgForSave(svgSource: string, layers: Layer[]): string {
       const parent = textEl.parentElement;
       if (parent?.id === layer.originalId) parent.id = layer.id;
     }
+  });
+  // Remove any previously saved <image> elements, then append current overlays
+  doc.documentElement.querySelectorAll('image').forEach(el => el.remove());
+  imageOverlays.forEach(img => {
+    const el = doc.createElementNS('http://www.w3.org/2000/svg', 'image');
+    el.setAttribute('href', img.src);
+    el.setAttribute('x', String(Math.round((img.x - img.w / 2) * 10) / 10));
+    el.setAttribute('y', String(Math.round((img.y - img.h / 2) * 10) / 10));
+    el.setAttribute('width', String(Math.round(img.w * 10) / 10));
+    el.setAttribute('height', String(Math.round(img.h * 10) / 10));
+    doc.documentElement.appendChild(el);
   });
   return new XMLSerializer().serializeToString(doc.documentElement);
 }
@@ -138,6 +158,11 @@ export default function TemplateEditorPage() {
   const [marquee, setMarquee] = useState<Marquee | null>(null);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
+  const [imageOverlays, setImageOverlays] = useState<ImageOverlay[]>([]);
+  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+  const [imageDrag, setImageDrag] = useState<{ id: string; startMouseX: number; startMouseY: number; startX: number; startY: number } | null>(null);
+  const [imageResize, setImageResize] = useState<{ id: string; startMouseX: number; startMouseY: number; startW: number; startH: number } | null>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
 
   // Refs for undo (avoid stale closures)
@@ -145,6 +170,12 @@ export default function TemplateEditorPage() {
   useEffect(() => { layersRef.current = layers; }, [layers]);
   const historyRef = useRef<Layer[][]>([]);
   useEffect(() => { historyRef.current = history; }, [history]);
+
+  // Refs for image drag/resize (avoid stale closures in mousemove useEffect)
+  const imageDragRef = useRef(imageDrag);
+  useEffect(() => { imageDragRef.current = imageDrag; }, [imageDrag]);
+  const imageResizeRef = useRef(imageResize);
+  useEffect(() => { imageResizeRef.current = imageResize; }, [imageResize]);
 
   // Auth guard
   useEffect(() => {
@@ -165,6 +196,7 @@ export default function TemplateEditorPage() {
     if (!selected?.textSvg) return;
     setSvgSource(null); setLayers([]); setSaveMsg(''); setSelection(new Set());
     setHistory([]); setRenamingIdx(null);
+    setImageOverlays([]); setSelectedImageId(null);
     const w = selected.style.canvasWidth;
     const h = selected.style.canvasHeight;
     setGuideX(w / 2);
@@ -277,6 +309,34 @@ export default function TemplateEditorPage() {
     window.addEventListener('mouseup', onUp);
     return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
   }, [dragging, scale, guideX, guideY, pushHistory]);
+
+  // ── image overlay drag/resize ─────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (!imageDrag && !imageResize) return;
+    const onMove = (e: MouseEvent) => {
+      const currentDrag = imageDragRef.current;
+      const currentResize = imageResizeRef.current;
+      if (currentDrag) {
+        const dx = (e.clientX - currentDrag.startMouseX) / scale;
+        const dy = (e.clientY - currentDrag.startMouseY) / scale;
+        setImageOverlays(prev => prev.map(img => img.id === currentDrag.id ? { ...img, x: currentDrag.startX + dx, y: currentDrag.startY + dy } : img));
+      }
+      if (currentResize) {
+        const dx = (e.clientX - currentResize.startMouseX) / scale;
+        const newW = Math.max(10, currentResize.startW + dx);
+        const ratio = currentResize.startH / currentResize.startW;
+        setImageOverlays(prev => prev.map(img => img.id === currentResize.id ? { ...img, w: newW, h: newW * ratio } : img));
+      }
+    };
+    const onUp = () => {
+      setImageDrag(null);
+      setImageResize(null);
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+  }, [imageDrag, imageResize, scale]);
 
   // ── guide drag ───────────────────────────────────────────────────────────────
 
@@ -422,7 +482,7 @@ export default function TemplateEditorPage() {
   const handleSave = async () => {
     if (!selected?.textSvg || !svgSource || !accessToken) return;
     setSaving(true); setSaveMsg('');
-    const content = buildSvgForSave(svgSource, layers);
+    const content = buildSvgForSave(svgSource, layers, imageOverlays);
     const res = await fetch('/api/admin/update-svg', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
@@ -432,6 +492,49 @@ export default function TemplateEditorPage() {
     if (res.ok) { setSvgSource(content); setLayers(parseLayers(content)); setSaveMsg('Saved ✓'); setTimeout(() => setSaveMsg(''), 3000); }
     else setSaveMsg('Error saving');
   };
+
+  const handleImageMouseDown = useCallback((e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    setSelectedImageId(id);
+    const img = imageOverlays.find(i => i.id === id);
+    if (!img) return;
+    setImageDrag({ id, startMouseX: e.clientX, startMouseY: e.clientY, startX: img.x, startY: img.y });
+  }, [imageOverlays]);
+
+  const handleImageResizeMouseDown = useCallback((e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    setSelectedImageId(id);
+    const img = imageOverlays.find(i => i.id === id);
+    if (!img) return;
+    setImageResize({ id, startMouseX: e.clientX, startMouseY: e.clientY, startW: img.w, startH: img.h });
+  }, [imageOverlays]);
+
+  const handleImageInsert = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const src = ev.target?.result as string;
+      const img = new Image();
+      img.onload = () => {
+        const aspect = img.height / img.width;
+        const defaultW = svgW * 0.3;
+        const overlay: ImageOverlay = {
+          id: `img_${Date.now()}`,
+          src,
+          x: svgW / 2,
+          y: svgH / 2,
+          w: defaultW,
+          h: defaultW * aspect,
+        };
+        setImageOverlays(prev => [...prev, overlay]);
+        setSelectedImageId(overlay.id);
+      };
+      img.src = src;
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  }, [svgW, svgH]);
 
   if (loading || !user || user.email !== ADMIN_EMAIL) return null;
 
@@ -608,6 +711,10 @@ export default function TemplateEditorPage() {
                   <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
                     Click · Shift+click · drag to box-select · ⌘A all · arrow keys · ⌘Z undo
                   </span>
+                  <input ref={imageInputRef} type="file" accept="image/png,image/jpeg,image/webp" style={{ display: 'none' }} onChange={handleImageInsert} />
+                  <button onClick={() => imageInputRef.current?.click()} style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>
+                    + Image
+                  </button>
                   <button onClick={() => setShowDots(v => !v)} style={{ marginLeft: 'auto', fontSize: 11, padding: '3px 10px', borderRadius: 6, background: showDots ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>
                     {showDots ? 'Hide dots' : 'Show dots'}
                   </button>
@@ -629,6 +736,25 @@ export default function TemplateEditorPage() {
                 >
                   <img src={selected.backgroundSrc} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} draggable={false} />
                   {displaySvg && <div style={{ position: 'absolute', inset: 0 }} dangerouslySetInnerHTML={{ __html: displaySvg }} />}
+
+                  {/* Image overlays */}
+                  {imageOverlays.map(img => {
+                    const isSel = selectedImageId === img.id;
+                    const left = (img.x - img.w / 2) * scale;
+                    const top = (img.y - img.h / 2) * scale;
+                    const w = img.w * scale;
+                    const h = img.h * scale;
+                    return (
+                      <div key={img.id} style={{ position: 'absolute', left, top, width: w, height: h, cursor: 'grab', outline: isSel ? '2px solid rgba(99,200,255,0.8)' : 'none', zIndex: 10 }}
+                        onMouseDown={e => handleImageMouseDown(e, img.id)}>
+                        <img src={img.src} style={{ width: '100%', height: '100%', display: 'block', pointerEvents: 'none' }} draggable={false} alt="" />
+                        {isSel && (
+                          <div onMouseDown={e => handleImageResizeMouseDown(e, img.id)}
+                            style={{ position: 'absolute', right: -5, bottom: -5, width: 12, height: 12, background: 'rgba(99,200,255,0.9)', borderRadius: 2, cursor: 'se-resize', zIndex: 11 }} />
+                        )}
+                      </div>
+                    );
+                  })}
 
                   {/* Guide lines */}
                   {showGuides && (
@@ -884,6 +1010,34 @@ export default function TemplateEditorPage() {
                     );
                   })}
                 </div>
+
+                {/* Image overlay controls */}
+                {selectedImageId && (() => {
+                  const img = imageOverlays.find(i => i.id === selectedImageId);
+                  if (!img) return null;
+                  return (
+                    <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                      <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 10 }}>Image</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 14 }}>W</span>
+                          <input type="number" step="1" min="1" value={Math.round(img.w)} onChange={e => setImageOverlays(prev => prev.map(i => i.id === selectedImageId ? { ...i, w: parseFloat(e.target.value) || i.w, h: (parseFloat(e.target.value) || i.w) * (i.h / i.w) } : i))}
+                            style={{ width: 70, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 8px', outline: 'none' }} />
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 14 }}>H</span>
+                          <input type="number" step="1" min="1" value={Math.round(img.h)} onChange={e => setImageOverlays(prev => prev.map(i => i.id === selectedImageId ? { ...i, h: parseFloat(e.target.value) || i.h } : i))}
+                            style={{ width: 70, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 8px', outline: 'none' }} />
+                        </label>
+                        <button onClick={() => { setImageOverlays(prev => prev.filter(i => i.id !== selectedImageId)); setSelectedImageId(null); }}
+                          style={{ marginTop: 4, fontSize: 11, padding: '4px 10px', borderRadius: 6, background: 'rgba(255,80,80,0.15)', border: '1px solid rgba(255,80,80,0.3)', color: 'rgba(255,120,120,0.9)', cursor: 'pointer' }}>
+                          Remove image
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()}
+
               </div>
           )}
         </div>
