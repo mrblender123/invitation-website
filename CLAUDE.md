@@ -17,13 +17,21 @@ When the user says "add this template" or provides new PNG/SVG files, follow thi
 
 ### 2. SVG Structure Rules
 
-**Alignment — preserve the designer's positions:**
-- Keep all `translate(X Y)` values exactly as they are in the Illustrator export. Do NOT change X to `viewBoxWidth/2` or any other fixed value.
-- Keep all `tspan x` values as designed (only remove trailing-space tspans which are Illustrator artifacts).
-- Do **not** add `text-anchor` to `<text>` elements in the SVG — the app handles centering during editing automatically.
+**Alignment — Hebrew SVG text requires explicit centering:**
+
+Browsers and Illustrator handle Hebrew text anchoring differently. Raw Illustrator-exported translate X values do **not** render correctly in browsers for Hebrew text (text overflows or goes off-frame). The only reliable approach is:
+
+- Set `translate X = viewBoxWidth / 2` (e.g. `180` for 360-wide, `222` for 444-wide) on every `<text>` element.
+- Add `text-anchor="middle"` to every `<text>` element.
+- Set every `<tspan x="0">` so the center is at the translate origin.
+
+This matches how R-001 (Vachnacht) was fixed and confirmed working.
+
+**Exception — non-Hebrew / specifically side-positioned designs:** If a template intentionally has text aligned to the left or right (not centered), keep the original translate X and use `text-anchor="start"` or `text-anchor="end"` as appropriate. The app will still center edited text at the visual midpoint of the placeholder.
+
 - **Never use** `data-no-center="true"`.
-- Initial render is always pixel-perfect to the SVG (fields with placeholder values are left completely untouched).
-- When a user edits a field: the app measures the original placeholder width and centers the new text at the same visual midpoint, so text grows/shrinks from its natural center.
+- Initial render is pixel-perfect (fields with placeholder values are left completely untouched).
+- When editing: `text-anchor="middle"` fields stay centered at their translate X; `text-anchor="start"` fields center at the original placeholder's visual midpoint.
 
 **Editable fields:**
 - Wrap each editable `<text>` in `<g id="field_id">…</g>`.
@@ -99,8 +107,8 @@ Do all of the following **in order**:
 - [ ] Remove trailing-space tspans (Illustrator RTL artifacts: `<tspan x="..." y="0"> </tspan>`)
 - [ ] Remove any `<image>` tags (background is loaded from the PNG, not the SVG)
 - [ ] Remove any `@import url(...)` or embedded `<image>` in `<defs>`
-- [ ] Keep all original `translate(X Y)` values — do NOT change X to the card center
-- [ ] Keep original `tspan x` values (only remove trailing-space tspans)
+- [ ] Set all `translate X` to `viewBoxWidth / 2` (e.g. `180`) and add `text-anchor="middle"` to every `<text>`
+- [ ] Set all `tspan x="0"`
 - [ ] Wrap each editable `<text>` in `<g id="field_id">` with a meaningful id
 - [ ] Write the cleaned SVG back to the file
 - [ ] `git add` both the PNG and SVG files and `git commit` them
