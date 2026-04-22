@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <text transform="translate(180 24.7) scale(1 1)" text-anchor="middle" fill="#321b0f" font-family="Heebo" font-weight="200"><tspan font-size="13.6"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></tspan><tspan font-size="13.6"><tspan x="0" y="16.3">על כל הטוב אשר גמלנו</tspan></tspan><tspan font-size="20.9"><tspan x="0" y="41.4">בשמחת הולדת בני שיחי׳</tspan></tspan><tspan font-size="14.7"><tspan x="0" y="59.1">למזל טוב</tspan></tspan><tspan font-size="13.6"><tspan x="0" y="75.4">אתכבד בזה להזמין את כל קרובי וידידי</tspan></tspan><tspan font-size="13.6"><tspan x="0" y="91.7">לבוא ולהשתתף בשמחתי אצל</tspan></tspan></text>
+  <text transform="translate(180 24.7) scale(1 1)" text-anchor="middle" fill="#321b0f" font-family="Heebo" font-weight="200">
+    <tspan font-size="13.6" x="0" y="0">מתוך שבח והודאה להשי״ת</tspan>
+    <tspan font-size="13.6" x="0" y="16.3">על כל הטוב אשר גמלנו</tspan>
+    <tspan font-size="20.9" x="0" y="41.4">בשמחת הולדת בני שיחי׳</tspan>
+    <tspan font-size="14.7" x="0" y="59.1">למזל טוב</tspan>
+    <tspan font-size="13.6" x="0" y="75.4">אתכבד בזה להזמין את כל קרובי וידידי</tspan>
+    <tspan font-size="13.6" x="0" y="91.7">לבוא ולהשתתף בשמחתי אצל</tspan>
+  </text>
   <text transform="translate(180 172.7) scale(.7 1)" text-anchor="middle" fill="#321b0f" font-family="Heebo" font-size="64.2"><tspan x="0" y="0">שלום זכר</tspan></text>
   <text transform="translate(180 199.4) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-size="14.5" font-weight="200"><tspan x="0" y="0">שתקיים אי״ה בליל שבת קודש</tspan></text>
   <g id="parsha">
