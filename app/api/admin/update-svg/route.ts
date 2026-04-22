@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { writeFile } from 'fs/promises';
+import path from 'path';
 import { createAuthenticatedClient } from '@/lib/supabase';
 
 const ADMIN_EMAIL = 'bycheshin@gmail.com';
@@ -25,6 +27,13 @@ export async function POST(req: NextRequest) {
     svgPublicPath.includes('..')
   ) {
     return NextResponse.json({ error: 'Invalid path' }, { status: 400 });
+  }
+
+  // In development: write directly to local filesystem (fast, immediate)
+  if (process.env.NODE_ENV === 'development') {
+    const localPath = path.join(process.cwd(), 'public', svgPublicPath);
+    await writeFile(localPath, svgContent, 'utf-8');
+    return NextResponse.json({ ok: true });
   }
 
   const githubToken = process.env.GITHUB_TOKEN;
