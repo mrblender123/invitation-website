@@ -965,13 +965,13 @@ export default function TemplateEditorPage() {
                             {/* Position */}
                             <div style={{ display: 'flex', gap: 8 }}>
                               {(['tx', 'ty'] as const).map(axis => (
-                                <label key={axis} style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 1 }}>
-                                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 10 }}>{axis === 'tx' ? 'x' : 'y'}</span>
+                                <label key={axis} style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 1, minWidth: 0 }}>
+                                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 10, flexShrink: 0 }}>{axis === 'tx' ? 'x' : 'y'}</span>
                                   <input
                                     type="number" step="0.1"
                                     value={Math.round(layer[axis] * 10) / 10}
                                     onChange={e => setLayerCoord(idx, axis, parseFloat(e.target.value))}
-                                    style={{ flex: 1, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 8px', fontVariantNumeric: 'tabular-nums', outline: 'none' }}
+                                    style={{ flex: 1, minWidth: 0, width: 0, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 8px', fontVariantNumeric: 'tabular-nums', outline: 'none' }}
                                   />
                                 </label>
                               ))}
