@@ -25,7 +25,6 @@ const CATEGORY_META: { key: string; icon: string }[] = [
   { key: 'Sheva Brachos', icon: '🍷' },
 ];
 const CATEGORY_ORDER = CATEGORY_META.map(c => c.key);
-const CATEGORY_ICON: Record<string, string> = Object.fromEntries(CATEGORY_META.map(c => [c.key, c.icon]));
 
 
 function TemplateThumb({ template }: { template: Template }) {
@@ -75,19 +74,7 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
         <h2 style={{
           fontSize: 16, fontWeight: 700,
           color: 'var(--foreground)', margin: 0,
-          display: 'flex', alignItems: 'center', gap: 8,
         }}>
-          <span style={{
-            fontSize: CATEGORY_ICON[category] === '⓭' ? 24 : 20,
-            fontFamily: CATEGORY_ICON[category] === '⓭' ? 'var(--font-playfair)' : undefined,
-            fontWeight: CATEGORY_ICON[category] === '⓭' ? 700 : undefined,
-            lineHeight: 1,
-            verticalAlign: 'middle',
-            position: 'relative',
-            top: CATEGORY_ICON[category] === '⓭' ? '-1px' : undefined,
-          }}>
-            {CATEGORY_ICON[category] ?? ''}
-          </span>
           {category}
         </h2>
         <GlassPill
