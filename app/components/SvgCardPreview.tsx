@@ -48,16 +48,13 @@ function injectFieldValues(
     if (id.includes('*')) g.setAttribute('id', id.replace(/\*/g, ''));
   });
 
-  // Get SVG viewBox for centering calculations and explicit sizing
+  // Make the SVG fill its container
+  root.setAttribute('width', '100%');
+  root.setAttribute('height', '100%');
+
+  // Get SVG viewBox for centering calculations
   const viewBox = root.getAttribute('viewBox')?.split(/[\s,]+/) ?? [];
   const svgWidth = parseFloat(viewBox[2] ?? '0');
-
-  // Set explicit pixel dimensions (more reliable than 100% on iOS Safari inside transformed containers)
-  const vbW = parseFloat(viewBox[2] ?? '0');
-  const vbH = parseFloat(viewBox[3] ?? '0');
-  if (vbW > 0) root.setAttribute('width', String(vbW));
-  if (vbH > 0) root.setAttribute('height', String(vbH));
-  root.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
   for (const field of fields) {
     const group = doc.getElementById(field.id);
