@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <text transform="translate(180 143.9) scale(1 1)" text-anchor="middle" fill="#321b0f" font-family="Heebo" font-weight="300">
-    <tspan font-size="13" x="0" y="0">מתוך שבח והודאה להשי״ת</tspan>
-    <tspan font-size="13" x="0" y="15.6">על כל הטוב אשר גמלנו</tspan>
-    <tspan font-size="20" x="0" y="39.5">בשמחת הולדת בני שיחי׳</tspan>
-    <tspan font-size="14.1" x="0" y="56.4">למזל טוב</tspan>
-    <tspan font-size="13" x="0" y="72">אתכבד בזה להזמין את כל קרובי וידידי</tspan>
-    <tspan font-size="13" x="0" y="87.6">לבוא ולהשתתף בשמחתי אצל</tspan>
-  </text>
+  <text transform="translate(180 136.8)" text-anchor="middle" fill="#321b0f" font-family="Heebo" font-weight="200" font-size="13.6"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
+  <text transform="translate(180 153.2)" text-anchor="middle" fill="#321b0f" font-family="Heebo" font-weight="200" font-size="13.6"><tspan x="0" y="0">על כל הטוב אשר גמלנו</tspan></text>
+  <text transform="translate(180 175.7)" text-anchor="middle" fill="#321b0f" font-family="Heebo" font-weight="300" font-size="20.9"><tspan x="0" y="0">בשמחת הולדת בני שיחי׳</tspan></text>
+  <text transform="translate(180 194.4)" text-anchor="middle" fill="#321b0f" font-family="Heebo" font-weight="200" font-size="14.7"><tspan x="0" y="0">למזל טוב</tspan></text>
+  <text transform="translate(180 210.8)" text-anchor="middle" fill="#321b0f" font-family="Heebo" font-weight="200" font-size="13.6"><tspan x="0" y="0">אתכבד בזה להזמין את כל קרובי וידידי</tspan></text>
+  <text transform="translate(180 228.8)" text-anchor="middle" fill="#321b0f" font-family="Heebo" font-weight="200" font-size="13.6"><tspan x="0" y="0">לבוא ולהשתתף בשמחתי אצל</tspan></text>
   <text transform="translate(180 285.2) scale(.7 1)" text-anchor="middle" fill="#321b0f" font-family="Heebo" font-size="61.3"><tspan x="0" y="0">שלום זכר</tspan></text>
-  <text transform="translate(180 310.7) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-size="13.8" font-weight="300"><tspan x="0" y="0">שתקיים אי״ה בליל שבת קודש</tspan></text>
+  <text transform="translate(180 310.7) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-weight="300" font-size="13.8"><tspan x="0" y="0">שתקיים אי״ה בליל שבת קודש</tspan></text>
   <g id="parsha">
-    <text transform="translate(180 328.8) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-size="19.5" font-weight="300"><tspan x="0" y="0">פרשת נשא</tspan></text>
+    <text transform="translate(180 328.8) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-weight="300" font-size="19.5"><tspan x="0" y="0">פרשת נשא</tspan></text>
   </g>
   <g id="location">
-    <text transform="translate(180 340.6) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-size="9.4" font-weight="300"><tspan x="0" y="0">בביהמ״ד לעלוב</tspan><tspan x="0" y="11.3">1693 49th Street</tspan></text>
+    <text transform="translate(180 340.6) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-weight="300" font-size="9.4"><tspan x="0" y="0">בביהמ״ד לעלוב</tspan><tspan x="0" y="11.3">1693 49th Street</tspan></text>
   </g>
-  <text transform="translate(180 368.7) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-size="12" font-weight="300"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
+  <text transform="translate(180 368.7) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-weight="300" font-size="12"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   <g id="host_name">
-    <text transform="translate(180 384.8) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-size="13.9" font-weight="500"><tspan x="0" y="0">מרדכי זאב ראטה</tspan></text>
+    <text transform="translate(180 384.8) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-weight="500" font-size="13.9"><tspan x="0" y="0">מרדכי זאב ראטה</tspan></text>
   </g>
   <g id="father_name_1">
-    <text transform="translate(180 396.2) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-size="7.5" font-weight="300"><tspan x="0" y="0">ב״ר בנימין משה הי״וו</tspan></text>
+    <text transform="translate(180 396.2) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-weight="300" font-size="7.5"><tspan x="0" y="0">ב״ר בנימין משה הי״וו</tspan></text>
   </g>
   <g id="father_name_2">
-    <text transform="translate(180 405.1) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-size="7.5" font-weight="300"><tspan x="0" y="0">חתן בערל גרינעלד הי״וו</tspan></text>
+    <text transform="translate(180 405.1) scale(.8 1)" text-anchor="middle" fill="#311a0f" font-family="Heebo" font-weight="300" font-size="7.5"><tspan x="0" y="0">חתן בערל גרינעלד הי״וו</tspan></text>
   </g>
 </svg>
