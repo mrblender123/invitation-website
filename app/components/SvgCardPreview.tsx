@@ -42,19 +42,22 @@ function injectFieldValues(
   const doc = parser.parseFromString(svgText, 'image/svg+xml');
   const root = doc.documentElement;
 
-  // Make the SVG fill its container
-  root.setAttribute('width', '100%');
-  root.setAttribute('height', '100%');
-
   // Strip * from all group IDs so getElementById works with clean IDs
   doc.querySelectorAll('g[id]').forEach(g => {
     const id = g.getAttribute('id') ?? '';
     if (id.includes('*')) g.setAttribute('id', id.replace(/\*/g, ''));
   });
 
-  // Get SVG viewBox width for centering calculations
+  // Get SVG viewBox for centering calculations and explicit sizing
   const viewBox = root.getAttribute('viewBox')?.split(/[\s,]+/) ?? [];
   const svgWidth = parseFloat(viewBox[2] ?? '0');
+
+  // Set explicit pixel dimensions (more reliable than 100% on iOS Safari inside transformed containers)
+  const vbW = parseFloat(viewBox[2] ?? '0');
+  const vbH = parseFloat(viewBox[3] ?? '0');
+  if (vbW > 0) root.setAttribute('width', String(vbW));
+  if (vbH > 0) root.setAttribute('height', String(vbH));
+  root.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
   for (const field of fields) {
     const group = doc.getElementById(field.id);
@@ -208,7 +211,10 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
               data-svg-overlay="true"
               style={{
                 position: 'absolute',
-                inset: 0,
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
                 width: canvasWidth,
                 height: canvasHeight,
                 overflow: 'hidden',
