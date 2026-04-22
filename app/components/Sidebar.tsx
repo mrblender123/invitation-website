@@ -2,21 +2,8 @@
 
 import { useState } from 'react';
 
-export type Confinements = {
-  preset: string;
-};
-
-export const BACKGROUND_PRESETS = [
-  { label: 'Classic Elegant', description: 'Traditional Hebrew wedding style' },
-  { label: 'Modern Minimalist', description: 'Clean, contemporary lines' },
-  { label: 'Floral & Romantic', description: 'Soft blooms, pastel garden' },
-  { label: 'Jerusalem Stone', description: 'Heritage & stone-inspired' },
-  { label: 'Luxury Gold & Ivory', description: 'Opulent, premium stationery' },
-];
-
 type SidebarProps = {
   data: { eventTitle: string; hostName: string; dateTime: string };
-  confinements: Confinements;
   canvasWidth: number;
   canvasHeight: number;
   overlayOpacity: number;
@@ -38,9 +25,7 @@ type SidebarProps = {
   titleFont: string;
   nameFont: string;
   dateFont: string;
-  isLoading: boolean;
   onUpdate: (field: string, value: string) => void;
-  onConfinementUpdate: (field: keyof Confinements, value: string) => void;
   onOverlayOpacityChange: (value: number) => void;
   onGlowIntensityChange: (value: number) => void;
   onTitleSizeChange: (value: number) => void;
@@ -58,7 +43,6 @@ type SidebarProps = {
   onTitleFontChange: (value: string) => void;
   onNameFontChange: (value: string) => void;
   onDateFontChange: (value: string) => void;
-  onGenerate: () => void;
 };
 
 const FONTS = [
@@ -75,7 +59,6 @@ const FONTS = [
 
 export default function Sidebar({
   data,
-  confinements,
   canvasWidth,
   canvasHeight,
   overlayOpacity,
@@ -97,9 +80,7 @@ export default function Sidebar({
   titleFont,
   nameFont,
   dateFont,
-  isLoading,
   onUpdate,
-  onConfinementUpdate,
   onOverlayOpacityChange,
   onGlowIntensityChange,
   onTitleSizeChange,
@@ -117,7 +98,6 @@ export default function Sidebar({
   onTitleFontChange,
   onNameFontChange,
   onDateFontChange,
-  onGenerate,
 }: SidebarProps) {
   const [openPanel, setOpenPanel] = useState<'title' | 'name' | 'date' | null>(null);
 
@@ -283,53 +263,6 @@ export default function Sidebar({
           />
         </div>
       </div>
-
-      <div className="border-t border-gray-700" />
-
-      {/* Background style */}
-      <div className="flex flex-col gap-3">
-        <p className="text-xs uppercase text-gray-500 tracking-widest">Background Style</p>
-        {BACKGROUND_PRESETS.map((p) => {
-          const selected = confinements.preset === p.label;
-          return (
-            <button
-              key={p.label}
-              onClick={() => onConfinementUpdate('preset', p.label)}
-              style={{
-                textAlign: 'left', padding: '10px 14px', borderRadius: 8,
-                border: selected ? '1px solid rgba(161,161,170,0.8)' : '1px solid rgba(255,255,255,0.1)',
-                background: selected ? 'rgba(161,161,170,0.15)' : 'rgba(255,255,255,0.03)',
-                cursor: 'pointer', transition: 'all 0.15s',
-              }}
-            >
-              <div style={{ fontSize: 13, fontWeight: 600, color: selected ? '#c084fc' : 'rgba(255,255,255,0.85)', marginBottom: 2 }}>
-                {p.label}
-              </div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
-                {p.description}
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      <button
-        onClick={onGenerate}
-        disabled={isLoading}
-        className="mt-auto w-full py-4 bg-gradient-to-r from-zinc-400 to-zinc-300 font-bold rounded-xl active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100"
-      >
-        {isLoading ? (
-          <span className="flex items-center justify-center gap-2">
-            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-            </svg>
-            Generating…
-          </span>
-        ) : (
-          '✨ Generate Background'
-        )}
-      </button>
     </div>
   );
 }

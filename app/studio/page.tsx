@@ -3,15 +3,11 @@ import { useRef, useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import html2canvas from 'html2canvas';
-import Sidebar, { type Confinements } from '../components/Sidebar';
+import Sidebar from '../components/Sidebar';
 import InvitationCard from '../components/InvitationCard';
 import { getSizeByKey, defaultPositions } from '@/lib/canvasSizes';
 import { useAuth } from '../components/AuthProvider';
 import UserMenu from '../components/UserMenu';
-
-const DEFAULT_CONFINEMENTS: Confinements = {
-  preset: 'Classic Elegant',
-};
 
 function StudioContent() {
   const router = useRouter();
@@ -29,8 +25,7 @@ function StudioContent() {
   const defPos = defaultPositions(canvasSize.width, canvasSize.height);
 
   const [data, setData] = useState({ eventTitle: '', hostName: '', dateTime: '' });
-  const [confinements, setConfinements] = useState<Confinements>(DEFAULT_CONFINEMENTS);
-  const [bg, setBg] = useState('');
+  const [bg] = useState('');
   const [overlayOpacity, setOverlayOpacity] = useState(0.3);
   const [glowIntensity, setGlowIntensity] = useState(7);
   const [vignetteIntensity, setVignetteIntensity] = useState(0);
@@ -49,8 +44,6 @@ function StudioContent() {
   const [titleFont, setTitleFont] = useState('"Playfair Display", serif');
   const [nameFont, setNameFont] = useState('Inter, sans-serif');
   const [dateFont, setDateFont] = useState('Inter, sans-serif');
-  const [isLoading, setIsLoading] = useState(false);
-  const [imgError, setImgError] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
 
   // Save modal state
@@ -116,27 +109,6 @@ function StudioContent() {
     titleX, titleY, nameX, nameY, dateX, dateY,
     titleColor, nameColor, dateColor,
     titleFont, nameFont, dateFont,
-  };
-
-  const handleGenerate = async () => {
-    setIsLoading(true);
-    setImgError('');
-    setBg('');
-    try {
-      const res = await fetch('/api/generate-background', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(confinements),
-      });
-      const { url, error } = await res.json();
-      if (error) throw new Error(error);
-      setBg(url);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Generation failed';
-      setImgError(msg);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const handleDownload = async () => {
@@ -225,12 +197,10 @@ function StudioContent() {
 
         <button
           onClick={() => { setShowSaveModal(true); setSaveError(''); setSaveSuccess(false); }}
-          disabled={isLoading}
           style={{
             padding: '6px 14px', borderRadius: 7, fontWeight: 600, fontSize: 13, cursor: 'pointer',
             background: 'transparent', color: 'rgba(255,255,255,0.65)',
             border: '1px solid rgba(255,255,255,0.15)',
-            opacity: isLoading ? 0.4 : 1,
           }}
         >
           Save
@@ -238,12 +208,10 @@ function StudioContent() {
 
         <button
           onClick={handleGoToExport}
-          disabled={isLoading}
           style={{
             padding: '6px 16px', borderRadius: 7, fontWeight: 600, fontSize: 13, cursor: 'pointer',
             background: 'linear-gradient(135deg, #a1a1aa, #e4e4e7)',
             color: '#fff', border: 'none',
-            opacity: isLoading ? 0.4 : 1,
           }}
         >
           Preview & Export →
@@ -257,7 +225,6 @@ function StudioContent() {
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         <Sidebar
           data={data}
-          confinements={confinements}
           canvasWidth={canvasSize.width}
           canvasHeight={canvasSize.height}
           overlayOpacity={overlayOpacity}
@@ -277,9 +244,7 @@ function StudioContent() {
           titleFont={titleFont}
           nameFont={nameFont}
           dateFont={dateFont}
-          isLoading={isLoading}
           onUpdate={(f, v) => setData({ ...data, [f]: v })}
-          onConfinementUpdate={(f, v) => setConfinements({ ...confinements, [f]: v })}
           onOverlayOpacityChange={setOverlayOpacity}
           onGlowIntensityChange={setGlowIntensity}
           vignetteIntensity={vignetteIntensity}
@@ -299,7 +264,6 @@ function StudioContent() {
           onTitleFontChange={setTitleFont}
           onNameFontChange={setNameFont}
           onDateFontChange={setDateFont}
-          onGenerate={handleGenerate}
         />
 
         {/* Canvas */}
@@ -333,29 +297,6 @@ function StudioContent() {
                   nameFont={nameFont}
                   dateFont={dateFont}
                 />
-                {isLoading && (
-                  <div style={{
-                    position: 'absolute', inset: 0, zIndex: 10, borderRadius: '16px',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                    background: 'rgba(0,0,0,0.65)',
-                  }}>
-                    <svg style={{ width: 36, height: 36, color: '#a1a1aa' }} className="animate-spin" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                    </svg>
-                    <p style={{ color: 'white', marginTop: 12, fontSize: 14 }}>Generating… ~15–30s</p>
-                  </div>
-                )}
-                {imgError && (
-                  <div style={{
-                    position: 'absolute', inset: 0, zIndex: 10, borderRadius: '16px',
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                    background: 'rgba(0,0,0,0.8)', padding: '0 24px', gap: 12,
-                  }}>
-                    <p style={{ color: '#f87171', textAlign: 'center', fontSize: 13, lineHeight: 1.5 }}>{imgError}</p>
-                    <p style={{ color: '#9ca3af', fontSize: 12 }}>Click Generate to try again</p>
-                  </div>
-                )}
               </div>
             </div>
           </div>
