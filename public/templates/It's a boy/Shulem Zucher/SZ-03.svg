@@ -1,27 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <text transform="translate(180 114.1)" text-anchor="middle" fill="#325679" font-family="Secular One" font-size="11.2"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
-  <text transform="translate(180 127.4)" text-anchor="middle" fill="#325679" font-family="Secular One" font-size="11.2"><tspan x="0" y="0">על כל הטוב אשר גמלנו</tspan></text>
-  <text transform="translate(180 145.8)" text-anchor="middle" fill="#325679" font-family="Secular One" font-size="17.2"><tspan x="0" y="0">בשמחת הולדת בני שיחי׳</tspan></text>
-  <text transform="translate(180 161.4)" text-anchor="middle" fill="#325679" font-family="Secular One" font-size="12.1"><tspan x="0" y="0">למזל טוב</tspan></text>
-  <text transform="translate(180 176.6)" text-anchor="middle" fill="#325679" font-family="Secular One" font-size="11"><tspan x="0" y="0">אתכבד בזה להזמין את כל קרובי וידידי</tspan></text>
-  <text transform="translate(180 189.7)" text-anchor="middle" fill="#325679" font-family="Secular One" font-size="11.2"><tspan x="0" y="0">לבוא ולהשתתף בשמחתי אצל</tspan></text>
-  <text transform="translate(180 261.2) scale(.6 1)" text-anchor="middle" fill="#0b1730" font-family="Secular One" font-size="81.6"><tspan x="0" y="0">שלום זכר</tspan></text>
-  <text transform="translate(180 298.6) scale(.8 1)" text-anchor="middle" fill="#335678" font-family="Secular One" font-size="15.9"><tspan x="0" y="0">שתקיים אי״ה בליל שבת קודש</tspan></text>
-  <g id="parsha">
-    <text transform="translate(180 319.5) scale(.8 1)" text-anchor="middle" fill="#335678" font-family="Secular One" font-size="22.5"><tspan x="0" y="0">פרשת נשא</tspan></text>
-  </g>
-  <g id="location">
-    <text transform="translate(180 333) scale(.8 1)" text-anchor="middle" fill="#335678" font-family="Secular One" font-size="10.8"><tspan x="0" y="0">בביהמ״ד לעלוב</tspan><tspan x="0" y="13">1693 49th Street</tspan></text>
-  </g>
-  <text transform="translate(180 365.5) scale(.8 1)" text-anchor="middle" fill="#335678" font-family="Secular One" font-size="13.9"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
-  <g id="host_name">
-    <text transform="translate(180 384) scale(.8 1)" text-anchor="middle" fill="#335678" font-family="Secular One" font-size="16"><tspan x="0" y="0">מרדכי זאב ראטה</tspan></text>
-  </g>
-  <g id="father_name_1">
-    <text transform="translate(180 397) scale(.8 1)" text-anchor="middle" fill="#335678" font-family="Secular One" font-size="8.7"><tspan x="0" y="0">ב״ר בנימין משה הי״וו</tspan></text>
-  </g>
-  <g id="father_name_2">
-    <text transform="translate(180 407.2) scale(.8 1)" text-anchor="middle" fill="#335678" font-family="Secular One" font-size="8.7"><tspan x="0" y="0">חתן בערל גרינעלד הי״וו</tspan></text>
-  </g>
+  <text/>
+  <text transform="translate(143.9 407.2) scale(.8 1)" fill="#335678" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="8.7"><tspan x="0" y="0">חתן בערל גרינפעלד הי״וו</tspan></text>
+  <text transform="translate(136.2 384) scale(.8 1)" fill="#335678" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="16"><tspan x="0" y="0">מרדכי זאב ראטה</tspan></text>
+  <text transform="translate(117.3 365.5) scale(.8 1)" fill="#335678" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="13.9"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan><tspan x="150.5" y="0"> </tspan></text>
+  <text transform="translate(148.7 397) scale(.8 1)" fill="#335678" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="8.7"><tspan x="0" y="0">ב״ר בנימין משה הי״וו</tspan></text>
+  <text transform="translate(151.2 333) scale(.8 1)" fill="#335678" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="10.8"><tspan x="0" y="0">בביהמ״ד לעלוב</tspan><tspan x="68.2" y="0"> </tspan></text>
+  <text transform="translate(149 343.7) scale(.8 1)" fill="#335678" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="10.8"><tspan x="0" y="0">1693 49th Steet</tspan></text>
+  <text transform="translate(99.6 298.6) scale(.8 1)" fill="#335678" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="15.9"><tspan x="0" y="0">שתקיים אי״ה בליל שבת קודש</tspan><tspan x="193.4" y="0"> </tspan></text>
+  <text transform="translate(140 319.5) scale(.8 1)" fill="#335678" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="22.5"><tspan x="0" y="0">פרשת נשא</tspan></text>
+  <text transform="translate(80.2 261.2) scale(.6 1)" fill="#0b1730" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="81.6"><tspan x="0" y="0">שלום זכר</tspan><tspan x="305.7" y="0"> </tspan></text>
+  <text transform="translate(119.6 114.1) scale(1 1)" fill="#325679" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="11.2"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
+  <text transform="translate(131 127.4) scale(1 1)" fill="#325679" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="11.2"><tspan x="0" y="0">על כל הטוב אשר גמלנו</tspan></text>
+  <text transform="translate(95.5 145.8) scale(1 1)" fill="#325679" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="17.2"><tspan x="0" y="0">בשמחת הולדת בני שיחי׳</tspan><tspan x="171.3" y="0"> </tspan></text>
+  <text transform="translate(158.2 161.4) scale(1 1)" fill="#325679" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="12.1"><tspan x="0" y="0">למזל טוב</tspan><tspan x="44.2" y="0"> </tspan></text>
+  <text transform="translate(115.7 189.7) scale(1 1)" fill="#325679" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="11.2"><tspan x="0" y="0">לבוא ולהשתתף בשמחתי אצל</tspan><tspan x="130.2" y="0"> </tspan></text>
+  <text transform="translate(97.5 176.6) scale(1 1)" fill="#325679" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="11"><tspan x="0" y="0">אתכבד בזה להזמין את כל קרובי וידידי</tspan><tspan x="167.3" y="0"> </tspan></text>
 </svg>

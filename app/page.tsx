@@ -78,7 +78,7 @@ export default function Home() {
             <p style={{ fontSize: 12, color: 'var(--muted-faint)', margin: 0 }}>
               Built with Next.js
             </p>
-            <a href="/admin" style={{ fontSize: 12, color: 'var(--muted-faint)', textDecoration: 'none' }}>Admin</a>
+            <a href="/admin" style={{ fontSize: 12, color: 'transparent', textDecoration: 'none', userSelect: 'none' }}>Admin</a>
           </div>
         </div>
       </footer>
