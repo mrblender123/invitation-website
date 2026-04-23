@@ -81,7 +81,6 @@ function StudioContent() {
     if (!raw) return;
     const s = JSON.parse(raw);
     if (s.data) setData(s.data);
-    if (s.bg !== undefined) setBg(s.bg);
     if (s.overlayOpacity !== undefined) setOverlayOpacity(s.overlayOpacity);
     if (s.glowIntensity !== undefined) setGlowIntensity(s.glowIntensity);
     if (s.vignetteIntensity !== undefined) setVignetteIntensity(s.vignetteIntensity);
