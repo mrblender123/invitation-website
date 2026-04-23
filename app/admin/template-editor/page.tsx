@@ -971,6 +971,7 @@ export default function TemplateEditorPage() {
                                     type="number" step="0.1"
                                     value={Math.round(layer[axis] * 10) / 10}
                                     onChange={e => setLayerCoord(idx, axis, parseFloat(e.target.value))}
+                                    onFocus={e => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
                                     style={{ flex: 1, minWidth: 0, width: 0, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 8px', fontVariantNumeric: 'tabular-nums', outline: 'none' }}
                                   />
                                 </label>
@@ -985,6 +986,7 @@ export default function TemplateEditorPage() {
                                   value={layer.fontSize ?? ''}
                                   placeholder="–"
                                   onChange={e => setLayerStyle(idx, 'fontSize', parseFloat(e.target.value))}
+                                  onFocus={e => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
                                   style={{ width: 64, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 8px', outline: 'none' }}
                                 />
                               </label>
@@ -1000,6 +1002,7 @@ export default function TemplateEditorPage() {
                                   type="text"
                                   value={layer.fill ?? ''}
                                   onChange={e => setLayerStyle(idx, 'fill', e.target.value)}
+                                  onFocus={e => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
                                   style={{ flex: 1, minWidth: 0, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 11, padding: '4px 6px', outline: 'none', fontFamily: 'monospace' }}
                                 />
                               </label>
