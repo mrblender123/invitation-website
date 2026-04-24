@@ -288,7 +288,20 @@ const [windowWidth, setWindowWidth] = useState(1200);
       .finally(() => setLoadingTemplates(false));
   }, []);
 
+  // Sync selected state with URL — clears editor when back is pressed
+  useEffect(() => {
+    if (!templateParam) {
+      setSelected(null);
+    } else if (templates.length > 0) {
+      const t = templates.find(t => t.id === templateParam);
+      if (t) setSelected(t);
+    }
+  }, [templateParam, templates]);
+
   const handleSelectTemplate = (template: Template) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('template', template.id);
+    router.push(`/templates?${params.toString()}`);
     setSelected(template);
     setClearedFields(new Set());
     if (template.fields) {

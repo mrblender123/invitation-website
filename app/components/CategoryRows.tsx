@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import GlassPill from './GlassPill';
 
@@ -64,6 +64,39 @@ function TemplateThumb({ template }: { template: Template }) {
 }
 
 function CategoryRow({ category, templates }: { category: string; templates: Template[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
+  const startX = useRef(0);
+  const startScrollLeft = useRef(0);
+  const [grabbing, setGrabbing] = useState(false);
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 2) return;
+    e.preventDefault();
+    dragging.current = true;
+    startX.current = e.clientX;
+    startScrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
+    setGrabbing(true);
+
+    const onMove = (ev: MouseEvent) => {
+      if (!dragging.current) return;
+      const dx = ev.clientX - startX.current;
+      if (scrollRef.current) scrollRef.current.scrollLeft = startScrollLeft.current - dx;
+    };
+    const onUp = () => {
+      dragging.current = false;
+      setGrabbing(false);
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  };
+
+  const onContextMenu = (e: React.MouseEvent) => {
+    if (dragging.current) e.preventDefault();
+  };
+
   return (
     <section style={{ marginBottom: 48 }}>
       {/* Row header */}
@@ -84,12 +117,19 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
       </div>
 
       {/* Horizontal scroll */}
-      <div style={{
-        overflowX: 'auto',
-        scrollbarWidth: 'none',
-        paddingLeft: 24,
-        paddingRight: 24,
-      }}>
+      <div
+        ref={scrollRef}
+        onMouseDown={onMouseDown}
+        onContextMenu={onContextMenu}
+        style={{
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+          paddingLeft: 24,
+          paddingRight: 24,
+          cursor: grabbing ? 'grabbing' : 'grab',
+          userSelect: 'none',
+        }}
+      >
         <div style={{ display: 'flex', gap: 12, width: 'max-content', paddingBottom: 4 }}>
           {templates.map(t => (
             <TemplateThumb key={t.id} template={t} />
