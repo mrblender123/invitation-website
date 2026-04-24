@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Emoji from './Emoji';
 
 interface GlassPillProps {
   text: string;
@@ -187,19 +188,26 @@ export default function GlassPill({
         transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s',
       }}>
         {emoji && (
-          <span style={{
-            fontSize: isNumeric ? '1rem' : '1.1rem',
-            fontFamily: isNumeric ? 'var(--font-playfair)' : undefined,
-            fontWeight: isNumeric ? 700 : undefined,
-            lineHeight: 1,
-            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.15))',
-          }}>{emoji}</span>
+          isNumeric ? (
+            <span style={{
+              fontSize: '1rem',
+              fontFamily: 'var(--font-playfair)',
+              fontWeight: 675,
+              lineHeight: 1,
+              filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.15))',
+            }}>{emoji}</span>
+          ) : (
+            <span style={{ lineHeight: 1, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.15))' }}>
+              <Emoji char={emoji} size="1.1rem" />
+            </span>
+          )
         )}
         <span style={{
-          fontSize: fullWidth ? '0.94rem' : '0.88rem',
-          fontWeight: 700,
-          fontStyle: 'italic',
-          letterSpacing: '-0.01em',
+          fontSize: fullWidth ? '0.84rem' : '0.78rem',
+          fontFamily: 'var(--font-montserrat)',
+          fontWeight: 625,
+          fontStyle: 'normal',
+          letterSpacing: '0.03em',
           color: active ? 'rgb(71,85,105)' : '#0f172a',
           lineHeight: 1,
           whiteSpace: 'nowrap',
@@ -268,7 +276,7 @@ export default function GlassPill({
             href={href ?? '/'}
             style={{
               padding: '10px 20px', borderRadius: 9999,
-              fontSize: 13, fontWeight: 700, fontStyle: 'italic',
+              fontSize: 13, fontFamily: 'var(--font-montserrat)', fontWeight: 600, fontStyle: 'normal', letterSpacing: '0.04em',
               color: '#334155', textDecoration: 'none', whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center',
               transition: 'background 0.15s, color 0.15s, transform 0.15s',
             }}
@@ -283,7 +291,7 @@ export default function GlassPill({
               href={`${href}&subcategory=${encodeURIComponent(sub)}`}
               style={{
                 padding: '10px 20px', borderRadius: 9999,
-                fontSize: 13, fontWeight: 700, fontStyle: 'italic',
+                fontSize: 13, fontFamily: 'var(--font-montserrat)', fontWeight: 600, fontStyle: 'normal', letterSpacing: '0.04em',
                 color: '#334155', textDecoration: 'none', whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center',
                 transition: `background 0.15s ${idx * 30}ms, color 0.15s, transform 0.15s`,
               }}

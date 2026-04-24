@@ -65,7 +65,7 @@
 }
 
 :root {
-  --background: #ffffff;
+  --background: #fcfcfc;
   --foreground: #18181b;
   --muted: rgba(0,0,0,0.42);
   --muted-faint: rgba(0,0,0,0.28);
