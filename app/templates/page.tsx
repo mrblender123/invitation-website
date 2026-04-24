@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import html2canvas from 'html2canvas';
@@ -235,6 +236,7 @@ function TemplatesContent() {
   const [hoveredField, setHoveredField] = useState<string | null>(null);
 const [windowWidth, setWindowWidth] = useState(1200);
   const [showAllFields, setShowAllFields] = useState(false);
+  const [keyboardRect, setKeyboardRect] = useState<DOMRect | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
@@ -251,6 +253,13 @@ const [windowWidth, setWindowWidth] = useState(1200);
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
   }, []);
+
+  // Update keyboard anchor position when active field changes
+  useEffect(() => {
+    if (!activeField) { setKeyboardRect(null); return; }
+    const el = inputRefs.current[activeField.id];
+    if (el) setKeyboardRect(el.getBoundingClientRect());
+  }, [activeField]);
 
   // Fetch templates from the API (auto-discovered from public/templates/*/)
   useEffect(() => {
@@ -735,19 +744,6 @@ const [windowWidth, setWindowWidth] = useState(1200);
                             {clearedFields.has(field.id) ? '↺' : '×'}
                           </button>
                         </div>
-                        {isActive && windowWidth >= 768 && (
-                          <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 50 }}>
-                            <VirtualKeyboard
-                              lang={field.rtl ? 'he' : 'en'}
-                              onKey={char => setFieldValues(v => ({ ...v, [field.id]: (v[field.id] ?? '') + char }))}
-                              onBackspace={() => setFieldValues(v => {
-                                const cur = v[field.id] ?? '';
-                                return { ...v, [field.id]: Array.from(cur).slice(0, -1).join('') };
-                              })}
-                              onDone={() => setActiveField(null)}
-                            />
-                          </div>
-                        )}
                       </div>
                       );
                     })
@@ -780,6 +776,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     </>
                   )}
                 </div>
+
 
                 {/* Actions */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -905,6 +902,21 @@ const [windowWidth, setWindowWidth] = useState(1200);
         </div>
       )}
 
+      {/* Virtual keyboard portal — fixed below the active input, not clipped by any overflow container */}
+      {activeField && keyboardRect && windowWidth >= 768 && createPortal(
+        <div style={{ position: 'fixed', top: keyboardRect.bottom + 8, left: keyboardRect.left, width: keyboardRect.width, zIndex: 1000 }}>
+          <VirtualKeyboard
+            lang={activeField.rtl ? 'he' : 'en'}
+            onKey={char => setFieldValues(v => ({ ...v, [activeField.id]: (v[activeField.id] ?? '') + char }))}
+            onBackspace={() => setFieldValues(v => {
+              const cur = v[activeField.id] ?? '';
+              return { ...v, [activeField.id]: Array.from(cur).slice(0, -1).join('') };
+            })}
+            onDone={() => setActiveField(null)}
+          />
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

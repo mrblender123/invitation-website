@@ -162,8 +162,10 @@ export default function TemplateEditorPage() {
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
   const [imageDrag, setImageDrag] = useState<{ id: string; startMouseX: number; startMouseY: number; startX: number; startY: number } | null>(null);
   const [imageResize, setImageResize] = useState<{ id: string; startMouseX: number; startMouseY: number; startW: number; startH: number } | null>(null);
+  const [keyboardInset, setKeyboardInset] = useState(0);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
+  const rightPanelRef = useRef<HTMLDivElement>(null);
 
   // Refs for undo (avoid stale closures)
   const layersRef = useRef(layers);
@@ -176,6 +178,19 @@ export default function TemplateEditorPage() {
   useEffect(() => { imageDragRef.current = imageDrag; }, [imageDrag]);
   const imageResizeRef = useRef(imageResize);
   useEffect(() => { imageResizeRef.current = imageResize; }, [imageResize]);
+
+  // Track keyboard height via visualViewport (iOS Safari doesn't resize layout viewport)
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const handler = () => {
+      const inset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      setKeyboardInset(inset);
+    };
+    vv.addEventListener('resize', handler);
+    vv.addEventListener('scroll', handler);
+    return () => { vv.removeEventListener('resize', handler); vv.removeEventListener('scroll', handler); };
+  }, []);
 
   // Auth guard
   useEffect(() => {
@@ -847,9 +862,9 @@ export default function TemplateEditorPage() {
         </div>
 
         {/* Right panel */}
-        <div style={{ width: 300, borderLeft: border, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+        <div ref={rightPanelRef} style={{ width: 300, borderLeft: border, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
           {selected && (
-            <div style={{ padding: '12px 16px' }}>
+            <div style={{ padding: '12px 16px', paddingBottom: 12 + keyboardInset }}>
 
                 {/* Alignment toolbar */}
                 <div style={{ marginBottom: 20 }}>
@@ -971,7 +986,7 @@ export default function TemplateEditorPage() {
                                     type="number" step="0.1"
                                     value={Math.round(layer[axis] * 10) / 10}
                                     onChange={e => setLayerCoord(idx, axis, parseFloat(e.target.value))}
-                                    onFocus={e => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
+                                    onFocus={e => { const t = e.target; setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 350); }}
                                     style={{ flex: 1, minWidth: 0, width: 0, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 8px', fontVariantNumeric: 'tabular-nums', outline: 'none' }}
                                   />
                                 </label>
@@ -986,7 +1001,7 @@ export default function TemplateEditorPage() {
                                   value={layer.fontSize ?? ''}
                                   placeholder="–"
                                   onChange={e => setLayerStyle(idx, 'fontSize', parseFloat(e.target.value))}
-                                  onFocus={e => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
+                                  onFocus={e => { const t = e.target; setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 350); }}
                                   style={{ width: 64, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 8px', outline: 'none' }}
                                 />
                               </label>
@@ -1002,7 +1017,7 @@ export default function TemplateEditorPage() {
                                   type="text"
                                   value={layer.fill ?? ''}
                                   onChange={e => setLayerStyle(idx, 'fill', e.target.value)}
-                                  onFocus={e => e.target.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
+                                  onFocus={e => { const t = e.target; setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 350); }}
                                   style={{ flex: 1, minWidth: 0, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 11, padding: '4px 6px', outline: 'none', fontFamily: 'monospace' }}
                                 />
                               </label>

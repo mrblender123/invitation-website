@@ -37,20 +37,22 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
   }
 
   // Collect all <g id="..."> in document order
-  const fields: SvgField[] = [];
   const seenIds = new Set<string>();
   const gTagRegex = /<g\b([^>]*)>/g;
   let m: RegExpExecArray | null;
+
+  const entries: Array<{ id: string; label: string; placeholder: string; hasStar: boolean }> = [];
 
   while ((m = gTagRegex.exec(content)) !== null) {
     const attrs = m[1];
     const idMatch = attrs.match(/\bid="([^"]+)"/);
     if (!idMatch) continue;
     const rawId = idMatch[1];
-    const isOptional = rawId.includes('*');
-    const gId = rawId.replace(/\*/g, ''); // strip asterisks for clean ID
+    const hasStar = rawId.includes('*');
+    const gId = rawId.replace(/\*/g, '').trim(); // strip asterisks and whitespace
 
     // Skip system / static groups
+    if (!gId) continue;
     if (seenIds.has(gId)) continue;
     if (SKIP_IDS.has(gId.toLowerCase())) continue;
     if (/^layer/i.test(gId)) continue;
@@ -61,8 +63,15 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
     const tspanMatch = afterTag.match(/<tspan[^>]*>([^<]*)</);
     const placeholder = tspanMatch?.[1]?.trim() ?? '';
 
-    fields.push({ id: gId, label: idToLabel(gId), placeholder, rtl: true, ...(isOptional && { optional: true }) });
+    entries.push({ id: gId, label: idToLabel(gId), placeholder, hasStar });
   }
+
+  // Star convention: if ALL fields have *, only starred fields are editable (new Illustrator-export style).
+  // If NONE or SOME have *, use old behavior: all fields editable, * = optional/hidden.
+  const allHaveStar = entries.length > 0 && entries.every(e => e.hasStar);
+  const fields: SvgField[] = allHaveStar
+    ? entries.map(e => ({ id: e.id, label: e.label, placeholder: e.placeholder, rtl: true }))
+    : entries.map(e => ({ id: e.id, label: e.label, placeholder: e.placeholder, rtl: true, ...(e.hasStar && { optional: true }) }));
 
   return {
     textSvg: publicUrl,
