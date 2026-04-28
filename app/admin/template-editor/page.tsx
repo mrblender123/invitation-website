@@ -21,7 +21,9 @@ type Layer = {
   ty: number;
   restTransform: string;
   fontSize: number | null;
+  fontWeight: number | null;
   fill: string | null;
+  anchor: 'start' | 'middle' | 'end' | null;
 };
 
 type DragState = {
@@ -59,8 +61,10 @@ function parseLayers(svgText: string): Layer[] {
     const id = parent?.tagName.toLowerCase() === 'g' && parent.id ? parent.id : null;
     const label = textEl.querySelector('tspan')?.textContent?.trim().slice(0, 24) ?? `text-${idx}`;
     const fsSrc = textEl.getAttribute('font-size');
+    const fwSrc = textEl.getAttribute('font-weight');
     const fillSrc = textEl.getAttribute('fill');
-    layers.push({ index: idx, id, originalId: id, label, tx: parseFloat(m[1]), ty: parseFloat(m[2]), restTransform: m[3], fontSize: fsSrc ? parseFloat(fsSrc) : null, fill: fillSrc ?? null });
+    const anchorSrc = textEl.getAttribute('text-anchor') as 'start' | 'middle' | 'end' | null;
+    layers.push({ index: idx, id, originalId: id, label, tx: parseFloat(m[1]), ty: parseFloat(m[2]), restTransform: m[3], fontSize: fsSrc ? parseFloat(fsSrc) : null, fontWeight: fwSrc ? parseFloat(fwSrc) : null, fill: fillSrc ?? null, anchor: anchorSrc });
   });
   return layers;
 }
@@ -79,8 +83,9 @@ function buildSvgForSave(svgSource: string, layers: Layer[], imageOverlays: Imag
     textEl.setAttribute('transform', updated);
     // Font size
     if (layer.fontSize !== null) textEl.setAttribute('font-size', String(Math.round(layer.fontSize * 10) / 10));
-    // Fill color
+    if (layer.fontWeight !== null) textEl.setAttribute('font-weight', String(layer.fontWeight));
     if (layer.fill !== null) textEl.setAttribute('fill', layer.fill);
+    if (layer.anchor !== null) textEl.setAttribute('text-anchor', layer.anchor ?? 'middle');
     // Rename id
     if (layer.originalId && layer.id && layer.id !== layer.originalId) {
       const parent = textEl.parentElement;
@@ -114,7 +119,9 @@ function buildSvgForDisplay(svgSource: string, layers: Layer[]): string {
     );
     textEl.setAttribute('transform', updated);
     if (layer.fontSize !== null) textEl.setAttribute('font-size', String(Math.round(layer.fontSize * 10) / 10));
+    if (layer.fontWeight !== null) textEl.setAttribute('font-weight', String(layer.fontWeight));
     if (layer.fill !== null) textEl.setAttribute('fill', layer.fill);
+    if (layer.anchor !== null) textEl.setAttribute('text-anchor', layer.anchor ?? 'middle');
   });
   const style = doc.createElementNS('http://www.w3.org/2000/svg', 'style');
   style.textContent = `
@@ -478,8 +485,8 @@ export default function TemplateEditorPage() {
     setLayers(prev => prev.map((l, i) => i === idx ? { ...l, [axis]: val } : l));
   }, [pushHistory]);
 
-  const setLayerStyle = useCallback((idx: number, prop: 'fontSize' | 'fill', val: string | number) => {
-    if (prop === 'fontSize' && isNaN(val as number)) return;
+  const setLayerStyle = useCallback((idx: number, prop: 'fontSize' | 'fontWeight' | 'fill' | 'anchor', val: string | number) => {
+    if ((prop === 'fontSize' || prop === 'fontWeight') && isNaN(val as number)) return;
     pushHistory();
     setLayers(prev => prev.map((l, i) => i === idx ? { ...l, [prop]: val } : l));
   }, [pushHistory]);
@@ -573,7 +580,7 @@ export default function TemplateEditorPage() {
   );
 
   return (
-    <div style={{ minHeight: '100vh', background: '#09090b', color: '#fff', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100vh', overflow: 'hidden', background: '#09090b', color: '#fff', display: 'flex', flexDirection: 'column' }}>
 
       {/* Header */}
       <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(9,9,11,0.9)', backdropFilter: 'blur(12px)', borderBottom: border }}>
@@ -637,7 +644,7 @@ export default function TemplateEditorPage() {
               return next;
             });
             return Array.from(cats.entries()).map(([cat, subMap]) => {
-              const catOpen = !collapsed.has(cat);
+              const catOpen = collapsed.has(cat);
               return (
                 <div key={cat}>
                   {/* Category row */}
@@ -652,7 +659,7 @@ export default function TemplateEditorPage() {
 
                   {catOpen && Array.from(subMap.entries()).map(([sub, items]) => {
                     const subKey = `${cat}/${sub}`;
-                    const subOpen = !collapsed.has(subKey);
+                    const subOpen = collapsed.has(subKey);
                     // If there's a subcategory, show a sub-folder row; otherwise list files directly
                     return (
                       <div key={sub}>
@@ -992,7 +999,7 @@ export default function TemplateEditorPage() {
                                 </label>
                               ))}
                             </div>
-                            {/* Font size + color */}
+                            {/* Font size + weight */}
                             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                               <label style={{ display: 'flex', alignItems: 'center', gap: 4, flex: '0 0 auto' }}>
                                 <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap' }}>size</span>
@@ -1002,25 +1009,77 @@ export default function TemplateEditorPage() {
                                   placeholder="–"
                                   onChange={e => setLayerStyle(idx, 'fontSize', parseFloat(e.target.value))}
                                   onFocus={e => { const t = e.target; setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 350); }}
-                                  style={{ width: 64, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 8px', outline: 'none' }}
+                                  style={{ width: 56, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 8px', outline: 'none' }}
                                 />
                               </label>
-                              <label style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 1, minWidth: 0 }}>
-                                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>color</span>
+                              <label style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1, minWidth: 0 }}>
+                                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap' }}>wt</span>
                                 <input
-                                  type="color"
-                                  value={layer.fill && /^#[0-9a-f]{6}$/i.test(layer.fill) ? layer.fill : '#ffffff'}
-                                  onChange={e => setLayerStyle(idx, 'fill', e.target.value)}
-                                  style={{ width: 28, height: 26, padding: '2px', background: 'none', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 5, cursor: 'pointer', flexShrink: 0 }}
+                                  type="range" min="100" max="900" step="100"
+                                  value={layer.fontWeight ?? 400}
+                                  onChange={e => setLayers(prev => prev.map((l, i) => i === idx ? { ...l, fontWeight: parseInt(e.target.value) } : l))}
+                                  onPointerUp={() => pushHistory()}
+                                  style={{ flex: 1, minWidth: 0, accentColor: 'rgba(255,255,255,0.6)', cursor: 'pointer' }}
                                 />
-                                <input
-                                  type="text"
-                                  value={layer.fill ?? ''}
-                                  onChange={e => setLayerStyle(idx, 'fill', e.target.value)}
-                                  onFocus={e => { const t = e.target; setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 350); }}
-                                  style={{ flex: 1, minWidth: 0, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 11, padding: '4px 6px', outline: 'none', fontFamily: 'monospace' }}
-                                />
+                                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', width: 28, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{layer.fontWeight ?? 400}</span>
                               </label>
+                            </div>
+                            {/* Color */}
+                            <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>color</span>
+                              <input
+                                type="color"
+                                value={layer.fill && /^#[0-9a-f]{6}$/i.test(layer.fill) ? layer.fill : '#ffffff'}
+                                onChange={e => setLayerStyle(idx, 'fill', e.target.value)}
+                                style={{ width: 28, height: 26, padding: '2px', background: 'none', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 5, cursor: 'pointer', flexShrink: 0 }}
+                              />
+                              <input
+                                type="text"
+                                value={layer.fill ?? ''}
+                                onChange={e => setLayerStyle(idx, 'fill', e.target.value)}
+                                onFocus={e => { const t = e.target; setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 350); }}
+                                style={{ flex: 1, minWidth: 0, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 11, padding: '4px 6px', outline: 'none', fontFamily: 'monospace' }}
+                              />
+                            </label>
+                            {/* Text anchor */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap' }}>anchor</span>
+                              <div style={{ display: 'flex', gap: 4 }}>
+                                {(['start', 'middle', 'end'] as const).map(a => (
+                                  <button
+                                    key={a}
+                                    onClick={() => setLayerStyle(idx, 'anchor', a)}
+                                    title={a === 'start' ? 'Left (start)' : a === 'middle' ? 'Center' : 'Right (end)'}
+                                    style={{
+                                      width: 30, height: 22,
+                                      border: `1px solid ${layer.anchor === a ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)'}`,
+                                      borderRadius: 5,
+                                      background: layer.anchor === a ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.3)',
+                                      cursor: 'pointer',
+                                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                      padding: 0, color: 'rgba(255,255,255,0.8)',
+                                    }}
+                                  >
+                                    <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                                      {a === 'start' && <>
+                                        <line x1="1" y1="2" x2="13" y2="2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                        <line x1="1" y1="5" x2="9"  y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                        <line x1="1" y1="8" x2="11" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                      </>}
+                                      {a === 'middle' && <>
+                                        <line x1="1" y1="2" x2="13" y2="2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                        <line x1="3" y1="5" x2="11" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                        <line x1="2" y1="8" x2="12" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                      </>}
+                                      {a === 'end' && <>
+                                        <line x1="1"  y1="2" x2="13" y2="2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                        <line x1="5"  y1="5" x2="13" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                        <line x1="3"  y1="8" x2="13" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                      </>}
+                                    </svg>
+                                  </button>
+                                ))}
+                              </div>
                             </div>
                           </div>
                         )}
