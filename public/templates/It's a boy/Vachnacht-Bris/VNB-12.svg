@@ -1,32 +1,31 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <g id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו">
-    <text transform="translate(149.8 486.6) scale(.7 1)" fill="#a88d65" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="7.4"><tspan x="0" y="0">חתן יהודה גרינבערגער הי״וו</tspan></text>
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
+  <g id="father_name_2*">
+    <text transform="translate(149.8 486.6) scale(.7 1)" text-anchor="start" fill="#a88d65" font-family="Secular One" font-size="7.4"><tspan x="0" y="0">חתן יהודה גרינבערגער הי״וו</tspan></text>
   </g>
-  <g id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו">
-    <text transform="translate(156.8 478.1) scale(.7 1)" fill="#a88d65" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="7.4"><tspan x="0" y="0">ב״ר שמחה ברוך הי״וו</tspan></text>
+  <g id="father_name_1*">
+    <text transform="translate(156.8 478.1) scale(.7 1)" text-anchor="start" fill="#a88d65" font-family="Secular One" font-size="7.4"><tspan x="0" y="0">ב״ר שמחה ברוך הי״וו</tspan></text>
   </g>
-  <g id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה">
-    <text transform="translate(133.3 468.6) scale(.7 1)" fill="#997b54" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="14.3"><tspan x="0" y="0">שמעון לוי ברענאוויטש</tspan></text>
+  <g id="host_name*">
+    <text transform="translate(133.3 468.6) scale(.7 1)" text-anchor="start" fill="#997b54" font-family="Secular One" font-size="14.3"><tspan x="0" y="0">שמעון לוי ברענאוויטש</tspan></text>
   </g>
-  <g id="_1247_38th_St_" data-name="1247 38th St *">
-    <text transform="translate(160.5 246.8) scale(.7 1)" fill="#a88d65" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="10"><tspan x="0" y="0">1247 38th St</tspan></text>
+  <g id="street*">
+    <text transform="translate(160.5 246.8) scale(.7 1)" text-anchor="start" fill="#a88d65" font-family="Secular One" font-size="10"><tspan x="0" y="0">1247 38th St</tspan></text>
   </g>
-  <g id="_בביהמ_ד_קהל_חסידי_בעלזא" data-name="* בביהמ״ד קהל חסידי בעלזא">
-    <text transform="translate(135.3 235.5) scale(.7 1)" fill="#a88d65" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="11.1"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan><tspan x="121.7" y="0"> </tspan></text>
+  <g id="location*">
+    <text transform="translate(135.3 235.5) scale(.7 1)" text-anchor="start" fill="#a88d65" font-family="Secular One" font-size="11.1"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
   </g>
-  <text transform="translate(160 223.3) scale(.7 1)" fill="#a88d65" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="8.9"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
-  <g id="_5015_15th_Ave_" data-name="5015 15th Ave *">
-    <text transform="translate(160.2 173.2) scale(.7 1)" fill="#a88d65" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="8.9"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+  <text transform="translate(160 223.3) scale(.7 1)" text-anchor="start" fill="#a88d65" font-family="Secular One" font-size="8.9"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
+  <g id="street_2*">
+    <text transform="translate(160.2 173.2) scale(.7 1)" text-anchor="start" fill="#a88d65" font-family="Secular One" font-size="8.9"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
-  <g id="_בבאולם_פרדס_נח" data-name="* בבאולם פרדס נח">
-    <text transform="translate(160.2 162.6) scale(.7 1)" fill="#a88d65" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="8.9"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+  <g id="hall*">
+    <text transform="translate(160.2 162.6) scale(.7 1)" text-anchor="start" fill="#a88d65" font-family="Secular One" font-size="8.9"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
   </g>
-  <g id="_בליל_ג_פרשת_שמות" data-name=" * בליל ג׳ פרשת שמות">
-    <text transform="translate(144 151.2) scale(.7 1)" fill="#a88d65" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="12.6"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan><tspan x="99.7" y="0" xml:space="preserve">  </tspan></text>
+  <g id="date*">
+    <text transform="translate(144 151.2) scale(.7 1)" text-anchor="start" fill="#a88d65" font-family="Secular One" font-size="12.6"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
   </g>
-  <text transform="translate(160.1 137.3) scale(.7 1)" fill="#a88d65" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="8.9"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
-  <text transform="translate(118.7 55.7) scale(.7 1)" fill="#a88d65" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="8"><tspan x="0" y="0">הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳</tspan></text>
-  <text transform="translate(143.6 65.8) scale(.7 1)" fill="#a88d65" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="11"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
-  <text transform="translate(107.8 48.5) scale(.7 1)" fill="#a88d65" font-family="SecularOne-Regular, &apos;Secular One&apos;" font-size="10"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
+  <text transform="translate(160.1 137.3) scale(.7 1)" text-anchor="start" fill="#a88d65" font-family="Secular One" font-size="8.9"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+  <text transform="translate(118.7 55.7) scale(.7 1)" text-anchor="start" fill="#a88d65" font-family="Secular One" font-size="8"><tspan x="0" y="0">הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳</tspan></text>
+  <text transform="translate(143.6 65.8) scale(.7 1)" text-anchor="start" fill="#a88d65" font-family="Secular One" font-size="11"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
+  <text transform="translate(107.8 48.5) scale(.7 1)" text-anchor="start" fill="#a88d65" font-family="Secular One" font-size="10"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
 </svg>
