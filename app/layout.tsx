@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Dancing_Script, Heebo, Lora, Montserrat, Oswald, Secular_One } from "next/font/google";
+import { Dancing_Script, Frank_Ruhl_Libre, Heebo, Lora, Montserrat, Oswald, Secular_One } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./components/AuthProvider";
 
@@ -41,6 +41,13 @@ const heebo = Heebo({
   display: "block",
 });
 
+const frankRuhlLibre = Frank_Ruhl_Libre({
+  variable: "--font-frank-ruhl-libre",
+  subsets: ["latin", "hebrew"],
+  weight: ["300", "400", "500", "700", "900"],
+  display: "fallback",
+});
+
 
 export const metadata: Metadata = {
   title: "Pintle — Custom Invitation Design",
@@ -58,7 +65,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable} ${heebo.variable}`}>
+    <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable} ${heebo.variable} ${frankRuhlLibre.variable}`}>
       <head>
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link rel="stylesheet" href="https://use.typekit.net/hat2kft.css" />
