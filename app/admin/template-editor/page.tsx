@@ -578,19 +578,6 @@ export default function TemplateEditorPage() {
   const firstSel = selArray.length > 0 ? layers[selArray[0]] : null;
   const hasSelection = selection.size > 0;
 
-  const AlignBtn = ({ action, title, children }: { action: Parameters<typeof align>[0]; title: string; children: React.ReactNode }) => (
-    <button
-      onClick={() => align(action)}
-      title={title}
-      disabled={!hasSelection}
-      style={{
-        padding: '5px 8px', borderRadius: 6, fontSize: 11, fontWeight: 600,
-        background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
-        color: !hasSelection ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.75)',
-        cursor: !hasSelection ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap',
-      }}
-    >{children}</button>
-  );
 
   return (
     <div style={{ height: '100vh', overflow: 'hidden', background: '#09090b', color: '#fff', display: 'flex', flexDirection: 'column' }}>
@@ -725,7 +712,7 @@ export default function TemplateEditorPage() {
 
             {/* Text anchor */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 10 }}>
-              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>Align</span>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>Anchor</span>
               <div style={{ display: 'flex', gap: 2 }}>
                 {(['start', 'middle', 'end'] as const).map(a => (
                   <button
@@ -746,6 +733,30 @@ export default function TemplateEditorPage() {
                   </button>
                 ))}
               </div>
+            </div>
+            <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.1)', flexShrink: 0, marginLeft: 10 }} />
+
+            {/* Snap to guide */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 10 }}>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap' }}>Snap</span>
+              <button
+                onClick={() => align('cx')} disabled={!hasSelection}
+                title={`Align to vertical guide X: ${Math.round(guideX * 10) / 10}`}
+                style={{ padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 600, background: 'rgba(99,200,255,0.08)', border: '1px solid rgba(99,200,255,0.25)', color: hasSelection ? 'rgba(99,200,255,0.9)' : 'rgba(99,200,255,0.25)', cursor: hasSelection ? 'pointer' : 'not-allowed', whiteSpace: 'nowrap' }}
+              >⊕ X</button>
+              <button
+                onClick={() => align('cy')} disabled={!hasSelection}
+                title={`Align to horizontal guide Y: ${Math.round(guideY * 10) / 10}`}
+                style={{ padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 600, background: 'rgba(99,200,255,0.08)', border: '1px solid rgba(99,200,255,0.25)', color: hasSelection ? 'rgba(99,200,255,0.9)' : 'rgba(99,200,255,0.25)', cursor: hasSelection ? 'pointer' : 'not-allowed', whiteSpace: 'nowrap' }}
+              >⊕ Y</button>
+              <span style={{ fontSize: 11, color: 'rgba(99,200,255,0.4)', whiteSpace: 'nowrap' }}>
+                {Math.round(guideX * 10) / 10} / {Math.round(guideY * 10) / 10}
+              </span>
+              <button
+                onClick={() => { setGuideX(svgW / 2); setGuideY(svgH / 2); }}
+                title="Reset guides to canvas center"
+                style={{ fontSize: 10, padding: '2px 6px', borderRadius: 4, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}
+              >↺</button>
             </div>
           </>
         )}
@@ -1012,35 +1023,6 @@ export default function TemplateEditorPage() {
         <div ref={rightPanelRef} style={{ width: 230, borderLeft: border, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
           {selected && (
             <div style={{ padding: '12px 16px', paddingBottom: 12 + keyboardInset }}>
-
-                {/* Alignment toolbar */}
-                <div style={{ marginBottom: 20 }}>
-                  <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 6 }}>
-                    Align
-                    {selection.size > 1 && <span style={{ color: 'rgba(99,200,255,0.8)', textTransform: 'none', letterSpacing: 0 }}> — {selection.size} layers</span>}
-                    {singleSel && <span style={{ color: singleSel.id ? '#f09b00' : 'rgba(255,255,255,0.6)', textTransform: 'none', letterSpacing: 0 }}> — {singleSel.id ?? `static-${selArray[0]}`}</span>}
-                    {!hasSelection && <span style={{ color: 'rgba(255,255,255,0.15)', textTransform: 'none', letterSpacing: 0 }}> (select a layer)</span>}
-                  </p>
-                  {/* Guide info */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <span style={{ fontSize: 11, color: 'rgba(99,200,255,0.6)' }}>Guide X: {Math.round(guideX * 10) / 10}</span>
-                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)' }}>·</span>
-                    <span style={{ fontSize: 11, color: 'rgba(99,200,255,0.6)' }}>Y: {Math.round(guideY * 10) / 10}</span>
-                    <button
-                      onClick={() => { setGuideX(svgW / 2); setGuideY(svgH / 2); }}
-                      style={{ fontSize: 10, padding: '2px 7px', borderRadius: 4, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}
-                      title="Reset guides to canvas center"
-                    >reset</button>
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    <AlignBtn action="cx" title="Snap to vertical guide (X)">⊕ Guide X</AlignBtn>
-                    <AlignBtn action="cy" title="Snap to horizontal guide (Y)">⊕ Guide Y</AlignBtn>
-                    <AlignBtn action="left" title="Align to left edge">← Left</AlignBtn>
-                    <AlignBtn action="right" title="Align to right edge">Right →</AlignBtn>
-                    <AlignBtn action="top" title="Align to top edge">↑ Top</AlignBtn>
-                    <AlignBtn action="bottom" title="Align to bottom edge">↓ Bottom</AlignBtn>
-                  </div>
-                </div>
 
                 {/* Layer list */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
