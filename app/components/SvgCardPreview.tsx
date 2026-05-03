@@ -10,27 +10,6 @@ type Props = {
   activeFieldId?: string | null;
 };
 
-// Reuse a single canvas element for all measurements (lightweight, no GPU alloc)
-let _measureCanvas: HTMLCanvasElement | null = null;
-let _measureCtx: CanvasRenderingContext2D | null = null;
-
-function measureTextWidth(text: string, fontFamily: string, fontSize: number): number {
-  if (typeof document === 'undefined' || !text) return 0;
-  try {
-    if (!_measureCanvas) {
-      _measureCanvas = document.createElement('canvas');
-      _measureCtx = _measureCanvas.getContext('2d');
-    }
-    const ctx = _measureCtx;
-    if (!ctx) return 0;
-    // Use the first font name from the SVG font-family list
-    const fontName = fontFamily.replace(/['"]/g, '').split(',')[0].trim();
-    ctx.font = `${fontSize}px "${fontName}"`;
-    return ctx.measureText(text).width;
-  } catch {
-    return 0;
-  }
-}
 
 function injectFieldValues(
   svgText: string,
@@ -83,25 +62,16 @@ function injectFieldValues(
     const originalAnchor = textEl.getAttribute('text-anchor') ?? 'start';
     const hasUserValue = value !== '';
 
-    // data-no-center: content was already updated — preserve all SVG positioning exactly.
-    if (textEl.getAttribute('data-no-center') === 'true') continue;
-
-    // For positioned (start) designs: only apply centering once the user has typed something.
+    // For non-centered anchors: only adjust once the user has typed something.
     if (originalAnchor !== 'middle' && !hasUserValue) continue;
 
-    textEl.setAttribute('text-anchor', 'middle');
-
-    const fontFamily = textEl.getAttribute('font-family') ?? 'sans-serif';
-    const fontSize = parseFloat(textEl.getAttribute('font-size') ?? '12');
-
+    // Trust the SVG's text-anchor and translate-X exactly as saved (by admin or original design).
+    // For middle: text centers at translate-X.
+    // For start/end: text flows from translate-X in the anchored direction.
+    // Always zero out tspan x so positioning is purely from the parent transform.
+    tspan.setAttribute('x', '0');
     if (originalAnchor === 'middle') {
-      // Text was already centered at its translate-X — just keep tspan at x=0.
-      tspan.setAttribute('x', '0');
-    } else {
-      // Positioned design: center the new text at the same visual midpoint as the
-      // original placeholder (translate-X + scale * originalWidth/2).
-      const originalWidth = measureTextWidth(originalText, fontFamily, fontSize);
-      tspan.setAttribute('x', String(Math.round((originalWidth / 2) * 10) / 10));
+      textEl.setAttribute('text-anchor', 'middle');
     }
   }
 
@@ -191,7 +161,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
         transformOrigin: 'top left',
       }}>
         {/* Inner: full-resolution content — ref this for html2canvas */}
-        <div ref={ref} style={{ width: canvasWidth, height: canvasHeight, position: 'relative', background: '#000' }}>
+        <div ref={ref} style={{ width: canvasWidth, height: canvasHeight, position: 'relative' }}>
 
           {/* PNG background */}
           <img
