@@ -22,6 +22,7 @@ type Layer = {
   restTransform: string;
   fontSize: number | null;
   fontWeight: number | null;
+  fontFamily: string | null;
   fill: string | null;
   anchor: 'start' | 'middle' | 'end' | null;
 };
@@ -62,9 +63,10 @@ function parseLayers(svgText: string): Layer[] {
     const label = textEl.querySelector('tspan')?.textContent?.trim().slice(0, 24) ?? `text-${idx}`;
     const fsSrc = textEl.getAttribute('font-size');
     const fwSrc = textEl.getAttribute('font-weight');
+    const ffSrc = textEl.getAttribute('font-family');
     const fillSrc = textEl.getAttribute('fill');
     const anchorSrc = textEl.getAttribute('text-anchor') as 'start' | 'middle' | 'end' | null;
-    layers.push({ index: idx, id, originalId: id, label, tx: parseFloat(m[1]), ty: parseFloat(m[2]), restTransform: m[3], fontSize: fsSrc ? parseFloat(fsSrc) : null, fontWeight: fwSrc ? parseFloat(fwSrc) : null, fill: fillSrc ?? null, anchor: anchorSrc });
+    layers.push({ index: idx, id, originalId: id, label, tx: parseFloat(m[1]), ty: parseFloat(m[2]), restTransform: m[3], fontSize: fsSrc ? parseFloat(fsSrc) : null, fontWeight: fwSrc ? parseFloat(fwSrc) : null, fontFamily: ffSrc ?? null, fill: fillSrc ?? null, anchor: anchorSrc });
   });
   return layers;
 }
@@ -84,6 +86,7 @@ function buildSvgForSave(svgSource: string, layers: Layer[], imageOverlays: Imag
     // Font size
     if (layer.fontSize !== null) textEl.setAttribute('font-size', String(Math.round(layer.fontSize * 10) / 10));
     if (layer.fontWeight !== null) textEl.setAttribute('font-weight', String(layer.fontWeight));
+    if (layer.fontFamily !== null) textEl.setAttribute('font-family', layer.fontFamily);
     if (layer.fill !== null) textEl.setAttribute('fill', layer.fill);
     if (layer.anchor !== null) textEl.setAttribute('text-anchor', layer.anchor ?? 'middle');
     // Rename id
@@ -120,6 +123,7 @@ function buildSvgForDisplay(svgSource: string, layers: Layer[]): string {
     textEl.setAttribute('transform', updated);
     if (layer.fontSize !== null) textEl.setAttribute('font-size', String(Math.round(layer.fontSize * 10) / 10));
     if (layer.fontWeight !== null) textEl.setAttribute('font-weight', String(layer.fontWeight));
+    if (layer.fontFamily !== null) textEl.setAttribute('font-family', layer.fontFamily);
     if (layer.fill !== null) textEl.setAttribute('fill', layer.fill);
     if (layer.anchor !== null) textEl.setAttribute('text-anchor', layer.anchor ?? 'middle');
   });
@@ -485,7 +489,7 @@ export default function TemplateEditorPage() {
     setLayers(prev => prev.map((l, i) => i === idx ? { ...l, [axis]: val } : l));
   }, [pushHistory]);
 
-  const setLayerStyle = useCallback((idx: number, prop: 'fontSize' | 'fontWeight' | 'fill' | 'anchor', val: string | number) => {
+  const setLayerStyle = useCallback((idx: number, prop: 'fontSize' | 'fontWeight' | 'fontFamily' | 'fill' | 'anchor', val: string | number) => {
     if ((prop === 'fontSize' || prop === 'fontWeight') && isNaN(val as number)) return;
     pushHistory();
     setLayers(prev => prev.map((l, i) => i === idx ? { ...l, [prop]: val } : l));
@@ -1024,6 +1028,24 @@ export default function TemplateEditorPage() {
                                 <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', width: 28, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{layer.fontWeight ?? 400}</span>
                               </label>
                             </div>
+                            {/* Font family */}
+                            <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap' }}>font</span>
+                              <select
+                                value={layer.fontFamily ?? ''}
+                                onChange={e => setLayerStyle(idx, 'fontFamily', e.target.value)}
+                                style={{ flex: 1, minWidth: 0, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 6px', outline: 'none', cursor: 'pointer' }}
+                              >
+                                <option value="Heebo">Heebo</option>
+                                <option value="Frank Ruhl Libre">Frank Ruhl Libre</option>
+                                <option value="Secular One">Secular One</option>
+                                <option value="Playpen Sans Hebrew">Playpen Sans Hebrew</option>
+                                <option value="Dancing Script">Dancing Script</option>
+                                <option value="Lora">Lora</option>
+                                <option value="Montserrat">Montserrat</option>
+                                <option value="Oswald">Oswald</option>
+                              </select>
+                            </label>
                             {/* Color */}
                             <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                               <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>color</span>
