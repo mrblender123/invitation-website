@@ -66,12 +66,13 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
     entries.push({ id: gId, label: idToLabel(gId), placeholder, hasStar });
   }
 
-  // Star convention: if ALL fields have *, only starred fields are editable (new Illustrator-export style).
-  // If NONE or SOME have *, use old behavior: all fields editable, * = optional/hidden.
-  const allHaveStar = entries.length > 0 && entries.every(e => e.hasStar);
-  const fields: SvgField[] = allHaveStar
-    ? entries.map(e => ({ id: e.id, label: e.label, placeholder: e.placeholder, rtl: true }))
-    : entries.map(e => ({ id: e.id, label: e.label, placeholder: e.placeholder, rtl: true, ...(e.hasStar && { optional: true }) }));
+  // Star convention: * = required/always-shown. No star = optional (hidden until user expands).
+  // Exception: if NO fields have *, treat all as required (legacy templates with no stars).
+  const anyHasStar = entries.some(e => e.hasStar);
+  const fields: SvgField[] = entries.map(e => ({
+    id: e.id, label: e.label, placeholder: e.placeholder, rtl: true,
+    ...(anyHasStar && !e.hasStar && { optional: true }),
+  }));
 
   return {
     textSvg: publicUrl,

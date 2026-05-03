@@ -1,21 +1,21 @@
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <g id="father_name_2*" data-name="* חתן בערל גרינפעלד הי״וו">
+  <g id="father_name_2" data-name="* חתן בערל גרינפעלד הי״וו">
     <text transform="translate(180 378.9) scale(.8 1)" fill="#58595b" font-family="Heebo" font-size="6" font-weight="400" text-anchor="middle"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
   </g>
-  <g id="father_name_1*" data-name="* ב״ר בנימין משה הי״וו">
+  <g id="father_name_1" data-name="* ב״ר בנימין משה הי״וו">
     <text transform="translate(180 372.7) scale(.8 1)" fill="#58595b" font-family="Heebo" font-size="6" font-weight="400" text-anchor="middle"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
   </g>
-  <g id="host_name" data-name="* מרדכי זאב ראטה">
+  <g id="host_name*" data-name="* מרדכי זאב ראטה">
     <text transform="translate(180 364.4) scale(.8 1)" fill="#808285" font-family="Heebo" font-size="15.7" font-weight="400" text-anchor="middle"><tspan x="0" y="0">ברוך זאב ראטה</tspan></text>
   </g>
-  <g id="host_label*" data-name=" ידידכם המצפה לקבל פניכם">
+  <g id="host_label" data-name=" ידידכם המצפה לקבל פניכם">
     <text transform="translate(180 351.8)" fill="#58595b" font-family="Heebo" font-size="6.9" font-weight="500" text-anchor="middle"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
   <g id="pidyon_time*" data-name=" * הפדיון בשעה 7:00">
-    <text transform="translate(180 324.2)" fill="#58595b" font-family="Heebo" font-size="6.9" font-weight="500" text-anchor="middle"><tspan x="0" y="0">הפדיון בשעה </tspan></text>
+    <text transform="translate(180 324.2)" fill="#58595b" font-family="Heebo" font-size="6.9" font-weight="500" text-anchor="middle"><tspan x="0" y="0">הפדיון בשעה 7:00</tspan></text>
   </g>
   <g id="netilat_time*" data-name=" * נטילת ידיים בשעה 7:00">
-    <text transform="translate(180 316.2)" fill="#58595b" font-family="Heebo" font-size="6.9" font-weight="500" text-anchor="middle"><tspan x="0" y="0">נטילת ידיים בשעה </tspan></text>
+    <text transform="translate(180 316.2)" fill="#58595b" font-family="Heebo" font-size="6.9" font-weight="500" text-anchor="middle"><tspan x="0" y="0">נטילת ידיים בשעה 7:00</tspan></text>
   </g>
   <g id="street*" data-name="1693 49th Steet *">
     <text transform="translate(180 293.1)" fill="#58595b" font-family="Heebo" font-size="10.3" font-weight="500" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>
@@ -27,7 +27,7 @@
     <text transform="translate(180 266.6) scale(.8 1)" fill="#808285" font-family="Heebo" font-size="15.7" font-weight="400" text-anchor="middle"><tspan x="0" y="0">ביום א׳ פרשת שמות</tspan></text>
   </g>
   <text transform="translate(180 250.6)" fill="#58595b" font-family="Heebo" font-size="6.9" font-weight="500" text-anchor="middle"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
-  <g id="baby_name" data-name=" * יוסף חיים נ״י">
+  <g id="baby_name*" data-name=" * יוסף חיים נ״י">
     <text transform="translate(180 232.4)" fill="#808285" font-family="Heebo" font-size="18.8" font-weight="400" text-anchor="middle"><tspan x="0" y="0">יוסף חיים נ״י</tspan></text>
   </g>
   <text transform="translate(180 214.7)" fill="#58595b" font-family="Heebo" font-size="9.8" font-weight="500" text-anchor="middle"><tspan x="0" y="0">לבננו בכורנו היקר</tspan></text>

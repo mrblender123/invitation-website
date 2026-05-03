@@ -1,21 +1,21 @@
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <g id="father_name_2*">
+  <g id="father_name_2">
     <text transform="translate(156.1 407.9) scale(.8 1)" text-anchor="start" fill="#a7a9ac" font-family="Heebo" font-size="6" font-weight="400"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
   </g>
-  <g id="father_name_1*">
+  <g id="father_name_1">
     <text transform="translate(160.1 401.7) scale(.8 1)" text-anchor="start" fill="#a7a9ac" font-family="Heebo" font-size="6" font-weight="400"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
   </g>
-  <g id="host_name">
+  <g id="host_name*">
     <text transform="translate(140.4 393.3) scale(.8 1)" text-anchor="start" fill="#d1d3d4" font-family="Heebo" font-size="15.7" font-weight="400"><tspan x="0" y="0">ברוך זאב ראטה</tspan></text>
   </g>
-  <g id="host_label*">
+  <g id="host_label">
     <text transform="translate(140.4 380.8)" text-anchor="start" fill="#a7a9ac" font-family="Heebo" font-size="6.9" font-weight="500"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
   <g id="pidyon_time*">
-    <text transform="translate(165.5 353.1)" text-anchor="start" fill="#a7a9ac" font-family="Heebo" font-size="6.9" font-weight="500"><tspan x="0" y="0">הפדיון בשעה </tspan></text>
+    <text transform="translate(165.5 353.1)" text-anchor="start" fill="#a7a9ac" font-family="Heebo" font-size="6.9" font-weight="500"><tspan x="0" y="0">הפדיון בשעה 7:00</tspan></text>
   </g>
   <g id="netilat_time*">
-    <text transform="translate(158.2 345.1)" text-anchor="start" fill="#a7a9ac" font-family="Heebo" font-size="6.9" font-weight="500"><tspan x="0" y="0">נטילת ידיים בשעה </tspan></text>
+    <text transform="translate(158.2 345.1)" text-anchor="start" fill="#a7a9ac" font-family="Heebo" font-size="6.9" font-weight="500"><tspan x="0" y="0">נטילת ידיים בשעה 7:00</tspan></text>
   </g>
   <g id="street*">
     <text transform="translate(147 322.1)" text-anchor="start" fill="#a7a9ac" font-family="Heebo" font-size="10.3" font-weight="500"><tspan x="0" y="0">5015 15th Ave</tspan></text>
@@ -27,7 +27,7 @@
     <text transform="translate(125.7 295.6) scale(.8 1)" text-anchor="start" fill="#a7a9ac" font-family="Heebo" font-size="15.7" font-weight="400"><tspan x="0" y="0">ביום א׳ פרשת שמות</tspan></text>
   </g>
   <text transform="translate(157.4 279.6)" text-anchor="start" fill="#a7a9ac" font-family="Heebo" font-size="6.9" font-weight="500"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
-  <g id="baby_name">
+  <g id="baby_name*">
     <text transform="translate(131.4 261.3)" text-anchor="start" fill="#d1d3d4" font-family="Heebo" font-size="18.8" font-weight="400"><tspan x="0" y="0">יוסף חיים נ״י</tspan></text>
   </g>
   <text transform="translate(143.9 243.7)" text-anchor="start" fill="#a7a9ac" font-family="Heebo" font-size="9.8" font-weight="500"><tspan x="0" y="0">לבננו בכורנו היקר</tspan></text>

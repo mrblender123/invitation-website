@@ -1,21 +1,21 @@
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <g id="father_name_2*">
+  <g id="father_name_2">
     <text transform="translate(146 476.8) scale(.8 1)" text-anchor="start" fill="#425d7b" font-family="Playpen Sans Hebrew" font-size="8.7" font-weight="800"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
   </g>
-  <g id="father_name_1*">
+  <g id="father_name_1">
     <text transform="translate(153.7 467.9) scale(.8 1)" text-anchor="start" fill="#425d7b" font-family="Playpen Sans Hebrew" font-size="8.7" font-weight="800"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
   </g>
-  <g id="host_name">
+  <g id="host_name*">
     <text transform="translate(116 455.9) scale(.8 1)" text-anchor="start" fill="#bf8b35" font-family="Playpen Sans Hebrew" font-size="22.5" font-weight="800"><tspan x="0" y="0">ברוך זאב ראטה</tspan></text>
   </g>
-  <g id="host_label*">
+  <g id="host_label">
     <text transform="translate(125 433.2)" text-anchor="start" fill="#425d7b" font-family="Playpen Sans Hebrew" font-size="9.8" font-weight="800"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
   <g id="pidyon_time*">
-    <text transform="translate(173.7 385.2)" text-anchor="start" fill="#425d7b" font-family="Playpen Sans Hebrew" font-size="5.1" font-weight="800"><tspan x="0" y="0">הפדיון בשעה </tspan></text>
+    <text transform="translate(173.7 385.2)" text-anchor="start" fill="#425d7b" font-family="Playpen Sans Hebrew" font-size="5.1" font-weight="800"><tspan x="0" y="0">הפדיון בשעה 7:00</tspan></text>
   </g>
   <g id="netilat_time*">
-    <text transform="translate(168.5 379.3)" text-anchor="start" fill="#425d7b" font-family="Playpen Sans Hebrew" font-size="5.1" font-weight="800"><tspan x="0" y="0">נטילת ידיים בשעה </tspan></text>
+    <text transform="translate(168.5 379.3)" text-anchor="start" fill="#425d7b" font-family="Playpen Sans Hebrew" font-size="5.1" font-weight="800"><tspan x="0" y="0">נטילת ידיים בשעה 7:00</tspan></text>
   </g>
   <g id="street*">
     <text transform="translate(159 368.3)" text-anchor="start" fill="#425d7b" font-family="Playpen Sans Hebrew" font-size="7.1" font-weight="800"><tspan x="0" y="0">5015 15th Ave</tspan></text>
@@ -27,7 +27,7 @@
     <text transform="translate(145.3 350.1) scale(.8 1)" text-anchor="start" fill="#bf8b35" font-family="Playpen Sans Hebrew" font-size="10.8" font-weight="800"><tspan x="0" y="0">ביום א׳ פרשת שמות</tspan></text>
   </g>
   <text transform="translate(168.3 339.7)" text-anchor="start" fill="#425d7b" font-family="Playpen Sans Hebrew" font-size="4.7" font-weight="800"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
-  <g id="baby_name">
+  <g id="baby_name*">
     <text transform="translate(135.7 316.6) scale(.8 1)" text-anchor="start" fill="#bf8b35" font-family="Playpen Sans Hebrew" font-size="22.5" font-weight="800"><tspan x="0" y="0">יוסף חיים נ״י</tspan></text>
   </g>
   <text transform="translate(160 295.2)" text-anchor="start" fill="#425d7b" font-family="Playpen Sans Hebrew" font-size="6.2" font-weight="800"><tspan x="0" y="0">לבננו בכורנו היקר</tspan></text>
