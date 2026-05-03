@@ -495,6 +495,13 @@ export default function TemplateEditorPage() {
     setLayers(prev => prev.map((l, i) => i === idx ? { ...l, [prop]: val } : l));
   }, [pushHistory]);
 
+  // Apply a style change to every selected layer at once
+  const setSelectionStyle = useCallback((prop: 'fontSize' | 'fontWeight' | 'fontFamily' | 'fill' | 'anchor', val: string | number) => {
+    if ((prop === 'fontSize' || prop === 'fontWeight') && isNaN(val as number)) return;
+    pushHistory();
+    setLayers(prev => prev.map((l, i) => selection.has(i) ? { ...l, [prop]: val } : l));
+  }, [selection, pushHistory]);
+
   // ── rename ────────────────────────────────────────────────────────────────────
 
   const renameLayer = useCallback((idx: number, newId: string) => {
@@ -567,6 +574,8 @@ export default function TemplateEditorPage() {
   const border = '1px solid rgba(255,255,255,0.08)';
   const selArray = Array.from(selection);
   const singleSel = selArray.length === 1 ? layers[selArray[0]] : null;
+  // Representative layer for toolbar display values (first selected)
+  const firstSel = selArray.length > 0 ? layers[selArray[0]] : null;
   const hasSelection = selection.size > 0;
 
   const AlignBtn = ({ action, title, children }: { action: Parameters<typeof align>[0]; title: string; children: React.ReactNode }) => (
@@ -614,6 +623,133 @@ export default function TemplateEditorPage() {
           )}
         </div>
       </header>
+
+      {/* ── Contextual toolbar (Photoshop-style options bar) ────────────────── */}
+      <div style={{
+        borderBottom: border, background: 'rgba(9,9,11,0.97)', flexShrink: 0,
+        height: 44, display: 'flex', alignItems: 'center', gap: 0, paddingLeft: 8, paddingRight: 8, overflowX: 'auto',
+      }}>
+        {!hasSelection || !selected ? (
+          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', paddingLeft: 8 }}>
+            Select a layer to edit its properties
+          </span>
+        ) : (
+          <>
+            {/* Layer label */}
+            <span style={{ fontSize: 12, fontWeight: 600, color: firstSel?.id ? '#f09b00' : 'rgba(255,255,255,0.6)', whiteSpace: 'nowrap', paddingLeft: 8, paddingRight: 12 }}>
+              {selection.size > 1 ? `${selection.size} layers` : (firstSel?.id ?? `static-${selArray[0]}`)}
+            </span>
+            <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.1)', flexShrink: 0 }} />
+
+            {/* X / Y — single selection only */}
+            {singleSel && (
+              <>
+                {(['tx', 'ty'] as const).map(axis => (
+                  <label key={axis} style={{ display: 'flex', alignItems: 'center', gap: 3, paddingLeft: 10 }}>
+                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', width: 10 }}>{axis === 'tx' ? 'X' : 'Y'}</span>
+                    <input
+                      type="number" step="0.1"
+                      value={Math.round(singleSel[axis] * 10) / 10}
+                      onChange={e => setLayerCoord(selArray[0], axis, parseFloat(e.target.value))}
+                      style={{ width: 58, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 5, color: '#fff', fontSize: 12, padding: '3px 6px', outline: 'none', fontVariantNumeric: 'tabular-nums' }}
+                    />
+                  </label>
+                ))}
+                <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.1)', flexShrink: 0, marginLeft: 10 }} />
+              </>
+            )}
+
+            {/* Font size */}
+            <label style={{ display: 'flex', alignItems: 'center', gap: 3, paddingLeft: 10 }}>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap' }}>Size</span>
+              <input
+                type="number" step="0.5" min="1"
+                value={firstSel?.fontSize ?? ''}
+                placeholder="–"
+                onChange={e => setSelectionStyle('fontSize', parseFloat(e.target.value))}
+                style={{ width: 52, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 5, color: '#fff', fontSize: 12, padding: '3px 6px', outline: 'none' }}
+              />
+            </label>
+
+            {/* Font weight */}
+            <label style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 10 }}>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap' }}>Wt</span>
+              <input
+                type="range" min="100" max="900" step="100"
+                value={firstSel?.fontWeight ?? 400}
+                onChange={e => setSelectionStyle('fontWeight', parseInt(e.target.value))}
+                onPointerUp={() => pushHistory()}
+                style={{ width: 72, accentColor: 'rgba(255,255,255,0.6)', cursor: 'pointer' }}
+              />
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', width: 28, fontVariantNumeric: 'tabular-nums' }}>{firstSel?.fontWeight ?? 400}</span>
+            </label>
+            <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.1)', flexShrink: 0, marginLeft: 6 }} />
+
+            {/* Font family */}
+            <label style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 10 }}>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap' }}>Font</span>
+              <select
+                value={firstSel?.fontFamily ?? ''}
+                onChange={e => setSelectionStyle('fontFamily', e.target.value)}
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 5, color: '#fff', fontSize: 12, padding: '3px 6px', outline: 'none', cursor: 'pointer' }}
+              >
+                <option value="Heebo">Heebo</option>
+                <option value="Frank Ruhl Libre">Frank Ruhl Libre</option>
+                <option value="Secular One">Secular One</option>
+                <option value="Playpen Sans Hebrew">Playpen Sans Hebrew</option>
+                <option value="Dancing Script">Dancing Script</option>
+                <option value="Lora">Lora</option>
+                <option value="Montserrat">Montserrat</option>
+                <option value="Oswald">Oswald</option>
+              </select>
+            </label>
+            <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.1)', flexShrink: 0, marginLeft: 10 }} />
+
+            {/* Color */}
+            <label style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 10 }}>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>Color</span>
+              <input
+                type="color"
+                value={firstSel?.fill && /^#[0-9a-f]{6}$/i.test(firstSel.fill) ? firstSel.fill : '#ffffff'}
+                onChange={e => setSelectionStyle('fill', e.target.value)}
+                style={{ width: 26, height: 24, padding: '1px', background: 'none', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 4, cursor: 'pointer', flexShrink: 0 }}
+              />
+              <input
+                type="text"
+                value={firstSel?.fill ?? ''}
+                onChange={e => setSelectionStyle('fill', e.target.value)}
+                style={{ width: 72, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 5, color: '#fff', fontSize: 11, padding: '3px 6px', outline: 'none', fontFamily: 'monospace' }}
+              />
+            </label>
+            <div style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.1)', flexShrink: 0, marginLeft: 10 }} />
+
+            {/* Text anchor */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 10 }}>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>Align</span>
+              <div style={{ display: 'flex', gap: 2 }}>
+                {(['start', 'middle', 'end'] as const).map(a => (
+                  <button
+                    key={a}
+                    onClick={() => setSelectionStyle('anchor', a)}
+                    title={a === 'start' ? 'Left (start)' : a === 'middle' ? 'Center' : 'Right (end)'}
+                    style={{
+                      width: 28, height: 24, border: `1px solid ${firstSel?.anchor === a ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)'}`,
+                      borderRadius: 4, background: firstSel?.anchor === a ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.04)',
+                      cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, color: 'rgba(255,255,255,0.8)',
+                    }}
+                  >
+                    <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                      {a === 'start'  && <><line x1="1" y1="2" x2="13" y2="2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="1" y1="5" x2="9"  y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="1" y1="8" x2="11" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></>}
+                      {a === 'middle' && <><line x1="1" y1="2" x2="13" y2="2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="3" y1="5" x2="11" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="2" y1="8" x2="12" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></>}
+                      {a === 'end'    && <><line x1="1"  y1="2" x2="13" y2="2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="5"  y1="5" x2="13" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><line x1="3"  y1="8" x2="13" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></>}
+                    </svg>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
 
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
 
@@ -873,7 +1009,7 @@ export default function TemplateEditorPage() {
         </div>
 
         {/* Right panel */}
-        <div ref={rightPanelRef} style={{ width: 300, borderLeft: border, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+        <div ref={rightPanelRef} style={{ width: 230, borderLeft: border, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
           {selected && (
             <div style={{ padding: '12px 16px', paddingBottom: 12 + keyboardInset }}>
 
@@ -927,7 +1063,7 @@ export default function TemplateEditorPage() {
                     >None</button>
                   )}
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   {layers.map((layer, idx) => {
                     const isSel = selection.has(idx);
                     const isHov = hoveredIdx === idx && !isSel;
@@ -940,171 +1076,45 @@ export default function TemplateEditorPage() {
                         onMouseEnter={() => setHoveredIdx(idx)}
                         onMouseLeave={() => setHoveredIdx(null)}
                         style={{
-                          padding: '8px 12px', borderRadius: 8, cursor: 'pointer',
+                          padding: '5px 10px', borderRadius: 6, cursor: 'pointer',
                           background: isSel ? 'rgba(255,255,255,0.07)' : isHov ? 'rgba(255,255,255,0.03)' : 'transparent',
                           border: `1px solid ${isSel ? (isMultiSel ? 'rgba(99,200,255,0.3)' : 'rgba(255,255,255,0.2)') : 'transparent'}`,
+                          display: 'flex', alignItems: 'center', gap: 7,
                         }}
                       >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: isSel && !isMultiSel ? 8 : 0 }}>
-                          <div style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: layer.id ? '#f09b00' : 'rgba(255,255,255,0.4)' }} />
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            {/* Rename input or label */}
-                            {isRenaming && layer.id !== null ? (
-                              <input
-                                autoFocus
-                                type="text"
-                                defaultValue={layer.id}
-                                onClick={e => e.stopPropagation()}
-                                onBlur={e => { renameLayer(idx, e.target.value); setRenamingIdx(null); }}
-                                onKeyDown={e => {
-                                  if (e.key === 'Enter') { renameLayer(idx, e.currentTarget.value); setRenamingIdx(null); }
-                                  if (e.key === 'Escape') setRenamingIdx(null);
-                                  e.stopPropagation();
-                                }}
-                                style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(99,200,255,0.5)', borderRadius: 4, color: '#63c8ff', fontSize: 12, fontWeight: 600, padding: '2px 6px', width: '100%', outline: 'none' }}
-                              />
-                            ) : (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                                <div style={{ fontSize: 12, fontWeight: 600, color: layer.id ? '#f09b00' : 'rgba(255,255,255,0.7)' }}>
-                                  {layer.id ?? `static-${idx}`}
-                                </div>
-                                {isSel && layer.id !== null && (
-                                  <button
-                                    onClick={e => { e.stopPropagation(); setRenamingIdx(idx); }}
-                                    title="Rename field id"
-                                    style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.3)', cursor: 'pointer', padding: '0 2px', fontSize: 12, lineHeight: 1 }}
-                                  >✎</button>
-                                )}
-                              </div>
-                            )}
-                            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{layer.label}</div>
-                          </div>
-                          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', fontVariantNumeric: 'tabular-nums', textAlign: 'right', flexShrink: 0 }}>
-                            <div>x {Math.round(layer.tx * 10) / 10}</div>
-                            <div>y {Math.round(layer.ty * 10) / 10}</div>
-                          </div>
+                        <div style={{ width: 7, height: 7, borderRadius: '50%', flexShrink: 0, background: layer.id ? '#f09b00' : 'rgba(255,255,255,0.35)' }} />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          {isRenaming && layer.id !== null ? (
+                            <input
+                              autoFocus type="text" defaultValue={layer.id}
+                              onClick={e => e.stopPropagation()}
+                              onBlur={e => { renameLayer(idx, e.target.value); setRenamingIdx(null); }}
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') { renameLayer(idx, e.currentTarget.value); setRenamingIdx(null); }
+                                if (e.key === 'Escape') setRenamingIdx(null);
+                                e.stopPropagation();
+                              }}
+                              style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(99,200,255,0.5)', borderRadius: 4, color: '#63c8ff', fontSize: 12, fontWeight: 600, padding: '1px 5px', width: '100%', outline: 'none' }}
+                            />
+                          ) : (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <span style={{ fontSize: 12, fontWeight: 500, color: layer.id ? '#f09b00' : 'rgba(255,255,255,0.6)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>
+                                {layer.id ?? `static-${idx}`}
+                              </span>
+                              {isSel && !isMultiSel && layer.id !== null && (
+                                <button
+                                  onClick={e => { e.stopPropagation(); setRenamingIdx(idx); }}
+                                  title="Rename field id"
+                                  style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.25)', cursor: 'pointer', padding: '0 2px', fontSize: 11, lineHeight: 1, flexShrink: 0 }}
+                                >✎</button>
+                              )}
+                            </div>
+                          )}
                         </div>
-
-                        {/* X/Y inputs — only for single selection */}
-                        {isSel && !isMultiSel && (
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }} onClick={e => e.stopPropagation()}>
-                            {/* Position */}
-                            <div style={{ display: 'flex', gap: 8 }}>
-                              {(['tx', 'ty'] as const).map(axis => (
-                                <label key={axis} style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 1, minWidth: 0 }}>
-                                  <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 10, flexShrink: 0 }}>{axis === 'tx' ? 'x' : 'y'}</span>
-                                  <input
-                                    type="number" step="0.1"
-                                    value={Math.round(layer[axis] * 10) / 10}
-                                    onChange={e => setLayerCoord(idx, axis, parseFloat(e.target.value))}
-                                    onFocus={e => { const t = e.target; setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 350); }}
-                                    style={{ flex: 1, minWidth: 0, width: 0, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 8px', fontVariantNumeric: 'tabular-nums', outline: 'none' }}
-                                  />
-                                </label>
-                              ))}
-                            </div>
-                            {/* Font size + weight */}
-                            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                              <label style={{ display: 'flex', alignItems: 'center', gap: 4, flex: '0 0 auto' }}>
-                                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap' }}>size</span>
-                                <input
-                                  type="number" step="0.5" min="1"
-                                  value={layer.fontSize ?? ''}
-                                  placeholder="–"
-                                  onChange={e => setLayerStyle(idx, 'fontSize', parseFloat(e.target.value))}
-                                  onFocus={e => { const t = e.target; setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 350); }}
-                                  style={{ width: 56, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 8px', outline: 'none' }}
-                                />
-                              </label>
-                              <label style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1, minWidth: 0 }}>
-                                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap' }}>wt</span>
-                                <input
-                                  type="range" min="100" max="900" step="100"
-                                  value={layer.fontWeight ?? 400}
-                                  onChange={e => setLayers(prev => prev.map((l, i) => i === idx ? { ...l, fontWeight: parseInt(e.target.value) } : l))}
-                                  onPointerUp={() => pushHistory()}
-                                  style={{ flex: 1, minWidth: 0, accentColor: 'rgba(255,255,255,0.6)', cursor: 'pointer' }}
-                                />
-                                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', width: 28, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{layer.fontWeight ?? 400}</span>
-                              </label>
-                            </div>
-                            {/* Font family */}
-                            <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap' }}>font</span>
-                              <select
-                                value={layer.fontFamily ?? ''}
-                                onChange={e => setLayerStyle(idx, 'fontFamily', e.target.value)}
-                                style={{ flex: 1, minWidth: 0, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 12, padding: '4px 6px', outline: 'none', cursor: 'pointer' }}
-                              >
-                                <option value="Heebo">Heebo</option>
-                                <option value="Frank Ruhl Libre">Frank Ruhl Libre</option>
-                                <option value="Secular One">Secular One</option>
-                                <option value="Playpen Sans Hebrew">Playpen Sans Hebrew</option>
-                                <option value="Dancing Script">Dancing Script</option>
-                                <option value="Lora">Lora</option>
-                                <option value="Montserrat">Montserrat</option>
-                                <option value="Oswald">Oswald</option>
-                              </select>
-                            </label>
-                            {/* Color */}
-                            <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>color</span>
-                              <input
-                                type="color"
-                                value={layer.fill && /^#[0-9a-f]{6}$/i.test(layer.fill) ? layer.fill : '#ffffff'}
-                                onChange={e => setLayerStyle(idx, 'fill', e.target.value)}
-                                style={{ width: 28, height: 26, padding: '2px', background: 'none', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 5, cursor: 'pointer', flexShrink: 0 }}
-                              />
-                              <input
-                                type="text"
-                                value={layer.fill ?? ''}
-                                onChange={e => setLayerStyle(idx, 'fill', e.target.value)}
-                                onFocus={e => { const t = e.target; setTimeout(() => t.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 350); }}
-                                style={{ flex: 1, minWidth: 0, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#fff', fontSize: 11, padding: '4px 6px', outline: 'none', fontFamily: 'monospace' }}
-                              />
-                            </label>
-                            {/* Text anchor */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap' }}>anchor</span>
-                              <div style={{ display: 'flex', gap: 4 }}>
-                                {(['start', 'middle', 'end'] as const).map(a => (
-                                  <button
-                                    key={a}
-                                    onClick={() => setLayerStyle(idx, 'anchor', a)}
-                                    title={a === 'start' ? 'Left (start)' : a === 'middle' ? 'Center' : 'Right (end)'}
-                                    style={{
-                                      width: 30, height: 22,
-                                      border: `1px solid ${layer.anchor === a ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)'}`,
-                                      borderRadius: 5,
-                                      background: layer.anchor === a ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.3)',
-                                      cursor: 'pointer',
-                                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                      padding: 0, color: 'rgba(255,255,255,0.8)',
-                                    }}
-                                  >
-                                    <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-                                      {a === 'start' && <>
-                                        <line x1="1" y1="2" x2="13" y2="2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                                        <line x1="1" y1="5" x2="9"  y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                                        <line x1="1" y1="8" x2="11" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                                      </>}
-                                      {a === 'middle' && <>
-                                        <line x1="1" y1="2" x2="13" y2="2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                                        <line x1="3" y1="5" x2="11" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                                        <line x1="2" y1="8" x2="12" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                                      </>}
-                                      {a === 'end' && <>
-                                        <line x1="1"  y1="2" x2="13" y2="2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                                        <line x1="5"  y1="5" x2="13" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                                        <line x1="3"  y1="8" x2="13" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                                      </>}
-                                    </svg>
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        )}
+                        <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', fontVariantNumeric: 'tabular-nums', textAlign: 'right', flexShrink: 0, lineHeight: 1.4 }}>
+                          <div>{Math.round(layer.tx * 10) / 10}</div>
+                          <div>{Math.round(layer.ty * 10) / 10}</div>
+                        </div>
                       </div>
                     );
                   })}
