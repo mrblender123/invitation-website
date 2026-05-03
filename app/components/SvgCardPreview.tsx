@@ -117,6 +117,7 @@ function injectFieldValues(
     [font-family="Montserrat"]     { font-family: var(--font-montserrat, Montserrat), sans-serif; }
     [font-family="Oswald"]         { font-family: var(--font-oswald, Oswald), sans-serif; }
     [font-family="Frank Ruhl Libre"] { font-family: var(--font-frank-ruhl-libre, "Frank Ruhl Libre"), serif; }
+    [font-family="Playpen Sans Hebrew"] { font-family: var(--font-playpen-sans-hebrew, "Playpen Sans Hebrew"), cursive; }
   `;
   root.insertBefore(fontMapStyle, root.firstChild);
 

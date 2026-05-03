@@ -61,6 +61,8 @@ Currently loaded fonts in `app/layout.tsx` (available in SVGs via their plain CS
 | `Lora`                  | `--font-lora`      | Latin only                     |
 | `Montserrat`            | `--font-montserrat`| Latin only                     |
 | `Oswald`                | `--font-oswald`    | Latin only                     |
+| `Frank Ruhl Libre`      | `--font-frank-ruhl-libre` | Hebrew + Latin            |
+| `Playpen Sans Hebrew`   | `--font-playpen-sans-hebrew` | Hebrew + Latin, weights 400–800 |
 
 **How the font mapping works:**
 `next/font/google` loads fonts under a scoped internal name, not the plain CSS name. `SvgCardPreview.tsx` injects a `<style>` block into every SVG that maps the plain name → CSS variable. This mapping lives in `injectFieldValues()` in `app/components/SvgCardPreview.tsx`.
