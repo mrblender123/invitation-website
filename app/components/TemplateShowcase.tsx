@@ -37,7 +37,7 @@ function TemplateCard({ template }: { template: Template }) {
       }}
     >
       {template.textSvg ? (
-        <SvgCardPreview template={template} fieldValues={{}} scale={scale} />
+        <SvgCardPreview template={template} fieldValues={{}} scale={scale} thumb />
       ) : (
         <div style={{
           width: style.canvasWidth,
