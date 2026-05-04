@@ -4,7 +4,7 @@ import path from 'path';
 import type { Template, SvgField } from '@/lib/templates';
 import { FOLDER_TO_CATEGORY } from '@/lib/categories';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // cache for 1 hour
 
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL?.replace(/\/$/, '') ?? '';
 
