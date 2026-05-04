@@ -117,20 +117,17 @@ export async function GET() {
           const svgFiles = subFiles.filter(f => /\.svg$/i.test(f)).sort();
 
           for (const svgFile of svgFiles) {
-            const stem = svgFile.replace(/\.svg$/i, '');
-            // Prefer an existing local PNG/JPG, otherwise assume .png exists on R2
-            const localImg  = subFiles.find(f => /\.(png|jpg|jpeg)$/i.test(f) && !/[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f) && f.toLowerCase() === `${stem.toLowerCase()}.png`)
-                           ?? subFiles.find(f => /\.(jpg|jpeg)$/i.test(f) && !/[-_ ]thumb/i.test(f) && f.toLowerCase().startsWith(stem.toLowerCase()));
-            const imgFile   = localImg ?? `${stem}.png`;
-            const thumbFile = subFiles.find(f => /[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f) && f.toLowerCase().replace(/[-_ ]thumb\.(png|jpg|jpeg)$/i, '') === stem.toLowerCase());
+            const stem          = svgFile.replace(/\.svg$/i, '');
+            const imgFile       = `${stem}.png`;
+            const thumbFileName = `${stem}-thumb.png`;
 
             const id            = `${folder}-${subDir.name}-${stem}`;
             const localBase     = `/templates/${folder}/${subDir.name}`;
             const backgroundSrc = R2_PUBLIC_URL
               ? r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, imgFile)
               : `${localBase}/${imgFile}`;
-            const thumbnailSrc  = thumbFile
-              ? (R2_PUBLIC_URL ? r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, thumbFile) : `${localBase}/${thumbFile}`)
+            const thumbnailSrc  = R2_PUBLIC_URL
+              ? r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, thumbFileName)
               : backgroundSrc;
 
             const svgPath   = path.join(subFolderPath, svgFile);
@@ -157,19 +154,17 @@ export async function GET() {
         const svgFiles      = flatFileNames.filter(f => /\.svg$/i.test(f)).sort();
 
         for (const svgFile of svgFiles) {
-          const stem      = svgFile.replace(/\.svg$/i, '');
-          const localImg  = flatFileNames.find(f => /\.(png|jpg|jpeg)$/i.test(f) && !/[-_ ]thumb/i.test(f) && f.toLowerCase() === `${stem.toLowerCase()}.png`)
-                         ?? flatFileNames.find(f => /\.(jpg|jpeg)$/i.test(f) && !/[-_ ]thumb/i.test(f) && f.toLowerCase().startsWith(stem.toLowerCase()));
-          const imgFile   = localImg ?? `${stem}.png`;
-          const thumbFile = flatFileNames.find(f => /[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f) && f.toLowerCase().replace(/[-_ ]thumb\.(png|jpg|jpeg)$/i, '') === stem.toLowerCase());
+          const stem          = svgFile.replace(/\.svg$/i, '');
+          const imgFile       = `${stem}.png`;
+          const thumbFileName = `${stem}-thumb.png`;
 
           const id            = `${folder}-${stem}`;
           const localBase     = `/templates/${folder}`;
           const backgroundSrc = R2_PUBLIC_URL
             ? r2Url(R2_PUBLIC_URL, 'templates', folder, imgFile)
             : `${localBase}/${imgFile}`;
-          const thumbnailSrc  = thumbFile
-            ? (R2_PUBLIC_URL ? r2Url(R2_PUBLIC_URL, 'templates', folder, thumbFile) : `${localBase}/${thumbFile}`)
+          const thumbnailSrc  = R2_PUBLIC_URL
+            ? r2Url(R2_PUBLIC_URL, 'templates', folder, thumbFileName)
             : backgroundSrc;
 
           const svgPath   = path.join(folderPath, svgFile);

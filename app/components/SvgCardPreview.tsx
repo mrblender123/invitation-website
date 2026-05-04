@@ -173,6 +173,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
             style={{ display: 'block', userSelect: 'none' }}
             draggable={false}
             crossOrigin="anonymous"
+            onError={thumb ? (e) => { (e.target as HTMLImageElement).src = template.backgroundSrc; } : undefined}
           />
 
           {/* SVG text overlay */}
