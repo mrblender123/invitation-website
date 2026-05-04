@@ -161,7 +161,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
         transformOrigin: 'top left',
       }}>
         {/* Inner: full-resolution content — ref this for html2canvas */}
-        <div ref={ref} style={{ width: canvasWidth, height: canvasHeight, position: 'relative' }}>
+        <div ref={ref} style={{ width: canvasWidth, height: canvasHeight, position: 'relative', background: '#1a1a2e' }}>
 
           {/* PNG background */}
           <img
