@@ -8,6 +8,11 @@ export const dynamic = 'force-dynamic';
 
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL?.replace(/\/$/, '') ?? '';
 
+/** Build a valid URL from an R2 base + path segments, encoding each segment */
+function r2Url(base: string, ...segments: string[]): string {
+  return base + '/' + segments.map(s => s.split('/').map(encodeURIComponent).join('/')).join('/');
+}
+
 /** "bar-mitzvah" → "Bar Mitzvah", with override map for special chars */
 function folderToCategory(folder: string): string {
   if (FOLDER_TO_CATEGORY[folder]) return FOLDER_TO_CATEGORY[folder];
@@ -121,12 +126,17 @@ export async function GET() {
 
             const id            = `${folder}-${subDir.name}-${stem}`;
             const localBase     = `/templates/${folder}/${subDir.name}`;
-            const r2Base        = R2_PUBLIC_URL ? `${R2_PUBLIC_URL}/templates/${folder}/${subDir.name}` : localBase;
-            const backgroundSrc = `${r2Base}/${imgFile}`;
-            const thumbnailSrc  = thumbFile ? `${r2Base}/${thumbFile}` : backgroundSrc;
+            const backgroundSrc = R2_PUBLIC_URL
+              ? r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, imgFile)
+              : `${localBase}/${imgFile}`;
+            const thumbnailSrc  = thumbFile
+              ? (R2_PUBLIC_URL ? r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, thumbFile) : `${localBase}/${thumbFile}`)
+              : backgroundSrc;
 
             const svgPath   = path.join(subFolderPath, svgFile);
-            const svgPublic = `${r2Base}/${svgFile}`;
+            const svgPublic = R2_PUBLIC_URL
+              ? r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, svgFile)
+              : `${localBase}/${svgFile}`;
             const content   = await readFile(svgPath, 'utf-8');
             const svgData   = parseSvg(content, svgPublic);
 
@@ -155,12 +165,17 @@ export async function GET() {
 
           const id            = `${folder}-${stem}`;
           const localBase     = `/templates/${folder}`;
-          const r2Base        = R2_PUBLIC_URL ? `${R2_PUBLIC_URL}/templates/${folder}` : localBase;
-          const backgroundSrc = `${r2Base}/${imgFile}`;
-          const thumbnailSrc  = thumbFile ? `${r2Base}/${thumbFile}` : backgroundSrc;
+          const backgroundSrc = R2_PUBLIC_URL
+            ? r2Url(R2_PUBLIC_URL, 'templates', folder, imgFile)
+            : `${localBase}/${imgFile}`;
+          const thumbnailSrc  = thumbFile
+            ? (R2_PUBLIC_URL ? r2Url(R2_PUBLIC_URL, 'templates', folder, thumbFile) : `${localBase}/${thumbFile}`)
+            : backgroundSrc;
 
           const svgPath   = path.join(folderPath, svgFile);
-          const svgPublic = `${r2Base}/${svgFile}`;
+          const svgPublic = R2_PUBLIC_URL
+            ? r2Url(R2_PUBLIC_URL, 'templates', folder, svgFile)
+            : `${localBase}/${svgFile}`;
           const content   = await readFile(svgPath, 'utf-8');
           const svgData   = parseSvg(content, svgPublic);
 
