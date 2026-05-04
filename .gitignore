@@ -36,6 +36,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Template images — served from Cloudflare R2, not git
+public/templates/**/*.png
+public/templates/**/*.jpg
+public/templates/**/*.jpeg
+public/templates/**/*.ai
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
