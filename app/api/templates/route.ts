@@ -99,8 +99,7 @@ export async function GET() {
       const files      = await readdir(folderPath, { withFileTypes: true });
 
       // Check if this folder contains sub-folders (sub-categories)
-      const subDirs  = files.filter(f => f.isDirectory());
-      const imgFiles = files.filter(f => !f.isDirectory() && /\.(png|jpg|jpeg)$/i.test(f.name));
+      const subDirs = files.filter(f => f.isDirectory());
 
       if (subDirs.length > 0) {
         // 2-level structure: category/subcategory/images
@@ -108,29 +107,28 @@ export async function GET() {
           const subcategory   = subDir.name.trim();
           const subFolderPath = path.join(folderPath, subDir.name);
           const subFiles      = await readdir(subFolderPath);
-          // Exclude *-thumb.* / *_thumb.* / * thumb.* files — they're thumbnails, not standalone templates
-          const subImgFiles   = subFiles.filter(f => /\.(png|jpg|jpeg)$/i.test(f) && !/[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f)).sort();
 
-          for (const imgFile of subImgFiles) {
-            const stem      = imgFile.replace(/\.(png|jpg|jpeg)$/i, '');
-            const ext       = imgFile.match(/\.(png|jpg|jpeg)$/i)![0];
-            const svgFile   = subFiles.find(f => f.toLowerCase() === `${stem.toLowerCase()}.svg`);
+          // Discover templates from SVG files (PNGs live on R2, not local)
+          const svgFiles = subFiles.filter(f => /\.svg$/i.test(f)).sort();
+
+          for (const svgFile of svgFiles) {
+            const stem = svgFile.replace(/\.svg$/i, '');
+            // Prefer an existing local PNG/JPG, otherwise assume .png exists on R2
+            const localImg  = subFiles.find(f => /\.(png|jpg|jpeg)$/i.test(f) && !/[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f) && f.toLowerCase() === `${stem.toLowerCase()}.png`)
+                           ?? subFiles.find(f => /\.(jpg|jpeg)$/i.test(f) && !/[-_ ]thumb/i.test(f) && f.toLowerCase().startsWith(stem.toLowerCase()));
+            const imgFile   = localImg ?? `${stem}.png`;
             const thumbFile = subFiles.find(f => /[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f) && f.toLowerCase().replace(/[-_ ]thumb\.(png|jpg|jpeg)$/i, '') === stem.toLowerCase());
+
             const id            = `${folder}-${subDir.name}-${stem}`;
             const localBase     = `/templates/${folder}/${subDir.name}`;
             const r2Base        = R2_PUBLIC_URL ? `${R2_PUBLIC_URL}/templates/${folder}/${subDir.name}` : localBase;
             const backgroundSrc = `${r2Base}/${imgFile}`;
-            const thumbnailSrc  = thumbFile
-              ? `${r2Base}/${thumbFile}`
-              : backgroundSrc;
+            const thumbnailSrc  = thumbFile ? `${r2Base}/${thumbFile}` : backgroundSrc;
 
-            let svgData: Partial<Template> = { style: { canvasWidth: 444, canvasHeight: 630 } };
-            if (svgFile) {
-              const svgPath   = path.join(subFolderPath, svgFile);
-              const svgPublic = `${r2Base}/${svgFile}`;
-              const content   = await readFile(svgPath, 'utf-8');
-              svgData = parseSvg(content, svgPublic);
-            }
+            const svgPath   = path.join(subFolderPath, svgFile);
+            const svgPublic = `${r2Base}/${svgFile}`;
+            const content   = await readFile(svgPath, 'utf-8');
+            const svgData   = parseSvg(content, svgPublic);
 
             templates.push({
               id,
@@ -145,30 +143,26 @@ export async function GET() {
         }
       } else {
         // Flat structure: category/images (legacy / no sub-categories)
-        // Exclude *-thumb.* / *_thumb.* / * thumb.* files
-        const flatImgFiles = imgFiles.filter(f => !/[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f.name)).map(f => f.name).sort();
         const flatFileNames = files.map(f => f.name);
+        const svgFiles      = flatFileNames.filter(f => /\.svg$/i.test(f)).sort();
 
-        for (const imgFile of flatImgFiles) {
-          const stem      = imgFile.replace(/\.(png|jpg|jpeg)$/i, '');
-          const ext       = imgFile.match(/\.(png|jpg|jpeg)$/i)![0];
-          const svgFile   = flatFileNames.find(f => f.toLowerCase() === `${stem.toLowerCase()}.svg`);
+        for (const svgFile of svgFiles) {
+          const stem      = svgFile.replace(/\.svg$/i, '');
+          const localImg  = flatFileNames.find(f => /\.(png|jpg|jpeg)$/i.test(f) && !/[-_ ]thumb/i.test(f) && f.toLowerCase() === `${stem.toLowerCase()}.png`)
+                         ?? flatFileNames.find(f => /\.(jpg|jpeg)$/i.test(f) && !/[-_ ]thumb/i.test(f) && f.toLowerCase().startsWith(stem.toLowerCase()));
+          const imgFile   = localImg ?? `${stem}.png`;
           const thumbFile = flatFileNames.find(f => /[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f) && f.toLowerCase().replace(/[-_ ]thumb\.(png|jpg|jpeg)$/i, '') === stem.toLowerCase());
+
           const id            = `${folder}-${stem}`;
           const localBase     = `/templates/${folder}`;
           const r2Base        = R2_PUBLIC_URL ? `${R2_PUBLIC_URL}/templates/${folder}` : localBase;
           const backgroundSrc = `${r2Base}/${imgFile}`;
-          const thumbnailSrc  = thumbFile
-            ? `${r2Base}/${thumbFile}`
-            : backgroundSrc;
+          const thumbnailSrc  = thumbFile ? `${r2Base}/${thumbFile}` : backgroundSrc;
 
-          let svgData: Partial<Template> = { style: { canvasWidth: 444, canvasHeight: 630 } };
-          if (svgFile) {
-            const svgPath   = path.join(folderPath, svgFile);
-            const svgPublic = `${r2Base}/${svgFile}`;
-            const content   = await readFile(svgPath, 'utf-8');
-            svgData = parseSvg(content, svgPublic);
-          }
+          const svgPath   = path.join(folderPath, svgFile);
+          const svgPublic = `${r2Base}/${svgFile}`;
+          const content   = await readFile(svgPath, 'utf-8');
+          const svgData   = parseSvg(content, svgPublic);
 
           templates.push({
             id,
