@@ -6,6 +6,8 @@ import { FOLDER_TO_CATEGORY } from '@/lib/categories';
 
 export const dynamic = 'force-dynamic';
 
+const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL?.replace(/\/$/, '') ?? '';
+
 /** "bar-mitzvah" → "Bar Mitzvah", with override map for special chars */
 function folderToCategory(folder: string): string {
   if (FOLDER_TO_CATEGORY[folder]) return FOLDER_TO_CATEGORY[folder];
@@ -115,15 +117,17 @@ export async function GET() {
             const svgFile   = subFiles.find(f => f.toLowerCase() === `${stem.toLowerCase()}.svg`);
             const thumbFile = subFiles.find(f => /[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f) && f.toLowerCase().replace(/[-_ ]thumb\.(png|jpg|jpeg)$/i, '') === stem.toLowerCase());
             const id            = `${folder}-${subDir.name}-${stem}`;
-            const backgroundSrc = `/templates/${folder}/${subDir.name}/${imgFile}`;
+            const localBase     = `/templates/${folder}/${subDir.name}`;
+            const r2Base        = R2_PUBLIC_URL ? `${R2_PUBLIC_URL}/templates/${folder}/${subDir.name}` : localBase;
+            const backgroundSrc = `${r2Base}/${imgFile}`;
             const thumbnailSrc  = thumbFile
-              ? `/templates/${folder}/${subDir.name}/${thumbFile}`
+              ? `${r2Base}/${thumbFile}`
               : backgroundSrc;
 
             let svgData: Partial<Template> = { style: { canvasWidth: 444, canvasHeight: 630 } };
             if (svgFile) {
               const svgPath   = path.join(subFolderPath, svgFile);
-              const svgPublic = `/templates/${folder}/${subDir.name}/${svgFile}`;
+              const svgPublic = `${r2Base}/${svgFile}`;
               const content   = await readFile(svgPath, 'utf-8');
               svgData = parseSvg(content, svgPublic);
             }
@@ -151,15 +155,17 @@ export async function GET() {
           const svgFile   = flatFileNames.find(f => f.toLowerCase() === `${stem.toLowerCase()}.svg`);
           const thumbFile = flatFileNames.find(f => /[-_ ]thumb\.(png|jpg|jpeg)$/i.test(f) && f.toLowerCase().replace(/[-_ ]thumb\.(png|jpg|jpeg)$/i, '') === stem.toLowerCase());
           const id            = `${folder}-${stem}`;
-          const backgroundSrc = `/templates/${folder}/${imgFile}`;
+          const localBase     = `/templates/${folder}`;
+          const r2Base        = R2_PUBLIC_URL ? `${R2_PUBLIC_URL}/templates/${folder}` : localBase;
+          const backgroundSrc = `${r2Base}/${imgFile}`;
           const thumbnailSrc  = thumbFile
-            ? `/templates/${folder}/${thumbFile}`
+            ? `${r2Base}/${thumbFile}`
             : backgroundSrc;
 
           let svgData: Partial<Template> = { style: { canvasWidth: 444, canvasHeight: 630 } };
           if (svgFile) {
             const svgPath   = path.join(folderPath, svgFile);
-            const svgPublic = `/templates/${folder}/${svgFile}`;
+            const svgPublic = `${r2Base}/${svgFile}`;
             const content   = await readFile(svgPath, 'utf-8');
             svgData = parseSvg(content, svgPublic);
           }
