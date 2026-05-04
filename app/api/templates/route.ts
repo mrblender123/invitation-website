@@ -119,7 +119,7 @@ export async function GET() {
           for (const svgFile of svgFiles) {
             const stem          = svgFile.replace(/\.svg$/i, '');
             const imgFile       = `${stem}.png`;
-            const thumbFileName = `${stem}-thumb.png`;
+            const thumbFileName = `${stem}-thumb.webp`;
 
             const id            = `${folder}-${subDir.name}-${stem}`;
             const localBase     = `/templates/${folder}/${subDir.name}`;
@@ -156,7 +156,7 @@ export async function GET() {
         for (const svgFile of svgFiles) {
           const stem          = svgFile.replace(/\.svg$/i, '');
           const imgFile       = `${stem}.png`;
-          const thumbFileName = `${stem}-thumb.png`;
+          const thumbFileName = `${stem}-thumb.webp`;
 
           const id            = `${folder}-${stem}`;
           const localBase     = `/templates/${folder}`;
