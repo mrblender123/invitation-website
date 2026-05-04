@@ -147,7 +147,7 @@ function TemplateThumbnail({ template, onClick, targetW }: { template: Template;
       }}
     >
       {template.textSvg ? (
-        <SvgCardPreview template={template} fieldValues={{}} scale={thumbScale} />
+        <SvgCardPreview template={template} fieldValues={{}} scale={thumbScale} thumb />
       ) : (
         <div style={{
           width: style.canvasWidth,

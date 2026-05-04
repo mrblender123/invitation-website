@@ -8,6 +8,7 @@ type Props = {
   fieldValues: Record<string, string>;
   scale?: number;
   activeFieldId?: string | null;
+  thumb?: boolean;
 };
 
 
@@ -123,7 +124,7 @@ function injectFieldValues(
  * The outer div clips it down to the scaled display size.
  */
 const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview(
-  { template, fieldValues, scale = 1, activeFieldId },
+  { template, fieldValues, scale = 1, activeFieldId, thumb = false },
   ref,
 ) {
   const { canvasWidth, canvasHeight } = template.style;
@@ -165,7 +166,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
 
           {/* PNG background */}
           <img
-            src={template.backgroundSrc}
+            src={thumb ? (template.thumbnailSrc ?? template.backgroundSrc) : template.backgroundSrc}
             alt={template.name}
             width={canvasWidth}
             height={canvasHeight}
