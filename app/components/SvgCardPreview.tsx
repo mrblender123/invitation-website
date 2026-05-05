@@ -129,18 +129,40 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
 ) {
   const { canvasWidth, canvasHeight } = template.style;
   const [svgContent, setSvgContent] = useState<string | null>(null);
+  // In editor mode: start with the fast thumbnail, upgrade to full image silently
+  const [imgSrc, setImgSrc] = useState(
+    !thumb && template.thumbnailSrc ? template.thumbnailSrc : template.backgroundSrc
+  );
 
   useEffect(() => {
     if (!template.textSvg) return;
     fetch(template.textSvg)
       .then(r => r.text())
       .then(text => {
-        // Strip any @import rules — fonts are loaded via the page's CSS
         text = text.replace(/@import url\([^)]+\)\s*;?/g, '');
         setSvgContent(text);
       })
       .catch(() => setSvgContent(null));
   }, [template.textSvg]);
+
+  // In editor mode: preload the full image in the background, swap when ready
+  useEffect(() => {
+    if (thumb) return;
+    setImgSrc(template.thumbnailSrc ?? template.backgroundSrc);
+    const full = new Image();
+    full.crossOrigin = 'anonymous';
+    full.src = template.backgroundSrc;
+    full.onload = () => setImgSrc(template.backgroundSrc);
+    full.onerror = () => {
+      // webp failed → try png
+      if (template.backgroundSrc.endsWith('.webp')) {
+        const fallback = new Image();
+        fallback.crossOrigin = 'anonymous';
+        fallback.src = template.backgroundSrc.replace('.webp', '.png');
+        fallback.onload = () => setImgSrc(fallback.src);
+      }
+    };
+  }, [template.backgroundSrc, template.thumbnailSrc, thumb]);
 
   const injectedSvg =
     svgContent && template.fields
@@ -162,11 +184,11 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
         transformOrigin: 'top left',
       }}>
         {/* Inner: full-resolution content — ref this for html2canvas */}
-        <div ref={ref} style={{ width: canvasWidth, height: canvasHeight, position: 'relative', background: '#1a1a2e' }}>
+        <div ref={ref} style={{ width: canvasWidth, height: canvasHeight, position: 'relative' }}>
 
-          {/* PNG background */}
+          {/* Background image — thumb shown immediately, full image swapped in silently */}
           <img
-            src={thumb ? (template.thumbnailSrc ?? template.backgroundSrc) : template.backgroundSrc}
+            src={thumb ? (template.thumbnailSrc ?? template.backgroundSrc) : imgSrc}
             alt={template.name}
             width={canvasWidth}
             height={canvasHeight}
@@ -175,7 +197,6 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
             crossOrigin="anonymous"
             onError={(e) => {
               const img = e.target as HTMLImageElement;
-              // webp failed → fall back to PNG equivalent
               if (img.src.endsWith('.webp')) {
                 img.src = img.src.replace('.webp', '.png');
               }
