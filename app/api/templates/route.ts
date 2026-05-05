@@ -118,7 +118,7 @@ export async function GET() {
 
           for (const svgFile of svgFiles) {
             const stem          = svgFile.replace(/\.svg$/i, '');
-            const imgFile       = `${stem}.png`;
+            const imgFile       = `${stem}.webp`;
             const thumbFileName = `${stem}-thumb.webp`;
 
             const id            = `${folder}-${subDir.name}-${stem}`;
@@ -155,7 +155,7 @@ export async function GET() {
 
         for (const svgFile of svgFiles) {
           const stem          = svgFile.replace(/\.svg$/i, '');
-          const imgFile       = `${stem}.png`;
+          const imgFile       = `${stem}.webp`;
           const thumbFileName = `${stem}-thumb.webp`;
 
           const id            = `${folder}-${stem}`;

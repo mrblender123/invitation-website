@@ -173,15 +173,13 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
             style={{ display: 'block', userSelect: 'none' }}
             draggable={false}
             crossOrigin="anonymous"
-            onError={thumb ? (e) => {
+            onError={(e) => {
               const img = e.target as HTMLImageElement;
-              // webp failed → try PNG thumb → then full background
-              if (img.src.endsWith('.webp') && template.thumbnailSrc) {
-                img.src = template.thumbnailSrc.replace('.webp', '.png');
-              } else {
-                img.src = template.backgroundSrc;
+              // webp failed → fall back to PNG equivalent
+              if (img.src.endsWith('.webp')) {
+                img.src = img.src.replace('.webp', '.png');
               }
-            } : undefined}
+            }}
           />
 
           {/* SVG text overlay */}
