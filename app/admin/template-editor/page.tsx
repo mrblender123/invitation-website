@@ -526,6 +526,16 @@ export default function TemplateEditorPage() {
     else setSaveMsg('Error saving');
   };
 
+  const handleRevalidate = async () => {
+    if (!accessToken) return;
+    const res = await fetch('/api/admin/revalidate-templates', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    setSaveMsg(res.ok ? 'Cache cleared ✓' : 'Revalidate failed');
+    setTimeout(() => setSaveMsg(''), 3000);
+  };
+
   const handleImageMouseDown = useCallback((e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     setSelectedImageId(id);
@@ -605,6 +615,9 @@ export default function TemplateEditorPage() {
               {saveMsg && <span style={{ fontSize: 13, color: saveMsg.includes('Error') ? '#f87171' : '#4ade80' }}>{saveMsg}</span>}
               <button onClick={handleSave} disabled={saving || !svgSource} style={{ padding: '7px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600, background: saving ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.15)', color: saving ? 'rgba(255,255,255,0.3)' : '#fff', cursor: saving ? 'not-allowed' : 'pointer' }}>
                 {saving ? 'Saving…' : 'Save to SVG'}
+              </button>
+              <button onClick={handleRevalidate} style={{ padding: '7px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }} title="Bust the /api/templates cache so changes appear immediately">
+                ↺ Refresh cache
               </button>
             </div>
           )}

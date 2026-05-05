@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { writeFile } from 'fs/promises';
 import path from 'path';
+import { revalidatePath } from 'next/cache';
 import { createAuthenticatedClient } from '@/lib/supabase';
 
 const ADMIN_EMAIL = 'bycheshin@gmail.com';
@@ -44,6 +45,7 @@ export async function POST(req: NextRequest) {
   if (process.env.NODE_ENV === 'development') {
     const localPath = path.join(process.cwd(), 'public', relativePath);
     await writeFile(localPath, svgContent, 'utf-8');
+    revalidatePath('/api/templates');
     return NextResponse.json({ ok: true });
   }
 
@@ -91,5 +93,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `GitHub PUT failed: ${err}` }, { status: 500 });
   }
 
+  revalidatePath('/api/templates');
   return NextResponse.json({ ok: true });
 }
