@@ -36,7 +36,7 @@ This matches how R-001 (Vachnacht) was fixed and confirmed working.
 **Editable fields:**
 - Wrap each editable `<text>` in `<g id="field_id">…</g>`.
 - The `id` becomes the field key; auto-label is generated as Title Case from the id (e.g. `host_name` → "Host Name").
-- For **optional fields** (hidden by default), append `*` to the id: `<g id="field_name*">`.
+- For **required fields** (always shown), append `*` to the id: `<g id="field_name*">`. Fields WITHOUT `*` are optional (hidden behind "Show all fields"). If NO fields have `*`, all are treated as required.
 - Forbidden ids (silently skipped): `static_text`, `layer_1`, `layer 1`, `background`, anything matching `/^layer/i`.
 - The first `<tspan>` text inside the group becomes the **placeholder** shown in the editor.
 - For multi-line fields (multiple `<tspan>` rows): only the first tspan is editable — the rest stay as static placeholder lines.

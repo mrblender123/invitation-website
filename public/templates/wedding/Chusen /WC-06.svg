@@ -1,34 +1,34 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
-  <g id="personal_intro*">
+  <g id="personal_intro">
     <text transform="translate(180 99)" text-anchor="middle" fill="#f7971c" font-family="Heebo" font-size="13" font-weight="600"><tspan x="0" y="0">איך וויל דיך פרעזענליך</tspan></text>
   </g>
-  <g id="invite_text*">
+  <g id="invite_text">
     <text transform="translate(180 113.5)" text-anchor="middle" fill="#f7971c" font-family="Heebo" font-size="13.1" font-weight="600"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
   </g>
   <text transform="translate(180 174.6)" text-anchor="middle" fill="#6f311b" font-family="Frank Ruhl Libre" font-size="62" font-weight="700"><tspan x="0" y="0">חתונה</tspan></text>
   <text transform="translate(180 218.2)" text-anchor="middle" fill="#f7971c" font-family="Heebo" font-size="11.2" font-weight="600"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
-  <g id="day">
+  <g id="day*">
     <text transform="translate(180 237.9)" text-anchor="middle" fill="#6f311b" font-family="Heebo" font-size="16" font-weight="800"><tspan x="0" y="0">דינסטאג</tspan></text>
   </g>
-  <g id="parasha">
+  <g id="parasha*">
     <text transform="translate(180 258)" text-anchor="middle" fill="#6f311b" font-family="Heebo" font-size="16.9" font-weight="800"><tspan x="0" y="0">פרשת מקץ</tspan></text>
   </g>
-  <g id="hall_intro*">
+  <g id="hall_intro">
     <text transform="translate(180 282.4)" text-anchor="middle" fill="#f7971c" font-family="Heebo" font-size="11.2" font-weight="600"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
   </g>
-  <g id="hall">
+  <g id="hall*">
     <text transform="translate(180 301.6)" text-anchor="middle" fill="#6f311b" font-family="Heebo" font-size="18.1" font-weight="800"><tspan x="0" y="0">תפארת מרדכי</tspan></text>
   </g>
-  <g id="address">
+  <g id="address*">
     <text transform="translate(180 317.1)" text-anchor="middle" fill="#6f311b" font-family="Heebo" font-size="13.4" font-weight="800"><tspan x="0" y="0">600-640 McDonald Ave</tspan></text>
   </g>
-  <g id="groom_title*">
+  <g id="groom_title">
     <text transform="translate(180 345.8)" text-anchor="middle" fill="#f7971c" font-family="Heebo" font-size="18.8" font-weight="600"><tspan x="0" y="0">החתן</tspan></text>
   </g>
-  <g id="groom_name">
+  <g id="groom_name*">
     <text transform="translate(180 378.2)" text-anchor="middle" fill="#6f311b" font-family="Heebo" font-size="16.9" font-weight="800"><tspan x="0" y="0">שמאול יצחק</tspan></text>
   </g>
-  <g id="groom_last">
+  <g id="groom_last*">
     <text transform="translate(180 398.4)" text-anchor="middle" fill="#6f311b" font-family="Heebo" font-size="16.9" font-weight="800"><tspan x="0" y="0">ווייס</tspan></text>
   </g>
 </svg>
