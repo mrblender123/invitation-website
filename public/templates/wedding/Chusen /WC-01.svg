@@ -5,7 +5,9 @@
   <g id="invite_text">
     <text transform="translate(96.9 102.3)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="13" font-weight="600"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
   </g>
-  <text transform="translate(96.9 231.4)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="10" font-weight="600"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
+  <g id="event_intro">
+    <text transform="translate(96.9 231.4)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="10" font-weight="600"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
+  </g>
   <g id="day*">
     <text transform="translate(96.9 248)" text-anchor="middle" fill="#593562" font-family="Heebo" font-size="14.9" font-weight="800"><tspan x="0" y="0">דינסטאג</tspan></text>
   </g>
