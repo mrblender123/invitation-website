@@ -31,6 +31,7 @@ const s3 = new S3Client({
 
 function mimeType(filename) {
   if (filename.endsWith('.svg')) return 'image/svg+xml';
+  if (filename.endsWith('.webp')) return 'image/webp';
   if (filename.endsWith('.png')) return 'image/png';
   if (filename.endsWith('.jpg') || filename.endsWith('.jpeg')) return 'image/jpeg';
   return 'application/octet-stream';
@@ -44,7 +45,7 @@ async function collectFiles(dir, base) {
     const rel  = path.join(base, e.name);
     if (e.isDirectory()) {
       files.push(...await collectFiles(full, rel));
-    } else if (/\.(png|jpg|jpeg|svg)$/i.test(e.name)) {
+    } else if (/\.(png|jpg|jpeg|svg|webp)$/i.test(e.name)) {
       files.push({ full, rel });
     }
   }
