@@ -151,7 +151,7 @@ export async function GET() {
             }
 
             const svgPath   = path.join(subFolderPath, svgFile);
-            const svgPublic = R2_PUBLIC_URL
+            const svgPublic = (!IS_DEV && R2_PUBLIC_URL)
               ? r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, svgFile)
               : `${localBase}/${svgFile}`;
             const content   = await readFile(svgPath, 'utf-8');
@@ -196,7 +196,7 @@ export async function GET() {
           }
 
           const svgPath   = path.join(folderPath, svgFile);
-          const svgPublic = R2_PUBLIC_URL
+          const svgPublic = (!IS_DEV && R2_PUBLIC_URL)
             ? r2Url(R2_PUBLIC_URL, 'templates', folder, svgFile)
             : `${localBase}/${svgFile}`;
           const content   = await readFile(svgPath, 'utf-8');
