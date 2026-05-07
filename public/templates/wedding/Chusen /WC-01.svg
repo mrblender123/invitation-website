@@ -1,33 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
   <g id="personal_intro">
-    <text transform="translate(180 88.7)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="13" font-weight="600"><tspan x="0" y="0">איך וויל דיך פרעזענליך</tspan></text>
+    <text transform="translate(96.9 88.7)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="13" font-weight="600"><tspan x="0" y="0">איך וויל דיך פרעזענליך</tspan></text>
   </g>
   <g id="invite_text">
-    <text transform="translate(180 102.3)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="13" font-weight="600"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
+    <text transform="translate(96.9 102.3)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="13" font-weight="600"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
   </g>
-  <text transform="translate(180 231.4)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="10" font-weight="600"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
+  <text transform="translate(96.9 231.4)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="10" font-weight="600"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
   <g id="day*">
-    <text transform="translate(180 248)" text-anchor="middle" fill="#593562" font-family="Heebo" font-size="14.9" font-weight="800"><tspan x="0" y="0">דינסטאג</tspan></text>
+    <text transform="translate(96.9 248)" text-anchor="middle" fill="#593562" font-family="Heebo" font-size="14.9" font-weight="800"><tspan x="0" y="0">דינסטאג</tspan></text>
   </g>
   <g id="parasha*">
-    <text transform="translate(180 264.3)" text-anchor="middle" fill="#593562" font-family="Heebo" font-size="14.9" font-weight="800"><tspan x="0" y="0">פרשת מקץ</tspan></text>
+    <text transform="translate(96.9 264.3)" text-anchor="middle" fill="#593562" font-family="Heebo" font-size="14.9" font-weight="800"><tspan x="0" y="0">פרשת מקץ</tspan></text>
   </g>
   <g id="hall_intro">
-    <text transform="translate(180 285.2)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="10" font-weight="600"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
+    <text transform="translate(96.9 285.2)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="10" font-weight="600"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
   </g>
   <g id="hall*">
-    <text transform="translate(180 301.4)" text-anchor="middle" fill="#593562" font-family="Heebo" font-size="14.9" font-weight="800"><tspan x="0" y="0">תפארת מרדכי</tspan></text>
+    <text transform="translate(96.9 301.4)" text-anchor="middle" fill="#593562" font-family="Heebo" font-size="14.9" font-weight="800"><tspan x="0" y="0">תפארת מרדכי</tspan></text>
   </g>
   <g id="address*">
-    <text transform="translate(180 315.9)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="11" font-weight="800"><tspan x="0" y="0">600-640 McDonald Ave</tspan></text>
+    <text transform="translate(96.9 315.9)" text-anchor="middle" fill="#4d563b" font-family="Heebo" font-size="11" font-weight="800"><tspan x="0" y="0">600-640 McDonald Ave</tspan></text>
   </g>
   <g id="groom_title">
-    <text transform="translate(180 357.5) rotate(.6)" text-anchor="middle" fill="#445030" font-family="Heebo" font-size="18" font-weight="600"><tspan x="0" y="0">החתן</tspan></text>
+    <text transform="translate(96.7 357.5) rotate(.6)" text-anchor="middle" fill="#445030" font-family="Heebo" font-size="18" font-weight="600"><tspan x="0" y="0">החתן</tspan></text>
   </g>
   <g id="groom_name*">
-    <text transform="translate(180 382) rotate(.6)" text-anchor="middle" fill="#593562" font-family="Heebo" font-size="21.5" font-weight="800"><tspan x="0" y="0">שמאול יצחק</tspan></text>
+    <text transform="translate(96.9 382) rotate(.6)" text-anchor="middle" fill="#593562" font-family="Heebo" font-size="21.5" font-weight="800"><tspan x="0" y="0">שמאול יצחק</tspan></text>
   </g>
   <g id="groom_last*">
-    <text transform="translate(180 401.9) rotate(.6)" text-anchor="middle" fill="#593562" font-family="Heebo" font-size="21.5" font-weight="800"><tspan x="0" y="0">ווייסמאן</tspan></text>
+    <text transform="translate(96.9 401.9) rotate(.6)" text-anchor="middle" fill="#593562" font-family="Heebo" font-size="21.5" font-weight="800"><tspan x="0" y="0">ווייסמאן</tspan></text>
   </g>
 </svg>
