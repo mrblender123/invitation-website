@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readdir, readFile } from 'fs/promises';
+import { readdir, readFile, access } from 'fs/promises';
 import path from 'path';
 import type { Template, SvgField } from '@/lib/templates';
 import { FOLDER_TO_CATEGORY } from '@/lib/categories';
@@ -7,6 +7,18 @@ import { FOLDER_TO_CATEGORY } from '@/lib/categories';
 export const revalidate = 3600; // cache for 1 hour
 
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL?.replace(/\/$/, '') ?? '';
+const IS_DEV = process.env.NODE_ENV === 'development';
+
+/** In dev: find a local image file for a stem (tries webp, png, jpg). Returns filename or null. */
+async function findLocalFile(dir: string, stem: string, suffix = ''): Promise<string | null> {
+  for (const ext of ['.webp', '.png', '.jpg', '.jpeg']) {
+    try {
+      await access(path.join(dir, `${stem}${suffix}${ext}`));
+      return `${stem}${suffix}${ext}`;
+    } catch { /* not found, try next */ }
+  }
+  return null;
+}
 
 /** Build a valid URL from an R2 base + path segments, encoding each segment */
 function r2Url(base: string, ...segments: string[]): string {
@@ -117,18 +129,26 @@ export async function GET() {
           const svgFiles = subFiles.filter(f => /\.svg$/i.test(f)).sort();
 
           for (const svgFile of svgFiles) {
-            const stem          = svgFile.replace(/\.svg$/i, '');
-            const imgFile       = `${stem}.webp`;
-            const thumbFileName = `${stem}-thumb.webp`;
+            const stem      = svgFile.replace(/\.svg$/i, '');
+            const id        = `${folder}-${subDir.name}-${stem}`;
+            const localBase = `/templates/${folder}/${subDir.name}`;
 
-            const id            = `${folder}-${subDir.name}-${stem}`;
-            const localBase     = `/templates/${folder}/${subDir.name}`;
-            const backgroundSrc = R2_PUBLIC_URL
-              ? r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, imgFile)
-              : `${localBase}/${imgFile}`;
-            const thumbnailSrc  = R2_PUBLIC_URL
-              ? r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, thumbFileName)
-              : backgroundSrc;
+            // In dev: serve images from local disk if available (fast); fall back to R2
+            let backgroundSrc: string;
+            let thumbnailSrc: string;
+            if (IS_DEV) {
+              const localImg   = await findLocalFile(subFolderPath, stem);
+              const localThumb = await findLocalFile(subFolderPath, stem, '-thumb');
+              backgroundSrc = localImg
+                ? `${localBase}/${localImg}`
+                : R2_PUBLIC_URL ? r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, `${stem}.webp`) : `${localBase}/${stem}.webp`;
+              thumbnailSrc = localThumb
+                ? `${localBase}/${localThumb}`
+                : R2_PUBLIC_URL ? r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, `${stem}-thumb.webp`) : backgroundSrc;
+            } else {
+              backgroundSrc = r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, `${stem}.webp`);
+              thumbnailSrc  = r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, `${stem}-thumb.webp`);
+            }
 
             const svgPath   = path.join(subFolderPath, svgFile);
             const svgPublic = R2_PUBLIC_URL
@@ -154,18 +174,26 @@ export async function GET() {
         const svgFiles      = flatFileNames.filter(f => /\.svg$/i.test(f)).sort();
 
         for (const svgFile of svgFiles) {
-          const stem          = svgFile.replace(/\.svg$/i, '');
-          const imgFile       = `${stem}.webp`;
-          const thumbFileName = `${stem}-thumb.webp`;
+          const stem      = svgFile.replace(/\.svg$/i, '');
+          const id        = `${folder}-${stem}`;
+          const localBase = `/templates/${folder}`;
 
-          const id            = `${folder}-${stem}`;
-          const localBase     = `/templates/${folder}`;
-          const backgroundSrc = R2_PUBLIC_URL
-            ? r2Url(R2_PUBLIC_URL, 'templates', folder, imgFile)
-            : `${localBase}/${imgFile}`;
-          const thumbnailSrc  = R2_PUBLIC_URL
-            ? r2Url(R2_PUBLIC_URL, 'templates', folder, thumbFileName)
-            : backgroundSrc;
+          // In dev: serve images from local disk if available (fast); fall back to R2
+          let backgroundSrc: string;
+          let thumbnailSrc: string;
+          if (IS_DEV) {
+            const localImg   = await findLocalFile(folderPath, stem);
+            const localThumb = await findLocalFile(folderPath, stem, '-thumb');
+            backgroundSrc = localImg
+              ? `${localBase}/${localImg}`
+              : R2_PUBLIC_URL ? r2Url(R2_PUBLIC_URL, 'templates', folder, `${stem}.webp`) : `${localBase}/${stem}.webp`;
+            thumbnailSrc = localThumb
+              ? `${localBase}/${localThumb}`
+              : R2_PUBLIC_URL ? r2Url(R2_PUBLIC_URL, 'templates', folder, `${stem}-thumb.webp`) : backgroundSrc;
+          } else {
+            backgroundSrc = r2Url(R2_PUBLIC_URL, 'templates', folder, `${stem}.webp`);
+            thumbnailSrc  = r2Url(R2_PUBLIC_URL, 'templates', folder, `${stem}-thumb.webp`);
+          }
 
           const svgPath   = path.join(folderPath, svgFile);
           const svgPublic = R2_PUBLIC_URL

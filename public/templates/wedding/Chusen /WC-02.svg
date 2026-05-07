@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
+  <g id="personal_intro*">
+    <text transform="translate(180 121)" text-anchor="middle" fill="#948166" font-family="Heebo" font-size="12" font-weight="600"><tspan x="0" y="0">איך וויל דיך פרעזענליך</tspan></text>
+  </g>
+  <g id="invite_text*">
+    <text transform="translate(180 132.6)" text-anchor="middle" fill="#948166" font-family="Heebo" font-size="12" font-weight="600"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
+  </g>
+  <text transform="translate(180 210.7)" text-anchor="middle" fill="#948166" font-family="Heebo" font-size="11" font-weight="600"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
+  <g id="day">
+    <text transform="translate(180 235.9)" text-anchor="middle" fill="#a46800" font-family="Heebo" font-size="15.7" font-weight="800"><tspan x="0" y="0">דינסטאג</tspan></text>
+  </g>
+  <g id="parasha">
+    <text transform="translate(180 255.7)" text-anchor="middle" fill="#a46800" font-family="Heebo" font-size="16.6" font-weight="800"><tspan x="0" y="0">פרשת מקץ</tspan></text>
+  </g>
+  <g id="hall_intro*">
+    <text transform="translate(180 279.6)" text-anchor="middle" fill="#948166" font-family="Heebo" font-size="11" font-weight="600"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
+  </g>
+  <g id="hall">
+    <text transform="translate(180 298.5)" text-anchor="middle" fill="#a46800" font-family="Heebo" font-size="17.7" font-weight="800"><tspan x="0" y="0">תפארת מרדכי</tspan></text>
+  </g>
+  <g id="address">
+    <text transform="translate(180 313.7)" text-anchor="middle" fill="#a46800" font-family="Heebo" font-size="13.1" font-weight="800"><tspan x="0" y="0">600-640 McDonald Ave</tspan></text>
+  </g>
+  <g id="groom_title*">
+    <text transform="translate(180 338.8)" text-anchor="middle" fill="#948166" font-family="Heebo" font-size="18.5" font-weight="600"><tspan x="0" y="0">החתן</tspan></text>
+  </g>
+  <g id="groom_name">
+    <text transform="translate(180 363.2)" text-anchor="middle" fill="#a46800" font-family="Heebo" font-size="23.1" font-weight="800"><tspan x="0" y="0">שמאול יצחק</tspan></text>
+  </g>
+  <g id="groom_last">
+    <text transform="translate(180 387.7)" text-anchor="middle" fill="#a46800" font-family="Heebo" font-size="23.1" font-weight="800"><tspan x="0" y="0">וייס</tspan></text>
+  </g>
+</svg>

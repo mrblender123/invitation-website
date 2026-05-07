@@ -10,6 +10,7 @@ interface Template {
   category: string;
   subcategory?: string;
   thumbnailSrc: string;
+  backgroundSrc: string;
   style: { canvasWidth: number; canvasHeight: number };
 }
 
@@ -57,6 +58,15 @@ function TemplateThumb({ template }: { template: Template }) {
           alt={template.name}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           draggable={false}
+          onError={(e) => {
+            const img = e.target as HTMLImageElement;
+            const thumbPng = template.thumbnailSrc.replace('.webp', '.png');
+            if (img.src !== thumbPng && thumbPng.endsWith('.png')) {
+              img.src = thumbPng;
+            } else {
+              img.src = template.backgroundSrc;
+            }
+          }}
         />
       </div>
     </Link>

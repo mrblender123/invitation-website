@@ -40,7 +40,8 @@ function injectFieldValues(
     const group = doc.getElementById(field.id);
     if (!group) continue;
 
-    const textEl = group.querySelector('text');
+    const textEls = group.querySelectorAll('text');
+    const textEl = textEls[0] as SVGTextElement | null;
     const tspan = textEl?.querySelector('tspan');
     if (!tspan || !textEl) continue;
 
@@ -55,6 +56,11 @@ function injectFieldValues(
     if (value === originalText) continue;
 
     tspan.textContent = value; // '' clears the text
+
+    // Hide secondary text elements so they don't overlay the edited primary text
+    for (let i = 1; i < textEls.length; i++) {
+      (textEls[i] as Element).setAttribute('display', 'none');
+    }
 
     // Skip multi-tspan elements — centering logic only handles single-tspan fields
     const tspanCount = textEl.querySelectorAll('tspan').length;
@@ -135,7 +141,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
   );
 
   useEffect(() => {
-    if (!template.textSvg) return;
+    if (thumb || !template.textSvg) return;
     fetch(template.textSvg)
       .then(r => r.text())
       .then(text => {
@@ -143,7 +149,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
         setSvgContent(text);
       })
       .catch(() => setSvgContent(null));
-  }, [template.textSvg]);
+  }, [template.textSvg, thumb]);
 
   // In editor mode: preload the full image in the background, swap when ready
   useEffect(() => {
@@ -197,7 +203,15 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
             crossOrigin="anonymous"
             onError={(e) => {
               const img = e.target as HTMLImageElement;
-              if (img.src.endsWith('.webp')) {
+              // Thumb fallback chain: thumb.webp → thumb.png → full backgroundSrc
+              if (thumb) {
+                const thumbPng = (template.thumbnailSrc ?? '').replace('.webp', '.png');
+                if (img.src !== thumbPng && thumbPng.endsWith('.png')) {
+                  img.src = thumbPng;
+                } else {
+                  img.src = template.backgroundSrc;
+                }
+              } else if (img.src.endsWith('.webp')) {
                 img.src = img.src.replace('.webp', '.png');
               }
             }}
