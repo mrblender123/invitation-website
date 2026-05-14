@@ -15,7 +15,7 @@ const CATEGORIES = [
   { key: 'Upsherin',      emoji: '✂️' },
   { key: 'Bar Mitzvah',   emoji: '⓭' },
   { key: 'Tenoyim',       emoji: '📜' },
-  { key: 'Vort',          emoji: '🥂' },
+  { key: 'Bavarfen',      emoji: '🥂' },
   { key: 'Wedding',       emoji: '💍' },
   { key: 'Sheva Brachos', emoji: '🍷' },
 ];

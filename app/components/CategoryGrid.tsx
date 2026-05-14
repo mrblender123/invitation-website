@@ -9,7 +9,7 @@ const CATEGORIES = [
   { key: 'Upsherin',      label: 'Upsherin',     icon: '✂️', description: 'First haircut celebration' },
   { key: 'Bar Mitzvah',   label: 'Bar Mitzvah',  icon: '13', description: 'Coming-of-age celebration' },
   { key: 'Tenoyim',       label: 'Tenoyim',      icon: '📜', description: 'Engagement contract signing' },
-  { key: 'Vort',          label: 'Vort',         icon: '🥂', description: 'Engagement celebration' },
+  { key: 'Bavarfen',      label: 'Bavarfen',     icon: '🥂', description: 'Engagement celebration' },
   { key: 'Wedding',       label: 'Wedding',      icon: '💍', description: 'Chuppah & reception' },
   { key: 'Sheva Brachos', label: 'Sheva Brachos',icon: '🍷', description: 'Seven blessings celebration' },
 ];

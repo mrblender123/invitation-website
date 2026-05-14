@@ -13,7 +13,7 @@ const FAQS = [
   },
   {
     q: 'What simchas are supported?',
-    a: "We cover the full lifecycle of Jewish celebrations: It's a Boy, It's a Girl, Upsherin, Bar Mitzvah, Tenoyim, Vort, Wedding, and Sheva Brachos — with more on the way.",
+    a: "We cover the full lifecycle of Jewish celebrations: It's a Boy, It's a Girl, Upsherin, Bar Mitzvah, Tenoyim, Bavarfen, Wedding, and Sheva Brachos — with more on the way.",
   },
   {
     q: 'Can I share the invitation digitally?',

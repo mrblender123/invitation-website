@@ -2,7 +2,7 @@
 
 const IMAGES = [
   "/templates/It's a boy/Vachnacht/01111.png",
-  '/templates/Vort/22.png',
+  '/templates/Bavarfen/22.png',
   '/templates/wedding/001.png',
   '/templates/wedding/002.png',
   '/templates/wedding/1.png',

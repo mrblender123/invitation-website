@@ -9,7 +9,7 @@ export const CATEGORY_SUBS: Record<string, string[]> = {
   'Upsherin':      [],
   'Bar Mitzvah':   [],
   'Tenoyim':       [],
-  'Vort':          [],
+  'Bavarfen':      [],
   'Wedding':       ['Chusen', 'Invitation'],
   'Sheva Brachos': [],
 };

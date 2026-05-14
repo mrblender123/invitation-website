@@ -21,7 +21,7 @@ const CATEGORY_META: { key: string; icon: string }[] = [
   { key: 'Upsherin',      icon: '✂️' },
   { key: 'Bar Mitzvah',   icon: '⓭' },
   { key: 'Tenoyim',       icon: '📜' },
-  { key: 'Vort',          icon: '🥂' },
+  { key: 'Bavarfen',      icon: '🥂' },
   { key: 'Wedding',       icon: '💍' },
   { key: 'Sheva Brachos', icon: '🍷' },
 ];
