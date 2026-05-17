@@ -7,7 +7,7 @@ export const CATEGORY_SUBS: Record<string, string[]> = {
   "It's a Boy":    ['Shulem Zucher', 'Vachnacht', 'Vachnacht-Bris', 'Bris', 'Pidyon Haben', "Shlishi L'milah"],
   "It's a Girl":   [],
   'Upsherin':      [],
-  'Bar Mitzvah':   [],
+  'Bar Mitzvah':   ['Bar Mizva'],
   'Tenoyim':       [],
   'Bavarfen':      [],
   'Wedding':       ['Chusen', 'Invitation'],
