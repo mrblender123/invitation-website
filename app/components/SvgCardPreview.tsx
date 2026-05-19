@@ -183,6 +183,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
       overflow: 'hidden',
       flexShrink: 0,
       position: 'relative',
+      background: 'white',
     }}>
       {/* Scale wrapper — transform lives here, NOT on the ref'd element */}
       <div style={{
