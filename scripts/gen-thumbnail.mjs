@@ -61,6 +61,7 @@ const svgBuf = Buffer.from(svgContent);
 const outPath = path.join(folder, `${stem}.png`);
 
 await sharp(pngPath)
+  .flatten({ background: '#ffffff' })
   .resize(bgW, bgH)
   .composite([{ input: svgBuf, top: 0, left: 0 }])
   .png({ quality: 95 })

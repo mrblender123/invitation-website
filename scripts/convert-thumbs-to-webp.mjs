@@ -51,6 +51,7 @@ async function main() {
 
     try {
       const buffer = await sharp(full)
+        .flatten({ background: '#ffffff' })
         .resize({ width: 400 })
         .webp({ quality: 82 })
         .toBuffer();
