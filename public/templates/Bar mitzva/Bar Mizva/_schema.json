@@ -1,0 +1,60 @@
+{
+  "fields": [
+    {
+      "id": "father_in_law",
+      "required": true
+    },
+    {
+      "id": "son_of",
+      "required": true
+    },
+    {
+      "id": "host_name",
+      "required": true
+    },
+    {
+      "id": "text1",
+      "required": false
+    },
+    {
+      "id": "time",
+      "required": true
+    },
+    {
+      "id": "adress",
+      "required": true
+    },
+    {
+      "id": "hall_name",
+      "required": true
+    },
+    {
+      "id": "date",
+      "required": true
+    },
+    {
+      "id": "text2",
+      "required": false
+    },
+    {
+      "id": "name_of_boy",
+      "required": true
+    },
+    {
+      "id": "text3",
+      "required": false
+    },
+    {
+      "id": "text4",
+      "required": false
+    },
+    {
+      "id": "text5",
+      "required": false
+    },
+    {
+      "id": "text6",
+      "required": false
+    }
+  ]
+}

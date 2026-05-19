@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 215 288">
+  <text transform="translate(154.4 202.8) rotate(.6)" fill="#020202" font-family="Heebo" font-weight="600" font-size="5.7"><tspan x="0" y="0">החתן</tspan></text>
+  <text transform="translate(138.9 211.1) rotate(.6)" fill="#6a280d" font-family="Heebo" font-weight="900" font-size="7.9"><tspan x="0" y="0">דוד ברוך</tspan></text>
+  <text transform="translate(138.7 220.1) rotate(.6)" fill="#6a280d" font-family="Heebo" font-weight="900" font-size="7.9"><tspan x="0" y="0">ווייסמאן</tspan></text>
+  <text transform="translate(93.5 145.7)" fill="#020202" font-family="Heebo" font-weight="900" font-size="8.6"><tspan x="1.5" y="0">פרשת וירא</tspan></text>
+  <text transform="translate(98.5 136.4)" fill="#020202" font-family="Heebo" font-weight="900" font-size="8.6"><tspan x="0" y="0">דינסטאג</tspan></text>
+  <text transform="translate(97.5 163.5)" fill="#020202" font-family="Heebo" font-weight="600" font-size="5.8"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
+  <text transform="translate(85.1 126.8)" fill="#020202" font-family="Heebo" font-weight="600" font-size="5.8"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
+  <text transform="translate(87.8 75.8)" fill="#020202" font-family="Heebo" font-weight="600" font-size="7.5"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
+  <g>
+    <path d="M82.4,70v-5.1h-2v-.7h3v5.9h-.9Z" fill="#020202"/>
+    <path d="M84.6,66.6v-1.7h-.7v-.7h1.7v2.5h-.9Z" fill="#020202"/>
+    <path d="M86.1,64.9v-2h.9v1.3h2.2v.7h-3.1ZM89.6,64.7l-1.5,3.8h-1l1.8-4.4h.7v.6Z" fill="#020202"/>
+    <path d="M90.5,68.6c-.1,0-.3,0-.4,0-.1,0-.2,0-.4,0v-.7c.2,0,.4,0,.5,0s.3,0,.4-.2c0-.1.1-.3.1-.5v-2.3h-.8v-.7h1.7v3.1c0,.4-.1.8-.3,1-.2.2-.5.3-.9.3Z" fill="#020202"/>
+    <path d="M94,68.6c-.2,0-.5,0-.8,0-.3,0-.6-.1-.9-.2l.2-.7c.3,0,.5.2.7.2.2,0,.4,0,.6,0,.4,0,.7,0,.9-.3.2-.2.3-.5.3-.9v-2.6h.9v2.5c0,.4,0,.8-.3,1-.2.3-.4.5-.7.6-.3.1-.7.2-1.1.2ZM92.6,64.1h.9l.7,3.1c0,.2,0,.3.1.4s.1.2.2.3h-.7c-.1,0-.2-.2-.3-.3-.1-.1-.2-.3-.2-.5l-.7-3.1Z" fill="#020202"/>
+    <path d="M97.5,68.5l-.5-3.6h-.3v-.8h2.3v.7h-1.1l.6,3.6h-1Z" fill="#020202"/>
+    <path d="M100.8,68.6c-.2,0-.5,0-.8,0-.3,0-.6-.1-.9-.2l.2-.7c.3,0,.5.2.7.2.2,0,.4,0,.6,0,.4,0,.7,0,.9-.3.2-.2.3-.5.3-.9v-2.6h.9v2.5c0,.4,0,.8-.3,1-.2.3-.4.5-.7.6-.3.1-.7.2-1.1.2ZM99.4,64.1h.9l.7,3.1c0,.2,0,.3.1.4s.1.2.2.3h-.7c-.1,0-.2-.2-.3-.3-.1-.1-.2-.3-.2-.5l-.7-3.1Z" fill="#020202"/>
+    <path d="M105.5,68.5v-2.9c0-.2,0-.4-.2-.5s-.3-.2-.5-.2h-1.4v-.7h1.4c.5,0,.9.1,1.2.4.3.3.4.6.4,1.1v2.9h-.9Z" fill="#020202"/>
+    <path d="M108.9,68.6c-.2,0-.5,0-.8,0-.3,0-.5-.1-.8-.2l.2-.7c.2,0,.5.1.7.2.2,0,.4,0,.6,0,.4,0,.7,0,.9-.3.2-.2.3-.4.3-.8v-1.9h-1.5c0,.1-.1.3-.1.5,0,.2,0,.3,0,.5v.3c0,0,.1,0,.2,0,0,0,.2,0,.3,0v.7c-.2,0-.4,0-.5,0-.2,0-.3,0-.5,0-.1,0-.3,0-.4-.2v-.5c0-.2,0-.5,0-.7s.1-.4.2-.6h-.5v-.7h3.7v2.5c0,.5,0,.8-.3,1.1-.2.3-.4.5-.7.6-.3.1-.7.2-1,.2Z" fill="#020202"/>
+    <path d="M115.1,70v-5.1h-2v-.7h3v5.9h-.9Z" fill="#020202"/>
+    <path d="M117.3,66.6v-1.7h-.7v-.7h1.7v2.5h-.9Z" fill="#020202"/>
+    <path d="M118.8,64.1h3.6v.7h-.7v3.6h-.9v-3.6h-1.9v-.7Z" fill="#020202"/>
+    <path d="M124.3,64.9v-2h.9v1.3h2.2v.7h-3.1ZM127.7,64.7l-1.5,3.8h-1l1.8-4.4h.7v.6Z" fill="#020202"/>
+    <path d="M128.6,66.6v-1.7h-.7v-.7h1.7v2.5h-.9Z" fill="#020202"/>
+    <path d="M130.6,68.5v-3.6h-.4v-.7h1.4v4.4h-.9Z" fill="#020202"/>
+    <path d="M132.7,68.5v-3.6h-.4v-.7h1.4v4.4h-.9Z" fill="#020202"/>
+    <path d="M137.8,70v-5.1h-2v-.7h3v5.9h-.9Z" fill="#020202"/>
+    <path d="M140,66.6v-1.7h-.7v-.7h1.7v2.5h-.9Z" fill="#020202"/>
+    <path d="M144.8,68.5l-3.1-4.4h1.1l3.1,4.4h-1.1ZM141.9,68.5v-1.5c0-.4,0-.8.2-1s.4-.4.7-.6l.3.5c-.3.1-.4.4-.4.7v1.9h-.9ZM145.9,64.1l-1.5,2.7-.6-.7,1-2h1.1Z" fill="#020202"/>
+  </g>
+  <g id="address*">
+    <text transform="translate(94.5 183.3)" fill="#020202" font-family="Heebo" font-weight="900" font-size="6.3"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+  </g>
+  <g id="hall*">
+    <text transform="translate(86.7 174.6)" fill="#020202" font-family="Heebo" font-weight="900" font-size="8.6"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+  </g>
+</svg>

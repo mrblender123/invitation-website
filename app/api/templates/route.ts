@@ -72,6 +72,7 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
 
     // Skip system / static groups
     if (!gId) continue;
+    if (!/^[A-Za-z]/.test(gId)) continue; // skip Illustrator auto-ids (_hebrew_, numbers, etc.)
     if (seenIds.has(gId)) continue;
     if (SKIP_IDS.has(gId.toLowerCase())) continue;
     if (/^layer/i.test(gId)) continue;

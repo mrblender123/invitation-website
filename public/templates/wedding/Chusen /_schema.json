@@ -1,0 +1,44 @@
+{
+  "fields": [
+    {
+      "id": "chusen_name",
+      "required": true
+    },
+    {
+      "id": "chusen_last_name",
+      "required": true
+    },
+    {
+      "id": "text1",
+      "required": false
+    },
+    {
+      "id": "address",
+      "required": true
+    },
+    {
+      "id": "hall_name",
+      "required": true
+    },
+    {
+      "id": "parsha",
+      "required": true
+    },
+    {
+      "id": "date",
+      "required": true
+    },
+    {
+      "id": "text2",
+      "required": false
+    },
+    {
+      "id": "text3",
+      "required": false
+    },
+    {
+      "id": "text4",
+      "required": false
+    }
+  ]
+}

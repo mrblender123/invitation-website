@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <text transform="translate(180 172.8)" text-anchor="middle" fill="#865e30" font-family="Heebo" font-size="5.9" font-weight="800"><tspan x="0" y="0">ברוב שמחה והודאה להשי״ת הננו מתכבדים להזמין את</tspan></text>
-  <text transform="translate(180 180.6)" text-anchor="middle" fill="#865e30" font-family="Heebo" font-size="7.4" font-weight="800"><tspan x="0" y="0">ידידינו וקרובינו ומכובדינו שיחיו</tspan></text>
-  <text transform="translate(180 187.2)" text-anchor="middle" fill="#865e30" font-family="Heebo" font-size="5.9" font-weight="800"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
-  <text transform="translate(180 271.6)" text-anchor="middle" fill="#865e30" font-family="Heebo" font-size="6.5" font-weight="800"><tspan x="0" y="0">של בני היקר</tspan></text>
+  <g id="father_in_law*">
+    <text transform="translate(180 172.8)" text-anchor="middle" fill="#865e30" font-family="Heebo" font-size="5.9" font-weight="800"><tspan x="0" y="0">ברוב שמחה והודאה להשי״ת הננו מתכבדים להזמין את</tspan></text>
+  </g>
+  <g id="son_of*">
+    <text transform="translate(180 180.6)" text-anchor="middle" fill="#865e30" font-family="Heebo" font-size="7.4" font-weight="800"><tspan x="0" y="0">ידידינו וקרובינו ומכובדינו שיחיו</tspan></text>
+  </g>
+  <g id="host_name*">
+    <text transform="translate(180 187.2)" text-anchor="middle" fill="#865e30" font-family="Heebo" font-size="5.9" font-weight="800"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
+  </g>
+  <g id="text1">
+    <text transform="translate(180 271.6)" text-anchor="middle" fill="#865e30" font-family="Heebo" font-size="6.5" font-weight="800"><tspan x="0" y="0">של בני היקר</tspan></text>
+  </g>
   <g id="boy_name*">
     <text transform="translate(180 283.2)" text-anchor="middle" fill="#624422" font-family="Heebo" font-size="12.6" font-weight="800"><tspan x="0" y="0">אברהם</tspan></text>
   </g>
-  <text transform="translate(180 295)" text-anchor="middle" fill="#865e30" font-family="Heebo" font-size="5.9" font-weight="800"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+  <g id="time*">
+    <text transform="translate(180 295)" text-anchor="middle" fill="#865e30" font-family="Heebo" font-size="5.9" font-weight="800"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+  </g>
   <g id="day*">
     <text transform="translate(180 308)" text-anchor="middle" fill="#624422" font-family="Heebo" font-size="13.5" font-weight="800"><tspan x="0" y="0">ביום א׳ פרשת שמות</tspan></text>
   </g>

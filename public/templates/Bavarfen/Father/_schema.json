@@ -1,0 +1,60 @@
+{
+  "fields": [
+    {
+      "id": "hosts father in law",
+      "required": true
+    },
+    {
+      "id": "son of",
+      "required": true
+    },
+    {
+      "id": "host name",
+      "required": true
+    },
+    {
+      "id": "text 1",
+      "required": false
+    },
+    {
+      "id": "shachris text",
+      "required": false
+    },
+    {
+      "id": "hall address",
+      "required": true
+    },
+    {
+      "id": "name of hall",
+      "required": true
+    },
+    {
+      "id": "parsha",
+      "required": true
+    },
+    {
+      "id": "day of event",
+      "required": true
+    },
+    {
+      "id": "text 2",
+      "required": false
+    },
+    {
+      "id": "name of groom",
+      "required": true
+    },
+    {
+      "id": "text 3",
+      "required": false
+    },
+    {
+      "id": "text 4",
+      "required": false
+    },
+    {
+      "id": "text 5",
+      "required": false
+    }
+  ]
+}

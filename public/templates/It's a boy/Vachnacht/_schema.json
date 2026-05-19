@@ -1,0 +1,32 @@
+{
+  "fields": [
+    {
+      "id": "text1",
+      "required": false
+    },
+    {
+      "id": "text2",
+      "required": false
+    },
+    {
+      "id": "text3",
+      "required": false
+    },
+    {
+      "id": "text4",
+      "required": false
+    },
+    {
+      "id": "text5",
+      "required": false
+    },
+    {
+      "id": "text6",
+      "required": false
+    },
+    {
+      "id": "text7",
+      "required": false
+    }
+  ]
+}
