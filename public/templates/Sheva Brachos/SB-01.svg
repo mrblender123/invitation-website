@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <text transform="translate(180 137)" text-anchor="middle" fill="#9b8367" font-family="Heebo" font-size="7" font-weight="700"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
-  <text transform="translate(180 145.7)" text-anchor="middle" fill="#9b8367" font-family="Heebo" font-size="8" font-weight="700"><tspan x="0" y="0">הננו מתכבדים בזה להזמין את מע״כ</tspan></text>
-  <text transform="translate(180 154.8)" text-anchor="middle" fill="#9b8367" font-family="Heebo" font-size="7" font-weight="700"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
-  <text transform="translate(180 252.2)" text-anchor="middle" fill="#9b8367" font-family="Heebo" font-size="7.9" font-weight="700"><tspan x="0" y="0">אשר נערך לכבוד שמחת נישוא׳</tspan></text>
+    <g id="text5">
+    <text transform="translate(180 137)" text-anchor="middle" fill="#9b8367" font-family="Heebo" font-size="7" font-weight="700"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
+  </g>
+    <g id="text4">
+    <text transform="translate(180 145.7)" text-anchor="middle" fill="#9b8367" font-family="Heebo" font-size="8" font-weight="700"><tspan x="0" y="0">הננו מתכבדים בזה להזמין את מע״כ</tspan></text>
+  </g>
+    <g id="text3">
+    <text transform="translate(180 154.8)" text-anchor="middle" fill="#9b8367" font-family="Heebo" font-size="7" font-weight="700"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
+  </g>
+    <g id="text2">
+    <text transform="translate(180 252.2)" text-anchor="middle" fill="#9b8367" font-family="Heebo" font-size="7.9" font-weight="700"><tspan x="0" y="0">אשר נערך לכבוד שמחת נישוא׳</tspan></text>
+  </g>
   <g id="couple_name*">
     <text transform="translate(180 274.7)" text-anchor="middle" fill="#9b8367" font-family="Heebo" font-size="15" font-weight="900"><tspan x="0" y="0">מנשה וחנה</tspan></text>
   </g>
