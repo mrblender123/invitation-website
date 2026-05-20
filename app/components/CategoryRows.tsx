@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import GlassPill from './GlassPill';
+
 
 interface Template {
   id: string;
@@ -120,10 +120,12 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
         }}>
           {category}
         </h2>
-        <GlassPill
-          text="View all →"
+        <a
           href={`/templates?category=${encodeURIComponent(category)}`}
-        />
+          style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '6px 16px', display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}
+        >
+          View all →
+        </a>
       </div>
 
       {/* Horizontal scroll */}
