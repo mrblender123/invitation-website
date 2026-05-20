@@ -15,6 +15,8 @@ export default function Home() {
       {/* Side vignettes — tweak width (how far it reaches in) and opacity (how dark) */}
       <div aria-hidden="true" style={{ position: 'fixed', top: 0, left: 0, width: 120, height: '100%', background: 'linear-gradient(to right, rgba(30, 30, 30, 0.12), transparent)', pointerEvents: 'none', zIndex: 0 }} />
       <div aria-hidden="true" style={{ position: 'fixed', top: 0, right: 0, width: 120, height: '100%', background: 'linear-gradient(to left, rgba(0,0,0,0.12), transparent)', pointerEvents: 'none', zIndex: 0 }} />
+      {/* Top fade — cards lose opacity as they scroll up into the header zone */}
+      <div aria-hidden="true" style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 'var(--pills-bottom, 180px)', background: 'linear-gradient(to bottom, var(--background) 20%, transparent 100%)', pointerEvents: 'none', zIndex: 48 }} />
 
 <LandingHeader />
 <div style={{ position: 'relative', zIndex: 1 }}>
