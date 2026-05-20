@@ -116,9 +116,7 @@ export default function LandingHeader() {
       {/* Fixed header row */}
       <div style={{
         position: 'fixed', top: HEADER.topOffset, left: '50%',
-        transform: scrolled
-          ? `translateX(-50%) ${hideTransform}`
-          : 'translateX(-50%) translateY(0)',
+        transform: 'translateX(-50%) translateY(0)',
         width: 'calc(100% - 48px)',
         maxWidth: 1100,
         height: HEADER.height,
@@ -193,8 +191,7 @@ export default function LandingHeader() {
       {/* Sticky category pills */}
       <div style={{
         position: 'sticky',
-        top: scrolled ? 0 : 64,
-        transition: 'top 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+        top: 64,
         zIndex: 50,
         overflow: 'visible',
         padding: '12px 24px 16px',
