@@ -489,7 +489,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
           /* ── Gallery view ── */
           <>
             <div style={{ marginBottom: 36 }}>
-              <GlassPill text="← Back" onClick={() => router.back()} />
+              <button onClick={() => router.back()} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '6px 0', display: 'flex', alignItems: 'center', gap: 6 }}>
+                ← Back
+              </button>
             </div>
 
 
@@ -591,7 +593,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
           <>
             {/* Back button */}
             <div style={{ marginBottom: 40, display: 'inline-block' }}>
-              <GlassPill text="← Back" onClick={() => router.back()} />
+              <button onClick={() => router.back()} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '6px 0', display: 'flex', alignItems: 'center', gap: 6 }}>
+                ← Back
+              </button>
             </div>
 
             {(() => {
