@@ -682,7 +682,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 <div style={{
                   display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32,
                   maxHeight: 420, overflowY: 'auto', overflowX: 'hidden',
-                  paddingRight: 6,
+                  padding: '16px',
+                  border: '1px solid rgba(0,0,0,0.10)',
+                  borderRadius: 16,
                   scrollbarWidth: 'thin',
                   scrollbarColor: 'rgba(0,0,0,0.12) transparent',
                 }}>
