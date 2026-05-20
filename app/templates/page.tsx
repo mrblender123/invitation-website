@@ -124,7 +124,7 @@ function TemplateThumbnail({ template, onClick, targetW }: { template: Template;
   const thumbScale = targetW ? targetW / style.canvasWidth : THUMB_TARGET_H / style.canvasHeight;
   const thumbW = targetW ?? Math.round(style.canvasWidth * thumbScale);
   const thumbH = Math.round(style.canvasHeight * thumbScale);
-  const gradId = `pm-${template.id}`;
+
 
   return (
     <div
@@ -139,6 +139,7 @@ function TemplateThumbnail({ template, onClick, targetW }: { template: Template;
         overflow: 'hidden',
         cursor: 'pointer',
         flexShrink: 0,
+        border: '1px solid rgba(0,0,0,0.08)',
         boxShadow: hovered
           ? '0 6px 20px rgba(0,0,0,0.10)'
           : '0 2px 8px rgba(0,0,0,0.06)',
@@ -173,23 +174,12 @@ function TemplateThumbnail({ template, onClick, targetW }: { template: Template;
       )}
 
 
-      {/* Platinum border + inner glow */}
+      {/* Hover glow */}
       <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 10 }}
         viewBox={`0 0 ${thumbW} ${thumbH}`} xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%"   stopColor="#3f3f46" />
-            <stop offset="45%"  stopColor="#a1a1aa" />
-            <stop offset="50%"  stopColor="#ffffff" />
-            <stop offset="55%"  stopColor="#a1a1aa" />
-            <stop offset="100%" stopColor="#27272a" />
-          </linearGradient>
-        </defs>
         <rect x="1" y="1" width={thumbW - 2} height={thumbH - 2} rx="11"
           fill="none" stroke="white" strokeWidth="8"
           style={{ opacity: hovered ? 0.35 : 0, transition: 'opacity 1.2s cubic-bezier(0.4,0,0.2,1)', filter: 'blur(6px)' }} />
-        <rect x="0.5" y="0.5" width={thumbW - 1} height={thumbH - 1} rx="11.5"
-          fill="none" stroke={`url(#${gradId})`} strokeWidth="1" />
       </svg>
     </div>
   );
