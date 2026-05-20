@@ -273,9 +273,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
           if (t) { setSelected(t); return; }
         }
         // Check if we need to reload a saved design
-        const raw = localStorage.getItem('pintle-template-load');
+        const raw = localStorage.getItem('joysend-template-load');
         if (!raw) return;
-        localStorage.removeItem('pintle-template-load');
+        localStorage.removeItem('joysend-template-load');
         try {
           const { templateId, fieldValues: saved } = JSON.parse(raw);
           const template = (data ?? []).find((t: Template) => t.id === templateId);
@@ -467,7 +467,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
       canvasWidth: style.canvasWidth,
       canvasHeight: style.canvasHeight,
     };
-    localStorage.setItem('pintle-state', JSON.stringify(state));
+    localStorage.setItem('joysend-state', JSON.stringify(state));
     router.push('/studio?load=1');
   };
 
@@ -486,7 +486,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
           padding: '0 24px',
         }}>
           <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--foreground)', textDecoration: 'none' }}>
-            Pintle
+            Joy Send
           </Link>
           <nav style={{ display: 'flex', alignItems: 'center', gap: 16 }} />
         </div>

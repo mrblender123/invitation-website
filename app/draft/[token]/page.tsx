@@ -16,7 +16,7 @@ export default function DraftPage() {
         if (res.status === 410) { setStatus('expired'); return; }
         if (!res.ok) { const d = await res.json(); setErrorMsg(d.error ?? 'Unknown error'); setStatus('error'); return; }
         const { templateId, fieldValues } = await res.json();
-        try { localStorage.setItem('pintle-template-load', JSON.stringify({ templateId, fieldValues })); } catch { /* blocked */ }
+        try { localStorage.setItem('joysend-template-load', JSON.stringify({ templateId, fieldValues })); } catch { /* blocked */ }
         const load = encodeURIComponent(JSON.stringify({ templateId, fieldValues }));
         router.replace(`/templates?load=${load}`);
       })

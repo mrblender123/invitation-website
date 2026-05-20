@@ -26,13 +26,13 @@ export async function POST(req: NextRequest) {
     }
 
     const token = data.token as string;
-    const draftUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://pintle.co'}/draft/${token}`;
+    const draftUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://joysend.co'}/draft/${token}`;
 
     console.log('[drafts] Sending email to:', email, 'url:', draftUrl);
 
     // Send email via Resend
     const { data: emailData, error: emailError } = await resend.emails.send({
-      from: process.env.RESEND_FROM ?? 'Pintle <onboarding@resend.dev>',
+      from: process.env.RESEND_FROM ?? 'Joy Send <onboarding@resend.dev>',
       to: email,
       subject: 'Your invitation draft is saved',
       html: `

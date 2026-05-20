@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Templates — Pintle',
+  title: 'Templates — Joy Send',
   description: 'Browse ready-made invitation templates for weddings, bar mitzvahs, and more.',
 };
 

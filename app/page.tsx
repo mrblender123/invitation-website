@@ -32,7 +32,7 @@ export default function Home() {
             {/* Brand */}
             <div style={{ maxWidth: 260 }}>
               <p style={{ fontFamily: 'var(--font-playfair)', fontSize: 22, fontWeight: 700, color: 'var(--foreground)', margin: '0 0 10px' }}>
-                Pintle
+                Joy Send
               </p>
               <p style={{ fontSize: 13, lineHeight: 1.7, color: 'var(--muted-faint)', margin: 0 }}>
                 Beautiful invitation designs for every simcha. Customize, download, and share in minutes.
@@ -73,7 +73,7 @@ export default function Home() {
             display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 8,
           }}>
             <p style={{ fontSize: 12, color: 'var(--muted-faint)', margin: 0 }}>
-              © {new Date().getFullYear()} Pintle. All rights reserved.
+              © {new Date().getFullYear()} Joy Send. All rights reserved.
             </p>
             <p style={{ fontSize: 12, color: 'var(--muted-faint)', margin: 0 }}>
               Built with Next.js

@@ -1,4 +1,4 @@
-# Pintle — Developer Guide for Claude
+# Joy Send — Developer Guide for Claude
 
 ## Adding a New Template
 

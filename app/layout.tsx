@@ -57,7 +57,7 @@ const frankRuhlLibre = Frank_Ruhl_Libre({
 
 
 export const metadata: Metadata = {
-  title: "Pintle — Custom Invitation Design",
+  title: "Joy Send — Custom Invitation Design",
   description: "Create beautiful custom invitations with unique backgrounds, typography, and layouts — all in one place.",
 };
 

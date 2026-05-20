@@ -147,7 +147,7 @@ export default function LandingHeader() {
         >
           <GlassPillLayers mousePos={logoMouse} isHovered={logoHovered} isPressed={logoPressed} />
           <a href="/" style={{ ...textStyle, fontFamily: 'var(--font-playfair)', fontSize: HEADER.fontSize }}>
-            Pintle
+            Joy Send
           </a>
         </div>
 
