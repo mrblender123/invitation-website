@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     const token = data.token as string;
-    const draftUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://joysend.co'}/draft/${token}`;
+    const draftUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://joy-send.com'}/draft/${token}`;
 
     console.log('[drafts] Sending email to:', email, 'url:', draftUrl);
 

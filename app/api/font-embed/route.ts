@@ -9,7 +9,7 @@ export async function GET() {
   }
 
   const apiKey = process.env.ADOBE_FONTS_API_KEY;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://joysend.co';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://joy-send.com';
 
   try {
     // Fetch the Typekit CSS (kit clg1fwd — contains forma-djr-hebrew-banner + schablona)
