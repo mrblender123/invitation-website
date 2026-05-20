@@ -185,19 +185,17 @@ export default function LandingHeader() {
         </div>
       </div>
 
-      {/* Spacer for fixed header + pills */}
-      <div style={{ height: 150 }} />
+      {/* Spacer for fixed header */}
+      <div style={{ height: 76 }} />
 
-      {/* Fixed category pills */}
+      {/* Sticky category pills */}
       <div style={{
-        position: 'fixed',
+        position: 'sticky',
         top: 64,
-        left: 0,
-        right: 0,
         zIndex: 50,
+        overflow: 'visible',
         padding: '12px 24px 16px',
         pointerEvents: 'none',
-        background: 'var(--background)',
       }}>
         <div style={{
           maxWidth: 1100,
