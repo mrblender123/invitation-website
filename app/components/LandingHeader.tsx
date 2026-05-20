@@ -193,7 +193,6 @@ export default function LandingHeader() {
         position: 'sticky',
         top: 64,
         zIndex: 50,
-        overflow: 'visible',
         padding: '12px 24px 16px',
         pointerEvents: 'none',
       }}>
