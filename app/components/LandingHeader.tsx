@@ -113,6 +113,18 @@ export default function LandingHeader() {
 
   return (
     <>
+      {/* Full-width frosted backdrop behind header */}
+      <div style={{
+        position: 'fixed', top: 0, left: 0, right: 0,
+        height: HEADER.height + HEADER.topOffset + 16,
+        zIndex: 99,
+        pointerEvents: 'none',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        maskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
+      }} />
+
       {/* Fixed header row */}
       <div style={{
         position: 'fixed', top: HEADER.topOffset, left: '50%',
