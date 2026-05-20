@@ -15,6 +15,56 @@ import type { Template } from '@/lib/templates';
 const THUMB_TARGET_H = 264;
 const EDITOR_SCALE = 1.15;
 
+function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, canvasWidth: number, canvasHeight: number) {
+  const vb = (svgEl.getAttribute('viewBox') ?? '').trim().split(/[\s,]+/).map(Number);
+  const svgW = vb[2] > 0 ? vb[2] : canvasWidth;
+  const svgH = vb[3] > 0 ? vb[3] : canvasHeight;
+  const kx = canvasWidth / svgW, ky = canvasHeight / svgH;
+
+  function parseTr(t: string) {
+    const tx = t.match(/translate\(\s*([\d.+-]+)(?:[,\s]+([\d.+-]+))?\s*\)/);
+    const rot = t.match(/rotate\(\s*([\d.+-]+)/);
+    const sc = t.match(/scale\(\s*([\d.+-]+)(?:[,\s]+([\d.+-]+))?\s*\)/);
+    return { tx: tx ? +tx[1] : 0, ty: tx?.[2] ? +tx[2] : 0, rot: rot ? +rot[1] * Math.PI / 180 : 0, sx: sc ? +sc[1] : 1, sy: sc?.[2] ? +sc[2] : (sc ? +sc[1] : 1) };
+  }
+  function inherit(el: Element, attr: string, stop: Element): string | null {
+    let n: Element | null = el;
+    while (n) { const v = n.getAttribute(attr); if (v !== null) return v; if (n === stop) break; n = n.parentElement; }
+    return null;
+  }
+
+  for (const textEl of Array.from(svgEl.querySelectorAll('text'))) {
+    let opacity = 1;
+    let node: Element | null = textEl;
+    while (node && node !== svgEl) { const op = (node as SVGElement).getAttribute('opacity'); if (op) opacity *= +op; node = node.parentElement; }
+    if (opacity <= 0) continue;
+    const family = (textEl.getAttribute('font-family') ?? 'sans-serif').replace(/['"]/g, '').split(',')[0].trim();
+    const weight = textEl.getAttribute('font-weight') ?? '400';
+    const anchor = textEl.getAttribute('text-anchor') ?? 'start';
+    const ls = parseFloat(textEl.getAttribute('letter-spacing') ?? '0');
+    const { tx, ty, rot, sx, sy } = parseTr(textEl.getAttribute('transform') ?? '');
+    const leaves = Array.from(textEl.querySelectorAll('tspan')).filter(ts => !ts.querySelector('tspan'));
+    let curY = 0;
+    for (const ts of leaves) {
+      const text = ts.textContent ?? ''; if (!text.trim()) continue;
+      const xA = ts.getAttribute('x'), yA = ts.getAttribute('y'), dyA = ts.getAttribute('dy');
+      const x = xA !== null ? +xA : 0;
+      if (yA !== null) curY = +yA; if (dyA !== null) curY += +dyA;
+      const size = parseFloat(inherit(ts, 'font-size', textEl) ?? '12');
+      const fill = inherit(ts, 'fill', textEl) ?? '#000';
+      ctx.save();
+      ctx.globalAlpha = opacity; ctx.scale(kx, ky); ctx.translate(tx, ty);
+      if (rot) ctx.rotate(rot); ctx.scale(sx, sy);
+      ctx.font = `${weight} ${size}px "${family}"`;
+      ctx.fillStyle = fill;
+      ctx.textAlign = anchor === 'middle' ? 'center' : anchor === 'end' ? 'right' : 'left';
+      ctx.textBaseline = 'alphabetic';
+      if (!isNaN(ls) && 'letterSpacing' in ctx) (ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${ls}px`;
+      ctx.fillText(text, x, curY);
+      ctx.restore();
+    }
+  }
+}
 
 function TemplateThumbnail({ template, onClick, targetW }: { template: Template; onClick: () => void; targetW?: number }) {
   const [hovered, setHovered] = useState(false);
@@ -112,6 +162,8 @@ function TemplatesContent() {
   const category    = searchParams.get('category');
   const subcategory = searchParams.get('subcategory');
   const templateParam = searchParams.get('template');
+  const tokenParam  = searchParams.get('token');
+  const restoreParam = searchParams.get('restore');
   const subs        = category ? (CATEGORY_SUBS[category] ?? []) : [];
 
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -134,12 +186,35 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [draftSent, setDraftSent] = useState(false);
   const [draftError, setDraftError] = useState('');
 
+  // Stripe / download state
+  const [isBuying, setIsBuying] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadAllowed, setDownloadAllowed] = useState(false);
+
   useEffect(() => {
     const update = () => setWindowWidth(window.innerWidth);
     update();
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
   }, []);
+
+  // Verify payment token and restore saved field values from email link
+  useEffect(() => {
+    if (!tokenParam || !templateParam) return;
+    fetch(`/api/verify-token?token=${encodeURIComponent(tokenParam)}&template=${encodeURIComponent(templateParam)}`)
+      .then(r => r.json())
+      .then(({ valid }) => {
+        if (valid) {
+          setDownloadAllowed(true);
+          if (restoreParam) {
+            try {
+              const saved = JSON.parse(Buffer.from(restoreParam, 'base64').toString());
+              setFieldValues(saved);
+            } catch {}
+          }
+        }
+      });
+  }, [tokenParam, templateParam, restoreParam]);
 
   // Update keyboard anchor position when active field changes
   useEffect(() => {
@@ -202,6 +277,72 @@ const [windowWidth, setWindowWidth] = useState(1200);
   };
 
 
+
+  const handleBuy = async () => {
+    if (!selected) return;
+    setIsBuying(true);
+    try {
+      const res = await fetch('/api/stripe/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          templateId: selected.id,
+          templateName: selected.name,
+          fieldValues,
+        }),
+      });
+      const { url } = await res.json();
+      window.location.href = url;
+    } catch {
+      setIsBuying(false);
+    }
+  };
+
+  const generateBlob = async (): Promise<Blob | null> => {
+    if (!cardRef.current || !selected) return null;
+    await document.fonts.ready;
+    if (selected.textSvg) {
+      const img = await new Promise<HTMLImageElement>(resolve => {
+        const i = new Image();
+        i.crossOrigin = 'anonymous';
+        i.onload = () => resolve(i);
+        i.onerror = () => resolve(i);
+        i.src = selected.backgroundSrc;
+      });
+      const { canvasWidth, canvasHeight } = selected.style;
+      const outW = img.naturalWidth || canvasWidth;
+      const outH = img.naturalHeight || canvasHeight;
+      const canvas = document.createElement('canvas');
+      canvas.width = outW;
+      canvas.height = outH;
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0, outW, outH);
+      const overlayDiv = cardRef.current.querySelector('[data-svg-overlay="true"]');
+      const svgEl = overlayDiv?.querySelector('svg');
+      if (svgEl) drawSvgTextToCanvas(ctx, svgEl as SVGElement, outW, outH);
+      return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    }
+    const { default: html2canvas } = await import('html2canvas');
+    const canvas = await html2canvas(cardRef.current, { useCORS: true, scale: 2 });
+    return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+  };
+
+  const handleDownload = async () => {
+    if (!cardRef.current) return;
+    setIsDownloading(true);
+    try {
+      const blob = await generateBlob();
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.download = `${selected?.id ?? 'invitation'}.png`;
+      link.href = url;
+      link.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const handleSaveForLater = async () => {
     if (!selected) return;
@@ -624,15 +765,22 @@ const [windowWidth, setWindowWidth] = useState(1200);
 
                 {/* Actions */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {/* Buy + Save for Later row */}
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <div style={{ flex: 1 }}>
-                      <GlassPill text="Buy" fullWidth />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <GlassPill text="Save for Later" onClick={handleSaveForLater} fullWidth />
-                    </div>
-                  </div>
+                  {downloadAllowed ? (
+                    <GlassPill
+                      text={isDownloading ? 'Preparing…' : '⬇ Download PNG'}
+                      onClick={handleDownload}
+                      disabled={isDownloading}
+                      fullWidth
+                    />
+                  ) : (
+                    <GlassPill
+                      text={isBuying ? 'Redirecting…' : '💳 Buy – $8.99'}
+                      onClick={handleBuy}
+                      disabled={isBuying}
+                      fullWidth
+                    />
+                  )}
+                  <GlassPill text="Save for Later" onClick={handleSaveForLater} fullWidth />
 
                   {!selected.textSvg && (
                     <GlassPill
