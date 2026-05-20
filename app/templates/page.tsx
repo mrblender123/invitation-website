@@ -4,7 +4,6 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import html2canvas from 'html2canvas';
 import InvitationCard from '../components/InvitationCard';
 import SvgCardPreview from '../components/SvgCardPreview';
 import { useAuth } from '../components/AuthProvider';
@@ -16,107 +15,6 @@ import type { Template } from '@/lib/templates';
 const THUMB_TARGET_H = 264;
 const EDITOR_SCALE = 1.15;
 
-/**
- * Draws SVG <text> elements directly onto a canvas using ctx.fillText().
- * This uses the browser's loaded font system (including Typekit), unlike
- * drawing SVG as <img> which is sandboxed and can't access external fonts.
- */
-function renderSvgTextToCanvas(
-  ctx: CanvasRenderingContext2D,
-  svgEl: SVGElement,
-  canvasWidth: number,
-  canvasHeight: number,
-) {
-  const vbParts = (svgEl.getAttribute('viewBox') ?? '').trim().split(/[\s,]+/).map(Number);
-  const svgW = vbParts[2] > 0 ? vbParts[2] : canvasWidth;
-  const svgH = vbParts[3] > 0 ? vbParts[3] : canvasHeight;
-  const kx = canvasWidth / svgW;
-  const ky = canvasHeight / svgH;
-
-  function parseTransform(t: string) {
-    const txM = t.match(/translate\(\s*([\d.+-]+)(?:[,\s]+([\d.+-]+))?\s*\)/);
-    const rotM = t.match(/rotate\(\s*([\d.+-]+)/);
-    const scM  = t.match(/scale\(\s*([\d.+-]+)(?:[,\s]+([\d.+-]+))?\s*\)/);
-    return {
-      tx:  txM ? parseFloat(txM[1]) : 0,
-      ty:  txM?.[2] ? parseFloat(txM[2]) : 0,
-      rot: rotM ? parseFloat(rotM[1]) * Math.PI / 180 : 0,
-      sx:  scM ? parseFloat(scM[1]) : 1,
-      sy:  scM?.[2] ? parseFloat(scM[2]) : (scM ? parseFloat(scM[1]) : 1),
-    };
-  }
-
-  // Walk up from el to stopAt to find nearest ancestor with given attribute
-  function inheritAttr(el: Element, attr: string, stopAt: Element): string | null {
-    let n: Element | null = el;
-    while (n) {
-      const v = n.getAttribute(attr);
-      if (v !== null) return v;
-      if (n === stopAt) break;
-      n = n.parentElement;
-    }
-    return null;
-  }
-
-  for (const textEl of Array.from(svgEl.querySelectorAll('text'))) {
-    // Accumulate opacity up through parent groups
-    let opacity = 1;
-    let node: Element | null = textEl;
-    while (node && node !== svgEl) {
-      const op = (node as SVGElement).getAttribute('opacity');
-      if (op !== null) opacity *= parseFloat(op);
-      node = node.parentElement;
-    }
-    if (opacity <= 0) continue;
-
-    const rawFamily = (textEl.getAttribute('font-family') ?? 'sans-serif')
-      .replace(/['"]/g, '').split(',')[0].trim();
-    const fontWeight = textEl.getAttribute('font-weight') ?? '400';
-    const anchor     = textEl.getAttribute('text-anchor') ?? 'start';
-    const ls         = parseFloat(textEl.getAttribute('letter-spacing') ?? '0');
-
-    const { tx, ty, rot, sx, sy } = parseTransform(textEl.getAttribute('transform') ?? '');
-
-    // Only process leaf tspans so nested font-size/fill on outer tspans is inherited correctly
-    const allTspans = Array.from(textEl.querySelectorAll('tspan'));
-    const leafTspans = allTspans.filter(ts => ts.querySelector('tspan') === null);
-
-    let currentY = 0;
-    for (const tspan of leafTspans) {
-      const text = tspan.textContent ?? '';
-      if (!text.trim()) continue;
-
-      const xAttr  = tspan.getAttribute('x');
-      const yAttr  = tspan.getAttribute('y');
-      const dyAttr = tspan.getAttribute('dy');
-      const x = xAttr  !== null ? parseFloat(xAttr)  : 0;
-      if (yAttr  !== null) currentY = parseFloat(yAttr);
-      if (dyAttr !== null) currentY += parseFloat(dyAttr);
-
-      // Inherit font-size and fill: tspan → parent tspans → text element
-      const fontSize = parseFloat(inheritAttr(tspan, 'font-size', textEl) ?? '12');
-      const fill     = inheritAttr(tspan, 'fill', textEl) ?? '#000';
-
-      ctx.save();
-      ctx.globalAlpha = opacity;
-      ctx.scale(kx, ky);
-      ctx.translate(tx, ty);
-      if (rot) ctx.rotate(rot);
-      ctx.scale(sx, sy);
-
-      ctx.font         = `${fontWeight} ${fontSize}px "${rawFamily}"`;
-      ctx.fillStyle    = fill;
-      ctx.textAlign    = anchor === 'middle' ? 'center' : anchor === 'end' ? 'right' : 'left';
-      ctx.textBaseline = 'alphabetic';
-      if (!isNaN(ls) && 'letterSpacing' in ctx) {
-        (ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${ls}px`;
-      }
-
-      ctx.fillText(text, x, currentY);
-      ctx.restore();
-    }
-  }
-}
 
 function TemplateThumbnail({ template, onClick, targetW }: { template: Template; onClick: () => void; targetW?: number }) {
   const [hovered, setHovered] = useState(false);
@@ -220,7 +118,6 @@ function TemplatesContent() {
   const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [selected, setSelected] = useState<Template | null>(null);
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
-  const [isDownloading, setIsDownloading] = useState(false);
   const [activeField, setActiveField] = useState<{ id: string; rtl: boolean } | null>(null);
   const [clearedFields, setClearedFields] = useState<Set<string>>(new Set());
   const [hoveredField, setHoveredField] = useState<string | null>(null);
@@ -304,69 +201,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const generateBlob = async (): Promise<Blob | null> => {
-    if (!cardRef.current || !selected) return null;
 
-    // SVG templates: bypass html2canvas (can't access cross-origin Typekit font).
-    // Instead, composite the PNG background + SVG overlay on a native canvas.
-    if (selected.textSvg) {
-      // Load the PNG first so we can use its native resolution for the output canvas
-      const img = await new Promise<HTMLImageElement>(resolve => {
-        const i = new Image();
-        i.crossOrigin = 'anonymous';
-        i.onload = () => resolve(i);
-        i.onerror = () => resolve(i);
-        i.src = selected.backgroundSrc;
-      });
-
-      // Use the PNG's native pixel dimensions — falls back to SVG viewBox size
-      const { canvasWidth, canvasHeight } = selected.style;
-      const outW = img.naturalWidth  || canvasWidth;
-      const outH = img.naturalHeight || canvasHeight;
-
-      const canvas = document.createElement('canvas');
-      canvas.width  = outW;
-      canvas.height = outH;
-      const ctx = canvas.getContext('2d')!;
-
-      // 1. Draw PNG background at full native resolution
-      ctx.drawImage(img, 0, 0, outW, outH);
-
-      // 2. Draw text directly using canvas API — uses the browser's loaded fonts
-      //    (SVG-as-img is sandboxed and can't access Typekit)
-      //    renderSvgTextToCanvas scales by outW/svgViewBoxW automatically
-      await document.fonts.ready;
-      const overlayDiv = cardRef.current.querySelector('[data-svg-overlay="true"]');
-      const svgEl = overlayDiv?.querySelector('svg');
-      if (svgEl) {
-        renderSvgTextToCanvas(ctx, svgEl as SVGElement, outW, outH);
-      }
-
-      return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-    }
-
-    // Legacy (non-SVG) templates: use html2canvas
-    await document.fonts.ready;
-    const canvas = await html2canvas(cardRef.current, { useCORS: true, scale: 2 });
-    return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-  };
-
-  const handleDownload = async () => {
-    if (!cardRef.current) return;
-    setIsDownloading(true);
-    try {
-      const blob = await generateBlob();
-      if (!blob) return;
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.download = `${selected?.id ?? 'invitation'}.png`;
-      link.href = url;
-      link.click();
-      URL.revokeObjectURL(url);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
 
   const handleSaveForLater = async () => {
     if (!selected) return;
@@ -789,13 +624,6 @@ const [windowWidth, setWindowWidth] = useState(1200);
 
                 {/* Actions */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  <GlassPill
-                    text={isDownloading ? 'Preparing…' : '⬇ Download PNG'}
-                    onClick={handleDownload}
-                    disabled={isDownloading}
-                    fullWidth
-                  />
-
                   {/* Buy + Save for Later row */}
                   <div style={{ display: 'flex', gap: 8 }}>
                     <div style={{ flex: 1 }}>
