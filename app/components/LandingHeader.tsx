@@ -195,6 +195,10 @@ export default function LandingHeader() {
         zIndex: 50,
         padding: '12px 24px 16px',
         pointerEvents: 'none',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        maskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
       }}>
         <div style={{
           maxWidth: 1100,
