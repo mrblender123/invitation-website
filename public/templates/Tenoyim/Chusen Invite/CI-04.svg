@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <text transform="translate(289.5 419.5) rotate(.6)" fill="#d8630c" font-family="Playpen Sans Hebrew" font-weight="600" font-size="22.8"><tspan x="0" y="0">החתן</tspan></text>
-  <text transform="translate(235.1 451) rotate(.6)" fill="#44759b" font-family="Playpen Sans Hebrew" font-weight="800" font-size="27.8"><tspan x="0" y="0">דוד ברוך</tspan></text>
-  <text transform="translate(242.8 480.6) rotate(.6)" fill="#44759b" font-family="Playpen Sans Hebrew" font-weight="800" font-size="27.8"><tspan x="0" y="0">ווייסמאן</tspan></text>
-  <text transform="translate(207.9 217.1)" fill="#d8630c" font-family="Heebo" font-weight="900" font-size="15.8"><tspan x="2.8" y="0">פרשת וירא</tspan></text>
-  <text transform="translate(217 202)" fill="#d8630c" font-family="Heebo" font-weight="900" font-size="15.8"><tspan x="0" y="0">דינסטאג</tspan></text>
-  <text transform="translate(60.3 186.6)" fill="#d8630c" font-family="Heebo" font-weight="600" font-size="11.3"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
-  <text transform="translate(189.1 186.6)" fill="#d8630c" font-family="Heebo" font-weight="600" font-size="11.3"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
-  <text transform="translate(118 65)" fill="#d8630c" font-family="Heebo" font-weight="600" font-size="16.5"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
+    <g id="text9">
+    <text transform="translate(289.5 419.5) rotate(.6)" fill="#d8630c" font-family="Playpen Sans Hebrew" font-weight="600" font-size="22.8"><tspan x="0" y="0">החתן</tspan></text>
+  </g>
+    <g id="text8">
+    <text transform="translate(235.1 451) rotate(.6)" fill="#44759b" font-family="Playpen Sans Hebrew" font-weight="800" font-size="27.8"><tspan x="0" y="0">דוד ברוך</tspan></text>
+  </g>
+    <g id="text7">
+    <text transform="translate(242.8 480.6) rotate(.6)" fill="#44759b" font-family="Playpen Sans Hebrew" font-weight="800" font-size="27.8"><tspan x="0" y="0">ווייסמאן</tspan></text>
+  </g>
+    <g id="text6">
+    <text transform="translate(207.9 217.1)" fill="#d8630c" font-family="Heebo" font-weight="900" font-size="15.8"><tspan x="2.8" y="0">פרשת וירא</tspan></text>
+  </g>
+    <g id="text5">
+    <text transform="translate(217 202)" fill="#d8630c" font-family="Heebo" font-weight="900" font-size="15.8"><tspan x="0" y="0">דינסטאג</tspan></text>
+  </g>
+    <g id="text4">
+    <text transform="translate(60.3 186.6)" fill="#d8630c" font-family="Heebo" font-weight="600" font-size="11.3"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
+  </g>
+    <g id="text3">
+    <text transform="translate(189.1 186.6)" fill="#d8630c" font-family="Heebo" font-weight="600" font-size="11.3"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
+  </g>
+    <g id="text2">
+    <text transform="translate(118 65)" fill="#d8630c" font-family="Heebo" font-weight="600" font-size="16.5"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
+  </g>
   <g>
     <path d="M106.1,52.3v-11.3h-4.4v-1.6h6.5v12.9h-2Z" fill="#d8630c"/>
     <path d="M110.9,44.8v-3.8h-1.6v-1.6h3.7v5.4h-2.1Z" fill="#d8630c"/>

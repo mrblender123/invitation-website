@@ -14,7 +14,9 @@
   <g id="location*">
     <text transform="translate(141.1 332.4) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="9.3" font-weight="700"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
   </g>
-  <text transform="translate(158.1 323.9) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="9.3" font-weight="700"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
+    <g id="text6">
+    <text transform="translate(158.1 323.9) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="9.3" font-weight="700"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
+  </g>
   <g id="street_2*">
     <text transform="translate(158 277.4) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="9.3" font-weight="700"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
@@ -24,8 +26,16 @@
   <g id="date*">
     <text transform="translate(149.8 255.8) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="9.8" font-weight="700"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
   </g>
-  <text transform="translate(153 245.1) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="11.6" font-weight="700"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
-  <text transform="translate(108.8 165.8) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="8.9" font-weight="700"><tspan x="0" y="0">הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳</tspan></text>
-  <text transform="translate(148.3 175.7) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="8.9" font-weight="700"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
-  <text transform="translate(110.8 155.1) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="8.9" font-weight="700"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
+    <g id="text5">
+    <text transform="translate(153 245.1) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="11.6" font-weight="700"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+  </g>
+    <g id="text4">
+    <text transform="translate(108.8 165.8) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="8.9" font-weight="700"><tspan x="0" y="0">הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳</tspan></text>
+  </g>
+    <g id="text3">
+    <text transform="translate(148.3 175.7) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="8.9" font-weight="700"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
+  </g>
+    <g id="text2">
+    <text transform="translate(110.8 155.1) scale(.7 1)" text-anchor="start" fill="#e5e9ec" font-family="Heebo" font-size="8.9" font-weight="700"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
+  </g>
 </svg>

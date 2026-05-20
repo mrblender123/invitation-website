@@ -6,7 +6,9 @@
   <g id="groom_last_name*">
     <text transform="translate(107.5 233.7)" fill="#e6b765" font-family="Heebo" font-weight="900" font-size="13.4" text-anchor="middle"><tspan x="0" y="0">וייס</tspan></text>
   </g>
-  <text transform="translate(107.5 205.3)" fill="#218b77" font-family="Heebo" font-weight="600" font-size="10.5" text-anchor="middle"><tspan x="0" y="0">החתן</tspan></text>
+    <g id="text5">
+    <text transform="translate(107.5 205.3)" fill="#218b77" font-family="Heebo" font-weight="600" font-size="10.5" text-anchor="middle"><tspan x="0" y="0">החתן</tspan></text>
+  </g>
   <g id="address*">
     <text transform="translate(107.5 188.9)" fill="#218b77" font-family="Heebo" font-weight="900" font-size="7.7" text-anchor="middle"><tspan x="0" y="0">600-640 McDonald Ave</tspan></text>
   </g>
@@ -19,9 +21,15 @@
   <g id="day*">
     <text transform="translate(107.5 143.6)" fill="#e6b765" font-family="Heebo" font-weight="900" font-size="9.1" text-anchor="middle"><tspan x="0" y="0">דינסטאג</tspan></text>
   </g>
-  <text transform="translate(107.5 169)" fill="#218b77" font-family="Heebo" font-weight="600" font-size="6.4" text-anchor="middle"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
-  <text transform="translate(107.5 132)" fill="#218b77" font-family="Heebo" font-weight="600" font-size="6.4" text-anchor="middle"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
-  <text transform="translate(107.5 80.6)" fill="#218b77" font-family="Heebo" font-weight="600" font-size="7" text-anchor="middle"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
+    <g id="text4">
+    <text transform="translate(107.5 169)" fill="#218b77" font-family="Heebo" font-weight="600" font-size="6.4" text-anchor="middle"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
+  </g>
+    <g id="text3">
+    <text transform="translate(107.5 132)" fill="#218b77" font-family="Heebo" font-weight="600" font-size="6.4" text-anchor="middle"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
+  </g>
+    <g id="text2">
+    <text transform="translate(107.5 80.6)" fill="#218b77" font-family="Heebo" font-weight="600" font-size="7" text-anchor="middle"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
+  </g>
   <g>
     <path d="M73.4,74v-4.8h-1.9v-.7h2.7v5.5h-.9Z" fill="#218b77"/>
     <path d="M75.8,70.8v-1.6h-.7v-.7h1.6v2.3h-.9Z" fill="#218b77"/>

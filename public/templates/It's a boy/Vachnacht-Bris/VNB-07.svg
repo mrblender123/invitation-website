@@ -1,7 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
-  <text transform="translate(115.6 89.4) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="8" font-weight="700"><tspan x="0" y="0">הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳</tspan></text>
-  <text transform="translate(147.4 99.9) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="9.1" font-weight="700"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
-  <text transform="translate(109.7 80.1) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="9" font-weight="700"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
+    <g id="text6">
+    <text transform="translate(115.6 89.4) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="8" font-weight="700"><tspan x="0" y="0">הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳</tspan></text>
+  </g>
+    <g id="text5">
+    <text transform="translate(147.4 99.9) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="9.1" font-weight="700"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
+  </g>
+    <g id="text4">
+    <text transform="translate(109.7 80.1) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="9" font-weight="700"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
+  </g>
   <g id="father_name_2*">
     <text transform="translate(150.1 381.3) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="7" font-weight="700"><tspan x="0" y="0">חתן יהודה גרינבערגער הי״וו</tspan></text>
   </g>
@@ -17,7 +23,9 @@
   <g id="location*">
     <text transform="translate(135.5 328.1) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="10.6" font-weight="700"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
   </g>
-  <text transform="translate(158.7 317.1) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="9" font-weight="700"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
+    <g id="text3">
+    <text transform="translate(158.7 317.1) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="9" font-weight="700"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
+  </g>
   <g id="street_2*">
     <text transform="translate(154.9 275.6) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="10.6" font-weight="700"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
@@ -27,5 +35,7 @@
   <g id="date*">
     <text transform="translate(141.2 252.1) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="12.5" font-weight="700"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
   </g>
-  <text transform="translate(156.5 238.5) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="10" font-weight="700"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+    <g id="text2">
+    <text transform="translate(156.5 238.5) scale(.7 1)" text-anchor="start" fill="#698188" font-family="Heebo" font-size="10" font-weight="700"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+  </g>
 </svg>

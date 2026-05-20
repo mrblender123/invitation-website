@@ -1,11 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
-  <text transform="translate(180 59.1) scale(1.1 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="10.1"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
-  <text transform="translate(180 67.8) scale(1.1 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="10.1"><tspan x="0" y="0">על כל הטוב אשר גמלנו</tspan></text>
-  <text transform="translate(180 82.7) scale(1.1 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="14"><tspan x="0" y="0">למזל טוב</tspan></text>
-  <text transform="translate(180 97.1) scale(1.1 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="15"><tspan x="0" y="0">בשמחת הולדת בני שיחי׳</tspan></text>
-  <text transform="translate(180 106.4) scale(1.1 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="8"><tspan x="0" y="0">אתכבד בזה להזמין את כל קרובי וידידי</tspan></text>
-  <text transform="translate(180 116.9) scale(1.1 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="8"><tspan x="0" y="0">לבוא ולהשתתף בשמחתי אצל</tspan></text>
-  <text transform="translate(180 433.2) scale(.9 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="12"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
+    <g id="text8">
+    <text transform="translate(180 59.1) scale(1.1 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="10.1"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
+  </g>
+    <g id="text7">
+    <text transform="translate(180 67.8) scale(1.1 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="10.1"><tspan x="0" y="0">על כל הטוב אשר גמלנו</tspan></text>
+  </g>
+    <g id="text6">
+    <text transform="translate(180 82.7) scale(1.1 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="14"><tspan x="0" y="0">למזל טוב</tspan></text>
+  </g>
+    <g id="text5">
+    <text transform="translate(180 97.1) scale(1.1 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="15"><tspan x="0" y="0">בשמחת הולדת בני שיחי׳</tspan></text>
+  </g>
+    <g id="text4">
+    <text transform="translate(180 106.4) scale(1.1 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="8"><tspan x="0" y="0">אתכבד בזה להזמין את כל קרובי וידידי</tspan></text>
+  </g>
+    <g id="text3">
+    <text transform="translate(180 116.9) scale(1.1 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="8"><tspan x="0" y="0">לבוא ולהשתתף בשמחתי אצל</tspan></text>
+  </g>
+    <g id="text2">
+    <text transform="translate(180 433.2) scale(.9 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="12"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
+  </g>
   <g id="shabbos*">
     <text transform="translate(180 378.9) scale(.9 1)" text-anchor="middle" fill="#86867c" font-family="Secular One" font-size="13"><tspan x="0" y="0">שתקיים אי״ה בליל שבת קודש</tspan></text>
   </g>

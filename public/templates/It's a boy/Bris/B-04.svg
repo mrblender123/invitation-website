@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <text transform="translate(180 113.6)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="6.4" font-weight="400"><tspan x="0" y="0">ברוב שמחה והודאה להשי״ת הננו מתכבדים להזמין את</tspan></text>
-  <text transform="translate(180 122.2)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="7.7" font-weight="400"><tspan x="0" y="0">ידידינו וקרובינו ומכובדינו שיחיו</tspan></text>
-  <text transform="translate(180 131)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="6.4" font-weight="400"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
-  <text transform="translate(180 254.2)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="8.8" font-weight="400"><tspan x="0" y="0">לבננו היקר</tspan></text>
-  <text transform="translate(180 287.2)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="7.1" font-weight="400"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+    <g id="text6">
+    <text transform="translate(180 113.6)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="6.4" font-weight="400"><tspan x="0" y="0">ברוב שמחה והודאה להשי״ת הננו מתכבדים להזמין את</tspan></text>
+  </g>
+    <g id="text5">
+    <text transform="translate(180 122.2)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="7.7" font-weight="400"><tspan x="0" y="0">ידידינו וקרובינו ומכובדינו שיחיו</tspan></text>
+  </g>
+    <g id="text4">
+    <text transform="translate(180 131)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="6.4" font-weight="400"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
+  </g>
+    <g id="text3">
+    <text transform="translate(180 254.2)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="8.8" font-weight="400"><tspan x="0" y="0">לבננו היקר</tspan></text>
+  </g>
+    <g id="text2">
+    <text transform="translate(180 287.2)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="7.1" font-weight="400"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+  </g>
   <g id="day*">
     <text transform="translate(180 302.8)" text-anchor="middle" fill="#496278" font-family="Heebo" font-size="16.3" font-weight="600"><tspan x="0" y="0">ביום א׳ פרשת שמות</tspan></text>
   </g>
