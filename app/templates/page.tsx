@@ -4,6 +4,8 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { loadStripe } from '@stripe/stripe-js';
+import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
 import InvitationCard from '../components/InvitationCard';
 import SvgCardPreview from '../components/SvgCardPreview';
 import { useAuth } from '../components/AuthProvider';
@@ -11,6 +13,8 @@ import VirtualKeyboard from '../components/VirtualKeyboard';
 import { CATEGORY_SUBS, SUB_DISPLAY_NAMES } from '@/lib/categories';
 import GlassPill from '../components/GlassPill';
 import type { Template } from '@/lib/templates';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const THUMB_TARGET_H = 264;
 const EDITOR_SCALE = 1.15;
@@ -191,7 +195,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadAllowed, setDownloadAllowed] = useState(false);
   const [showBuyModal, setShowBuyModal] = useState(false);
-  const [buyEmail, setBuyEmail] = useState('');
+  const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
 
   useEffect(() => {
     const update = () => setWindowWidth(window.innerWidth);
@@ -280,7 +284,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
 
 
 
-  const handleBuy = async (email: string) => {
+  const handleBuy = async (_email: string) => {
     if (!selected) return;
     setIsBuying(true);
     try {
@@ -291,12 +295,11 @@ const [windowWidth, setWindowWidth] = useState(1200);
           templateId: selected.id,
           templateName: selected.name,
           fieldValues,
-          email,
         }),
       });
-      const { url } = await res.json();
-      window.location.href = url;
-    } catch {
+      const { clientSecret } = await res.json();
+      setCheckoutClientSecret(clientSecret);
+    } finally {
       setIsBuying(false);
     }
   };
@@ -778,7 +781,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   ) : (
                     <GlassPill
                       text="Buy – $8.99"
-                      onClick={() => { setBuyEmail(user?.email ?? ''); setShowBuyModal(true); }}
+                      onClick={() => { setCheckoutClientSecret(null); setShowBuyModal(true); handleBuy(''); }}
                       fullWidth
                     />
                   )}
@@ -897,32 +900,18 @@ const [windowWidth, setWindowWidth] = useState(1200);
       {/* Buy modal */}
       {showBuyModal && (
         <div
-          onClick={e => { if (e.target === e.currentTarget) setShowBuyModal(false); }}
+          onClick={e => { if (e.target === e.currentTarget) { setShowBuyModal(false); setCheckoutClientSecret(null); } }}
           style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
-          <div style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 16, padding: '36px 32px', width: '100%', maxWidth: 420, position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.12)' }}>
-            <button onClick={() => setShowBuyModal(false)} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: 'var(--muted)', fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 4 }}>×</button>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', margin: '0 0 8px' }}>Complete your purchase</h2>
-            <p style={{ fontSize: 14, color: 'var(--muted)', margin: '0 0 28px', lineHeight: 1.6 }}>
-              Enter your email — we&apos;ll send your download link there after payment.
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <input
-                type="email"
-                placeholder="your@email.com"
-                value={buyEmail}
-                onChange={e => setBuyEmail(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && buyEmail.trim()) handleBuy(buyEmail.trim()); }}
-                autoFocus
-                style={{ ...inputStyle, fontSize: 15, padding: '12px 16px' }}
-              />
-              <GlassPill
-                text={isBuying ? 'Redirecting…' : 'Pay $8.99 →'}
-                onClick={() => { if (buyEmail.trim()) handleBuy(buyEmail.trim()); }}
-                disabled={isBuying || !buyEmail.trim()}
-                fullWidth
-              />
-            </div>
+          <div style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 16, padding: '24px', width: '100%', maxWidth: 500, position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.12)', maxHeight: '90vh', overflowY: 'auto' }}>
+            <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); }} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: 'var(--muted)', fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 4 }}>×</button>
+            {isBuying || !checkoutClientSecret ? (
+              <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--muted)' }}>Loading…</div>
+            ) : (
+              <EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret: checkoutClientSecret }}>
+                <EmbeddedCheckout />
+              </EmbeddedCheckoutProvider>
+            )}
           </div>
         </div>
       )}

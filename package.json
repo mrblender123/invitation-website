@@ -11,6 +11,8 @@
     "wrap-svg": "node scripts/wrap-svg.mjs"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^6.4.0",
+    "@stripe/stripe-js": "^9.6.0",
     "@supabase/supabase-js": "^2.97.0",
     "@types/webfontloader": "^1.6.38",
     "canvas-confetti": "^1.9.4",

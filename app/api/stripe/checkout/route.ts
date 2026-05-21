@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: Request) {
-  const { templateId, templateName, fieldValues, email } = await req.json();
+  const { templateId, templateName, fieldValues } = await req.json();
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
@@ -19,14 +19,14 @@ export async function POST(req: Request) {
       quantity: 1,
     }],
     mode: 'payment',
-    customer_email: email || undefined,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ui_mode: 'embedded' as any,
     metadata: {
       templateId,
       fieldValues: JSON.stringify(fieldValues).slice(0, 500),
     },
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${templateId}&paid=1`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${templateId}`,
+    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${templateId}&paid=1`,
   });
 
-  return Response.json({ url: session.url });
+  return Response.json({ clientSecret: session.client_secret });
 }
