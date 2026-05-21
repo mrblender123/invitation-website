@@ -16,14 +16,15 @@ export async function initEditRecord(piId: string, templateId: string) {
 
 export async function consumeEdit(
   piId: string,
-): Promise<{ allowed: boolean; editsRemaining: number }> {
+): Promise<{ allowed: boolean; editsRemaining: number; notFound?: boolean }> {
   const { data } = await db()
     .from('invitation_edits')
     .select('edits_remaining')
     .eq('payment_intent_id', piId)
     .single();
 
-  if (!data || data.edits_remaining <= 0) return { allowed: false, editsRemaining: 0 };
+  if (!data) return { allowed: false, editsRemaining: 0, notFound: true };
+  if (data.edits_remaining <= 0) return { allowed: false, editsRemaining: 0 };
 
   const newCount = data.edits_remaining - 1;
   await db()

@@ -12,10 +12,16 @@ export async function GET(req: Request) {
   }
 
   if (piId) {
-    const { allowed, editsRemaining } = await consumeEdit(piId);
-    return Response.json({ valid: allowed, editsRemaining });
+    try {
+      const { allowed, editsRemaining, notFound } = await consumeEdit(piId);
+      // No row found = purchase predates edit tracking; fall back to token-only
+      if (notFound) return Response.json({ valid: true, editsRemaining: null });
+      return Response.json({ valid: allowed, editsRemaining });
+    } catch {
+      // Supabase unavailable — don't block the user, fall through to token-only
+    }
   }
 
-  // Old links without piId — still honour the token
+  // No piId or Supabase fallback — honour the token alone
   return Response.json({ valid: true, editsRemaining: null });
 }
