@@ -1,6 +1,5 @@
 import { readdir, readFile } from 'fs/promises';
 import path from 'path';
-import { Resvg } from '@resvg/resvg-js';
 import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
 
@@ -77,16 +76,27 @@ async function resolveTemplate(templateId: string): Promise<TemplatePaths | null
   return null;
 }
 
-async function loadFontFiles(): Promise<string[]> {
+async function buildFontFaceStyle(): Promise<string> {
   const fontsDir = path.join(process.cwd(), 'public', 'fonts');
+  const rules: string[] = [];
   try {
-    const names = await readdir(fontsDir);
-    return names
-      .filter(n => /\.(ttf|otf)$/i.test(n))
-      .map(n => path.join(fontsDir, n));
-  } catch {
-    return [];
-  }
+    const files = await readdir(fontsDir);
+    for (const file of files.filter(f => /\.ttf$/i.test(f))) {
+      const buf = await readFile(path.join(fontsDir, file));
+      const b64 = buf.toString('base64');
+      // Derive family name from filename (e.g. "Heebo[wght].ttf" → "Heebo", "SecularOne-Regular.ttf" → "Secular One")
+      const family = file
+        .replace(/\.ttf$/i, '')
+        .replace(/\[.*?\]/g, '')      // strip variable font axis e.g. [wght]
+        .replace(/-Regular$/i, '')
+        .replace(/([a-z])([A-Z])/g, '$1 $2') // CamelCase → "Camel Case"
+        .trim();
+      rules.push(
+        `@font-face { font-family: '${family}'; src: url('data:font/truetype;base64,${b64}') format('truetype'); font-weight: 100 900; }`,
+      );
+    }
+  } catch { /* fonts dir missing — render with system fonts */ }
+  return rules.join('\n');
 }
 
 export async function renderTemplateToPng(
@@ -102,37 +112,47 @@ export async function renderTemplateToPng(
   const svgContent = await readFile(resolved.svgPath, 'utf-8');
   const injected = injectFieldValues(svgContent, fieldValues);
 
+  // Parse viewBox
   const vbMatch = injected.match(/viewBox=["']([^"']+)["']/);
   const vbParts = vbMatch?.[1].trim().split(/[\s,]+/) ?? [];
   const svgW = vbParts.length >= 4 ? Math.round(parseFloat(vbParts[2])) : 444;
   const svgH = vbParts.length >= 4 ? Math.round(parseFloat(vbParts[3])) : 630;
 
-  const fontFiles = await loadFontFiles();
+  // Extract inner content: strip <svg> wrapper and any <image> tags
+  const innerContent = injected
+    .replace(/^[\s\S]*?<svg[^>]*>/, '')
+    .replace(/<\/svg>[\s\S]*$/, '')
+    .replace(/<image[^/]*(\/?>|>[\s\S]*?<\/image>)/gi, '');
 
-  // Render the SVG text layer at 2× for crisp output
-  const resvg = new Resvg(injected, {
-    font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'Heebo' },
-    fitTo: { mode: 'width', value: svgW * 2 },
-  });
-  const textPng = Buffer.from(resvg.render().asPng());
+  // Embed fonts
+  const fontStyle = await buildFontFaceStyle();
 
-  // Fetch background from R2 and composite
+  // Fetch background from R2 and convert to PNG for embedding
+  let bgDataUri = '';
   try {
     const bgRes = await fetch(resolved.backgroundUrl);
     if (bgRes.ok) {
       const bgBuf = Buffer.from(await bgRes.arrayBuffer());
-      const { width: bgW = svgW * 2, height: bgH = svgH * 2 } = await sharp(bgBuf).metadata();
-      const resizedText = await sharp(textPng).resize(bgW, bgH).png().toBuffer();
-      return await sharp(bgBuf)
-        .composite([{ input: resizedText, top: 0, left: 0 }])
-        .png()
-        .toBuffer();
+      const bgPng = await sharp(bgBuf).resize(svgW * 2, svgH * 2).png().toBuffer();
+      bgDataUri = `data:image/png;base64,${bgPng.toString('base64')}`;
     }
   } catch (e) {
-    console.error('[render] background fetch failed:', e);
+    console.error('[render] background fetch error:', e);
   }
 
-  return textPng;
+  // Build a self-contained SVG: fonts + background image + text layer
+  const combinedSvg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 ${svgW} ${svgH}" width="${svgW * 2}" height="${svgH * 2}">
+  <defs>
+    <style>${fontStyle}</style>
+  </defs>
+  ${bgDataUri ? `<image href="${bgDataUri}" x="0" y="0" width="${svgW}" height="${svgH}" preserveAspectRatio="xMidYMid slice"/>` : ''}
+  ${innerContent}
+</svg>`;
+
+  // Render with sharp (uses librsvg internally)
+  return await sharp(Buffer.from(combinedSvg)).png().toBuffer();
 }
 
 export async function pngToPdf(pngBuffer: Buffer): Promise<Buffer> {
