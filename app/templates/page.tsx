@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
-import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import InvitationCard from '../components/InvitationCard';
 import SvgCardPreview from '../components/SvgCardPreview';
 import { useAuth } from '../components/AuthProvider';
@@ -68,6 +68,45 @@ function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, c
       ctx.restore();
     }
   }
+}
+
+function CheckoutForm({ onSuccess }: { onSuccess: () => void }) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [paying, setPaying] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!stripe || !elements) return;
+    setPaying(true);
+    setError('');
+    const { error: stripeError } = await stripe.confirmPayment({
+      elements,
+      confirmParams: { return_url: window.location.href },
+      redirect: 'if_required',
+    });
+    if (stripeError) {
+      setError(stripeError.message ?? 'Payment failed');
+      setPaying(false);
+    } else {
+      onSuccess();
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <PaymentElement />
+      {error && <p style={{ color: '#ef4444', fontSize: 13, margin: 0 }}>{error}</p>}
+      <button
+        type="submit"
+        disabled={!stripe || paying}
+        style={{ background: '#0f172a', color: '#fff', border: 'none', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: paying ? 'wait' : 'pointer', opacity: paying ? 0.7 : 1 }}
+      >
+        {paying ? 'Processing…' : 'Pay $8.99'}
+      </button>
+    </form>
+  );
 }
 
 function TemplateThumbnail({ template, onClick, targetW }: { template: Template; onClick: () => void; targetW?: number }) {
@@ -195,8 +234,10 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadAllowed, setDownloadAllowed] = useState(false);
   const [showBuyModal, setShowBuyModal] = useState(false);
+  const [buyEmail, setBuyEmail] = useState('');
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
   const [buyError, setBuyError] = useState('');
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   useEffect(() => {
     const update = () => setWindowWidth(window.innerWidth);
@@ -285,17 +326,19 @@ const [windowWidth, setWindowWidth] = useState(1200);
 
 
 
-  const handleBuy = async (_email: string) => {
+  const handleBuy = async (email: string) => {
     if (!selected) return;
     setIsBuying(true);
+    setBuyError('');
     try {
-      const res = await fetch('/api/stripe/checkout', {
+      const res = await fetch('/api/stripe/payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           templateId: selected.id,
           templateName: selected.name,
           fieldValues,
+          email,
         }),
       });
       const data = await res.json();
@@ -908,22 +951,56 @@ const [windowWidth, setWindowWidth] = useState(1200);
       {/* Buy modal */}
       {showBuyModal && (
         <div
-          onClick={e => { if (e.target === e.currentTarget) { setShowBuyModal(false); setCheckoutClientSecret(null); } }}
+          onClick={e => { if (e.target === e.currentTarget) { setShowBuyModal(false); setCheckoutClientSecret(null); setPaymentSuccess(false); } }}
           style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
-          <div style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 16, padding: '24px', width: '100%', maxWidth: 500, position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.12)', maxHeight: '90vh', overflowY: 'auto' }}>
-            <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); }} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: 'var(--muted)', fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 4 }}>×</button>
-            {buyError ? (
-              <div style={{ padding: '40px 0', textAlign: 'center' }}>
-                <p style={{ color: '#ef4444', fontSize: 14, marginBottom: 16 }}>{buyError}</p>
-                <button onClick={() => { setBuyError(''); handleBuy(''); }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 20px', cursor: 'pointer', fontSize: 14 }}>Try again</button>
+          <div style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 16, padding: '32px', width: '100%', maxWidth: 440, position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.12)', maxHeight: '90vh', overflowY: 'auto' }}>
+            <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setPaymentSuccess(false); }} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: 'var(--muted)', fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 4 }}>×</button>
+
+            {paymentSuccess ? (
+              <div style={{ textAlign: 'center', padding: '16px 0' }}>
+                <p style={{ fontSize: 40, margin: '0 0 16px' }}>📬</p>
+                <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 10px' }}>Check your inbox</h2>
+                <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 24px' }}>
+                  We sent your download link to <strong>{buyEmail}</strong>. Valid for 7 days.
+                </p>
+                <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setPaymentSuccess(false); }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 24px', cursor: 'pointer', fontSize: 14 }}>Done</button>
               </div>
-            ) : isBuying || !checkoutClientSecret ? (
-              <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--muted)' }}>Loading…</div>
+            ) : !checkoutClientSecret ? (
+              /* Step 1 — email */
+              <div>
+                <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 8px' }}>Complete your purchase</h2>
+                <p style={{ fontSize: 14, color: 'var(--muted)', margin: '0 0 24px', lineHeight: 1.6 }}>
+                  We&apos;ll send your download link to this email after payment.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={buyEmail}
+                    onChange={e => setBuyEmail(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter' && buyEmail.trim()) handleBuy(buyEmail.trim()); }}
+                    autoFocus
+                    style={{ ...inputStyle, fontSize: 15, padding: '12px 16px' }}
+                  />
+                  {buyError && <p style={{ color: '#ef4444', fontSize: 13, margin: 0 }}>{buyError}</p>}
+                  <button
+                    onClick={() => { if (buyEmail.trim()) handleBuy(buyEmail.trim()); }}
+                    disabled={isBuying || !buyEmail.trim()}
+                    style={{ background: '#0f172a', color: '#fff', border: 'none', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: isBuying || !buyEmail.trim() ? 'not-allowed' : 'pointer', opacity: isBuying || !buyEmail.trim() ? 0.6 : 1 }}
+                  >
+                    {isBuying ? 'Loading…' : 'Continue →'}
+                  </button>
+                </div>
+              </div>
             ) : (
-              <EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret: checkoutClientSecret }}>
-                <EmbeddedCheckout />
-              </EmbeddedCheckoutProvider>
+              /* Step 2 — card */
+              <div>
+                <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 24px' }}>Pay $8.99</h2>
+                <Elements stripe={stripePromise} options={{ clientSecret: checkoutClientSecret }}>
+                  <CheckoutForm onSuccess={() => setPaymentSuccess(true)} />
+                </Elements>
+              </div>
             )}
           </div>
         </div>
