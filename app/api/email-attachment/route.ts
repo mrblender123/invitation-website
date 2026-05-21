@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
   const pdfBuf = await pngToPdf(pngBuf);
 
-  await initEditRecord(piId, templateId);
+  try { await initEditRecord(piId, templateId); } catch (e) { console.error('initEditRecord failed:', e); }
 
   const token = createDownloadToken(templateId);
   const fieldValues: Record<string, string> = JSON.parse(pi.metadata?.fieldValues ?? '{}');

@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     const fieldValues: Record<string, string> = JSON.parse(pi.metadata?.fieldValues ?? '{}');
 
     if (email && templateId) {
-      await initEditRecord(pi.id, templateId);
+      try { await initEditRecord(pi.id, templateId); } catch (e) { console.error('initEditRecord failed:', e); }
 
       const token = createDownloadToken(templateId);
       const restoreParam = encodeURIComponent(
