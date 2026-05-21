@@ -11,6 +11,7 @@
     "wrap-svg": "node scripts/wrap-svg.mjs"
   },
   "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@stripe/react-stripe-js": "^6.4.0",
     "@stripe/stripe-js": "^9.6.0",
     "@supabase/supabase-js": "^2.97.0",
@@ -21,9 +22,11 @@
     "liquid-glass-react": "^1.1.1",
     "lucide-react": "^0.574.0",
     "next": "16.1.6",
+    "pdf-lib": "^1.17.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "resend": "^6.9.3",
+    "sharp": "^0.34.5",
     "stripe": "^22.1.1",
     "webfontloader": "^1.6.28"
   },
