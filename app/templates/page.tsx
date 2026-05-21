@@ -832,7 +832,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   ) : (
                     <GlassPill
                       text="Buy – $8.99"
-                      onClick={() => { setCheckoutClientSecret(null); setBuyError(''); setShowBuyModal(true); handleBuy(''); }}
+                      onClick={() => { setCheckoutClientSecret(null); setBuyError(''); setBuyEmail(user?.email ?? ''); setShowBuyModal(true); }}
                       fullWidth
                     />
                   )}
