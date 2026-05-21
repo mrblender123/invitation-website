@@ -46,7 +46,7 @@ export async function POST(req: Request) {
             </p>
             <a href="${downloadUrl}"
                style="display: inline-block; background: #0f172a; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 9999px; font-size: 15px; font-weight: 600; margin-bottom: 32px;">
-              Edit &amp; download my invitation →
+              Edit my invitation →
             </a>
             <p style="font-size: 13px; color: #888; margin: 0 0 8px;">
               This link lets you <strong>edit and re-download up to 3 times</strong> within 7 days.

@@ -59,7 +59,7 @@ export async function POST(req: Request) {
         </p>
         <a href="${downloadUrl}"
            style="display: inline-block; background: #0f172a; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 9999px; font-size: 15px; font-weight: 600; margin-bottom: 32px;">
-          Edit &amp; re-download →
+          Edit my invitation →
         </a>
         <p style="font-size: 13px; color: #bbb; margin: 0;">© ${new Date().getFullYear()} Joy Send</p>
       </div>
