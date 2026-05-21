@@ -1034,22 +1034,21 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 <Elements stripe={stripePromise} options={{ clientSecret: checkoutClientSecret ?? undefined }}>
                   <CheckoutForm clientSecret={checkoutClientSecret!} onSuccess={async () => {
                     setBuyStep('success');
-                    // Fire-and-forget: render client-side (already works) and upload to R2
-                    // so the webhook can attach it to the email.
+                    // Fire-and-forget: generate the PNG in the browser and email it directly.
                     try {
                       const piId = checkoutClientSecret?.split('_secret_')[0];
                       if (piId) {
                         const blob = await generateBlob();
                         if (blob) {
-                          fetch('/api/upload-render', {
+                          fetch('/api/email-attachment', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'image/png', 'x-pi-id': piId },
+                            headers: { 'x-pi-id': piId },
                             body: blob,
                           }).catch(console.error);
                         }
                       }
                     } catch (e) {
-                      console.error('post-payment render upload failed:', e);
+                      console.error('post-payment attachment email failed:', e);
                     }
                   }} />
                 </Elements>
