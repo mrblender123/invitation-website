@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
-import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import InvitationCard from '../components/InvitationCard';
 import SvgCardPreview from '../components/SvgCardPreview';
 import { useAuth } from '../components/AuthProvider';
@@ -70,7 +70,7 @@ function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, c
   }
 }
 
-function CheckoutForm({ onSuccess }: { onSuccess: () => void }) {
+function CheckoutForm({ clientSecret, onSuccess }: { clientSecret: string; onSuccess: () => void }) {
   const stripe = useStripe();
   const elements = useElements();
   const [paying, setPaying] = useState(false);
@@ -81,10 +81,10 @@ function CheckoutForm({ onSuccess }: { onSuccess: () => void }) {
     if (!stripe || !elements) return;
     setPaying(true);
     setError('');
-    const { error: stripeError } = await stripe.confirmPayment({
-      elements,
-      confirmParams: { return_url: window.location.href },
-      redirect: 'if_required',
+    const card = elements.getElement(CardElement);
+    if (!card) return;
+    const { error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: { card },
     });
     if (stripeError) {
       setError(stripeError.message ?? 'Payment failed');
@@ -96,7 +96,9 @@ function CheckoutForm({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <PaymentElement options={{ fields: { billingDetails: { phone: 'never', email: 'never' } } }} />
+      <div style={{ border: '1px solid rgba(0,0,0,0.18)', borderRadius: 8, padding: '12px 14px' }}>
+        <CardElement options={{ hidePostalCode: true }} />
+      </div>
       {error && <p style={{ color: '#ef4444', fontSize: 13, margin: 0 }}>{error}</p>}
       <button
         type="submit"
@@ -832,7 +834,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   ) : (
                     <GlassPill
                       text="Buy – $8.99"
-                      onClick={() => { setCheckoutClientSecret(null); setBuyError(''); setBuyEmail(user?.email ?? ''); setShowBuyModal(true); }}
+                      onClick={() => { setCheckoutClientSecret(null); setBuyError(''); setBuyEmail(user?.email ?? ''); setPaymentSuccess(false); setShowBuyModal(true); }}
                       fullWidth
                     />
                   )}
@@ -998,7 +1000,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
               <div>
                 <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 24px' }}>Pay $8.99</h2>
                 <Elements stripe={stripePromise} options={{ clientSecret: checkoutClientSecret }}>
-                  <CheckoutForm onSuccess={() => setPaymentSuccess(true)} />
+                  <CheckoutForm clientSecret={checkoutClientSecret!} onSuccess={() => setPaymentSuccess(true)} />
                 </Elements>
               </div>
             )}
