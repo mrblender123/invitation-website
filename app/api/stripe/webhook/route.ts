@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { createDownloadToken } from '@/lib/download-token';
-import { pngToPdf } from '@/lib/server-render';
+import { pngToPdf } from '@/lib/pdf';
 
 export const maxDuration = 60;
 
