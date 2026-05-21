@@ -196,6 +196,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [downloadAllowed, setDownloadAllowed] = useState(false);
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
+  const [buyError, setBuyError] = useState('');
 
   useEffect(() => {
     const update = () => setWindowWidth(window.innerWidth);
@@ -297,8 +298,15 @@ const [windowWidth, setWindowWidth] = useState(1200);
           fieldValues,
         }),
       });
-      const { clientSecret } = await res.json();
-      setCheckoutClientSecret(clientSecret);
+      const data = await res.json();
+      if (!res.ok || !data.clientSecret) {
+        setBuyError(data.error ?? 'Something went wrong. Please try again.');
+        return;
+      }
+      setCheckoutClientSecret(data.clientSecret);
+    } catch (e) {
+      setBuyError('Network error. Please try again.');
+      console.error(e);
     } finally {
       setIsBuying(false);
     }
@@ -781,7 +789,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   ) : (
                     <GlassPill
                       text="Buy – $8.99"
-                      onClick={() => { setCheckoutClientSecret(null); setShowBuyModal(true); handleBuy(''); }}
+                      onClick={() => { setCheckoutClientSecret(null); setBuyError(''); setShowBuyModal(true); handleBuy(''); }}
                       fullWidth
                     />
                   )}
@@ -905,7 +913,12 @@ const [windowWidth, setWindowWidth] = useState(1200);
         >
           <div style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 16, padding: '24px', width: '100%', maxWidth: 500, position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.12)', maxHeight: '90vh', overflowY: 'auto' }}>
             <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); }} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: 'var(--muted)', fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 4 }}>×</button>
-            {isBuying || !checkoutClientSecret ? (
+            {buyError ? (
+              <div style={{ padding: '40px 0', textAlign: 'center' }}>
+                <p style={{ color: '#ef4444', fontSize: 14, marginBottom: 16 }}>{buyError}</p>
+                <button onClick={() => { setBuyError(''); handleBuy(''); }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 20px', cursor: 'pointer', fontSize: 14 }}>Try again</button>
+              </div>
+            ) : isBuying || !checkoutClientSecret ? (
               <div style={{ textAlign: 'center', padding: '40px 0', color: 'var(--muted)' }}>Loading…</div>
             ) : (
               <EmbeddedCheckoutProvider stripe={stripePromise} options={{ clientSecret: checkoutClientSecret }}>
