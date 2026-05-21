@@ -1,7 +1,8 @@
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { createDownloadToken } from '@/lib/download-token';
-import { renderTemplateToPng, pngToPdf } from '@/lib/server-render';
+
+export const maxDuration = 60;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
@@ -17,9 +18,10 @@ async function sendDownloadEmail(
   );
   const downloadUrl = `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${encodeURIComponent(templateId)}&token=${token}&restore=${restoreParam}`;
 
-  // Generate PNG and PDF attachments
+  // Try to generate PNG + PDF attachments (dynamic import so a failure doesn't break email send)
   let attachments: Array<{ filename: string; content: Buffer }> = [];
   try {
+    const { renderTemplateToPng, pngToPdf } = await import('@/lib/server-render');
     const pngBuf = await renderTemplateToPng(templateId, fieldValues);
     if (pngBuf) {
       const pdfBuf = await pngToPdf(pngBuf);
@@ -29,8 +31,10 @@ async function sendDownloadEmail(
       ];
     }
   } catch (e) {
-    console.error('[webhook] render failed, sending link only:', e);
+    console.error('[webhook] render failed, sending link-only email:', e);
   }
+
+  const hasAttachments = attachments.length > 0;
 
   await resend.emails.send({
     from: process.env.RESEND_FROM ?? 'Joy Send <noreply@joy-send.com>',
@@ -42,15 +46,15 @@ async function sendDownloadEmail(
         <p style="font-size: 26px; font-weight: 700; margin: 0 0 8px;">Joy Send</p>
         <p style="font-size: 15px; color: #555; margin: 0 0 32px;">Beautiful invitations for every simcha</p>
         <p style="font-size: 16px; line-height: 1.6; margin: 0 0 24px;">
-          Thank you for your purchase! Your customized invitation is attached to this email as a PNG and PDF.
-        </p>
-        <p style="font-size: 14px; color: #555; line-height: 1.6; margin: 0 0 24px;">
-          You can also re-download it anytime within 7 days using the link below:
+          Thank you for your purchase! ${hasAttachments ? 'Your customized invitation is attached to this email as a PNG and PDF.' : 'Your customized invitation is ready to download.'}
         </p>
         <a href="${downloadUrl}"
            style="display: inline-block; background: #0f172a; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 9999px; font-size: 15px; font-weight: 600; margin-bottom: 32px;">
-          Re-download my invitation →
+          ${hasAttachments ? 'Re-download my invitation →' : 'Download my invitation →'}
         </a>
+        <p style="font-size: 13px; color: #888; margin: 0 0 8px;">
+          This link is valid for <strong>7 days</strong>.
+        </p>
         <p style="font-size: 13px; color: #bbb; margin: 0;">
           © ${new Date().getFullYear()} Joy Send
         </p>
