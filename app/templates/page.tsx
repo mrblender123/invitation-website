@@ -96,7 +96,7 @@ function CheckoutForm({ onSuccess }: { onSuccess: () => void }) {
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <PaymentElement />
+      <PaymentElement options={{ fields: { billingDetails: { phone: 'never', email: 'never' } } }} />
       {error && <p style={{ color: '#ef4444', fontSize: 13, margin: 0 }}>{error}</p>}
       <button
         type="submit"
