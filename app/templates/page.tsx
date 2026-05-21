@@ -238,8 +238,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [buyEmail, setBuyEmail] = useState('');
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
+  const [buyStep, setBuyStep] = useState<'email' | 'card' | 'success'>('email');
   const [buyError, setBuyError] = useState('');
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   useEffect(() => {
     const update = () => setWindowWidth(window.innerWidth);
@@ -349,6 +349,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
         return;
       }
       setCheckoutClientSecret(data.clientSecret);
+      setBuyStep('card');
     } catch (e) {
       setBuyError('Network error. Please try again.');
       console.error(e);
@@ -834,7 +835,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   ) : (
                     <GlassPill
                       text="Buy – $8.99"
-                      onClick={() => { setCheckoutClientSecret(null); setBuyError(''); setBuyEmail(user?.email ?? ''); setPaymentSuccess(false); setShowBuyModal(true); }}
+                      onClick={() => { setCheckoutClientSecret(null); setBuyStep('email'); setBuyError(''); setBuyEmail(user?.email ?? ''); setShowBuyModal(true); }}
                       fullWidth
                     />
                   )}
@@ -953,22 +954,22 @@ const [windowWidth, setWindowWidth] = useState(1200);
       {/* Buy modal */}
       {showBuyModal && (
         <div
-          onClick={e => { if (e.target === e.currentTarget) { setShowBuyModal(false); setCheckoutClientSecret(null); setPaymentSuccess(false); } }}
+          onClick={e => { if (e.target === e.currentTarget) { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); } }}
           style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
           <div style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 16, padding: '32px', width: '100%', maxWidth: 440, position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.12)', maxHeight: '90vh', overflowY: 'auto' }}>
-            <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setPaymentSuccess(false); }} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: 'var(--muted)', fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 4 }}>×</button>
+            <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); }} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: 'var(--muted)', fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 4 }}>×</button>
 
-            {paymentSuccess ? (
+            {buyStep === 'success' ? (
               <div style={{ textAlign: 'center', padding: '16px 0' }}>
                 <p style={{ fontSize: 40, margin: '0 0 16px' }}>📬</p>
                 <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 10px' }}>Check your inbox</h2>
                 <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 24px' }}>
                   We sent your download link to <strong>{buyEmail}</strong>. Valid for 7 days.
                 </p>
-                <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setPaymentSuccess(false); }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 24px', cursor: 'pointer', fontSize: 14 }}>Done</button>
+                <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 24px', cursor: 'pointer', fontSize: 14 }}>Done</button>
               </div>
-            ) : !checkoutClientSecret ? (
+            ) : buyStep === 'email' ? (
               /* Step 1 — email */
               <div>
                 <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 8px' }}>Complete your purchase</h2>
@@ -999,8 +1000,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
               /* Step 2 — card */
               <div>
                 <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 24px' }}>Pay $8.99</h2>
-                <Elements stripe={stripePromise} options={{ clientSecret: checkoutClientSecret }}>
-                  <CheckoutForm clientSecret={checkoutClientSecret!} onSuccess={() => setPaymentSuccess(true)} />
+                <Elements stripe={stripePromise} options={{ clientSecret: checkoutClientSecret ?? undefined }}>
+                  <CheckoutForm clientSecret={checkoutClientSecret!} onSuccess={() => setBuyStep('success')} />
                 </Elements>
               </div>
             )}
