@@ -190,6 +190,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [isBuying, setIsBuying] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadAllowed, setDownloadAllowed] = useState(false);
+  const [showBuyModal, setShowBuyModal] = useState(false);
+  const [buyEmail, setBuyEmail] = useState('');
 
   useEffect(() => {
     const update = () => setWindowWidth(window.innerWidth);
@@ -278,7 +280,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
 
 
 
-  const handleBuy = async () => {
+  const handleBuy = async (email: string) => {
     if (!selected) return;
     setIsBuying(true);
     try {
@@ -289,6 +291,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
           templateId: selected.id,
           templateName: selected.name,
           fieldValues,
+          email,
         }),
       });
       const { url } = await res.json();
@@ -774,13 +777,17 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     />
                   ) : (
                     <GlassPill
-                      text={isBuying ? 'Redirecting…' : '💳 Buy – $8.99'}
-                      onClick={handleBuy}
-                      disabled={isBuying}
+                      text="Buy – $8.99"
+                      onClick={() => { setBuyEmail(user?.email ?? ''); setShowBuyModal(true); }}
                       fullWidth
                     />
                   )}
-                  <GlassPill text="Save for Later" onClick={handleSaveForLater} fullWidth />
+                  <button
+                    onClick={handleSaveForLater}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.88rem', color: 'var(--muted)', padding: '6px 0', textAlign: 'center' }}
+                  >
+                    Save for Later
+                  </button>
 
                   {!selected.textSvg && (
                     <GlassPill
@@ -883,6 +890,39 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Buy modal */}
+      {showBuyModal && (
+        <div
+          onClick={e => { if (e.target === e.currentTarget) setShowBuyModal(false); }}
+          style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+        >
+          <div style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 16, padding: '36px 32px', width: '100%', maxWidth: 420, position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.12)' }}>
+            <button onClick={() => setShowBuyModal(false)} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: 'var(--muted)', fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 4 }}>×</button>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--foreground)', margin: '0 0 8px' }}>Complete your purchase</h2>
+            <p style={{ fontSize: 14, color: 'var(--muted)', margin: '0 0 28px', lineHeight: 1.6 }}>
+              Enter your email — we&apos;ll send your download link there after payment.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <input
+                type="email"
+                placeholder="your@email.com"
+                value={buyEmail}
+                onChange={e => setBuyEmail(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && buyEmail.trim()) handleBuy(buyEmail.trim()); }}
+                autoFocus
+                style={{ ...inputStyle, fontSize: 15, padding: '12px 16px' }}
+              />
+              <GlassPill
+                text={isBuying ? 'Redirecting…' : 'Pay $8.99 →'}
+                onClick={() => { if (buyEmail.trim()) handleBuy(buyEmail.trim()); }}
+                disabled={isBuying || !buyEmail.trim()}
+                fullWidth
+              />
+            </div>
           </div>
         </div>
       )}

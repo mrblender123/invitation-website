@@ -3,7 +3,7 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: Request) {
-  const { templateId, templateName, fieldValues } = await req.json();
+  const { templateId, templateName, fieldValues, email } = await req.json();
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
@@ -19,6 +19,7 @@ export async function POST(req: Request) {
       quantity: 1,
     }],
     mode: 'payment',
+    customer_email: email || undefined,
     metadata: {
       templateId,
       fieldValues: JSON.stringify(fieldValues).slice(0, 500),
