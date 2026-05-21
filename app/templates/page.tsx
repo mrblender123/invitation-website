@@ -268,6 +268,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadAllowed, setDownloadAllowed] = useState(false);
   const [editsRemaining, setEditsRemaining] = useState<number | null>(null);
+  const [editsExhausted, setEditsExhausted] = useState(false);
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [buyEmail, setBuyEmail] = useState('');
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
@@ -298,6 +299,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
             setFieldValues(saved);
           } catch {}
         }
+      } else if (piParam) {
+        setEditsExhausted(true);
       }
     };
 
@@ -889,6 +892,14 @@ const [windowWidth, setWindowWidth] = useState(1200);
                         </p>
                       )}
                     </>
+                  ) : editsExhausted ? (
+                    <div style={{ textAlign: 'center', padding: '16px', border: '1px solid rgba(0,0,0,0.1)', borderRadius: 12, background: 'rgba(0,0,0,0.02)' }}>
+                      <p style={{ fontSize: 15, fontWeight: 600, margin: '0 0 6px' }}>Edit limit reached</p>
+                      <p style={{ fontSize: 13, color: 'var(--muted)', margin: 0, lineHeight: 1.5 }}>
+                        You&apos;ve used all 3 edits for this invitation.<br />
+                        Purchase again to get a new set of edits.
+                      </p>
+                    </div>
                   ) : (
                     <GlassPill
                       text="Buy – $8.99"
