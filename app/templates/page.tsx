@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
-import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { Elements, CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import InvitationCard from '../components/InvitationCard';
 import SvgCardPreview from '../components/SvgCardPreview';
 import { useAuth } from '../components/AuthProvider';
@@ -70,6 +70,10 @@ function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, c
   }
 }
 
+const stripeFieldStyle = {
+  base: { fontSize: '15px', color: '#18181b', '::placeholder': { color: '#a1a1aa' } },
+};
+
 function CheckoutForm({ clientSecret, onSuccess }: { clientSecret: string; onSuccess: () => void }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -81,10 +85,10 @@ function CheckoutForm({ clientSecret, onSuccess }: { clientSecret: string; onSuc
     if (!stripe || !elements) return;
     setPaying(true);
     setError('');
-    const card = elements.getElement(CardElement);
-    if (!card) return;
+    const cardNumber = elements.getElement(CardNumberElement);
+    if (!cardNumber) return;
     const { error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: { card },
+      payment_method: { card: cardNumber },
     });
     if (stripeError) {
       setError(stripeError.message ?? 'Payment failed');
@@ -94,16 +98,43 @@ function CheckoutForm({ clientSecret, onSuccess }: { clientSecret: string; onSuc
     }
   };
 
+  const fieldBox: React.CSSProperties = {
+    border: '1px solid rgba(0,0,0,0.18)',
+    borderRadius: 8,
+    padding: '12px 14px',
+    background: '#fff',
+  };
+  const fieldLabel: React.CSSProperties = {
+    fontSize: 11,
+    fontWeight: 600,
+    color: '#71717a',
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase',
+    marginBottom: 8,
+    display: 'block',
+  };
+
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <div style={{ border: '1px solid rgba(0,0,0,0.18)', borderRadius: 8, padding: '12px 14px' }}>
-        <CardElement options={{ hidePostalCode: true }} />
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={fieldBox}>
+        <span style={fieldLabel}>Card number</span>
+        <CardNumberElement options={{ style: stripeFieldStyle, showIcon: true }} />
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div style={fieldBox}>
+          <span style={fieldLabel}>Expiry</span>
+          <CardExpiryElement options={{ style: stripeFieldStyle }} />
+        </div>
+        <div style={fieldBox}>
+          <span style={fieldLabel}>CVC</span>
+          <CardCvcElement options={{ style: stripeFieldStyle }} />
+        </div>
       </div>
       {error && <p style={{ color: '#ef4444', fontSize: 13, margin: 0 }}>{error}</p>}
       <button
         type="submit"
         disabled={!stripe || paying}
-        style={{ background: '#0f172a', color: '#fff', border: 'none', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: paying ? 'wait' : 'pointer', opacity: paying ? 0.7 : 1 }}
+        style={{ background: '#0f172a', color: '#fff', border: 'none', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: paying ? 'wait' : 'pointer', opacity: paying ? 0.7 : 1, marginTop: 4 }}
       >
         {paying ? 'Processing…' : 'Pay $8.99'}
       </button>
