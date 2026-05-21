@@ -2,6 +2,7 @@ import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 import sharp from 'sharp';
 import { PDFDocument } from 'pdf-lib';
+import { createCanvas, GlobalFonts, Image } from '@napi-rs/canvas';
 
 function escapeXml(str: string): string {
   return str
@@ -76,27 +77,109 @@ async function resolveTemplate(templateId: string): Promise<TemplatePaths | null
   return null;
 }
 
-async function buildFontFaceStyle(): Promise<string> {
+let fontsRegistered = false;
+async function registerFonts() {
+  if (fontsRegistered) return;
   const fontsDir = path.join(process.cwd(), 'public', 'fonts');
-  const rules: string[] = [];
   try {
     const files = await readdir(fontsDir);
     for (const file of files.filter(f => /\.ttf$/i.test(f))) {
-      const buf = await readFile(path.join(fontsDir, file));
-      const b64 = buf.toString('base64');
-      // Derive family name from filename (e.g. "Heebo[wght].ttf" → "Heebo", "SecularOne-Regular.ttf" → "Secular One")
+      const fontPath = path.join(fontsDir, file);
       const family = file
         .replace(/\.ttf$/i, '')
-        .replace(/\[.*?\]/g, '')      // strip variable font axis e.g. [wght]
-        .replace(/-Regular$/i, '')
-        .replace(/([a-z])([A-Z])/g, '$1 $2') // CamelCase → "Camel Case"
+        .replace(/\[.*?\]/g, '')
+        .replace(/-(?:Regular|Medium|SemiBold|Bold|ExtraBold|Black|Light|Thin)$/i, '')
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
         .trim();
-      rules.push(
-        `@font-face { font-family: '${family}'; src: url('data:font/truetype;base64,${b64}') format('truetype'); font-weight: 100 900; }`,
-      );
+      GlobalFonts.registerFromPath(fontPath, family);
     }
-  } catch { /* fonts dir missing — render with system fonts */ }
-  return rules.join('\n');
+  } catch { /* fonts dir missing */ }
+  fontsRegistered = true;
+}
+
+// Mirror of client-side drawSvgTextToCanvas, adapted for @napi-rs/canvas
+type Ctx2D = ReturnType<ReturnType<typeof createCanvas>['getContext']>;
+
+function parseTr(t: string) {
+  const tx = t.match(/translate\(\s*([\d.+-]+)(?:[,\s]+([\d.+-]+))?\s*\)/);
+  const rot = t.match(/rotate\(\s*([\d.+-]+)/);
+  const sc = t.match(/scale\(\s*([\d.+-]+)(?:[,\s]+([\d.+-]+))?\s*\)/);
+  return {
+    tx: tx ? +tx[1] : 0,
+    ty: tx?.[2] ? +tx[2] : 0,
+    rot: rot ? +rot[1] * Math.PI / 180 : 0,
+    sx: sc ? +sc[1] : 1,
+    sy: sc?.[2] ? +sc[2] : (sc ? +sc[1] : 1),
+  };
+}
+
+
+function drawSvgTextToCanvas(
+  ctx: Ctx2D,
+  svgText: string,
+  canvasW: number,
+  canvasH: number,
+) {
+  // Parse SVG in a minimal way without a DOM — extract text elements via regex
+  // We iterate <text> blocks and their <tspan> children
+  const textBlockRe = /<text([^>]*)>([\s\S]*?)<\/text>/g;
+  const tspanRe = /<tspan([^>]*)>([\s\S]*?)<\/tspan>/g;
+
+  const vbMatch = svgText.match(/viewBox=["']([^"']+)["']/);
+  const vbParts = vbMatch?.[1].trim().split(/[\s,]+/) ?? [];
+  const svgW = vbParts.length >= 4 ? parseFloat(vbParts[2]) : canvasW;
+  const svgH = vbParts.length >= 4 ? parseFloat(vbParts[3]) : canvasH;
+  const kx = canvasW / svgW;
+  const ky = canvasH / svgH;
+
+  function attr(attrs: string, name: string): string | null {
+    const m = attrs.match(new RegExp(`\\b${name}=["']([^"']*)["']`));
+    return m ? m[1] : null;
+  }
+
+  let textMatch: RegExpExecArray | null;
+  while ((textMatch = textBlockRe.exec(svgText)) !== null) {
+    const textAttrs = textMatch[1];
+    const textInner = textMatch[2];
+
+    const family = (attr(textAttrs, 'font-family') ?? 'Heebo').replace(/['"]/g, '').split(',')[0].trim();
+    const weight = attr(textAttrs, 'font-weight') ?? '400';
+    const anchor = attr(textAttrs, 'text-anchor') ?? 'start';
+    const trRaw = attr(textAttrs, 'transform') ?? '';
+    const { tx, ty, rot, sx, sy } = parseTr(trRaw);
+
+    let curY = 0;
+    let tspanMatch: RegExpExecArray | null;
+    tspanRe.lastIndex = 0;
+
+    while ((tspanMatch = tspanRe.exec(textInner)) !== null) {
+      const tsAttrs = tspanMatch[1];
+      const text = tspanMatch[2].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'");
+      if (!text.trim()) continue;
+
+      const x = parseFloat(attr(tsAttrs, 'x') ?? '0');
+      const yVal = attr(tsAttrs, 'y');
+      const dyVal = attr(tsAttrs, 'dy');
+      if (yVal !== null) curY = parseFloat(yVal);
+      if (dyVal !== null) curY += parseFloat(dyVal);
+
+      const sizeSrc = attr(tsAttrs, 'font-size') ?? attr(textAttrs, 'font-size') ?? '12';
+      const size = parseFloat(sizeSrc);
+      const fill = attr(tsAttrs, 'fill') ?? attr(textAttrs, 'fill') ?? '#000';
+
+      ctx.save();
+      ctx.scale(kx, ky);
+      ctx.translate(tx, ty);
+      if (rot) ctx.rotate(rot);
+      ctx.scale(sx, sy);
+      ctx.font = `${weight} ${size}px "${family}"`;
+      ctx.fillStyle = fill;
+      ctx.textAlign = anchor === 'middle' ? 'center' : anchor === 'end' ? 'right' : 'left';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(text, x, curY);
+      ctx.restore();
+    }
+  }
 }
 
 export async function renderTemplateToPng(
@@ -109,50 +192,43 @@ export async function renderTemplateToPng(
     return null;
   }
 
+  await registerFonts();
+
   const svgContent = await readFile(resolved.svgPath, 'utf-8');
   const injected = injectFieldValues(svgContent, fieldValues);
 
-  // Parse viewBox
   const vbMatch = injected.match(/viewBox=["']([^"']+)["']/);
   const vbParts = vbMatch?.[1].trim().split(/[\s,]+/) ?? [];
   const svgW = vbParts.length >= 4 ? Math.round(parseFloat(vbParts[2])) : 444;
   const svgH = vbParts.length >= 4 ? Math.round(parseFloat(vbParts[3])) : 630;
 
-  // Extract inner content: strip <svg> wrapper and any <image> tags
-  const innerContent = injected
-    .replace(/^[\s\S]*?<svg[^>]*>/, '')
-    .replace(/<\/svg>[\s\S]*$/, '')
-    .replace(/<image[^/]*(\/?>|>[\s\S]*?<\/image>)/gi, '');
+  const SCALE = 2;
+  const outW = svgW * SCALE;
+  const outH = svgH * SCALE;
 
-  // Embed fonts
-  const fontStyle = await buildFontFaceStyle();
+  const canvas = createCanvas(outW, outH);
+  const ctx = canvas.getContext('2d');
 
-  // Fetch background from R2 and convert to PNG for embedding
-  let bgDataUri = '';
+  // Draw background from R2
   try {
     const bgRes = await fetch(resolved.backgroundUrl);
     if (bgRes.ok) {
       const bgBuf = Buffer.from(await bgRes.arrayBuffer());
-      const bgPng = await sharp(bgBuf).resize(svgW * 2, svgH * 2).png().toBuffer();
-      bgDataUri = `data:image/png;base64,${bgPng.toString('base64')}`;
+      const bgPng = await sharp(bgBuf).resize(outW, outH).png().toBuffer();
+      const img = new Image();
+      img.src = bgPng;
+      ctx.drawImage(img, 0, 0, outW, outH);
     }
   } catch (e) {
-    console.error('[render] background fetch error:', e);
+    console.error('[render] background error:', e);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, outW, outH);
   }
 
-  // Build a self-contained SVG: fonts + background image + text layer
-  const combinedSvg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-     viewBox="0 0 ${svgW} ${svgH}" width="${svgW * 2}" height="${svgH * 2}">
-  <defs>
-    <style>${fontStyle}</style>
-  </defs>
-  ${bgDataUri ? `<image href="${bgDataUri}" x="0" y="0" width="${svgW}" height="${svgH}" preserveAspectRatio="xMidYMid slice"/>` : ''}
-  ${innerContent}
-</svg>`;
+  // Draw text layer
+  drawSvgTextToCanvas(ctx, injected, outW, outH);
 
-  // Render with sharp (uses librsvg internally)
-  return await sharp(Buffer.from(combinedSvg)).png().toBuffer();
+  return canvas.toBuffer('image/png');
 }
 
 export async function pngToPdf(pngBuffer: Buffer): Promise<Buffer> {
