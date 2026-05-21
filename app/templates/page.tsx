@@ -240,6 +240,7 @@ function TemplatesContent() {
   const templateParam = searchParams.get('template');
   const tokenParam  = searchParams.get('token');
   const restoreParam = searchParams.get('restore');
+  const piParam     = searchParams.get('pi');
   const subs        = category ? (CATEGORY_SUBS[category] ?? []) : [];
 
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -266,6 +267,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [isBuying, setIsBuying] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadAllowed, setDownloadAllowed] = useState(false);
+  const [editsRemaining, setEditsRemaining] = useState<number | null>(null);
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [buyEmail, setBuyEmail] = useState('');
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
@@ -282,20 +284,37 @@ const [windowWidth, setWindowWidth] = useState(1200);
   // Verify payment token and restore saved field values from email link
   useEffect(() => {
     if (!tokenParam || !templateParam) return;
-    fetch(`/api/verify-token?token=${encodeURIComponent(tokenParam)}&template=${encodeURIComponent(templateParam)}`)
-      .then(r => r.json())
-      .then(({ valid }) => {
-        if (valid) {
-          setDownloadAllowed(true);
-          if (restoreParam) {
-            try {
-              const saved = JSON.parse(Buffer.from(restoreParam, 'base64').toString());
-              setFieldValues(saved);
-            } catch {}
-          }
+
+    const cacheKey = piParam ? `joysend-edit-${piParam}` : null;
+    const cached = cacheKey ? sessionStorage.getItem(cacheKey) : null;
+
+    const apply = (valid: boolean, remaining: number | null) => {
+      if (valid) {
+        setDownloadAllowed(true);
+        setEditsRemaining(remaining);
+        if (restoreParam) {
+          try {
+            const saved = JSON.parse(Buffer.from(restoreParam, 'base64').toString());
+            setFieldValues(saved);
+          } catch {}
         }
+      }
+    };
+
+    if (cached) {
+      const { valid, editsRemaining: rem } = JSON.parse(cached);
+      apply(valid, rem);
+      return;
+    }
+
+    const url = `/api/verify-token?token=${encodeURIComponent(tokenParam)}&template=${encodeURIComponent(templateParam)}${piParam ? `&pi=${encodeURIComponent(piParam)}` : ''}`;
+    fetch(url)
+      .then(r => r.json())
+      .then(({ valid, editsRemaining: rem }: { valid: boolean; editsRemaining: number | null }) => {
+        if (cacheKey) sessionStorage.setItem(cacheKey, JSON.stringify({ valid, editsRemaining: rem }));
+        apply(valid, rem);
       });
-  }, [tokenParam, templateParam, restoreParam]);
+  }, [tokenParam, templateParam, restoreParam, piParam]);
 
   // Update keyboard anchor position when active field changes
   useEffect(() => {
@@ -857,12 +876,19 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 {/* Actions */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {downloadAllowed ? (
-                    <GlassPill
-                      text={isDownloading ? 'Preparing…' : '⬇ Download PNG'}
-                      onClick={handleDownload}
-                      disabled={isDownloading}
-                      fullWidth
-                    />
+                    <>
+                      <GlassPill
+                        text={isDownloading ? 'Preparing…' : '⬇ Download PNG'}
+                        onClick={handleDownload}
+                        disabled={isDownloading}
+                        fullWidth
+                      />
+                      {editsRemaining !== null && (
+                        <p style={{ fontSize: 12, color: 'var(--muted)', margin: 0, textAlign: 'center' }}>
+                          {editsRemaining} edit{editsRemaining !== 1 ? 's' : ''} remaining
+                        </p>
+                      )}
+                    </>
                   ) : (
                     <GlassPill
                       text="Buy – $8.99"

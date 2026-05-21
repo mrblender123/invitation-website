@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { createDownloadToken } from '@/lib/download-token';
+import { initEditRecord } from '@/lib/edit-tracking';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
@@ -24,11 +25,13 @@ export async function POST(req: Request) {
     const fieldValues: Record<string, string> = JSON.parse(pi.metadata?.fieldValues ?? '{}');
 
     if (email && templateId) {
+      await initEditRecord(pi.id, templateId);
+
       const token = createDownloadToken(templateId);
       const restoreParam = encodeURIComponent(
         Buffer.from(JSON.stringify(fieldValues)).toString('base64'),
       );
-      const downloadUrl = `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${encodeURIComponent(templateId)}&token=${token}&restore=${restoreParam}`;
+      const downloadUrl = `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${encodeURIComponent(templateId)}&token=${token}&restore=${restoreParam}&pi=${encodeURIComponent(pi.id)}`;
 
       await resend.emails.send({
         from: process.env.RESEND_FROM ?? 'Joy Send <noreply@joy-send.com>',
@@ -43,9 +46,11 @@ export async function POST(req: Request) {
             </p>
             <a href="${downloadUrl}"
                style="display: inline-block; background: #0f172a; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 9999px; font-size: 15px; font-weight: 600; margin-bottom: 32px;">
-              Download my invitation →
+              Edit &amp; download my invitation →
             </a>
-            <p style="font-size: 13px; color: #888; margin: 0 0 8px;">This link is valid for <strong>7 days</strong>.</p>
+            <p style="font-size: 13px; color: #888; margin: 0 0 8px;">
+              This link lets you <strong>edit and re-download up to 3 times</strong> within 7 days.
+            </p>
             <p style="font-size: 13px; color: #bbb; margin: 0;">© ${new Date().getFullYear()} Joy Send</p>
           </div>
         `,
