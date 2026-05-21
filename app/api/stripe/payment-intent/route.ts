@@ -9,6 +9,7 @@ export async function POST(req: Request) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: 899,
       currency: 'usd',
+      payment_method_types: ['card'],
       receipt_email: email || undefined,
       description: `Joy Send – ${templateName}`,
       metadata: {
