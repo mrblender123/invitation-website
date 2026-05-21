@@ -1032,7 +1032,26 @@ const [windowWidth, setWindowWidth] = useState(1200);
               <div>
                 <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 24px' }}>Pay $8.99</h2>
                 <Elements stripe={stripePromise} options={{ clientSecret: checkoutClientSecret ?? undefined }}>
-                  <CheckoutForm clientSecret={checkoutClientSecret!} onSuccess={() => setBuyStep('success')} />
+                  <CheckoutForm clientSecret={checkoutClientSecret!} onSuccess={async () => {
+                    setBuyStep('success');
+                    // Fire-and-forget: render client-side (already works) and upload to R2
+                    // so the webhook can attach it to the email.
+                    try {
+                      const piId = checkoutClientSecret?.split('_secret_')[0];
+                      if (piId) {
+                        const blob = await generateBlob();
+                        if (blob) {
+                          fetch('/api/upload-render', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'image/png', 'x-pi-id': piId },
+                            body: blob,
+                          }).catch(console.error);
+                        }
+                      }
+                    } catch (e) {
+                      console.error('post-payment render upload failed:', e);
+                    }
+                  }} />
                 </Elements>
               </div>
             )}
