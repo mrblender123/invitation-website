@@ -20,6 +20,51 @@ const THUMB_TARGET_H = 264;
 const EDITOR_SCALE = 1.15;
 
 
+// Maps original font names → Next.js CSS variable names
+const FONT_CSS_VARS: Record<string, string> = {
+  'Heebo': '--font-heebo',
+  'Secular One': '--font-secular-one',
+  'Dancing Script': '--font-dancing-script',
+  'Lora': '--font-lora',
+  'Montserrat': '--font-montserrat',
+  'Oswald': '--font-oswald',
+  'Frank Ruhl Libre': '--font-frank-ruhl-libre',
+  'Playpen Sans Hebrew': '--font-playpen-sans-hebrew',
+};
+
+// Next.js registers fonts under scoped names (e.g. __Playpen_Sans_Hebrew_abc), not the
+// original name. Canvas ctx.font can only find fonts by their CSS @font-face family name,
+// so we register each font under its original name before the first download.
+let fontsRegistered = false;
+async function ensureFontsRegisteredUnderOriginalNames() {
+  if (fontsRegistered) return;
+  fontsRegistered = true;
+  const htmlStyle = getComputedStyle(document.documentElement);
+  for (const [originalName, cssVar] of Object.entries(FONT_CSS_VARS)) {
+    const scopedName = htmlStyle.getPropertyValue(cssVar).trim()
+      .split(',')[0].replace(/['"]/g, '').trim();
+    if (!scopedName) continue;
+    for (const sheet of Array.from(document.styleSheets)) {
+      try {
+        for (const rule of Array.from(sheet.cssRules)) {
+          if (!(rule instanceof CSSFontFaceRule)) continue;
+          const familyMatch = rule.cssText.match(/font-family:\s*["']([^"']+)["']/);
+          if (!familyMatch || familyMatch[1].trim() !== scopedName) continue;
+          const urlMatch = rule.cssText.match(/url\(["']?([^"')]+)["']?\)/);
+          if (!urlMatch) continue;
+          const weight = rule.cssText.match(/font-weight:\s*([^;]+)/)?.[1]?.trim() ?? 'normal';
+          const style  = rule.cssText.match(/font-style:\s*([^;]+)/)?.[1]?.trim()  ?? 'normal';
+          try {
+            const face = new FontFace(originalName, `url(${urlMatch[1]})`, { weight, style });
+            await face.load();
+            document.fonts.add(face);
+          } catch { /* skip this variant */ }
+        }
+      } catch { /* cross-origin sheet */ }
+    }
+  }
+}
+
 function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, canvasWidth: number, canvasHeight: number) {
   const vb = (svgEl.getAttribute('viewBox') ?? '').trim().split(/[\s,]+/).map(Number);
   const svgW = vb[2] > 0 ? vb[2] : canvasWidth;
@@ -416,6 +461,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const generateBlob = async (): Promise<Blob | null> => {
     if (!cardRef.current || !selected) return null;
     await document.fonts.ready;
+    await ensureFontsRegisteredUnderOriginalNames();
     if (selected.textSvg) {
       const img = await new Promise<HTMLImageElement>(resolve => {
         const i = new Image();
