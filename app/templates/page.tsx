@@ -42,8 +42,9 @@ function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, c
     let node: Element | null = textEl;
     while (node && node !== svgEl) { const op = (node as SVGElement).getAttribute('opacity'); if (op) opacity *= +op; node = node.parentElement; }
     if (opacity <= 0) continue;
-    const family = (textEl.getAttribute('font-family') ?? 'sans-serif').replace(/['"]/g, '').split(',')[0].trim();
-    const weight = textEl.getAttribute('font-weight') ?? '400';
+    const computedStyle = window.getComputedStyle(textEl);
+    const family = (computedStyle.fontFamily || textEl.getAttribute('font-family') || 'sans-serif').split(',')[0].replace(/['"]/g, '').trim();
+    const weight = computedStyle.fontWeight || textEl.getAttribute('font-weight') || '400';
     const anchor = textEl.getAttribute('text-anchor') ?? 'start';
     const ls = parseFloat(textEl.getAttribute('letter-spacing') ?? '0');
     const { tx, ty, rot, sx, sy } = parseTr(textEl.getAttribute('transform') ?? '');
