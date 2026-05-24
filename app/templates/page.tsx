@@ -276,7 +276,6 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
   const [buyStep, setBuyStep] = useState<'email' | 'card' | 'success'>('email');
   const [buyError, setBuyError] = useState('');
-  const [purchaseBlob, setPurchaseBlob] = useState<Blob | null>(null);
 
   useEffect(() => {
     const update = () => setWindowWidth(window.innerWidth);
@@ -1040,18 +1039,14 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 24px' }}>
                   We also sent a 7-day edit &amp; download link to <strong>{buyEmail}</strong>.
                 </p>
-                {purchaseBlob ? (
-                  <a
-                    href={URL.createObjectURL(purchaseBlob)}
-                    download="invitation.png"
-                    style={{ display: 'block', background: '#0f172a', color: '#fff', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, textDecoration: 'none', marginBottom: 12 }}
-                  >
-                    Download PNG
-                  </a>
-                ) : (
-                  <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 12 }}>Preparing download…</p>
-                )}
-                <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); setPurchaseBlob(null); }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 24px', cursor: 'pointer', fontSize: 14 }}>Done</button>
+                <button
+                  onClick={() => { handleDownload(); }}
+                  disabled={isDownloading}
+                  style={{ display: 'block', width: '100%', background: '#0f172a', color: '#fff', border: 'none', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: isDownloading ? 'not-allowed' : 'pointer', opacity: isDownloading ? 0.6 : 1, marginBottom: 12 }}
+                >
+                  {isDownloading ? 'Generating…' : 'Download PNG'}
+                </button>
+                <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 24px', cursor: 'pointer', fontSize: 14 }}>Done</button>
               </div>
             ) : buyStep === 'email' ? (
               /* Step 1 — email */
@@ -1090,15 +1085,12 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     try {
                       const piId = checkoutClientSecret?.split('_secret_')[0];
                       const blob = await generateBlob();
-                      if (blob) {
-                        setPurchaseBlob(blob);
-                        if (piId) {
-                          fetch('/api/email-attachment', {
-                            method: 'POST',
-                            headers: { 'x-pi-id': piId },
-                            body: blob,
-                          }).catch(console.error);
-                        }
+                      if (blob && piId) {
+                        fetch('/api/email-attachment', {
+                          method: 'POST',
+                          headers: { 'x-pi-id': piId },
+                          body: blob,
+                        }).catch(console.error);
                       }
                     } catch (e) {
                       console.error('post-payment blob generation failed:', e);
