@@ -20,80 +20,54 @@ const THUMB_TARGET_H = 264;
 const EDITOR_SCALE = 1.15;
 
 
-async function renderSvgToCanvas(
-  ctx: CanvasRenderingContext2D,
-  svgEl: SVGElement,
-  outW: number,
-  outH: number,
-) {
-  await document.fonts.ready;
+function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, canvasWidth: number, canvasHeight: number) {
+  const vb = (svgEl.getAttribute('viewBox') ?? '').trim().split(/[\s,]+/).map(Number);
+  const svgW = vb[2] > 0 ? vb[2] : canvasWidth;
+  const svgH = vb[3] > 0 ? vb[3] : canvasHeight;
+  const kx = canvasWidth / svgW, ky = canvasHeight / svgH;
 
-  const vb = (svgEl as SVGSVGElement).viewBox?.baseVal;
-  const svgW = vb?.width || outW;
-  const svgH = vb?.height || outH;
-  const scaleX = outW / svgW;
-  const scaleY = outH / svgH;
+  function parseTr(t: string) {
+    const tx = t.match(/translate\(\s*([\d.+-]+)(?:[,\s]+([\d.+-]+))?\s*\)/);
+    const rot = t.match(/rotate\(\s*([\d.+-]+)/);
+    const sc = t.match(/scale\(\s*([\d.+-]+)(?:[,\s]+([\d.+-]+))?\s*\)/);
+    return { tx: tx ? +tx[1] : 0, ty: tx?.[2] ? +tx[2] : 0, rot: rot ? +rot[1] * Math.PI / 180 : 0, sx: sc ? +sc[1] : 1, sy: sc?.[2] ? +sc[2] : (sc ? +sc[1] : 1) };
+  }
+  function inherit(el: Element, attr: string, stop: Element): string | null {
+    let n: Element | null = el;
+    while (n) { const v = n.getAttribute(attr); if (v !== null) return v; if (n === stop) break; n = n.parentElement; }
+    return null;
+  }
 
-  // Step 1: render non-text SVG content (decorative paths, shapes) as image.
-  // Hide all text so the image renders without needing fonts.
-  const clone = svgEl.cloneNode(true) as SVGElement;
-  clone.setAttribute('width', String(outW));
-  clone.setAttribute('height', String(outH));
-  for (const t of clone.querySelectorAll('text')) t.setAttribute('visibility', 'hidden');
-  // Strip the fontMapStyle block — it references CSS vars that won't resolve in <img>
-  const cloneStyle = clone.querySelector('style');
-  if (cloneStyle) cloneStyle.textContent = '';
-
-  const svgStr = new XMLSerializer().serializeToString(clone);
-  const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
-  const svgUrl = URL.createObjectURL(svgBlob);
-  await new Promise<void>((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => { ctx.drawImage(img, 0, 0, outW, outH); URL.revokeObjectURL(svgUrl); resolve(); };
-    img.onerror = () => { URL.revokeObjectURL(svgUrl); resolve(); }; // non-fatal
-    img.src = svgUrl;
-  });
-
-  // Step 2: draw every <text> element directly on canvas.
-  // getComputedStyle on the LIVE DOM element resolves CSS variables correctly,
-  // giving us the Next.js scoped font name. Canvas uses document-loaded fonts,
-  // so ctx.font with the scoped name renders with the correct typeface.
-  for (const textEl of svgEl.querySelectorAll<SVGTextElement>('text')) {
-    const transformAttr = textEl.getAttribute('transform') ?? '';
-    const tMatch = transformAttr.match(/translate\(\s*([\d.+-]+)[\s,]+([\d.+-]+)\s*\)/);
-    if (!tMatch) continue;
-    const baseTx = parseFloat(tMatch[1]);
-    const baseTy = parseFloat(tMatch[2]);
-
-    const cs = getComputedStyle(textEl);
-    const fontFamily = cs.fontFamily; // resolved scoped name, e.g. "__Playpen_Sans_Hebrew_abc"
-    const fontSizeSvg = parseFloat(textEl.getAttribute('font-size') ?? cs.fontSize) || 16;
-    const fontWeight = textEl.getAttribute('font-weight') || cs.fontWeight || '400';
-    const fill = textEl.getAttribute('fill') || cs.fill || '#000000';
-    const textAnchor = textEl.getAttribute('text-anchor') || 'start';
-
-    ctx.save();
-    ctx.font = `${fontWeight} ${fontSizeSvg * scaleY}px ${fontFamily}`;
-    ctx.fillStyle = fill;
-    ctx.textAlign = textAnchor === 'middle' ? 'center' : textAnchor === 'end' ? 'right' : 'left';
-
-    let currentY = baseTy;
-    for (const tspan of textEl.querySelectorAll<SVGTSpanElement>('tspan')) {
-      const text = tspan.textContent ?? '';
-      const tspanY = tspan.getAttribute('y');
-      const dyStr = tspan.getAttribute('dy');
-      if (tspanY !== null) {
-        currentY = baseTy + parseFloat(tspanY);
-      } else if (dyStr !== null) {
-        const dy = parseFloat(dyStr);
-        currentY += dyStr.includes('em') ? dy * fontSizeSvg : dy;
-      }
-      const cx = (baseTx + parseFloat(tspan.getAttribute('x') ?? '0')) * scaleX;
-      const cy = currentY * scaleY;
-      if (text.trim()) ctx.fillText(text, cx, cy);
+  for (const textEl of Array.from(svgEl.querySelectorAll('text'))) {
+    let opacity = 1;
+    let node: Element | null = textEl;
+    while (node && node !== svgEl) { const op = (node as SVGElement).getAttribute('opacity'); if (op) opacity *= +op; node = node.parentElement; }
+    if (opacity <= 0) continue;
+    const family = (textEl.getAttribute('font-family') ?? 'sans-serif').replace(/['"]/g, '').split(',')[0].trim();
+    const weight = textEl.getAttribute('font-weight') ?? '400';
+    const anchor = textEl.getAttribute('text-anchor') ?? 'start';
+    const ls = parseFloat(textEl.getAttribute('letter-spacing') ?? '0');
+    const { tx, ty, rot, sx, sy } = parseTr(textEl.getAttribute('transform') ?? '');
+    const leaves = Array.from(textEl.querySelectorAll('tspan')).filter(ts => !ts.querySelector('tspan'));
+    let curY = 0;
+    for (const ts of leaves) {
+      const text = ts.textContent ?? ''; if (!text.trim()) continue;
+      const xA = ts.getAttribute('x'), yA = ts.getAttribute('y'), dyA = ts.getAttribute('dy');
+      const x = xA !== null ? +xA : 0;
+      if (yA !== null) curY = +yA; if (dyA !== null) curY += +dyA;
+      const size = parseFloat(inherit(ts, 'font-size', textEl) ?? '12');
+      const fill = inherit(ts, 'fill', textEl) ?? '#000';
+      ctx.save();
+      ctx.globalAlpha = opacity; ctx.scale(kx, ky); ctx.translate(tx, ty);
+      if (rot) ctx.rotate(rot); ctx.scale(sx, sy);
+      ctx.font = `${weight} ${size}px "${family}"`;
+      ctx.fillStyle = fill;
+      ctx.textAlign = anchor === 'middle' ? 'center' : anchor === 'end' ? 'right' : 'left';
+      ctx.textBaseline = 'alphabetic';
+      if (!isNaN(ls) && 'letterSpacing' in ctx) (ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${ls}px`;
+      ctx.fillText(text, x, curY);
+      ctx.restore();
     }
-
-    ctx.restore();
   }
 }
 
@@ -462,11 +436,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
       const overlayDiv = cardRef.current.querySelector('[data-svg-overlay="true"]');
       const svgEl = overlayDiv?.querySelector('svg');
       if (svgEl) {
-        try {
-          await renderSvgToCanvas(ctx, svgEl as SVGElement, outW, outH);
-        } catch (err) {
-          console.error('renderSvgToCanvas failed:', err);
-        }
+        drawSvgTextToCanvas(ctx, svgEl as SVGElement, outW, outH);
       }
       return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
     }
