@@ -317,6 +317,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   // Stripe / download state
   const [isBuying, setIsBuying] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [downloadAllowed, setDownloadAllowed] = useState(false);
   const [editsRemaining, setEditsRemaining] = useState<number | null>(null);
   const [editsExhausted, setEditsExhausted] = useState(false);
@@ -508,6 +509,30 @@ const [windowWidth, setWindowWidth] = useState(1200);
       URL.revokeObjectURL(url);
     } finally {
       setIsDownloading(false);
+    }
+  };
+
+  const handleDownloadPdf = async () => {
+    if (!cardRef.current) return;
+    setIsDownloadingPdf(true);
+    try {
+      const blob = await generateBlob();
+      if (!blob) return;
+      const { PDFDocument } = await import('pdf-lib');
+      const pngBytes = new Uint8Array(await blob.arrayBuffer());
+      const pdf = await PDFDocument.create();
+      const img = await pdf.embedPng(pngBytes);
+      const page = pdf.addPage([img.width, img.height]);
+      page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+      const pdfBytes = await pdf.save();
+      const url = URL.createObjectURL(new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' }));
+      const link = document.createElement('a');
+      link.download = `${selected?.id ?? 'invitation'}.pdf`;
+      link.href = url;
+      link.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setIsDownloadingPdf(false);
     }
   };
 
@@ -937,7 +962,13 @@ const [windowWidth, setWindowWidth] = useState(1200);
                       <GlassPill
                         text={isDownloading ? 'Preparing…' : '⬇ Download PNG'}
                         onClick={handleDownload}
-                        disabled={isDownloading}
+                        disabled={isDownloading || isDownloadingPdf}
+                        fullWidth
+                      />
+                      <GlassPill
+                        text={isDownloadingPdf ? 'Preparing…' : '⬇ Download PDF'}
+                        onClick={handleDownloadPdf}
+                        disabled={isDownloading || isDownloadingPdf}
                         fullWidth
                       />
                       {editsRemaining !== null && (
@@ -1090,11 +1121,18 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   We also sent a 7-day edit &amp; download link to <strong>{buyEmail}</strong>.
                 </p>
                 <button
-                  onClick={() => { handleDownload(); }}
-                  disabled={isDownloading}
-                  style={{ display: 'block', width: '100%', background: '#0f172a', color: '#fff', border: 'none', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: isDownloading ? 'not-allowed' : 'pointer', opacity: isDownloading ? 0.6 : 1, marginBottom: 12 }}
+                  onClick={handleDownload}
+                  disabled={isDownloading || isDownloadingPdf}
+                  style={{ display: 'block', width: '100%', background: '#0f172a', color: '#fff', border: 'none', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: (isDownloading || isDownloadingPdf) ? 'not-allowed' : 'pointer', opacity: (isDownloading || isDownloadingPdf) ? 0.6 : 1, marginBottom: 10 }}
                 >
                   {isDownloading ? 'Generating…' : 'Download PNG'}
+                </button>
+                <button
+                  onClick={handleDownloadPdf}
+                  disabled={isDownloading || isDownloadingPdf}
+                  style={{ display: 'block', width: '100%', background: '#fff', color: '#0f172a', border: '1.5px solid #0f172a', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: (isDownloading || isDownloadingPdf) ? 'not-allowed' : 'pointer', opacity: (isDownloading || isDownloadingPdf) ? 0.6 : 1, marginBottom: 12 }}
+                >
+                  {isDownloadingPdf ? 'Generating…' : 'Download PDF'}
                 </button>
                 <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 24px', cursor: 'pointer', fontSize: 14 }}>Done</button>
               </div>
