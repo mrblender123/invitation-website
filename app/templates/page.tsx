@@ -30,65 +30,85 @@ const FONT_CSS_VARS: Record<string, string> = {
   'Playpen Sans Hebrew': '--font-playpen-sans-hebrew',
 };
 
-function resolvedFontName(rawFamily: string): string {
-  const cssVar = FONT_CSS_VARS[rawFamily];
-  if (!cssVar) return rawFamily;
-  const val = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
-  if (!val) return rawFamily;
-  return val.split(',')[0].replace(/['"]/g, '').trim() || rawFamily;
+async function renderSvgToCanvas(
+  ctx: CanvasRenderingContext2D,
+  svgEl: SVGElement,
+  outW: number,
+  outH: number,
+) {
+  // Build scoped-name → original-name map from CSS variables
+  const htmlStyle = getComputedStyle(document.documentElement);
+  const scopedToOriginal = new Map<string, string>();
+  for (const [orig, cssVar] of Object.entries(FONT_CSS_VARS)) {
+    const scoped = htmlStyle.getPropertyValue(cssVar).trim().split(',')[0].replace(/['"]/g, '').trim();
+    if (scoped) scopedToOriginal.set(scoped, orig);
+  }
+
+  // Find fonts actually used in this SVG
+  const usedFonts = new Set<string>();
+  for (const el of svgEl.querySelectorAll('[font-family]')) {
+    const f = el.getAttribute('font-family')!.replace(/['"]/g, '').split(',')[0].trim();
+    if (FONT_CSS_VARS[f]) usedFonts.add(f);
+  }
+
+  // Inline @font-face rules under original names
+  const inlinedCSS: string[] = [];
+  for (const sheet of Array.from(document.styleSheets)) {
+    try {
+      for (const rule of Array.from(sheet.cssRules)) {
+        if (!(rule instanceof CSSFontFaceRule)) continue;
+        const familyMatch = rule.cssText.match(/font-family:\s*["']([^"']+)["']/);
+        if (!familyMatch) continue;
+        const scopedName = familyMatch[1].trim();
+        const originalName = scopedToOriginal.get(scopedName);
+        if (!originalName || !usedFonts.has(originalName)) continue;
+
+        const urlMatch = rule.cssText.match(/url\(["']?([^"')]+)["']?\)/);
+        if (!urlMatch) continue;
+        try {
+          const res = await fetch(urlMatch[1]);
+          if (!res.ok) continue;
+          const buf = await res.arrayBuffer();
+          const bytes = new Uint8Array(buf);
+          let binary = '';
+          for (let i = 0; i < bytes.length; i += 8192)
+            binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
+          const base64 = btoa(binary);
+          const ext = urlMatch[1].split('.').pop() ?? 'woff2';
+          const mime = ext === 'woff2' ? 'font/woff2' : ext === 'woff' ? 'font/woff' : 'font/truetype';
+          const weight = rule.cssText.match(/font-weight:\s*([^;]+)/)?.[1]?.trim() ?? 'normal';
+          const style  = rule.cssText.match(/font-style:\s*([^;]+)/)?.[1]?.trim() ?? 'normal';
+          inlinedCSS.push(`@font-face { font-family: '${originalName}'; src: url("data:${mime};base64,${base64}") format('${ext}'); font-weight: ${weight}; font-style: ${style}; }`);
+        } catch { /* font fetch failed, skip */ }
+      }
+    } catch { /* cross-origin sheet, skip */ }
+  }
+
+  // Clone SVG, inject inlined fonts, set explicit size
+  const clone = svgEl.cloneNode(true) as SVGElement;
+  clone.setAttribute('width', String(outW));
+  clone.setAttribute('height', String(outH));
+  const existingStyle = clone.querySelector('style');
+  const existingText = existingStyle?.textContent ?? '';
+  const newStyle = document.createElementNS('http://www.w3.org/2000/svg', 'style') as Element;
+  newStyle.textContent = inlinedCSS.join('\n') + '\n' + existingText;
+  if (existingStyle) {
+    clone.replaceChild(newStyle, existingStyle);
+  } else {
+    clone.insertBefore(newStyle, clone.firstChild);
+  }
+
+  const svgStr = new XMLSerializer().serializeToString(clone);
+  const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+  const svgUrl = URL.createObjectURL(svgBlob);
+  await new Promise<void>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => { ctx.drawImage(img, 0, 0, outW, outH); URL.revokeObjectURL(svgUrl); resolve(); };
+    img.onerror = (e) => { URL.revokeObjectURL(svgUrl); reject(e); };
+    img.src = svgUrl;
+  });
 }
 
-function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, canvasWidth: number, canvasHeight: number) {
-  const vb = (svgEl.getAttribute('viewBox') ?? '').trim().split(/[\s,]+/).map(Number);
-  const svgW = vb[2] > 0 ? vb[2] : canvasWidth;
-  const svgH = vb[3] > 0 ? vb[3] : canvasHeight;
-  const kx = canvasWidth / svgW, ky = canvasHeight / svgH;
-
-  function parseTr(t: string) {
-    const tx = t.match(/translate\(\s*([\d.+-]+)(?:[,\s]+([\d.+-]+))?\s*\)/);
-    const rot = t.match(/rotate\(\s*([\d.+-]+)/);
-    const sc = t.match(/scale\(\s*([\d.+-]+)(?:[,\s]+([\d.+-]+))?\s*\)/);
-    return { tx: tx ? +tx[1] : 0, ty: tx?.[2] ? +tx[2] : 0, rot: rot ? +rot[1] * Math.PI / 180 : 0, sx: sc ? +sc[1] : 1, sy: sc?.[2] ? +sc[2] : (sc ? +sc[1] : 1) };
-  }
-  function inherit(el: Element, attr: string, stop: Element): string | null {
-    let n: Element | null = el;
-    while (n) { const v = n.getAttribute(attr); if (v !== null) return v; if (n === stop) break; n = n.parentElement; }
-    return null;
-  }
-
-  for (const textEl of Array.from(svgEl.querySelectorAll('text'))) {
-    let opacity = 1;
-    let node: Element | null = textEl;
-    while (node && node !== svgEl) { const op = (node as SVGElement).getAttribute('opacity'); if (op) opacity *= +op; node = node.parentElement; }
-    if (opacity <= 0) continue;
-    const rawFamily = (textEl.getAttribute('font-family') ?? 'sans-serif').replace(/['"]/g, '').split(',')[0].trim();
-    const family = resolvedFontName(rawFamily);
-    const weight = textEl.getAttribute('font-weight') ?? '400';
-    const anchor = textEl.getAttribute('text-anchor') ?? 'start';
-    const ls = parseFloat(textEl.getAttribute('letter-spacing') ?? '0');
-    const { tx, ty, rot, sx, sy } = parseTr(textEl.getAttribute('transform') ?? '');
-    const leaves = Array.from(textEl.querySelectorAll('tspan')).filter(ts => !ts.querySelector('tspan'));
-    let curY = 0;
-    for (const ts of leaves) {
-      const text = ts.textContent ?? ''; if (!text.trim()) continue;
-      const xA = ts.getAttribute('x'), yA = ts.getAttribute('y'), dyA = ts.getAttribute('dy');
-      const x = xA !== null ? +xA : 0;
-      if (yA !== null) curY = +yA; if (dyA !== null) curY += +dyA;
-      const size = parseFloat(inherit(ts, 'font-size', textEl) ?? '12');
-      const fill = inherit(ts, 'fill', textEl) ?? '#000';
-      ctx.save();
-      ctx.globalAlpha = opacity; ctx.scale(kx, ky); ctx.translate(tx, ty);
-      if (rot) ctx.rotate(rot); ctx.scale(sx, sy);
-      ctx.font = `${weight} ${size}px "${family}"`;
-      ctx.fillStyle = fill;
-      ctx.textAlign = anchor === 'middle' ? 'center' : anchor === 'end' ? 'right' : 'left';
-      ctx.textBaseline = 'alphabetic';
-      if (!isNaN(ls) && 'letterSpacing' in ctx) (ctx as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = `${ls}px`;
-      ctx.fillText(text, x, curY);
-      ctx.restore();
-    }
-  }
-}
 
 const stripeFieldStyle = {
   base: { fontSize: '15px', color: '#18181b', '::placeholder': { color: '#a1a1aa' } },
@@ -452,7 +472,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
       ctx.drawImage(img, 0, 0, outW, outH);
       const overlayDiv = cardRef.current.querySelector('[data-svg-overlay="true"]');
       const svgEl = overlayDiv?.querySelector('svg');
-      if (svgEl) drawSvgTextToCanvas(ctx, svgEl as SVGElement, outW, outH);
+      if (svgEl) await renderSvgToCanvas(ctx, svgEl as SVGElement, outW, outH);
       return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
     }
     const { default: html2canvas } = await import('html2canvas');
