@@ -76,6 +76,7 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
     if (seenIds.has(gId)) continue;
     if (SKIP_IDS.has(gId.toLowerCase())) continue;
     if (/^layer/i.test(gId)) continue;
+    if (/^text\d*$/i.test(gId)) continue; // skip Illustrator auto-generated text group IDs
     seenIds.add(gId);
 
     // Find first <tspan> after this group's opening tag to use as placeholder
