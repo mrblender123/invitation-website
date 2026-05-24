@@ -472,7 +472,13 @@ const [windowWidth, setWindowWidth] = useState(1200);
       ctx.drawImage(img, 0, 0, outW, outH);
       const overlayDiv = cardRef.current.querySelector('[data-svg-overlay="true"]');
       const svgEl = overlayDiv?.querySelector('svg');
-      if (svgEl) await renderSvgToCanvas(ctx, svgEl as SVGElement, outW, outH);
+      if (svgEl) {
+        try {
+          await renderSvgToCanvas(ctx, svgEl as SVGElement, outW, outH);
+        } catch (err) {
+          console.error('renderSvgToCanvas failed:', err);
+        }
+      }
       return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
     }
     const { default: html2canvas } = await import('html2canvas');
