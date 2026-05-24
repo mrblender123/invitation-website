@@ -19,6 +19,25 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 const THUMB_TARGET_H = 264;
 const EDITOR_SCALE = 1.15;
 
+const FONT_CSS_VARS: Record<string, string> = {
+  'Heebo': '--font-heebo',
+  'Secular One': '--font-secular-one',
+  'Dancing Script': '--font-dancing-script',
+  'Lora': '--font-lora',
+  'Montserrat': '--font-montserrat',
+  'Oswald': '--font-oswald',
+  'Frank Ruhl Libre': '--font-frank-ruhl-libre',
+  'Playpen Sans Hebrew': '--font-playpen-sans-hebrew',
+};
+
+function resolvedFontName(rawFamily: string): string {
+  const cssVar = FONT_CSS_VARS[rawFamily];
+  if (!cssVar) return rawFamily;
+  const val = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+  if (!val) return rawFamily;
+  return val.split(',')[0].replace(/['"]/g, '').trim() || rawFamily;
+}
+
 function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, canvasWidth: number, canvasHeight: number) {
   const vb = (svgEl.getAttribute('viewBox') ?? '').trim().split(/[\s,]+/).map(Number);
   const svgW = vb[2] > 0 ? vb[2] : canvasWidth;
@@ -42,9 +61,9 @@ function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, c
     let node: Element | null = textEl;
     while (node && node !== svgEl) { const op = (node as SVGElement).getAttribute('opacity'); if (op) opacity *= +op; node = node.parentElement; }
     if (opacity <= 0) continue;
-    const computedStyle = window.getComputedStyle(textEl);
-    const family = (computedStyle.fontFamily || textEl.getAttribute('font-family') || 'sans-serif').split(',')[0].replace(/['"]/g, '').trim();
-    const weight = computedStyle.fontWeight || textEl.getAttribute('font-weight') || '400';
+    const rawFamily = (textEl.getAttribute('font-family') ?? 'sans-serif').replace(/['"]/g, '').split(',')[0].trim();
+    const family = resolvedFontName(rawFamily);
+    const weight = textEl.getAttribute('font-weight') ?? '400';
     const anchor = textEl.getAttribute('text-anchor') ?? 'start';
     const ls = parseFloat(textEl.getAttribute('letter-spacing') ?? '0');
     const { tx, ty, rot, sx, sy } = parseTr(textEl.getAttribute('transform') ?? '');
