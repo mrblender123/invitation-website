@@ -19,16 +19,6 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 const THUMB_TARGET_H = 264;
 const EDITOR_SCALE = 1.15;
 
-const FONT_CSS_VARS: Record<string, string> = {
-  'Heebo': '--font-heebo',
-  'Secular One': '--font-secular-one',
-  'Dancing Script': '--font-dancing-script',
-  'Lora': '--font-lora',
-  'Montserrat': '--font-montserrat',
-  'Oswald': '--font-oswald',
-  'Frank Ruhl Libre': '--font-frank-ruhl-libre',
-  'Playpen Sans Hebrew': '--font-playpen-sans-hebrew',
-};
 
 async function renderSvgToCanvas(
   ctx: CanvasRenderingContext2D,
@@ -36,88 +26,23 @@ async function renderSvgToCanvas(
   outW: number,
   outH: number,
 ) {
-  const htmlStyle = getComputedStyle(document.documentElement);
+  await document.fonts.ready;
 
-  // Build scoped-name → original-name map, and cssVar → full scoped value map
-  const scopedToOriginal = new Map<string, string>();
-  const cssVarToScopedValue = new Map<string, string>();
-  for (const [orig, cssVar] of Object.entries(FONT_CSS_VARS)) {
-    const fullValue = htmlStyle.getPropertyValue(cssVar).trim(); // e.g. '__Playpen_Sans_Hebrew_abc', '__Fallback_abc'
-    const primaryScoped = fullValue.split(',')[0].replace(/['"]/g, '').trim();
-    if (primaryScoped) {
-      scopedToOriginal.set(primaryScoped, orig);
-      cssVarToScopedValue.set(cssVar, fullValue);
-    }
-  }
+  const vb = (svgEl as SVGSVGElement).viewBox?.baseVal;
+  const svgW = vb?.width || outW;
+  const svgH = vb?.height || outH;
+  const scaleX = outW / svgW;
+  const scaleY = outH / svgH;
 
-  // Find fonts actually used in this SVG (by attribute)
-  const usedFonts = new Set<string>();
-  for (const el of svgEl.querySelectorAll('[font-family]')) {
-    const f = el.getAttribute('font-family')!.replace(/['"]/g, '').split(',')[0].trim();
-    if (FONT_CSS_VARS[f]) usedFonts.add(f);
-  }
-
-  // Inline @font-face rules keeping the scoped name (NOT mapping to original).
-  // This is critical: the SVG style block uses var(--font-x) which we'll resolve to
-  // the scoped name, so the @font-face must also use the scoped name for them to match.
-  const inlinedCSS: string[] = [];
-  for (const sheet of Array.from(document.styleSheets)) {
-    try {
-      for (const rule of Array.from(sheet.cssRules)) {
-        if (!(rule instanceof CSSFontFaceRule)) continue;
-        const familyMatch = rule.cssText.match(/font-family:\s*["']([^"']+)["']/);
-        if (!familyMatch) continue;
-        const scopedName = familyMatch[1].trim();
-        const originalName = scopedToOriginal.get(scopedName);
-        if (!originalName || !usedFonts.has(originalName)) continue;
-
-        const urlMatch = rule.cssText.match(/url\(["']?([^"')]+)["']?\)/);
-        if (!urlMatch) continue;
-        try {
-          const res = await fetch(urlMatch[1]);
-          if (!res.ok) continue;
-          const buf = await res.arrayBuffer();
-          const bytes = new Uint8Array(buf);
-          let binary = '';
-          for (let i = 0; i < bytes.length; i += 8192)
-            binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
-          const base64 = btoa(binary);
-          const ext = urlMatch[1].split('.').pop() ?? 'woff2';
-          const mime = ext === 'woff2' ? 'font/woff2' : ext === 'woff' ? 'font/woff' : 'font/truetype';
-          const weight = rule.cssText.match(/font-weight:\s*([^;]+)/)?.[1]?.trim() ?? 'normal';
-          const style  = rule.cssText.match(/font-style:\s*([^;]+)/)?.[1]?.trim() ?? 'normal';
-          // Keep scopedName — it matches what we'll inject into the style block below
-          inlinedCSS.push(`@font-face { font-family: '${scopedName}'; src: url("data:${mime};base64,${base64}") format('${ext}'); font-weight: ${weight}; font-style: ${style}; }`);
-        } catch { /* font fetch failed, skip */ }
-      }
-    } catch { /* cross-origin sheet, skip */ }
-  }
-
-  // Clone SVG, inject inlined fonts, resolve CSS variables, set explicit size
+  // Step 1: render non-text SVG content (decorative paths, shapes) as image.
+  // Hide all text so the image renders without needing fonts.
   const clone = svgEl.cloneNode(true) as SVGElement;
   clone.setAttribute('width', String(outW));
   clone.setAttribute('height', String(outH));
-  const existingStyle = clone.querySelector('style');
-  const existingText = existingStyle?.textContent ?? '';
-
-  // Resolve var(--font-x, fallback) → the actual scoped font name.
-  // CSS variables don't work when SVG is rendered as <img>, so we replace them
-  // with the literal scoped value that matches our inlined @font-face above.
-  const resolvedText = existingText.replace(
-    /var\(\s*(--[^,)]+?)\s*(?:,\s*([^)]*))?\)/g,
-    (_match, varName: string, fallback: string) => {
-      const scoped = cssVarToScopedValue.get(varName.trim());
-      return scoped ?? fallback ?? varName;
-    },
-  );
-
-  const newStyle = document.createElementNS('http://www.w3.org/2000/svg', 'style') as Element;
-  newStyle.textContent = inlinedCSS.join('\n') + '\n' + resolvedText;
-  if (existingStyle) {
-    clone.replaceChild(newStyle, existingStyle);
-  } else {
-    clone.insertBefore(newStyle, clone.firstChild);
-  }
+  for (const t of clone.querySelectorAll('text')) t.setAttribute('visibility', 'hidden');
+  // Strip the fontMapStyle block — it references CSS vars that won't resolve in <img>
+  const cloneStyle = clone.querySelector('style');
+  if (cloneStyle) cloneStyle.textContent = '';
 
   const svgStr = new XMLSerializer().serializeToString(clone);
   const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
@@ -125,9 +50,51 @@ async function renderSvgToCanvas(
   await new Promise<void>((resolve, reject) => {
     const img = new Image();
     img.onload = () => { ctx.drawImage(img, 0, 0, outW, outH); URL.revokeObjectURL(svgUrl); resolve(); };
-    img.onerror = (e) => { URL.revokeObjectURL(svgUrl); reject(e); };
+    img.onerror = () => { URL.revokeObjectURL(svgUrl); resolve(); }; // non-fatal
     img.src = svgUrl;
   });
+
+  // Step 2: draw every <text> element directly on canvas.
+  // getComputedStyle on the LIVE DOM element resolves CSS variables correctly,
+  // giving us the Next.js scoped font name. Canvas uses document-loaded fonts,
+  // so ctx.font with the scoped name renders with the correct typeface.
+  for (const textEl of svgEl.querySelectorAll<SVGTextElement>('text')) {
+    const transformAttr = textEl.getAttribute('transform') ?? '';
+    const tMatch = transformAttr.match(/translate\(\s*([\d.+-]+)[\s,]+([\d.+-]+)\s*\)/);
+    if (!tMatch) continue;
+    const baseTx = parseFloat(tMatch[1]);
+    const baseTy = parseFloat(tMatch[2]);
+
+    const cs = getComputedStyle(textEl);
+    const fontFamily = cs.fontFamily; // resolved scoped name, e.g. "__Playpen_Sans_Hebrew_abc"
+    const fontSizeSvg = parseFloat(textEl.getAttribute('font-size') ?? cs.fontSize) || 16;
+    const fontWeight = textEl.getAttribute('font-weight') || cs.fontWeight || '400';
+    const fill = textEl.getAttribute('fill') || cs.fill || '#000000';
+    const textAnchor = textEl.getAttribute('text-anchor') || 'start';
+
+    ctx.save();
+    ctx.font = `${fontWeight} ${fontSizeSvg * scaleY}px ${fontFamily}`;
+    ctx.fillStyle = fill;
+    ctx.textAlign = textAnchor === 'middle' ? 'center' : textAnchor === 'end' ? 'right' : 'left';
+
+    let currentY = baseTy;
+    for (const tspan of textEl.querySelectorAll<SVGTSpanElement>('tspan')) {
+      const text = tspan.textContent ?? '';
+      const tspanY = tspan.getAttribute('y');
+      const dyStr = tspan.getAttribute('dy');
+      if (tspanY !== null) {
+        currentY = baseTy + parseFloat(tspanY);
+      } else if (dyStr !== null) {
+        const dy = parseFloat(dyStr);
+        currentY += dyStr.includes('em') ? dy * fontSizeSvg : dy;
+      }
+      const cx = (baseTx + parseFloat(tspan.getAttribute('x') ?? '0')) * scaleX;
+      const cy = currentY * scaleY;
+      if (text.trim()) ctx.fillText(text, cx, cy);
+    }
+
+    ctx.restore();
+  }
 }
 
 
