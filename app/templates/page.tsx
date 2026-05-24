@@ -36,22 +36,30 @@ async function renderSvgToCanvas(
   outW: number,
   outH: number,
 ) {
-  // Build scoped-name → original-name map from CSS variables
   const htmlStyle = getComputedStyle(document.documentElement);
+
+  // Build scoped-name → original-name map, and cssVar → full scoped value map
   const scopedToOriginal = new Map<string, string>();
+  const cssVarToScopedValue = new Map<string, string>();
   for (const [orig, cssVar] of Object.entries(FONT_CSS_VARS)) {
-    const scoped = htmlStyle.getPropertyValue(cssVar).trim().split(',')[0].replace(/['"]/g, '').trim();
-    if (scoped) scopedToOriginal.set(scoped, orig);
+    const fullValue = htmlStyle.getPropertyValue(cssVar).trim(); // e.g. '__Playpen_Sans_Hebrew_abc', '__Fallback_abc'
+    const primaryScoped = fullValue.split(',')[0].replace(/['"]/g, '').trim();
+    if (primaryScoped) {
+      scopedToOriginal.set(primaryScoped, orig);
+      cssVarToScopedValue.set(cssVar, fullValue);
+    }
   }
 
-  // Find fonts actually used in this SVG
+  // Find fonts actually used in this SVG (by attribute)
   const usedFonts = new Set<string>();
   for (const el of svgEl.querySelectorAll('[font-family]')) {
     const f = el.getAttribute('font-family')!.replace(/['"]/g, '').split(',')[0].trim();
     if (FONT_CSS_VARS[f]) usedFonts.add(f);
   }
 
-  // Inline @font-face rules under original names
+  // Inline @font-face rules keeping the scoped name (NOT mapping to original).
+  // This is critical: the SVG style block uses var(--font-x) which we'll resolve to
+  // the scoped name, so the @font-face must also use the scoped name for them to match.
   const inlinedCSS: string[] = [];
   for (const sheet of Array.from(document.styleSheets)) {
     try {
@@ -78,20 +86,33 @@ async function renderSvgToCanvas(
           const mime = ext === 'woff2' ? 'font/woff2' : ext === 'woff' ? 'font/woff' : 'font/truetype';
           const weight = rule.cssText.match(/font-weight:\s*([^;]+)/)?.[1]?.trim() ?? 'normal';
           const style  = rule.cssText.match(/font-style:\s*([^;]+)/)?.[1]?.trim() ?? 'normal';
-          inlinedCSS.push(`@font-face { font-family: '${originalName}'; src: url("data:${mime};base64,${base64}") format('${ext}'); font-weight: ${weight}; font-style: ${style}; }`);
+          // Keep scopedName — it matches what we'll inject into the style block below
+          inlinedCSS.push(`@font-face { font-family: '${scopedName}'; src: url("data:${mime};base64,${base64}") format('${ext}'); font-weight: ${weight}; font-style: ${style}; }`);
         } catch { /* font fetch failed, skip */ }
       }
     } catch { /* cross-origin sheet, skip */ }
   }
 
-  // Clone SVG, inject inlined fonts, set explicit size
+  // Clone SVG, inject inlined fonts, resolve CSS variables, set explicit size
   const clone = svgEl.cloneNode(true) as SVGElement;
   clone.setAttribute('width', String(outW));
   clone.setAttribute('height', String(outH));
   const existingStyle = clone.querySelector('style');
   const existingText = existingStyle?.textContent ?? '';
+
+  // Resolve var(--font-x, fallback) → the actual scoped font name.
+  // CSS variables don't work when SVG is rendered as <img>, so we replace them
+  // with the literal scoped value that matches our inlined @font-face above.
+  const resolvedText = existingText.replace(
+    /var\(\s*(--[^,)]+?)\s*(?:,\s*([^)]*))?\)/g,
+    (_match, varName: string, fallback: string) => {
+      const scoped = cssVarToScopedValue.get(varName.trim());
+      return scoped ?? fallback ?? varName;
+    },
+  );
+
   const newStyle = document.createElementNS('http://www.w3.org/2000/svg', 'style') as Element;
-  newStyle.textContent = inlinedCSS.join('\n') + '\n' + existingText;
+  newStyle.textContent = inlinedCSS.join('\n') + '\n' + resolvedText;
   if (existingStyle) {
     clone.replaceChild(newStyle, existingStyle);
   } else {
