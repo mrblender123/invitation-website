@@ -88,7 +88,11 @@ function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, c
     let node: Element | null = textEl;
     while (node && node !== svgEl) { const op = (node as SVGElement).getAttribute('opacity'); if (op) opacity *= +op; node = node.parentElement; }
     if (opacity <= 0) continue;
-    const family = (textEl.getAttribute('font-family') ?? 'sans-serif').replace(/['"]/g, '').split(',')[0].trim();
+    // getComputedStyle resolves CSS variables (var(--font-x)) to the scoped Next.js
+    // font name (e.g. '__Playpen_Sans_Hebrew_abc'). Canvas can find scoped names
+    // in document.fonts, so this always uses the correct loaded font.
+    const computedFamily = getComputedStyle(textEl).fontFamily;
+    const family = computedFamily || (textEl.getAttribute('font-family') ?? 'sans-serif').replace(/['"]/g, '').split(',')[0].trim();
     const weight = textEl.getAttribute('font-weight') ?? '400';
     const anchor = textEl.getAttribute('text-anchor') ?? 'start';
     const ls = parseFloat(textEl.getAttribute('letter-spacing') ?? '0');
@@ -105,7 +109,7 @@ function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, c
       ctx.save();
       ctx.globalAlpha = opacity; ctx.scale(kx, ky); ctx.translate(tx, ty);
       if (rot) ctx.rotate(rot); ctx.scale(sx, sy);
-      ctx.font = `${weight} ${size}px "${family}"`;
+      ctx.font = `${weight} ${size}px ${family}`;
       ctx.fillStyle = fill;
       ctx.textAlign = anchor === 'middle' ? 'center' : anchor === 'end' ? 'right' : 'left';
       ctx.textBaseline = 'alphabetic';
