@@ -787,6 +787,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
               {/* Live preview — flex wrapper centers card on mobile without affecting desktop */}
               <div style={{ display: 'flex', justifyContent: 'center' }}>
               {selected.textSvg ? (
+                <div style={{ position: 'relative', display: 'inline-block' }}>
                 <SvgCardPreview
                   ref={cardRef}
                   template={selected}
@@ -794,6 +795,21 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   scale={cardScale}
                   activeFieldId={activeField?.id}
                 />
+                {!downloadAllowed && buyStep !== 'success' && (
+                  <img
+                    src="/watermark.svg"
+                    alt=""
+                    aria-hidden="true"
+                    style={{
+                      position: 'absolute', top: 0, left: 0,
+                      width: '100%', height: '100%',
+                      pointerEvents: 'none',
+                      userSelect: 'none',
+                      zIndex: 10,
+                    }}
+                  />
+                )}
+                </div>
               ) : (
                 <div style={{
                   position: 'relative',
