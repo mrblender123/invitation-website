@@ -10,18 +10,18 @@ export const metadata = {
 const STEPS = [
   {
     number: '01',
-    title: 'Simple',
-    body: 'Browse a curated collection of beautiful designs for every simcha — from a Bris to a Wedding. No design skills needed. Just pick what you love.',
+    title: 'Browse',
+    body: "Choose from a curated collection of beautiful designs for every simcha — Bris, Bar Mitzvah, Wedding, Sheva Brachos, and more. No design skills needed.",
   },
   {
     number: '02',
-    title: 'Easy',
-    body: 'Tap any field to update the text. Your changes appear instantly on the invitation. No learning curve, no tutorials.',
+    title: 'Customize',
+    body: 'Click any text field to make it yours. Your changes appear instantly on the invitation — names, dates, times, locations. What you see is what you get.',
   },
   {
     number: '03',
-    title: 'Done',
-    body: 'Download your finished invitation as a high-quality image and share it on WhatsApp, email, or print it. Ready in minutes.',
+    title: 'Download',
+    body: 'Pay once ($8.99) and receive your finished invitation as a high-quality PNG straight to your email. Share it on WhatsApp, print it, or post it — ready in minutes.',
   },
 ];
 
@@ -37,12 +37,12 @@ export default function AboutPage() {
           About Joy Send
         </p>
         <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.1, margin: '0 0 28px' }}>
-          Simple.{' '}
-          <span style={{ color: 'var(--muted-faint)' }}>Easy.</span>{' '}
-          Done.
+          Browse.{' '}
+          <span style={{ color: 'var(--muted-faint)' }}>Customize.</span>{' '}
+          Download.
         </h1>
         <p style={{ fontSize: 18, lineHeight: 1.75, color: 'var(--muted)', maxWidth: 500, margin: '0 auto' }}>
-          Joy Send was built for the Jewish community — so anyone can create a beautiful, meaningful invitation for their simcha without any design experience.
+          Joy Send was built for the Jewish community — so anyone can create a beautiful, professional invitation for their simcha in minutes, no design experience needed.
         </p>
       </section>
 

@@ -4,20 +4,24 @@ import { useState } from 'react';
 
 const FAQS = [
   {
-    q: 'Is Joy Send free to use?',
-    a: 'Yes — browsing templates and customizing your invitation is completely free. You can download your finished design at no cost.',
+    q: 'How much does it cost?',
+    a: 'Browsing and customizing is completely free. When you\'re happy with your design, you pay $8.99 to download — your finished invitation arrives as a high-quality PNG straight to your email.',
   },
   {
     q: 'Do I need to create an account?',
-    a: 'No account is required to browse or customize. Creating an account lets you save your work and come back to it later.',
+    a: 'No account needed. Browse, customize, pay, and receive your invitation — all without signing up.',
+  },
+  {
+    q: 'Can I make changes after I download?',
+    a: 'Yes. Every purchase includes up to 3 edits within 7 days. A link in your confirmation email lets you reopen your invitation, make changes, and re-download.',
   },
   {
     q: 'What simchas are supported?',
-    a: "We cover the full lifecycle of Jewish celebrations: It's a Boy, It's a Girl, Upsherin, Bar Mitzvah, Tenoyim, Bavarfen, Wedding, and Sheva Brachos — with more on the way.",
+    a: "We cover the full lifecycle of Jewish celebrations: Bris, Vachnacht, Pidyon Haben, It's a Girl, Upsherin, Bar Mitzvah, Tenoyim, Bavarfen, Wedding, and Sheva Brachos — with more added regularly.",
   },
   {
     q: 'Can I share the invitation digitally?',
-    a: 'Absolutely. Download your invitation as a high-quality image and share it directly on WhatsApp, email, or any messaging app.',
+    a: 'Absolutely. Share the PNG directly on WhatsApp, email, or any messaging app. It\'s the perfect size for digital sharing.',
   },
   {
     q: 'Can I print the invitation?',
@@ -25,7 +29,7 @@ const FAQS = [
   },
   {
     q: 'Can I edit Hebrew text on the templates?',
-    a: 'Yes. Templates that include Hebrew fields are fully editable. Just tap or click the field and type your text.',
+    a: 'Yes. Templates that include Hebrew fields are fully editable. Just click the field and type your text.',
   },
 ];
 
