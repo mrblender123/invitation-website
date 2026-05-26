@@ -117,8 +117,8 @@ export default function LandingHeader() {
         transition: 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
       }}>
         {/* Logo — left */}
-        <a href="/" style={{ ...textStyle, pointerEvents: 'auto', fontFamily: 'var(--font-playfair)', fontSize: HEADER.fontSize, paddingLeft: 20 }}>
-          Joy Send
+        <a href="/" style={{ pointerEvents: 'auto', paddingLeft: 20, display: 'flex', alignItems: 'center' }}>
+          <img src="/logo.svg" alt="Joy Send" style={{ height: 30, width: 'auto' }} />
         </a>
 
         {/* Right — About + WhatsApp */}
