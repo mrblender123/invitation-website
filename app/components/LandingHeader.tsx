@@ -118,7 +118,7 @@ export default function LandingHeader() {
       }}>
         {/* Logo — left */}
         <a href="/" style={{ pointerEvents: 'auto', paddingLeft: 20, display: 'flex', alignItems: 'center' }}>
-          <img src="/logo.svg" alt="Joy Send" style={{ height: 30, width: 'auto' }} />
+          <img src="/logo.svg" alt="Joy Send" style={{ height: 40, width: 'auto' }} />
         </a>
 
         {/* Right — About + WhatsApp */}
