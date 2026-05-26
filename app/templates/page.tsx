@@ -646,8 +646,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
           justifyContent: 'space-between',
           padding: '0 24px',
         }}>
-          <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--foreground)', textDecoration: 'none' }}>
-            Joy Send
+          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+            <img src="/logo.svg" alt="Joy Send" style={{ height: 32, width: 'auto' }} />
           </Link>
           <nav style={{ display: 'flex', alignItems: 'center', gap: 16 }} />
         </div>

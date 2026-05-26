@@ -33,9 +33,7 @@ export default function Home() {
 
             {/* Brand */}
             <div style={{ maxWidth: 260 }}>
-              <p style={{ fontFamily: 'var(--font-playfair)', fontSize: 22, fontWeight: 700, color: 'var(--foreground)', margin: '0 0 10px' }}>
-                Joy Send
-              </p>
+              <img src="/logo.svg" alt="Joy Send" style={{ height: 36, width: 'auto', marginBottom: 10 }} />
               <p style={{ fontSize: 13, lineHeight: 1.7, color: 'var(--muted-faint)', margin: 0 }}>
                 Beautiful invitation designs for every simcha. Customize, download, and share in minutes.
               </p>
