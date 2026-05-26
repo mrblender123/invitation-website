@@ -57,6 +57,8 @@ export default function Home() {
                 </p>
                 {[
                   { label: 'Templates', href: '/templates' },
+                  { label: 'About', href: '/about' },
+                  { label: 'Contact', href: '/contact' },
                 ].map(({ label, href }) => (
                   <a key={label} href={href} className="footer-link">
                     {label}
