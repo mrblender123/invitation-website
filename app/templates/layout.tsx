@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Templates — Joy Send',
-  description: 'Browse ready-made invitation templates for weddings, bar mitzvahs, and more.',
+  title: 'Invitation Templates | Joy Send — Vachnacht, Bris, Bar Mitzvah & More',
+  description: 'Browse and customize Jewish simcha invitation templates — vachnacht, bris, bar mitzvah, sheva brachos, upsherin, tenoyim and weddings. Personalize with your details and download instantly.',
 };
 
 export default function TemplatesLayout({ children }: { children: React.ReactNode }) {

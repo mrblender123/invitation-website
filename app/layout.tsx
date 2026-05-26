@@ -57,8 +57,28 @@ const frankRuhlLibre = Frank_Ruhl_Libre({
 
 
 export const metadata: Metadata = {
-  title: "Joy Send — Custom Invitation Design",
-  description: "Create beautiful custom invitations with unique backgrounds, typography, and layouts — all in one place.",
+  title: "Joy Send | Jewish Simcha Invitations — Vachnacht, Bris, Bar Mitzvah & More",
+  description: "Custom Jewish simcha invitation templates for vachnacht, bris, bar mitzvah, sheva brachos, upsherin, tenoyim and weddings. Design, personalize, and download in minutes.",
+  keywords: [
+    "vachnacht invitation",
+    "bris invitation",
+    "bar mitzvah invitation",
+    "sheva brachos invitation",
+    "upsherin invitation",
+    "tenoyim invitation",
+    "Jewish simcha invitation",
+    "Jewish invitation template",
+    "simcha invitation",
+    "Jewish wedding invitation",
+    "vachnacht bris invitation",
+    "Pidyon haben invitation",
+    "shulem zucher invitation",
+  ],
+  openGraph: {
+    title: "Joy Send | Jewish Simcha Invitations",
+    description: "Beautiful invitation templates for every simcha — vachnacht, bris, bar mitzvah, sheva brachos and more. Personalize and download instantly.",
+    type: "website",
+  },
 };
 
 export const viewport = {
