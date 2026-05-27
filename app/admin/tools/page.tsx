@@ -75,6 +75,7 @@ export default function AdminToolsPage() {
   const [fetched, setFetched] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState('');
 
   useEffect(() => {
     if (loading) return;
@@ -97,14 +98,25 @@ export default function AdminToolsPage() {
     if (!accessToken) return;
     setSaving(true);
     setSaved(false);
-    await fetch('/api/admin/banner', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
-      body: JSON.stringify(cfg),
-    });
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    setSaveError('');
+    try {
+      const res = await fetch('/api/admin/banner', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+        body: JSON.stringify(cfg),
+      });
+      if (!res.ok) {
+        const d = await res.json();
+        setSaveError(d.error ?? 'Save failed');
+      } else {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 3000);
+      }
+    } catch (e) {
+      setSaveError(String(e));
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading || !user || user.email !== ADMIN_EMAIL) return null;
@@ -272,6 +284,11 @@ export default function AdminToolsPage() {
         >
           {saving ? 'Saving…' : saved ? 'Saved ✓' : 'Save & Publish'}
         </button>
+        {saveError && (
+          <p style={{ marginTop: 12, fontSize: 13, color: '#f87171', textAlign: 'center' }}>
+            Error: {saveError}
+          </p>
+        )}
       </main>
     </div>
   );

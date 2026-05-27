@@ -44,7 +44,14 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  await db.from('site_settings').upsert({ key: 'banner', value: body, updated_at: new Date().toISOString() });
+  const { error: upsertError } = await db
+    .from('site_settings')
+    .upsert({ key: 'banner', value: body, updated_at: new Date().toISOString() });
+
+  if (upsertError) {
+    console.error('[banner] upsert error:', upsertError);
+    return NextResponse.json({ error: upsertError.message }, { status: 500 });
+  }
 
   return NextResponse.json({ ok: true });
 }
