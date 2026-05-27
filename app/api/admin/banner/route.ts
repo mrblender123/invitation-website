@@ -9,7 +9,12 @@ export const DEFAULT_BANNER = {
   link: '',
   linkLabel: 'Learn more →',
   size: 'small' as 'small' | 'large',
-  style: 'dark' as 'dark' | 'light' | 'accent',
+  bgColor: '#0f172a',
+  bgOpacity: 1,
+  textColor: '#ffffff',
+  textOpacity: 1,
+  accentColor: '#fbbf24',
+  blur: false,
 };
 
 // Public GET — called by AnnouncementBanner on every page load
