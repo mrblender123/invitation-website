@@ -749,7 +749,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                         <TemplateThumbnail template={template} onClick={() => handleSelectTemplate(template)} targetW={mobileCardW} />
                         <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `0 ${isMobileGallery ? 8 : 12}px` }}>
                           <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 600, color: 'var(--foreground)', margin: 0 }}>{template.name}</p>
-                          <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 500, color: 'var(--muted)', margin: 0 }}>$19.99</p>
+                          <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 500, color: 'var(--muted)', margin: 0 }}>$8.99</p>
                         </div>
                       </div>
                     );
