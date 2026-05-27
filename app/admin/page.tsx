@@ -126,6 +126,17 @@ export default function AdminPage() {
           >
             Template Editor →
           </a>
+          <a
+            href="/admin/tools"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '10px 20px', borderRadius: 10, fontSize: 13, fontWeight: 600,
+              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+              color: '#fff', textDecoration: 'none',
+            }}
+          >
+            Site Tools →
+          </a>
         </div>
 
         {/* Stats */}

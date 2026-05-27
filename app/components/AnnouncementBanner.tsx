@@ -1,41 +1,58 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-// ─── Edit here to control the banner ────────────────────────────────────────
-const BANNER = {
-  enabled: false,
-  text: 'New templates just added for Sheva Brachos and Wedding! 🎉',
-  link: '',        // optional URL — leave empty for no link
-  linkLabel: 'Browse now →',
+type BannerConfig = {
+  enabled: boolean;
+  text: string;
+  link: string;
+  linkLabel: string;
+  size: 'small' | 'large';
+  style: 'dark' | 'light' | 'accent';
 };
-// ────────────────────────────────────────────────────────────────────────────
+
+const STYLE_PRESETS = {
+  dark:   { bg: '#0f172a', color: '#fff',    accent: '#fbbf24' },
+  light:  { bg: '#f1f5f9', color: '#0f172a', accent: '#6366f1' },
+  accent: { bg: '#7c3aed', color: '#fff',    accent: '#fde68a' },
+};
 
 export default function AnnouncementBanner() {
+  const [cfg, setCfg] = useState<BannerConfig | null>(null);
   const [dismissed, setDismissed] = useState(false);
 
-  if (!BANNER.enabled || dismissed) return null;
+  useEffect(() => {
+    fetch('/api/admin/banner')
+      .then(r => r.json())
+      .then(setCfg)
+      .catch(() => {});
+  }, []);
+
+  if (!cfg || !cfg.enabled || !cfg.text || dismissed) return null;
+
+  const preset = STYLE_PRESETS[cfg.style] ?? STYLE_PRESETS.dark;
+  const isLarge = cfg.size === 'large';
 
   return (
     <div style={{
       position: 'fixed',
       top: 0, left: 0, right: 0,
       zIndex: 200,
-      background: '#0f172a',
-      color: '#fff',
-      padding: '10px 48px 10px 16px',
+      background: preset.bg,
+      color: preset.color,
+      padding: isLarge ? '18px 56px' : '10px 48px',
       textAlign: 'center',
-      fontSize: 13,
+      fontSize: isLarge ? 15 : 13,
       fontWeight: 500,
       lineHeight: 1.4,
     }}>
-      {BANNER.text}
-      {BANNER.link && (
+      {cfg.text}
+      {cfg.link && (
         <a
-          href={BANNER.link}
-          style={{ color: '#fbbf24', marginLeft: 10, textDecoration: 'underline', fontWeight: 600 }}
+          href={cfg.link}
+          style={{ color: preset.accent, marginLeft: 10, textDecoration: 'underline', fontWeight: 600 }}
         >
-          {BANNER.linkLabel}
+          {cfg.linkLabel || 'Learn more →'}
         </a>
       )}
       <button
@@ -44,7 +61,7 @@ export default function AnnouncementBanner() {
         style={{
           position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
           background: 'none', border: 'none', cursor: 'pointer',
-          color: 'rgba(255,255,255,0.5)', fontSize: 18, lineHeight: 1, padding: 4,
+          color: preset.color, opacity: 0.5, fontSize: 20, lineHeight: 1, padding: 4,
         }}
       >
         ×
