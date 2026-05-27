@@ -143,8 +143,8 @@ export default function GalleryPage() {
         backdropFilter: 'blur(12px)',
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none' }}>
-            Joy Send
+          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+            <img src="/logo.svg" alt="Joy Send" style={{ height: 34, width: 'auto', filter: 'brightness(0) invert(1)' }} />
           </Link>
           <nav style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
             <Link href="/saved" style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>

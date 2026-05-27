@@ -24,8 +24,8 @@ export default function LoginPage() {
     }}>
 
       {/* Logo */}
-      <Link href="/" style={{ fontFamily: 'var(--font-playfair)', fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em', color: '#fff', textDecoration: 'none', marginBottom: 48 }}>
-        Joy Send
+      <Link href="/" style={{ textDecoration: 'none', marginBottom: 48, display: 'block' }}>
+        <img src="/logo.svg" alt="Joy Send" style={{ height: 40, width: 'auto', filter: 'brightness(0) invert(1)' }} />
       </Link>
 
       {/* Card */}
