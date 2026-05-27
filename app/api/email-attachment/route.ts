@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { Resend } from 'resend';
+import { PDFDocument } from 'pdf-lib';
 import { createDownloadToken } from '@/lib/download-token';
 import { initEditRecord } from '@/lib/edit-tracking';
 
@@ -27,6 +28,13 @@ export async function POST(req: Request) {
   const pngBuf = Buffer.from(await req.arrayBuffer());
   if (!pngBuf.length) return new Response('Empty body', { status: 400 });
 
+  // Wrap PNG in a PDF (fast — just embeds the image, no re-rendering)
+  const pdfDoc = await PDFDocument.create();
+  const pngImage = await pdfDoc.embedPng(pngBuf);
+  const page = pdfDoc.addPage([pngImage.width, pngImage.height]);
+  page.drawImage(pngImage, { x: 0, y: 0, width: pngImage.width, height: pngImage.height });
+  const pdfBuf = Buffer.from(await pdfDoc.save());
+
   try { await initEditRecord(piId, templateId); } catch (e) { console.error('initEditRecord failed:', e); }
 
   const token = createDownloadToken(templateId);
@@ -42,13 +50,14 @@ export async function POST(req: Request) {
     subject: 'Your Joy Send invitation files 🎉',
     attachments: [
       { filename: 'invitation.png', content: pngBuf },
+      { filename: 'invitation.pdf', content: pdfBuf },
     ],
     html: `
       <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1a1a1a;">
         <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo.png" alt="Joy Send" style="height: 70px; width: auto; margin-bottom: 24px; display: block;" />
         <p style="font-size: 15px; color: #555; margin: 0 0 32px;">Beautiful invitations for every simcha</p>
         <p style="font-size: 16px; line-height: 1.6; margin: 0 0 24px;">
-          Your customized invitation is attached to this email as a PNG.
+          Your customized invitation is attached to this email as a PNG and PDF.
         </p>
         <p style="font-size: 14px; color: #555; margin: 0 0 24px;">
           You can also edit and re-download using the link below — up to 3 times within 7 days:
