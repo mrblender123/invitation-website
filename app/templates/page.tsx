@@ -318,9 +318,6 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [isBuying, setIsBuying] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
-  const [smsPhone, setSmsPhone] = useState('');
-  const [smsSending, setSmsSending] = useState(false);
-  const [smsStatus, setSmsStatus] = useState<'idle' | 'sent' | 'error'>('idle');
   const [downloadAllowed, setDownloadAllowed] = useState(false);
   const [editsRemaining, setEditsRemaining] = useState<number | null>(null);
   const [editsExhausted, setEditsExhausted] = useState(false);
@@ -1153,49 +1150,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 >
                   {isDownloadingPdf ? 'Generating…' : 'Download PDF'}
                 </button>
-                {/* SMS to US number */}
-                <div style={{ borderTop: '1px solid rgba(0,0,0,0.08)', marginTop: 16, paddingTop: 16 }}>
-                  <p style={{ fontSize: 13, color: 'var(--muted)', margin: '0 0 8px' }}>Send to a US phone number (MMS)</p>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <input
-                      type="tel"
-                      placeholder="(555) 555-5555"
-                      value={smsPhone}
-                      onChange={e => { setSmsPhone(e.target.value); setSmsStatus('idle'); }}
-                      style={{ ...inputStyle, flex: 1, fontSize: 14, padding: '10px 14px' }}
-                    />
-                    <button
-                      onClick={async () => {
-                        const piId = checkoutClientSecret?.split('_secret_')[0];
-                        if (!piId || !smsPhone.trim()) return;
-                        setSmsSending(true);
-                        setSmsStatus('idle');
-                        try {
-                          const blob = await generateBlob();
-                          if (!blob) throw new Error('No image');
-                          const res = await fetch('/api/send-sms', {
-                            method: 'POST',
-                            headers: { 'x-pi-id': piId, 'x-phone': smsPhone.trim() },
-                            body: blob,
-                          });
-                          setSmsStatus(res.ok ? 'sent' : 'error');
-                        } catch {
-                          setSmsStatus('error');
-                        } finally {
-                          setSmsSending(false);
-                        }
-                      }}
-                      disabled={smsSending || !smsPhone.trim()}
-                      style={{ background: '#0f172a', color: '#fff', border: 'none', borderRadius: 9999, padding: '10px 18px', fontSize: 14, fontWeight: 600, cursor: smsSending || !smsPhone.trim() ? 'not-allowed' : 'pointer', opacity: smsSending || !smsPhone.trim() ? 0.6 : 1, whiteSpace: 'nowrap' }}
-                    >
-                      {smsSending ? 'Sending…' : 'Send'}
-                    </button>
-                  </div>
-                  {smsStatus === 'sent' && <p style={{ fontSize: 12, color: '#16a34a', margin: '6px 0 0' }}>Sent! Check your messages.</p>}
-                  {smsStatus === 'error' && <p style={{ fontSize: 12, color: '#ef4444', margin: '6px 0 0' }}>Failed to send. Make sure it&apos;s a US number.</p>}
-                </div>
 
-                <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 24px', cursor: 'pointer', fontSize: 14, marginTop: 16 }}>Done</button>
+<button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 24px', cursor: 'pointer', fontSize: 14, marginTop: 16 }}>Done</button>
               </div>
             ) : buyStep === 'email' ? (
               /* Step 1 — email */
