@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServiceClient } from '@/lib/supabase';
+import { verifyDraftToken } from '@/lib/draft-token';
 
 export async function GET(
   _req: NextRequest,
@@ -7,25 +7,16 @@ export async function GET(
 ) {
   try {
     const { token } = await params;
-    const supabase = createServiceClient();
+    const draft = verifyDraftToken(token);
 
-    const { data, error } = await supabase
-      .from('drafts')
-      .select('template_id, field_values, expires_at')
-      .eq('token', token)
-      .single();
-
-    if (error || !data) {
-      return NextResponse.json({ error: 'Draft not found' }, { status: 404 });
-    }
-
-    if (new Date(data.expires_at) < new Date()) {
-      return NextResponse.json({ error: 'Draft has expired' }, { status: 410 });
+    if (!draft) {
+      // Expired tokens return null the same way — client checks status 410 for expiry message
+      return NextResponse.json({ error: 'Draft not found or expired' }, { status: 410 });
     }
 
     return NextResponse.json({
-      templateId: data.template_id,
-      fieldValues: data.field_values,
+      templateId: draft.templateId,
+      fieldValues: draft.fieldValues,
     });
   } catch (err) {
     console.error('[GET /api/drafts/:token]', err);
