@@ -8,13 +8,14 @@ type BannerConfig = {
   link: string;
   linkLabel: string;
   size: 'small' | 'large';
-  style: 'dark' | 'light' | 'accent';
+  style: 'dark' | 'light' | 'accent' | 'glass';
 };
 
 const STYLE_PRESETS = {
-  dark:   { bg: '#0f172a', color: '#fff',    accent: '#fbbf24' },
-  light:  { bg: '#f1f5f9', color: '#0f172a', accent: '#6366f1' },
-  accent: { bg: '#7c3aed', color: '#fff',    accent: '#fde68a' },
+  dark:   { bg: '#0f172a',                color: '#fff',    accent: '#fbbf24', blur: false },
+  light:  { bg: '#f1f5f9',                color: '#0f172a', accent: '#6366f1', blur: false },
+  accent: { bg: '#7c3aed',                color: '#fff',    accent: '#fde68a', blur: false },
+  glass:  { bg: 'rgba(255,255,255,0.12)', color: '#fff',    accent: '#fbbf24', blur: true  },
 };
 
 export default function AnnouncementBanner() {
@@ -39,6 +40,8 @@ export default function AnnouncementBanner() {
       top: 0, left: 0, right: 0,
       zIndex: 200,
       background: preset.bg,
+      backdropFilter: preset.blur ? 'blur(12px)' : undefined,
+      WebkitBackdropFilter: preset.blur ? 'blur(12px)' : undefined,
       color: preset.color,
       padding: isLarge ? '18px 56px' : '10px 48px',
       textAlign: 'center',

@@ -6,7 +6,7 @@ import { useAuth } from '../../components/AuthProvider';
 
 const ADMIN_EMAIL = 'bycheshin@gmail.com';
 
-type BannerStyle = 'dark' | 'light' | 'accent';
+type BannerStyle = 'dark' | 'light' | 'accent' | 'glass';
 type BannerSize  = 'small' | 'large';
 
 type BannerConfig = {
@@ -22,10 +22,11 @@ const DEFAULT: BannerConfig = {
   enabled: false, text: '', link: '', linkLabel: 'Learn more →', size: 'small', style: 'dark',
 };
 
-const STYLE_PRESETS: Record<BannerStyle, { bg: string; color: string; accent: string; label: string }> = {
-  dark:   { bg: '#0f172a', color: '#fff',    accent: '#fbbf24', label: 'Dark'   },
-  light:  { bg: '#f1f5f9', color: '#0f172a', accent: '#6366f1', label: 'Light'  },
-  accent: { bg: '#7c3aed', color: '#fff',    accent: '#fde68a', label: 'Purple' },
+const STYLE_PRESETS: Record<BannerStyle, { bg: string; color: string; accent: string; label: string; blur?: boolean }> = {
+  dark:   { bg: '#0f172a',               color: '#fff',    accent: '#fbbf24', label: 'Dark'        },
+  light:  { bg: '#f1f5f9',               color: '#0f172a', accent: '#6366f1', label: 'Light'       },
+  accent: { bg: '#7c3aed',               color: '#fff',    accent: '#fde68a', label: 'Purple'      },
+  glass:  { bg: 'rgba(255,255,255,0.12)', color: '#fff',   accent: '#fbbf24', label: 'Glass', blur: true },
 };
 
 function BannerPreview({ cfg }: { cfg: BannerConfig }) {
@@ -35,6 +36,8 @@ function BannerPreview({ cfg }: { cfg: BannerConfig }) {
     <div style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
       <div style={{
         background: preset.bg, color: preset.color,
+        backdropFilter: preset.blur ? 'blur(12px)' : undefined,
+        WebkitBackdropFilter: preset.blur ? 'blur(12px)' : undefined,
         padding: isLarge ? '18px 56px' : '10px 48px',
         textAlign: 'center', fontSize: isLarge ? 15 : 13, fontWeight: 500, position: 'relative',
       }}>
