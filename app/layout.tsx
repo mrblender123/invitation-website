@@ -74,10 +74,27 @@ export const metadata: Metadata = {
     "Pidyon haben invitation",
     "shulem zucher invitation",
   ],
+  metadataBase: new URL('https://www.joy-send.com'),
   openGraph: {
     title: "Joy Send | Jewish Simcha Invitations",
     description: "Beautiful invitation templates for every simcha — vachnacht, bris, bar mitzvah, sheva brachos and more. Personalize and download instantly.",
     type: "website",
+    url: "https://www.joy-send.com",
+    siteName: "Joy Send",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Joy Send — Jewish Simcha Invitations",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Joy Send | Jewish Simcha Invitations",
+    description: "Beautiful invitation templates for every simcha. Personalize and download instantly.",
+    images: ["/og-image.png"],
   },
 };
 
