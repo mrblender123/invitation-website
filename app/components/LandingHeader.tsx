@@ -10,7 +10,7 @@ const HEADER = {
 };
 
 const CATEGORIES = [
-  { key: "It's a Boy",    emoji: '👶🏻', subcategories: ['Bris', 'Pidyon Haben', "Shlishi L'milah", 'Shulem Zucher', 'Vachnacht', 'Vachnacht-Bris'] },
+  { key: "It's a Boy",    emoji: '👶🏻', subcategories: ['Bris', 'Pidyon Haben', "Shlishi L'milah", 'Shulem Zucher', 'Vachnacht-Bris'] },
   { key: "It's a Girl",   emoji: '🎀' },
   { key: 'Upsherin',      emoji: '✂️' },
   { key: 'Bar Mitzvah',   emoji: '⓭' },
