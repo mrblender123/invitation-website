@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto, { timingSafeEqual } from 'crypto';
 
 const SECRET = process.env.DRAFT_SECRET ?? 'dev-draft-secret-change-in-prod';
 const EXPIRY_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
@@ -27,7 +27,7 @@ export function verifyDraftToken(token: string): {
   if (dotIndex === -1) return null;
   const payload = token.slice(0, dotIndex);
   const sig = token.slice(dotIndex + 1);
-  if (sig !== sign(payload)) return null;
+  if (!timingSafeEqual(Buffer.from(sig), Buffer.from(sign(payload)))) return null;
   try {
     const { templateId, fieldValues, email, exp } = JSON.parse(
       Buffer.from(payload, 'base64url').toString(),

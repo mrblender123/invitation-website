@@ -1,4 +1,4 @@
-import { createHmac } from 'crypto';
+import { createHmac, timingSafeEqual } from 'crypto';
 
 const SECRET = process.env.DOWNLOAD_TOKEN_SECRET!;
 const TTL_MS = 7 * 24 * 60 * 60 * 1000;
@@ -15,7 +15,7 @@ export function verifyDownloadToken(token: string, templateId: string): boolean 
     const [payload, sig] = token.split('.');
     if (!payload || !sig) return false;
     const expected = createHmac('sha256', SECRET).update(payload).digest('base64url');
-    if (sig !== expected) return false;
+    if (!timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) return false;
     const { templateId: tid, exp } = JSON.parse(Buffer.from(payload, 'base64url').toString());
     return tid === templateId && Date.now() < exp;
   } catch {
