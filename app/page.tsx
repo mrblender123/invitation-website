@@ -1,5 +1,6 @@
 import LandingHeader from './components/LandingHeader';
 import CategoryRows from './components/CategoryRows';
+import AnnouncementBanner from './components/AnnouncementBanner';
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       {/* Top fade — cards lose opacity as they scroll up into the header zone */}
       <div aria-hidden="true" style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 'var(--pills-bottom, 180px)', background: 'linear-gradient(to bottom, var(--background) 20%, transparent 100%)', pointerEvents: 'none', zIndex: 48 }} />
 
+<AnnouncementBanner />
 <LandingHeader />
 <div style={{ position: 'relative', zIndex: 1 }}>
         <CategoryRows />
