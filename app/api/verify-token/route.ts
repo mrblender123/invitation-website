@@ -1,5 +1,5 @@
 import { verifyDownloadToken } from '@/lib/download-token';
-import { consumeEdit } from '@/lib/edit-tracking';
+import { checkEditCount } from '@/lib/edit-tracking';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -13,15 +13,13 @@ export async function GET(req: Request) {
 
   if (piId) {
     try {
-      const { allowed, editsRemaining, notFound } = await consumeEdit(piId);
-      // No row found = purchase predates edit tracking; fall back to token-only
+      const { allowed, editsRemaining, notFound } = await checkEditCount(piId);
       if (notFound) return Response.json({ valid: true, editsRemaining: null });
       return Response.json({ valid: allowed, editsRemaining });
     } catch {
-      // Supabase unavailable — don't block the user, fall through to token-only
+      // Supabase unavailable — don't block the user
     }
   }
 
-  // No piId or Supabase fallback — honour the token alone
   return Response.json({ valid: true, editsRemaining: null });
 }

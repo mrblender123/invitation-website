@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { PDFDocument } from 'pdf-lib';
 import { createDownloadToken } from '@/lib/download-token';
-import { initEditRecord } from '@/lib/edit-tracking';
+import { initEditRecord, markEmailSent } from '@/lib/edit-tracking';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
@@ -36,6 +36,13 @@ export async function POST(req: Request) {
   const pdfBuf = Buffer.from(await pdfDoc.save());
 
   try { await initEditRecord(piId, templateId); } catch (e) { console.error('initEditRecord failed:', e); }
+
+  // Dedup guard — if email already sent for this payment, skip to avoid duplicates
+  const canSend = await markEmailSent(piId);
+  if (!canSend) {
+    console.log('[email-attachment] Already sent for pi=%s, skipping', piId);
+    return new Response('OK');
+  }
 
   const token = createDownloadToken(templateId);
 

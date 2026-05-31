@@ -518,10 +518,33 @@ const [windowWidth, setWindowWidth] = useState(1200);
     return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
   };
 
+  // Called before re-edit downloads — consumes one edit slot server-side.
+  // Returns false if the edit limit is reached.
+  const consumeEditSlot = async (): Promise<boolean> => {
+    if (!piParam) return true; // not an edit session — no consumption needed
+    try {
+      const res = await fetch('/api/consume-edit', {
+        method: 'POST',
+        headers: { 'x-pi-id': piParam },
+      });
+      const data = await res.json();
+      if (!data.allowed) {
+        setEditsExhausted(true);
+        setDownloadAllowed(false);
+        return false;
+      }
+      if (data.editsRemaining !== null) setEditsRemaining(data.editsRemaining);
+      return true;
+    } catch {
+      return true; // network error — let the download proceed
+    }
+  };
+
   const handleDownload = async () => {
     if (!cardRef.current) return;
     setIsDownloading(true);
     try {
+      if (!await consumeEditSlot()) return;
       const blob = await generateBlob();
       if (!blob) return;
       const url = URL.createObjectURL(blob);
@@ -539,6 +562,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
     if (!cardRef.current) return;
     setIsDownloadingPdf(true);
     try {
+      if (!await consumeEditSlot()) return;
       const blob = await generateBlob();
       if (!blob) return;
       const { PDFDocument } = await import('pdf-lib');
