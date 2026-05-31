@@ -35,10 +35,9 @@ const FONT_CSS_VARS: Record<string, string> = {
 // Next.js registers fonts under scoped names (e.g. __Playpen_Sans_Hebrew_abc), not the
 // original name. Canvas ctx.font can only find fonts by their CSS @font-face family name,
 // so we register each font under its original name before the first download.
-let fontsRegistered = false;
-async function ensureFontsRegisteredUnderOriginalNames() {
-  if (fontsRegistered) return;
-  fontsRegistered = true;
+let fontsRegistrationPromise: Promise<void> | null = null;
+
+async function _loadFonts() {
   const htmlStyle = getComputedStyle(document.documentElement);
   for (const [originalName, cssVar] of Object.entries(FONT_CSS_VARS)) {
     const scopedName = htmlStyle.getPropertyValue(cssVar).trim()
@@ -63,6 +62,11 @@ async function ensureFontsRegisteredUnderOriginalNames() {
       } catch { /* cross-origin sheet */ }
     }
   }
+}
+
+function ensureFontsRegisteredUnderOriginalNames() {
+  if (!fontsRegistrationPromise) fontsRegistrationPromise = _loadFonts();
+  return fontsRegistrationPromise;
 }
 
 function drawSvgTextToCanvas(ctx: CanvasRenderingContext2D, svgEl: SVGElement, canvasWidth: number, canvasHeight: number) {
@@ -369,7 +373,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
       .then(({ valid, editsRemaining: rem }: { valid: boolean; editsRemaining: number | null }) => {
         if (cacheKey) sessionStorage.setItem(cacheKey, JSON.stringify({ valid, editsRemaining: rem }));
         apply(valid, rem);
-      });
+      })
+      .catch(() => apply(false, null));
   }, [tokenParam, templateParam, restoreParam, piParam]);
 
   // Update keyboard anchor position when active field changes
@@ -431,6 +436,12 @@ const [windowWidth, setWindowWidth] = useState(1200);
     router.push(`/templates?${params.toString()}`);
     setSelected(template);
     setClearedFields(new Set());
+    // Reset payment state so a new template always requires a new purchase
+    setDownloadAllowed(false);
+    setEditsExhausted(false);
+    setEditsRemaining(null);
+    setCheckoutClientSecret(null);
+    setBuyStep('email');
     if (template.fields) {
       const initial: Record<string, string> = {};
       for (const f of template.fields) initial[f.id] = f.placeholder;
@@ -1197,6 +1208,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 <Elements stripe={stripePromise} options={{ clientSecret: checkoutClientSecret ?? undefined }}>
                   <CheckoutForm clientSecret={checkoutClientSecret!} onSuccess={async () => {
                     setBuyStep('success');
+                    setDownloadAllowed(true);
                     try {
                       const piId = checkoutClientSecret?.split('_secret_')[0];
                       const blob = await generateBlob();
