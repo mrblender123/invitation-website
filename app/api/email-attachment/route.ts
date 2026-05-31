@@ -38,38 +38,51 @@ export async function POST(req: Request) {
   try { await initEditRecord(piId, templateId); } catch (e) { console.error('initEditRecord failed:', e); }
 
   const token = createDownloadToken(templateId);
-  const fieldValues: Record<string, string> = JSON.parse(pi.metadata?.fieldValues ?? '{}');
+
+  // fieldValues may be truncated at 500 chars in Stripe metadata — parse defensively
+  let fieldValues: Record<string, string> = {};
+  try { fieldValues = JSON.parse(pi.metadata?.fieldValues ?? '{}'); } catch { /* restore link will be empty */ }
+
   const restoreParam = encodeURIComponent(
     Buffer.from(JSON.stringify(fieldValues)).toString('base64'),
   );
   const downloadUrl = `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${encodeURIComponent(templateId)}&token=${token}&restore=${restoreParam}&pi=${encodeURIComponent(piId)}`;
 
-  await resend.emails.send({
-    from: process.env.RESEND_FROM ?? 'Joy Send <noreply@joy-send.com>',
-    to: email,
-    subject: 'Your Joy Send invitation files 🎉',
-    attachments: [
-      { filename: 'invitation.png', content: pngBuf },
-      { filename: 'invitation.pdf', content: pdfBuf },
-    ],
-    html: `
-      <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1a1a1a;">
-        <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo.png" alt="Joy Send" style="height: 70px; width: auto; margin-bottom: 24px; display: block;" />
-        <p style="font-size: 15px; color: #555; margin: 0 0 32px;">Beautiful invitations for every simcha</p>
-        <p style="font-size: 16px; line-height: 1.6; margin: 0 0 24px;">
-          Your customized invitation is attached to this email as a PNG and PDF.
-        </p>
-        <p style="font-size: 14px; color: #555; margin: 0 0 24px;">
-          You can also edit and re-download using the link below — up to 3 times within 7 days:
-        </p>
-        <a href="${downloadUrl}"
-           style="display: inline-block; background: #0f172a; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 9999px; font-size: 15px; font-weight: 600; margin-bottom: 32px;">
-          Edit &amp; re-download →
-        </a>
-        <p style="font-size: 13px; color: #bbb; margin: 0;">© ${new Date().getFullYear()} Joy Send</p>
-      </div>
-    `,
-  });
+  try {
+    const { error: sendError } = await resend.emails.send({
+      from: process.env.RESEND_FROM ?? 'Joy Send <noreply@joy-send.com>',
+      to: email,
+      subject: 'Your Joy Send invitation files 🎉',
+      attachments: [
+        { filename: 'invitation.png', content: pngBuf },
+        { filename: 'invitation.pdf', content: pdfBuf },
+      ],
+      html: `
+        <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1a1a1a;">
+          <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo.png" alt="Joy Send" style="height: 70px; width: auto; margin-bottom: 24px; display: block;" />
+          <p style="font-size: 15px; color: #555; margin: 0 0 32px;">Beautiful invitations for every simcha</p>
+          <p style="font-size: 16px; line-height: 1.6; margin: 0 0 24px;">
+            Your customized invitation is attached to this email as a PNG and PDF.
+          </p>
+          <p style="font-size: 14px; color: #555; margin: 0 0 24px;">
+            You can also edit and re-download using the link below — up to 3 times within 7 days:
+          </p>
+          <a href="${downloadUrl}"
+             style="display: inline-block; background: #0f172a; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 9999px; font-size: 15px; font-weight: 600; margin-bottom: 32px;">
+            Edit &amp; re-download →
+          </a>
+          <p style="font-size: 13px; color: #bbb; margin: 0;">© ${new Date().getFullYear()} Joy Send</p>
+        </div>
+      `,
+    });
+    if (sendError) {
+      console.error('[email-attachment] Resend error for pi=%s: %s', piId, sendError.message);
+      return new Response(JSON.stringify({ error: 'email_failed', piId }), { status: 500 });
+    }
+  } catch (e) {
+    console.error('[email-attachment] Unexpected send error for pi=%s:', piId, e);
+    return new Response(JSON.stringify({ error: 'email_failed', piId }), { status: 500 });
+  }
 
   return new Response('OK');
 }

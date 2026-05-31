@@ -15,7 +15,8 @@ export async function POST(req: Request) {
       metadata: {
         templateId,
         email: email || '',
-        fieldValues: JSON.stringify(fieldValues).slice(0, 500),
+        // Stripe allows 500 chars per key; 2000 is safe within the 8KB object limit
+        fieldValues: JSON.stringify(fieldValues).slice(0, 2000),
       },
     });
 

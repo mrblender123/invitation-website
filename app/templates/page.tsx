@@ -331,6 +331,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
   const [buyStep, setBuyStep] = useState<'email' | 'card' | 'success'>('email');
   const [buyError, setBuyError] = useState('');
+  const [emailError, setEmailError] = useState(false);
 
   useEffect(() => {
     const update = () => setWindowWidth(window.innerWidth);
@@ -442,6 +443,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
     setEditsRemaining(null);
     setCheckoutClientSecret(null);
     setBuyStep('email');
+    setEmailError(false);
     if (template.fields) {
       const initial: Record<string, string> = {};
       for (const f of template.fields) initial[f.id] = f.placeholder;
@@ -1154,9 +1156,15 @@ const [windowWidth, setWindowWidth] = useState(1200);
               <div style={{ textAlign: 'center', padding: '16px 0' }}>
                 <p style={{ fontSize: 40, margin: '0 0 16px' }}>🎉</p>
                 <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 10px' }}>Your invitation is ready!</h2>
-                <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 24px' }}>
-                  We also sent a 7-day edit &amp; download link to <strong>{buyEmail}</strong>.
-                </p>
+                {emailError ? (
+                  <p style={{ fontSize: 14, color: '#ef4444', lineHeight: 1.6, margin: '0 0 24px', background: '#fef2f2', borderRadius: 8, padding: '10px 14px' }}>
+                    We couldn&apos;t send your email. Download your files now — or contact <a href="mailto:info@joy-send.com" style={{ color: '#ef4444' }}>info@joy-send.com</a> with your payment ID to get them later.
+                  </p>
+                ) : (
+                  <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 24px' }}>
+                    We also sent a 7-day edit &amp; download link to <strong>{buyEmail}</strong>.
+                  </p>
+                )}
                 <button
                   onClick={handleDownload}
                   disabled={isDownloading || isDownloadingPdf}
@@ -1209,18 +1217,23 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   <CheckoutForm clientSecret={checkoutClientSecret!} onSuccess={async () => {
                     setBuyStep('success');
                     setDownloadAllowed(true);
+                    setEmailError(false);
                     try {
                       const piId = checkoutClientSecret?.split('_secret_')[0];
                       const blob = await generateBlob();
                       if (blob && piId) {
-                        fetch('/api/email-attachment', {
+                        const res = await fetch('/api/email-attachment', {
                           method: 'POST',
                           headers: { 'x-pi-id': piId },
                           body: blob,
-                        }).catch(console.error);
+                        });
+                        if (!res.ok) setEmailError(true);
+                      } else {
+                        setEmailError(true);
                       }
                     } catch (e) {
-                      console.error('post-payment blob generation failed:', e);
+                      console.error('post-payment email failed:', e);
+                      setEmailError(true);
                     }
                   }} />
                 </Elements>
