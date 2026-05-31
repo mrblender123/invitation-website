@@ -292,6 +292,7 @@ function TemplatesContent() {
   const tokenParam  = searchParams.get('token');
   const restoreParam = searchParams.get('restore');
   const piParam     = searchParams.get('pi');
+  const draftParam  = searchParams.get('draft');
   const subs        = category ? (CATEGORY_SUBS[category] ?? []) : [];
 
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -404,6 +405,15 @@ const [windowWidth, setWindowWidth] = useState(1200);
       })
       .finally(() => setLoadingTemplates(false));
   }, []);
+
+  // Restore field values from draft link (?draft=1&restore=...)
+  useEffect(() => {
+    if (!draftParam || !restoreParam || !templateParam) return;
+    try {
+      const saved = JSON.parse(Buffer.from(restoreParam, 'base64').toString());
+      setFieldValues(saved);
+    } catch {}
+  }, [draftParam, restoreParam, templateParam]);
 
   // Sync selected state with URL — clears editor when back is pressed
   useEffect(() => {
