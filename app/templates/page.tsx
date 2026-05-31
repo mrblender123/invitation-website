@@ -700,7 +700,10 @@ const [windowWidth, setWindowWidth] = useState(1200);
       {/* Content */}
       <div className="page-content" style={{ maxWidth: 1200, margin: '0 auto', padding: '44px 24px 80px' }}>
 
-        {selected === null ? (
+        {selected === null && templateParam && loadingTemplates ? (
+          /* Loading a specific template — blank to avoid gallery flash */
+          <div style={{ minHeight: 400 }} />
+        ) : selected === null ? (
           /* ── Gallery view ── */
           <>
             <div style={{ marginBottom: 36 }}>
