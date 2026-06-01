@@ -166,6 +166,9 @@ export default function TemplateEditorPage() {
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState('');
   const [renamingIdx, setRenamingIdx] = useState<number | null>(null);
+  const [showAddLayer, setShowAddLayer] = useState(false);
+  const [newLayerId, setNewLayerId] = useState('');
+  const [newLayerText, setNewLayerText] = useState('');
   const [marquee, setMarquee] = useState<Marquee | null>(null);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
@@ -509,6 +512,46 @@ export default function TemplateEditorPage() {
     if (!cleaned) return;
     setLayers(prev => prev.map((l, i) => i === idx ? { ...l, id: cleaned } : l));
   }, []);
+
+  // ── add / delete layer ────────────────────────────────────────────────────────
+
+  const handleAddLayer = useCallback(() => {
+    if (!svgSource) return;
+    const id = newLayerId.trim() || `field_${Date.now()}`;
+    const placeholder = newLayerText.trim() || 'New text';
+    const cx = svgW / 2;
+    const cy = svgH / 2;
+    pushHistory();
+    const el = `<g id="${id}"><text font-family="Heebo" font-size="24" font-weight="400" fill="#000000" text-anchor="middle" transform="translate(${cx} ${cy})"><tspan x="0">${placeholder}</tspan></text></g>`;
+    const newSvg = svgSource.replace(/<\/svg>/, `${el}</svg>`);
+    const newLayer: Layer = {
+      index: layers.length, id, originalId: id, label: placeholder,
+      tx: cx, ty: cy, restTransform: '',
+      fontSize: 24, fontWeight: 400, fontFamily: 'Heebo', fill: '#000000', anchor: 'middle',
+    };
+    setSvgSource(newSvg);
+    setLayers(prev => { const next = [...prev, newLayer]; setSelection(new Set([next.length - 1])); return next; });
+    setNewLayerId(''); setNewLayerText(''); setShowAddLayer(false);
+  }, [svgSource, newLayerId, newLayerText, svgW, svgH, layers.length, pushHistory]);
+
+  const handleDeleteLayer = useCallback((idx: number) => {
+    if (!svgSource) return;
+    pushHistory();
+    const doc = new DOMParser().parseFromString(svgSource, 'image/svg+xml');
+    const textEls = doc.querySelectorAll('text');
+    const textEl = textEls[idx];
+    if (textEl) {
+      const parent = textEl.parentElement;
+      if (parent?.tagName.toLowerCase() === 'g' && parent.id) { parent.remove(); } else { textEl.remove(); }
+    }
+    setSvgSource(new XMLSerializer().serializeToString(doc.documentElement));
+    setLayers(prev => prev.filter((_, i) => i !== idx));
+    setSelection(prev => {
+      const next = new Set<number>();
+      prev.forEach(i => { if (i !== idx) next.add(i > idx ? i - 1 : i); });
+      return next;
+    });
+  }, [svgSource, pushHistory]);
 
   // ── save ──────────────────────────────────────────────────────────────────────
 
@@ -1057,7 +1100,38 @@ export default function TemplateEditorPage() {
                       style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.3)', cursor: 'pointer', whiteSpace: 'nowrap' }}
                     >None</button>
                   )}
+                  <button
+                    onClick={() => { setShowAddLayer(v => !v); setNewLayerId(''); setNewLayerText(''); }}
+                    title="Add new text layer"
+                    style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.3)', color: '#4ade80', cursor: 'pointer', whiteSpace: 'nowrap', fontWeight: 600 }}
+                  >+ Layer</button>
                 </div>
+
+                {/* Add layer form */}
+                {showAddLayer && (
+                  <div style={{ background: 'rgba(74,222,128,0.05)', border: '1px solid rgba(74,222,128,0.2)', borderRadius: 8, padding: '10px', marginBottom: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    <input
+                      autoFocus
+                      placeholder="Field ID (e.g. host_name)"
+                      value={newLayerId}
+                      onChange={e => setNewLayerId(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter') handleAddLayer(); if (e.key === 'Escape') setShowAddLayer(false); }}
+                      style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 5, color: '#fff', fontSize: 12, padding: '5px 8px', outline: 'none', width: '100%', boxSizing: 'border-box' }}
+                    />
+                    <input
+                      placeholder="Placeholder text"
+                      value={newLayerText}
+                      onChange={e => setNewLayerText(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter') handleAddLayer(); if (e.key === 'Escape') setShowAddLayer(false); }}
+                      style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 5, color: '#fff', fontSize: 12, padding: '5px 8px', outline: 'none', width: '100%', boxSizing: 'border-box' }}
+                    />
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button onClick={handleAddLayer} style={{ flex: 1, padding: '5px 0', borderRadius: 5, border: 'none', background: '#4ade80', color: '#000', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>Add</button>
+                      <button onClick={() => setShowAddLayer(false)} style={{ padding: '5px 10px', borderRadius: 5, border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: 'rgba(255,255,255,0.4)', fontSize: 12, cursor: 'pointer' }}>✕</button>
+                    </div>
+                  </div>
+                )}
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   {layers.map((layer, idx) => {
                     const isSel = selection.has(idx);
@@ -1102,6 +1176,13 @@ export default function TemplateEditorPage() {
                                   title="Rename field id"
                                   style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.25)', cursor: 'pointer', padding: '0 2px', fontSize: 11, lineHeight: 1, flexShrink: 0 }}
                                 >✎</button>
+                              )}
+                              {isSel && !isMultiSel && (
+                                <button
+                                  onClick={e => { e.stopPropagation(); if (confirm(`Delete layer "${layer.id ?? layer.label}"?`)) handleDeleteLayer(idx); }}
+                                  title="Delete layer"
+                                  style={{ background: 'none', border: 'none', color: 'rgba(239,68,68,0.5)', cursor: 'pointer', padding: '0 2px', fontSize: 12, lineHeight: 1, flexShrink: 0 }}
+                                >🗑</button>
                               )}
                             </div>
                           )}
