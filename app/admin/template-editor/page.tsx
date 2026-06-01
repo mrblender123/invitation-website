@@ -17,6 +17,7 @@ type Layer = {
   id: string | null;
   originalId: string | null;
   label: string;
+  placeholder: string;
   tx: number;
   ty: number;
   restTransform: string;
@@ -60,13 +61,14 @@ function parseLayers(svgText: string): Layer[] {
     if (!m) return;
     const parent = textEl.parentElement;
     const id = parent?.tagName.toLowerCase() === 'g' && parent.id ? parent.id : null;
-    const label = textEl.querySelector('tspan')?.textContent?.trim().slice(0, 24) ?? `text-${idx}`;
+    const placeholder = textEl.querySelector('tspan')?.textContent?.trim() ?? '';
+    const label = placeholder.slice(0, 24) || `text-${idx}`;
     const fsSrc = textEl.getAttribute('font-size');
     const fwSrc = textEl.getAttribute('font-weight');
     const ffSrc = textEl.getAttribute('font-family');
     const fillSrc = textEl.getAttribute('fill');
     const anchorSrc = textEl.getAttribute('text-anchor') as 'start' | 'middle' | 'end' | null;
-    layers.push({ index: idx, id, originalId: id, label, tx: parseFloat(m[1]), ty: parseFloat(m[2]), restTransform: m[3], fontSize: fsSrc ? parseFloat(fsSrc) : null, fontWeight: fwSrc ? parseFloat(fwSrc) : null, fontFamily: ffSrc ?? null, fill: fillSrc ?? null, anchor: anchorSrc });
+    layers.push({ index: idx, id, originalId: id, label, placeholder, tx: parseFloat(m[1]), ty: parseFloat(m[2]), restTransform: m[3], fontSize: fsSrc ? parseFloat(fsSrc) : null, fontWeight: fwSrc ? parseFloat(fwSrc) : null, fontFamily: ffSrc ?? null, fill: fillSrc ?? null, anchor: anchorSrc });
   });
   return layers;
 }
@@ -89,6 +91,9 @@ function buildSvgForSave(svgSource: string, layers: Layer[], imageOverlays: Imag
     if (layer.fontFamily !== null) textEl.setAttribute('font-family', layer.fontFamily);
     if (layer.fill !== null) textEl.setAttribute('fill', layer.fill);
     if (layer.anchor !== null) textEl.setAttribute('text-anchor', layer.anchor ?? 'middle');
+    // Placeholder text — update first tspan content
+    const firstTspan = textEl.querySelector('tspan');
+    if (firstTspan && layer.placeholder !== undefined) firstTspan.textContent = layer.placeholder;
     // Rename id
     if (layer.originalId && layer.id && layer.id !== layer.originalId) {
       const parent = textEl.parentElement;
@@ -567,7 +572,7 @@ export default function TemplateEditorPage() {
     const el = `<g id="${id}"><text font-family="Heebo" font-size="24" font-weight="400" fill="#000000" text-anchor="middle" transform="translate(${cx} ${cy})"><tspan x="0">${placeholder}</tspan></text></g>`;
     const newSvg = svgSource.replace(/<\/svg>/, `${el}</svg>`);
     const newLayer: Layer = {
-      index: layers.length, id, originalId: id, label: placeholder,
+      index: layers.length, id, originalId: id, label: placeholder, placeholder,
       tx: cx, ty: cy, restTransform: '',
       fontSize: 24, fontWeight: 400, fontFamily: 'Heebo', fill: '#000000', anchor: 'middle',
     };
@@ -1272,6 +1277,33 @@ export default function TemplateEditorPage() {
                     );
                   })}
                 </div>
+
+                {/* Placeholder text editor — shown when a single editable layer is selected */}
+                {singleSel && singleSel.id !== null && (
+                  <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                    <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', margin: '0 0 8px' }}>Placeholder text</p>
+                    <input
+                      type="text"
+                      value={singleSel.placeholder}
+                      dir="auto"
+                      onChange={e => {
+                        const val = e.target.value;
+                        setLayers(prev => prev.map((l, i) =>
+                          i === selArray[0] ? { ...l, placeholder: val, label: val.slice(0, 24) || l.label } : l
+                        ));
+                      }}
+                      style={{
+                        width: '100%', boxSizing: 'border-box',
+                        background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)',
+                        borderRadius: 6, color: '#fff', fontSize: 13,
+                        padding: '6px 10px', outline: 'none', fontFamily: 'inherit',
+                      }}
+                    />
+                    <p style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', margin: '5px 0 0' }}>
+                      This is the default text shown in the invitation editor.
+                    </p>
+                  </div>
+                )}
 
                 {/* Image overlay controls */}
                 {selectedImageId && (() => {
