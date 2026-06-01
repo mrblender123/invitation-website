@@ -1224,6 +1224,29 @@ export default function TemplateEditorPage() {
                               <span style={{ fontSize: 12, fontWeight: 500, color: layer.id ? '#f09b00' : 'rgba(255,255,255,0.6)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>
                                 {layer.id ?? `static-${idx}`}
                               </span>
+                              {/* Required / Optional toggle — only for editable fields */}
+                              {layer.id !== null && (() => {
+                                const isRequired = layer.id.endsWith('*');
+                                return (
+                                  <button
+                                    onClick={e => {
+                                      e.stopPropagation();
+                                      const baseId = layer.id!.replace(/\*$/, '');
+                                      renameLayer(idx, isRequired ? baseId : baseId + '*');
+                                    }}
+                                    title={isRequired ? 'Required (always shown) — click to make optional' : 'Optional (hidden behind "Show all fields") — click to make required'}
+                                    style={{
+                                      background: isRequired ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)',
+                                      border: `1px solid ${isRequired ? 'rgba(74,222,128,0.4)' : 'rgba(255,255,255,0.12)'}`,
+                                      borderRadius: 4, color: isRequired ? '#4ade80' : 'rgba(255,255,255,0.3)',
+                                      cursor: 'pointer', padding: '1px 5px', fontSize: 9, lineHeight: 1.4,
+                                      flexShrink: 0, fontWeight: 600, whiteSpace: 'nowrap',
+                                    }}
+                                  >
+                                    {isRequired ? 'REQ' : 'OPT'}
+                                  </button>
+                                );
+                              })()}
                               {isSel && !isMultiSel && layer.id !== null && (
                                 <button
                                   onClick={e => { e.stopPropagation(); setRenamingIdx(idx); }}
