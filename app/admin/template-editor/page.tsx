@@ -169,6 +169,8 @@ export default function TemplateEditorPage() {
   const [showAddLayer, setShowAddLayer] = useState(false);
   const [newLayerId, setNewLayerId] = useState('');
   const [newLayerText, setNewLayerText] = useState('');
+  const [dragLayerIdx, setDragLayerIdx] = useState<number | null>(null);
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
   const [marquee, setMarquee] = useState<Marquee | null>(null);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState('');
@@ -514,6 +516,46 @@ export default function TemplateEditorPage() {
   }, []);
 
   // ── add / delete layer ────────────────────────────────────────────────────────
+
+  const handleLayerReorder = useCallback((fromIdx: number, toIdx: number) => {
+    if (fromIdx === toIdx || !svgSource) return;
+    pushHistory();
+
+    // Reorder layers array
+    const newLayers = [...layers];
+    const [moved] = newLayers.splice(fromIdx, 1);
+    newLayers.splice(toIdx, 0, moved);
+
+    // Reorder the actual SVG elements to match
+    const doc = new DOMParser().parseFromString(svgSource, 'image/svg+xml');
+    const textEls = Array.from(doc.querySelectorAll('text'));
+    const rootEls = textEls.map(t => {
+      const p = t.parentElement;
+      return (p && p.tagName.toLowerCase() === 'g' && p.id) ? p : t;
+    });
+    // Remove duplicates (safety)
+    const unique = rootEls.filter((el, i) => rootEls.indexOf(el) === i);
+    const reordered = [...unique];
+    const [movedEl] = reordered.splice(fromIdx, 1);
+    reordered.splice(toIdx, 0, movedEl);
+    unique.forEach(el => el.remove());
+    reordered.forEach(el => doc.documentElement.appendChild(el));
+    setSvgSource(new XMLSerializer().serializeToString(doc.documentElement));
+
+    // Remap selection indices
+    setSelection(prev => {
+      const next = new Set<number>();
+      prev.forEach(i => {
+        if (i === fromIdx) { next.add(toIdx); return; }
+        if (fromIdx < toIdx && i > fromIdx && i <= toIdx) { next.add(i - 1); return; }
+        if (fromIdx > toIdx && i >= toIdx && i < fromIdx) { next.add(i + 1); return; }
+        next.add(i);
+      });
+      return next;
+    });
+
+    setLayers(newLayers);
+  }, [svgSource, layers, pushHistory]);
 
   const handleAddLayer = useCallback(() => {
     if (!svgSource) return;
@@ -1138,19 +1180,31 @@ export default function TemplateEditorPage() {
                     const isHov = hoveredIdx === idx && !isSel;
                     const isMultiSel = isSel && selection.size > 1;
                     const isRenaming = renamingIdx === idx;
+                    const isDragOver = dragOverIdx === idx && dragLayerIdx !== idx;
+                    const isDragging = dragLayerIdx === idx;
                     return (
                       <div
                         key={idx}
+                        draggable
+                        onDragStart={e => { e.stopPropagation(); setDragLayerIdx(idx); e.dataTransfer.effectAllowed = 'move'; }}
+                        onDragOver={e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; setDragOverIdx(idx); }}
+                        onDragLeave={() => setDragOverIdx(null)}
+                        onDrop={e => { e.preventDefault(); if (dragLayerIdx !== null) handleLayerReorder(dragLayerIdx, idx); setDragLayerIdx(null); setDragOverIdx(null); }}
+                        onDragEnd={() => { setDragLayerIdx(null); setDragOverIdx(null); }}
                         onClick={e => { e.stopPropagation(); toggleSelect(idx, e.shiftKey); }}
                         onMouseEnter={() => setHoveredIdx(idx)}
                         onMouseLeave={() => setHoveredIdx(null)}
                         style={{
-                          padding: '5px 10px', borderRadius: 6, cursor: 'pointer',
-                          background: isSel ? 'rgba(255,255,255,0.07)' : isHov ? 'rgba(255,255,255,0.03)' : 'transparent',
-                          border: `1px solid ${isSel ? (isMultiSel ? 'rgba(99,200,255,0.3)' : 'rgba(255,255,255,0.2)') : 'transparent'}`,
+                          padding: '5px 10px', borderRadius: 6, cursor: 'grab',
+                          opacity: isDragging ? 0.4 : 1,
+                          background: isDragOver ? 'rgba(99,200,255,0.1)' : isSel ? 'rgba(255,255,255,0.07)' : isHov ? 'rgba(255,255,255,0.03)' : 'transparent',
+                          border: `1px solid ${isDragOver ? 'rgba(99,200,255,0.5)' : isSel ? (isMultiSel ? 'rgba(99,200,255,0.3)' : 'rgba(255,255,255,0.2)') : 'transparent'}`,
                           display: 'flex', alignItems: 'center', gap: 7,
+                          transition: 'border-color 0.1s, background 0.1s',
                         }}
                       >
+                        {/* Drag handle */}
+                        <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 11, cursor: 'grab', flexShrink: 0, lineHeight: 1, userSelect: 'none' }}>⠿</span>
                         <div style={{ width: 7, height: 7, borderRadius: '50%', flexShrink: 0, background: layer.id ? '#f09b00' : 'rgba(255,255,255,0.35)' }} />
                         <div style={{ flex: 1, minWidth: 0 }}>
                           {isRenaming && layer.id !== null ? (
