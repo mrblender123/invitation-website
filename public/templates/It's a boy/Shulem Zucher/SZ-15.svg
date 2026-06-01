@@ -1,23 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
-    <g id="text8">
+    <g id="line_8">
     <text transform="translate(180 98) scale(1 1)" text-anchor="middle" fill="#471a0e" font-family="Secular One" font-size="13.3"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
   </g>
-    <g id="text7">
+    <g id="line_7">
     <text transform="translate(180 113.8) scale(1 1)" text-anchor="middle" fill="#471a0e" font-family="Secular One" font-size="13.3"><tspan x="0" y="0">על כל הטוב אשר גמלנו</tspan></text>
   </g>
-    <g id="text6">
+    <g id="line_6">
     <text transform="translate(180 135.6) scale(1 1)" text-anchor="middle" fill="#471a0e" font-family="Secular One" font-size="20.5"><tspan x="0" y="0">בשמחת הולדת בני שיחי׳</tspan></text>
   </g>
-    <g id="text5">
+    <g id="line_5">
     <text transform="translate(180 154.1) scale(1 1)" text-anchor="middle" fill="#471a0e" font-family="Secular One" font-size="14.4"><tspan x="0" y="0">למזל טוב</tspan></text>
   </g>
-    <g id="text4">
+    <g id="line_4">
     <text transform="translate(180 172.5) scale(1 1)" text-anchor="middle" fill="#471a0e" font-family="Secular One" font-size="13.1"><tspan x="0" y="0">אתכבד בזה להזמין את כל קרובי וידידי</tspan></text>
   </g>
-    <g id="text3">
+    <g id="line_3">
     <text transform="translate(180 187.7) scale(1 1)" text-anchor="middle" fill="#471a0e" font-family="Secular One" font-size="13.3"><tspan x="0" y="0">לבוא ולהשתתף בשמחתי אצל</tspan></text>
   </g>
-    <g id="text2">
+    <g id="line_2">
     <text transform="translate(180 288.5) scale(.8 1)" text-anchor="middle" fill="#471a0e" font-family="Secular One" font-size="18.3"><tspan x="0" y="0">שתקיים אי״ה בליל שבת קודש</tspan></text>
   </g>
   <g id="parsha*">
@@ -29,7 +29,7 @@
   <g id="street*">
     <text transform="translate(180 340.4) scale(.8 1)" text-anchor="middle" fill="#471a0e" font-family="Secular One" font-size="12.4"><tspan x="0" y="0">1693 49th Street</tspan></text>
   </g>
-  <g id="greeting*">
+  <g id="greeting">
     <text transform="translate(180 365.4) scale(.8 1)" text-anchor="middle" fill="#471a0e" font-family="Secular One" font-size="15.9"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
   <g id="host_name*">

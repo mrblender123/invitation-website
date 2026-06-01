@@ -1,23 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
-    <g id="text8">
+    <g id="line_8">
     <text transform="translate(180 105.5) scale(1 1)" text-anchor="middle" fill="#8f7043" font-family="Heebo" font-size="10.5" font-weight="700"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
   </g>
-    <g id="text7">
+    <g id="line_7">
     <text transform="translate(180 119) scale(1 1)" text-anchor="middle" fill="#8f7043" font-family="Heebo" font-size="10.5" font-weight="700"><tspan x="0" y="0">על כל הטוב אשר גמלנו</tspan></text>
   </g>
-    <g id="text6">
+    <g id="line_6">
     <text transform="translate(180 138.5) scale(1 1)" text-anchor="middle" fill="#8f7043" font-family="Heebo" font-size="16" font-weight="800"><tspan x="0" y="0">בשמחת הולדת בני שיחי׳</tspan></text>
   </g>
-    <g id="text5">
+    <g id="line_5">
     <text transform="translate(180 157.2) scale(1 1)" text-anchor="middle" fill="#8f7043" font-family="Heebo" font-size="12.1" font-weight="700"><tspan x="0" y="0">למזל טוב</tspan></text>
   </g>
-    <g id="text4">
+    <g id="line_4">
     <text transform="translate(180 170.7) scale(1 1)" text-anchor="middle" fill="#8f7043" font-family="Heebo" font-size="10.5" font-weight="700"><tspan x="0" y="0">אתכבד בזה להזמין את כל קרובי וידידי</tspan></text>
   </g>
-    <g id="text3">
+    <g id="line_3">
     <text transform="translate(180 184.7) scale(1 1)" text-anchor="middle" fill="#8f7043" font-family="Heebo" font-size="10.5" font-weight="700"><tspan x="0" y="0">לבוא ולהשתתף בשמחתי אצל</tspan></text>
   </g>
-    <g id="text2">
+    <g id="line_2">
     <text transform="translate(180 278) scale(.8 1)" text-anchor="middle" fill="#8f7043" font-family="Heebo" font-size="15.9" font-weight="600"><tspan x="0" y="0">שתקיים אי״ה בליל שבת קודש</tspan></text>
   </g>
   <g id="parsha*">
@@ -29,7 +29,7 @@
   <g id="street*">
     <text transform="translate(180 332.7) scale(.8 1)" text-anchor="middle" fill="#8f7043" font-family="Heebo" font-size="10.8" font-weight="700"><tspan x="0" y="0">1693 49th Street</tspan></text>
   </g>
-  <g id="greeting*">
+  <g id="greeting">
     <text transform="translate(180 352.8) scale(.8 1)" text-anchor="middle" fill="#8f7043" font-family="Heebo" font-size="9.5" font-weight="700"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
   <g id="host_name*">

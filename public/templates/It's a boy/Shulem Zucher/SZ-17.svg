@@ -1,26 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
-    <g id="text2">
-    <text transform="translate(274.8 462) scale(.9 1)" text-anchor="start" fill="#8f6230" font-family="Heebo" font-size="5.3"><tspan x="0" y="0">שתקיים אי״ה בליל שבת קודש</tspan></text>
-  </g>
-  <g id="parsha*">
-    <text transform="translate(278.5 473.5) scale(.9 1)" text-anchor="start" fill="#e1af54" font-family="Heebo" font-size="12.6"><tspan x="0" y="0">פרשת נשא</tspan></text>
-  </g>
-  <g id="location*">
-    <text transform="translate(282.3 482.9) scale(.9 1)" text-anchor="start" fill="#8f6230" font-family="Heebo" font-size="7.8"><tspan x="0" y="0">בביהמ״ד לעלוב</tspan></text>
-  </g>
-  <g id="street*">
-    <text transform="translate(279.8 490.4) scale(.9 1)" text-anchor="start" fill="#8f6230" font-family="Heebo" font-size="7.8"><tspan x="0" y="0">1693 49th Steet</tspan></text>
-  </g>
-  <g id="greeting*">
-    <text transform="translate(37.4 463.1) scale(.9 1)" text-anchor="start" fill="#8f6230" font-family="Heebo" font-size="5.3"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
-  </g>
-  <g id="host_name*">
-    <text transform="translate(25.3 473.7) scale(.9 1)" text-anchor="start" fill="#e1af54" font-family="Heebo" font-size="12.6"><tspan x="0" y="0">מרדכי זאב ראטה</tspan></text>
-  </g>
-  <g id="father_name_1*">
-    <text transform="translate(46 480.3) scale(.9 1)" text-anchor="start" fill="#8f6230" font-family="Heebo" font-size="5"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
-  </g>
-  <g id="father_name_2*">
-    <text transform="translate(43.6 486.6) scale(.9 1)" text-anchor="start" fill="#8f6230" font-family="Heebo" font-size="5"><tspan x="0" y="0">חתן בערל גרינעלד הי״ו</tspan></text>
-  </g>
-</svg>
+    
+  
+  
+  
+  
+  
+  
+  
+<g id="line_2">
+    <text transform="translate(294.9 454.3) scale(.9 1)" text-anchor="middle" fill="#8f6230" font-family="Heebo" font-size="5.3"><tspan x="0" y="0">שתקיים אי״ה בליל שבת קודש</tspan></text>
+  </g><g id="parsha*">
+    <text transform="translate(294.9 469.2) scale(.9 1)" text-anchor="middle" fill="#e1af54" font-family="Heebo" font-size="12.6"><tspan x="0" y="0">פרשת נשא</tspan></text>
+  </g><g id="location*">
+    <text transform="translate(294.9 480.3) scale(.9 1)" text-anchor="middle" fill="#8f6230" font-family="Heebo" font-size="7.8"><tspan x="0" y="0">בביהמ״ד לעלוב</tspan></text>
+  </g><g id="street*">
+    <text transform="translate(294.9 489.5) scale(.9 1)" text-anchor="middle" fill="#8f6230" font-family="Heebo" font-size="7.8"><tspan x="0" y="0">1693 49th Steet</tspan></text>
+  </g><g id="greeting">
+    <text transform="translate(65.1 453.7) scale(.9 1)" text-anchor="middle" fill="#8f6230" font-family="Heebo" font-size="5.3"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
+  </g><g id="host_first_name*"><text font-family="Heebo" font-size="8.5" font-weight="400" fill="#e1af54" text-anchor="middle" transform="translate(65.1 463.7)"><tspan x="0">מרדכי זאב</tspan></text></g><g id="host_last_name*"><text font-family="Heebo" font-size="8.5" font-weight="400" fill="#e1af54" text-anchor="middle" transform="translate(64.3 473.1)"><tspan x="0">מאשקאוויטש</tspan></text></g><g id="father_name_1*">
+    <text transform="translate(65.1 482) scale(.9 1)" text-anchor="middle" fill="#8f6230" font-family="Heebo" font-size="5"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
+  </g><g id="father_name_2*">
+    <text transform="translate(65.1 488.3) scale(.9 1)" text-anchor="middle" fill="#8f6230" font-family="Heebo" font-size="5"><tspan x="0" y="0">חתן בערל גרינעלד הי״ו</tspan></text>
+  </g></svg>
