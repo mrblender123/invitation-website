@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
   <g id="father_line_2*">
     <text transform="translate(180 355.3)" fill="#e2b290" font-family="Heebo" font-weight="700" font-size="9.4" text-anchor="middle"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
   </g>
@@ -13,7 +12,7 @@
     <text transform="translate(180 308.4)" fill="#e2b290" font-family="Heebo" font-weight="700" font-size="9.4" text-anchor="middle"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
   <g id="shacharis*">
-    <text transform="translate(180 290.3)" fill="#e2b290" font-family="Heebo" font-weight="700" font-size="9.4" text-anchor="middle"><tspan x="0" y="0">שחרית </tspan></text>
+    <text transform="translate(180 286.9)" fill="#e2b290" font-family="Heebo" font-weight="700" font-size="9.4" text-anchor="middle"><tspan x="0" y="0">שחרית</tspan></text>
   </g>
   <g id="address*">
     <text transform="translate(180 275.3)" fill="#e2b290" font-family="Heebo" font-weight="700" font-size="9.4" text-anchor="middle"><tspan x="0" y="0">1247 38th St</tspan></text>
@@ -31,15 +30,15 @@
     <text transform="translate(180 218)" fill="#e2b290" font-family="Heebo" font-weight="700" font-size="6.4" text-anchor="middle"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
   </g>
     <g id="text5">
-    <text fill="#e2b290" font-family="Heebo" font-weight="700" font-size="7.4" text-anchor="middle"><tspan x="180" y="206.8">לרגל הולדת בתי למז״ט</tspan></text>
+    <text fill="#e2b290" font-family="Heebo" font-weight="700" font-size="6.4" text-anchor="middle" transform=""><tspan x="180" y="206.8">להשתתף עמנו בשמחת</tspan></text>
   </g>
     <g id="text4">
-    <text transform="translate(180 124.2)" fill="#e2b290" font-family="Heebo" font-weight="700" font-size="6.4" text-anchor="middle"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
-  </g>
-    <g id="text3">
     <text transform="translate(180 116.9)" fill="#e2b290" font-family="Heebo" font-weight="700" font-size="6.4" text-anchor="middle"><tspan x="0" y="0">הננו מתכבדים להזמין את כבוד ידידנו</tspan></text>
   </g>
-    <g id="text2">
+    <g id="text3">
     <text transform="translate(180 108.1)" fill="#e2b290" font-family="Heebo" font-weight="700" font-size="6.4" text-anchor="middle"><tspan x="0" y="0">ברוב שבח והודאה להשי״ת</tspan></text>
+  </g>
+    <g id="text2">
+    <text transform="translate(180 296.5)" fill="#e2b290" font-family="Heebo" font-weight="700" font-size="9" text-anchor="middle"><tspan x="0" y="0">בשעה 9:00</tspan></text>
   </g>
 <g id="shachrit_time"><text font-family="Heebo" font-size="9.4" font-weight="700" fill="#e2b290" text-anchor="middle" transform="translate(180 351.4)"><tspan x="0">בשעה 9:00</tspan></text></g></svg>

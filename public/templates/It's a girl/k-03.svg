@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
     <g id="text6">
     <text transform="translate(180 115.8)" text-anchor="middle" fill="#8b5e3c" font-family="Playpen Sans Hebrew" font-size="7.5" font-weight="800"><tspan x="0" y="0">ברוב שבח והודאה להשי״ת</tspan></text>
   </g>
@@ -28,7 +27,7 @@
     <text transform="translate(180 276.1)" text-anchor="middle" fill="#603913" font-family="Playpen Sans Hebrew" font-size="10.3" font-weight="800"><tspan x="0" y="0">1247 38th St</tspan></text>
   </g>
   <g id="time*">
-    <text transform="translate(180 296.9)" text-anchor="middle" fill="#603913" font-family="Playpen Sans Hebrew" font-size="15.3" font-weight="800"><tspan x="0" y="0">שחרית</tspan></text>
+    <text transform="translate(180 293.5)" text-anchor="middle" fill="#603913" font-family="Playpen Sans Hebrew" font-size="13" font-weight="800"><tspan x="0" y="0">שחרית</tspan></text>
   </g>
   <g id="greeting">
     <text transform="translate(180 329.1)" text-anchor="middle" fill="#8b5e3c" font-family="Playpen Sans Hebrew" font-size="10.3" font-weight="800"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
@@ -42,4 +41,4 @@
   <g id="father_name_1*">
     <text transform="translate(180 380.6)" text-anchor="middle" fill="#8b5e3c" font-family="Playpen Sans Hebrew" font-size="10.3" font-weight="800"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
   </g>
-<g id="shachrit_time"><text font-family="Playpen Sans Hebrew" font-size="15.3" font-weight="800" fill="#603913" text-anchor="middle" transform="translate(180 351.4)"><tspan x="0">בשעה 9:00</tspan></text></g></svg>
+<g id="shachrit_time"><text font-family="Playpen Sans Hebrew" font-size="13" font-weight="800" fill="#603913" text-anchor="middle" transform="translate(180 311.1)"><tspan x="0">בשעה 9:00</tspan></text></g></svg>
