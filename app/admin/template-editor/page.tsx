@@ -886,6 +886,10 @@ export default function TemplateEditorPage() {
             const filteredTemplates = search.trim()
               ? templates.filter(t => [t.name, t.category, t.subcategory ?? ''].some(s => s.toLowerCase().includes(search.toLowerCase())))
               : templates;
+            const numSort = (a: Template, b: Template) => {
+              const num = (s: string) => { const m = s.match(/(\d+)/); return m ? parseInt(m[1]) : 0; };
+              return num(a.name) - num(b.name);
+            };
             const cats = new Map<string, Map<string, Template[]>>();
             for (const t of filteredTemplates) {
               if (!cats.has(t.category)) cats.set(t.category, new Map());
@@ -894,6 +898,10 @@ export default function TemplateEditorPage() {
               if (!catMap.has(sub)) catMap.set(sub, []);
               catMap.get(sub)!.push(t);
             }
+            // Sort each group numerically
+            for (const subMap of cats.values())
+              for (const items of subMap.values())
+                items.sort(numSort);
             const toggle = (key: string) => setCollapsed(prev => {
               const next = new Set(prev);
               next.has(key) ? next.delete(key) : next.add(key);
