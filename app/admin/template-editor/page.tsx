@@ -1084,12 +1084,13 @@ export default function TemplateEditorPage() {
                     );
                   })()}
 
-                  {/* Layer handles */}
-                  {showDots && layers.map((layer, idx) => {
+                  {/* Layer handles — always rendered for selection; visually hidden when showDots is off */}
+                  {layers.map((layer, idx) => {
                     const isActive = dragging?.handleIdx === idx;
                     const isSel = selection.has(idx);
                     const isHov = hoveredIdx === idx;
                     const isField = layer.id !== null;
+                    const visible = showDots || isSel || isHov;
                     return (
                       <div
                         key={idx}
@@ -1104,14 +1105,14 @@ export default function TemplateEditorPage() {
                           width: isActive || isHov || isSel ? 20 : 14,
                           height: isActive || isHov || isSel ? 20 : 14,
                           borderRadius: '50%',
-                          background: isField ? '#f09b00' : 'rgba(255,255,255,0.7)',
-                          border: `2px solid ${isSel ? '#fff' : 'rgba(0,0,0,0.5)'}`,
+                          background: visible ? (isField ? '#f09b00' : 'rgba(255,255,255,0.7)') : 'transparent',
+                          border: visible ? `2px solid ${isSel ? '#fff' : 'rgba(0,0,0,0.5)'}` : '2px solid transparent',
                           cursor: isActive ? 'grabbing' : 'grab',
                           zIndex: 20,
-                          boxShadow: isSel
+                          boxShadow: visible && isSel
                             ? (selection.size > 1 ? '0 0 0 3px rgba(99,200,255,0.6)' : '0 0 0 3px rgba(255,255,255,0.5)')
                             : undefined,
-                          outline: isSel ? `2px solid ${selection.size > 1 ? 'rgba(99,200,255,0.4)' : 'rgba(255,255,255,0.4)'}` : undefined,
+                          outline: visible && isSel ? `2px solid ${selection.size > 1 ? 'rgba(99,200,255,0.4)' : 'rgba(255,255,255,0.4)'}` : undefined,
                           outlineOffset: '4px',
                           transition: isActive ? 'none' : 'width 0.1s, height 0.1s',
                         }}
