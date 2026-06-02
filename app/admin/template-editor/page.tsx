@@ -131,6 +131,8 @@ function buildSvgForDisplay(svgSource: string, layers: Layer[]): string {
     if (layer.fontFamily !== null) textEl.setAttribute('font-family', layer.fontFamily);
     if (layer.fill !== null) textEl.setAttribute('fill', layer.fill);
     if (layer.anchor !== null) textEl.setAttribute('text-anchor', layer.anchor ?? 'middle');
+    const firstTspan = textEl.querySelector('tspan');
+    if (firstTspan && layer.placeholder !== undefined) firstTspan.textContent = layer.placeholder;
   });
   const style = doc.createElementNS('http://www.w3.org/2000/svg', 'style');
   style.textContent = `
