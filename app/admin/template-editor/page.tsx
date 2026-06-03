@@ -94,10 +94,19 @@ function buildSvgForSave(svgSource: string, layers: Layer[], imageOverlays: Imag
     // Placeholder text — update first tspan content
     const firstTspan = textEl.querySelector('tspan');
     if (firstTspan && layer.placeholder !== undefined) firstTspan.textContent = layer.placeholder;
-    // Rename id
-    if (layer.originalId && layer.id && layer.id !== layer.originalId) {
+    // Rename id or wrap bare text in <g id> if it was promoted from static
+    if (layer.id) {
       const parent = textEl.parentElement;
-      if (parent?.id === layer.originalId) parent.id = layer.id;
+      if (parent?.tagName.toLowerCase() === 'g' && parent.id) {
+        // Already wrapped — just rename if changed
+        if (layer.originalId && layer.id !== layer.originalId) parent.id = layer.id;
+      } else {
+        // Bare text promoted to editable — wrap in <g id>
+        const g = doc.createElementNS('http://www.w3.org/2000/svg', 'g');
+        g.setAttribute('id', layer.id);
+        textEl.parentNode?.insertBefore(g, textEl);
+        g.appendChild(textEl);
+      }
     }
   });
   // Remove any previously saved <image> elements, then append current overlays
@@ -1240,26 +1249,34 @@ export default function TemplateEditorPage() {
                               <span style={{ fontSize: 12, fontWeight: 500, color: layer.id ? '#f09b00' : 'rgba(255,255,255,0.6)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>
                                 {layer.id ?? `static-${idx}`}
                               </span>
-                              {/* Required / Optional toggle — only for editable fields */}
-                              {layer.id !== null && (() => {
-                                const isRequired = layer.id.endsWith('*');
+                              {/* Required / Optional toggle — all layers; clicking static promotes it to editable */}
+                              {(() => {
+                                const currentId = layer.id ?? '';
+                                const isRequired = currentId.endsWith('*');
+                                const isStatic = layer.id === null;
                                 return (
                                   <button
                                     onClick={e => {
                                       e.stopPropagation();
-                                      const baseId = layer.id!.replace(/\*$/, '');
-                                      renameLayer(idx, isRequired ? baseId : baseId + '*');
+                                      if (isStatic) {
+                                        // Promote static text to editable field
+                                        renameLayer(idx, `line_${idx}*`);
+                                      } else {
+                                        const baseId = currentId.replace(/\*$/, '');
+                                        renameLayer(idx, isRequired ? baseId : baseId + '*');
+                                      }
                                     }}
-                                    title={isRequired ? 'Required (always shown) — click to make optional' : 'Optional (hidden behind "Show all fields") — click to make required'}
+                                    title={isStatic ? 'Static text — click to make an editable field' : isRequired ? 'Required (always shown) — click to make optional' : 'Optional (hidden behind "Show all fields") — click to make required'}
                                     style={{
-                                      background: isRequired ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)',
-                                      border: `1px solid ${isRequired ? 'rgba(74,222,128,0.4)' : 'rgba(255,255,255,0.12)'}`,
-                                      borderRadius: 4, color: isRequired ? '#4ade80' : 'rgba(255,255,255,0.3)',
+                                      background: isStatic ? 'rgba(255,255,255,0.03)' : isRequired ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)',
+                                      border: `1px solid ${isStatic ? 'rgba(255,255,255,0.08)' : isRequired ? 'rgba(74,222,128,0.4)' : 'rgba(255,255,255,0.12)'}`,
+                                      borderRadius: 4,
+                                      color: isStatic ? 'rgba(255,255,255,0.15)' : isRequired ? '#4ade80' : 'rgba(255,255,255,0.3)',
                                       cursor: 'pointer', padding: '1px 5px', fontSize: 9, lineHeight: 1.4,
                                       flexShrink: 0, fontWeight: 600, whiteSpace: 'nowrap',
                                     }}
                                   >
-                                    {isRequired ? 'REQ' : 'OPT'}
+                                    {isStatic ? 'STA' : isRequired ? 'REQ' : 'OPT'}
                                   </button>
                                 );
                               })()}
