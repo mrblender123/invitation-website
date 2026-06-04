@@ -159,6 +159,11 @@ function buildSvgForDisplay(svgSource: string, layers: Layer[]): string {
   return new XMLSerializer().serializeToString(root);
 }
 
+// ─── field manager types ──────────────────────────────────────────────────────
+
+type FolderField = { id: string; required: boolean; placeholder: string };
+type FolderData  = { folder: string; category: string; name: string; fields: FolderField[] };
+
 // ─── component ────────────────────────────────────────────────────────────────
 
 export default function TemplateEditorPage() {
@@ -196,6 +201,16 @@ export default function TemplateEditorPage() {
   const [imageResize, setImageResize] = useState<{ id: string; startMouseX: number; startMouseY: number; startW: number; startH: number } | null>(null);
   const [keyboardInset, setKeyboardInset] = useState(0);
   const imageInputRef = useRef<HTMLInputElement>(null);
+
+  // ── field manager state ───────────────────────────────────────────────────
+  const [mainTab, setMainTab]           = useState<'editor' | 'fields'>('editor');
+  const [fmData, setFmData]             = useState<FolderData[] | null>(null);
+  const [fmFolder, setFmFolder]         = useState<FolderData | null>(null);
+  const [fmFields, setFmFields]         = useState<FolderField[]>([]);
+  const [fmDirty, setFmDirty]           = useState(false);
+  const [fmSaving, setFmSaving]         = useState(false);
+  const [fmStatus, setFmStatus]         = useState('');
+  const [fmDragSrc, setFmDragSrc]       = useState<number | null>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const rightPanelRef = useRef<HTMLDivElement>(null);
 
@@ -680,6 +695,66 @@ export default function TemplateEditorPage() {
     e.target.value = '';
   }, [svgW, svgH]);
 
+  // ── field manager: load overview ─────────────────────────────────────────
+  useEffect(() => {
+    if (mainTab !== 'fields' || fmData) return;
+    fetch('/api/admin/field-overview').then(r => r.json()).then(setFmData);
+  }, [mainTab, fmData]);
+
+  const fmSelectFolder = (row: FolderData) => {
+    setFmFolder(row);
+    setFmFields(row.fields.map(f => ({ ...f })));
+    setFmDirty(false);
+    setFmStatus('');
+  };
+
+  const fmToggle = (idx: number) => {
+    setFmFields(prev => prev.map((f, i) => i === idx ? { ...f, required: !f.required } : f));
+    setFmDirty(true); setFmStatus('Unsaved changes');
+  };
+
+  const fmSave = async () => {
+    if (!fmFolder || !accessToken) return;
+    setFmSaving(true);
+    const res  = await fetch('/api/admin/update-folder-fields', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify({ folderPath: fmFolder.folder, fields: fmFields }),
+    });
+    const data = await res.json();
+    setFmSaving(false);
+    if (data.ok) {
+      setFmDirty(false);
+      setFmStatus(`✓ Saved ${data.count} file${data.count === 1 ? '' : 's'}`);
+      // update local fmData cache
+      setFmData(prev => prev ? prev.map(d => d.folder === fmFolder.folder ? { ...d, fields: fmFields } : d) : prev);
+    } else {
+      setFmStatus(`✗ ${data.error}`);
+    }
+  };
+
+  const fmToggleOverview = async (folderPath: string, fieldId: string, required: boolean) => {
+    if (!accessToken) return;
+    const res  = await fetch('/api/admin/update-folder-fields', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify({
+        folderPath,
+        fields: (fmData?.find(d => d.folder === folderPath)?.fields ?? []).map(f =>
+          f.id === fieldId ? { ...f, required } : f
+        ),
+      }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      setFmData(prev => prev ? prev.map(d => d.folder === folderPath
+        ? { ...d, fields: d.fields.map(f => f.id === fieldId ? { ...f, required } : f) }
+        : d
+      ) : prev);
+      setFmStatus(`✓ ${fieldId} → ${required ? 'required' : 'optional'} in ${folderPath.split('/').pop()}`);
+    }
+  };
+
   if (loading || !user || user.email !== ADMIN_EMAIL) return null;
 
   const border = '1px solid rgba(255,255,255,0.08)';
@@ -699,10 +774,30 @@ export default function TemplateEditorPage() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <button onClick={() => router.push('/admin')} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontSize: 13, padding: 0 }}>← Admin</button>
             <span style={{ color: 'rgba(255,255,255,0.15)' }}>/</span>
-            <span style={{ fontSize: 14, fontWeight: 600 }}>Template Editor</span>
-            {selected && <><span style={{ color: 'rgba(255,255,255,0.15)' }}>/</span><span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>{selected.subcategory ?? selected.category} — {selected.name}</span></>}
+            {/* Tab buttons */}
+            {(['editor', 'fields'] as const).map(tab => (
+              <button key={tab} onClick={() => setMainTab(tab)} style={{
+                fontSize: 13, fontWeight: 600, padding: '4px 12px', borderRadius: 6, border: 'none', cursor: 'pointer',
+                background: mainTab === tab ? 'rgba(255,255,255,0.12)' : 'transparent',
+                color: mainTab === tab ? '#fff' : 'rgba(255,255,255,0.35)',
+                transition: 'all 0.15s',
+              }}>
+                {tab === 'editor' ? 'Template Editor' : 'Field Manager'}
+              </button>
+            ))}
+            {mainTab === 'editor' && selected && <><span style={{ color: 'rgba(255,255,255,0.15)' }}>/</span><span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>{selected.subcategory ?? selected.category} — {selected.name}</span></>}
           </div>
-          {selected && (
+          {mainTab === 'fields' && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              {fmStatus && <span style={{ fontSize: 13, color: fmStatus.startsWith('✗') ? '#f87171' : '#4ade80' }}>{fmStatus}</span>}
+              {fmFolder && (
+                <button onClick={fmSave} disabled={fmSaving || !fmDirty} style={{ padding: '7px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600, background: fmDirty ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', color: fmDirty ? '#fff' : 'rgba(255,255,255,0.3)', cursor: fmDirty ? 'pointer' : 'not-allowed' }}>
+                  {fmSaving ? 'Saving…' : 'Save to folder'}
+                </button>
+              )}
+            </div>
+          )}
+          {mainTab === 'editor' && selected && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               {history.length > 0 && (
                 <button
@@ -725,7 +820,111 @@ export default function TemplateEditorPage() {
         </div>
       </header>
 
+      {/* ── Field Manager tab ──────────────────────────────────────────────── */}
+      {mainTab === 'fields' && (
+        <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+          {/* Folder list */}
+          <div style={{ width: 220, borderRight: border, overflowY: 'auto', flexShrink: 0 }}>
+            <div style={{ padding: '10px 12px 6px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.3)' }}>Folders</div>
+            {!fmData && <div style={{ padding: 16, color: 'rgba(255,255,255,0.3)', fontSize: 13 }}>Loading…</div>}
+            {fmData && (() => {
+              const cats: Record<string, FolderData[]> = {};
+              for (const d of fmData) {
+                if (!cats[d.category]) cats[d.category] = [];
+                cats[d.category].push(d);
+              }
+              return Object.entries(cats).map(([cat, rows]) => (
+                <div key={cat}>
+                  <div style={{ padding: '8px 12px 4px', fontSize: 11, color: 'rgba(255,255,255,0.25)', fontWeight: 600 }}>{cat}</div>
+                  {rows.map(row => (
+                    <button key={row.folder} onClick={() => fmSelectFolder(row)}
+                      style={{ width: '100%', textAlign: 'left', padding: '6px 16px', background: fmFolder?.folder === row.folder ? 'rgba(255,255,255,0.08)' : 'none', border: 'none', borderLeft: fmFolder?.folder === row.folder ? '2px solid rgba(255,255,255,0.35)' : '2px solid transparent', color: fmFolder?.folder === row.folder ? '#fff' : 'rgba(255,255,255,0.5)', fontSize: 13, cursor: 'pointer' }}>
+                      {row.name}
+                    </button>
+                  ))}
+                </div>
+              ));
+            })()}
+          </div>
+
+          {/* Main area */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: 24 }}>
+            {!fmFolder ? (
+              /* Overview: all folders */
+              <div>
+                <h2 style={{ fontSize: 16, fontWeight: 600, marginBottom: 4 }}>Overview</h2>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', marginBottom: 24 }}>Click any badge to toggle REQ/OPT — saves immediately to all templates in that folder.</p>
+                {!fmData && <div style={{ color: 'rgba(255,255,255,0.3)' }}>Loading…</div>}
+                {fmData && (() => {
+                  const cats: Record<string, FolderData[]> = {};
+                  for (const d of fmData) {
+                    if (!cats[d.category]) cats[d.category] = [];
+                    cats[d.category].push(d);
+                  }
+                  return Object.entries(cats).map(([cat, rows]) => (
+                    <div key={cat} style={{ marginBottom: 24 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase' as const, letterSpacing: '0.08em', color: 'rgba(255,255,255,0.3)', marginBottom: 10 }}>{cat}</div>
+                      {rows.map(row => (
+                        <div key={row.folder} style={{ background: 'rgba(255,255,255,0.03)', border, borderRadius: 10, padding: '10px 14px', marginBottom: 8, display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.6)', width: 110, flexShrink: 0, paddingTop: 2 }}>{row.name}</div>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                            {row.fields.map(f => (
+                              <button key={f.id} onClick={() => fmToggleOverview(row.folder, f.id, !f.required)}
+                                title={`${f.required ? 'required' : 'optional'} — click to toggle`}
+                                style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 99, border: 'none', cursor: 'pointer', transition: '0.12s', background: f.required ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)', color: f.required ? '#4ade80' : 'rgba(255,255,255,0.4)', fontFamily: 'monospace' }}>
+                                {f.id}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ));
+                })()}
+              </div>
+            ) : (
+              /* Per-folder editor */
+              <div style={{ maxWidth: 500 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+                  <button onClick={() => setFmFolder(null)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontSize: 13, padding: 0 }}>← Overview</button>
+                  <h2 style={{ fontSize: 16, fontWeight: 600 }}>{fmFolder.name}</h2>
+                </div>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', marginBottom: 16 }}>Drag to reorder · click badge to toggle REQ/OPT · applies to all templates in this folder.</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {fmFields.map((f, idx) => (
+                    <div key={f.id}
+                      draggable
+                      onDragStart={() => setFmDragSrc(idx)}
+                      onDragOver={e => e.preventDefault()}
+                      onDrop={() => {
+                        if (fmDragSrc === null || fmDragSrc === idx) return;
+                        const next = [...fmFields];
+                        const [moved] = next.splice(fmDragSrc, 1);
+                        next.splice(idx, 0, moved);
+                        setFmFields(next);
+                        setFmDragSrc(null);
+                        setFmDirty(true); setFmStatus('Unsaved changes');
+                      }}
+                      onDragEnd={() => setFmDragSrc(null)}
+                      style={{ background: 'rgba(255,255,255,0.04)', border, borderRadius: 10, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10, cursor: 'grab', opacity: fmDragSrc === idx ? 0.4 : 1 }}>
+                      <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 12 }}>⠿</span>
+                      <button onClick={() => fmToggle(idx)}
+                        style={{ fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 99, border: 'none', cursor: 'pointer', flexShrink: 0, background: f.required ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)', color: f.required ? '#4ade80' : 'rgba(255,255,255,0.4)' }}>
+                        {f.required ? 'REQ' : 'OPT'}
+                      </button>
+                      <span style={{ fontSize: 13, fontWeight: 600, fontFamily: 'monospace', flex: 1 }}>{f.id}</span>
+                      <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', direction: 'rtl', maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.placeholder}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* ── Contextual toolbar (Photoshop-style options bar) ────────────────── */}
+      {mainTab === 'editor' && <>
       <div style={{
         borderBottom: border, background: 'rgba(9,9,11,0.97)', flexShrink: 0,
         height: 44, display: 'flex', alignItems: 'center', gap: 0, paddingLeft: 8, paddingRight: 8, overflowX: 'auto',
@@ -1364,6 +1563,7 @@ export default function TemplateEditorPage() {
           )}
         </div>
       </div>
+      </>}
     </div>
   );
 }
