@@ -38,18 +38,15 @@ To preview without writing: add `--dry` flag.
 
 The script **reports** the current `<g id>` field list after cleaning. Review it.
 
-#### Step 2 — Assign / rename field IDs
+#### Step 2 — Auto-assign field IDs from an existing template (mandatory)
 
-After cleaning, check whether the SVG already has `<g id>` wrappers:
-
-**Case A — No `<g id>` wrappers yet (bare `<text>` elements):**
 ```bash
-npm run wrap-svg -- "public/templates/Category/Sub/FILE.svg"
+node scripts/match-template.mjs "public/templates/Category/Sub/FILE.svg"
 ```
-Interactive: type a field ID for each text element, Enter to make it static.
 
-**Case B — Has Illustrator `<g id>` wrappers** (bad IDs like `_מרדכי_זאב_ראטה`):
-Manually rename the `id` attribute on each `<g>` to the correct field name from the category table below. Do not change the `<text>` content or positions.
+This looks at the other already-processed templates in the same folder, matches text elements by Y position (visual top→bottom), and automatically wraps each element with the correct `<g id>`, field name, REQ/OPT, and order — exactly matching the category pattern.
+
+**This only works if there is at least one already-processed template in the folder.** For the very first template in a new folder, assign field IDs manually using the category table below, then subsequent templates use `match-template.mjs`.
 
 Rules for field IDs:
 - Use `snake_case`, English only
