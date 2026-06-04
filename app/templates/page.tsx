@@ -740,7 +740,11 @@ const [windowWidth, setWindowWidth] = useState(1200);
               </div>
             ) : (() => {
               const filtered = (category ? templates.filter(t => t.category === category) : templates)
-                .filter(t => !subcategory || t.subcategory === subcategory);
+                .filter(t => !subcategory || t.subcategory === subcategory)
+                .sort((a, b) => {
+                  const num = (s: string) => { const m = s.match(/(\d+)/); return m ? parseInt(m[1]) : 0; };
+                  return num(a.name) - num(b.name);
+                });
               return filtered.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '80px 0', border: '1px dashed rgba(0,0,0,0.12)', borderRadius: 20 }}>
                   <p style={{ fontSize: 22, marginBottom: 12 }}>🎨</p>
