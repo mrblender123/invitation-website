@@ -2,9 +2,12 @@
 /**
  * reorder-fields.mjs
  *
- * Local GUI for reordering SVG field order across a template folder.
- * Rewrites <g id> block order in all SVGs in the selected folder.
- * Does NOT touch _schema.json — safe for add-template.mjs future runs.
+ * GUI tool for managing SVG template fields across folders.
+ *
+ * Features:
+ *   - Drag to reorder fields (applied to all SVGs in folder)
+ *   - Click REQ/OPT badge to toggle required state (applied to all SVGs in folder)
+ *   - Overview tab: see all categories at a glance, click badges to toggle instantly
  *
  * Usage:
  *   node scripts/reorder-fields.mjs
@@ -20,9 +23,12 @@ const TEMPLATES_DIR = 'public/templates';
 
 // ── SVG utilities ─────────────────────────────────────────────────────────────
 
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function findMatchingClose(svg, start) {
-  let depth = 0;
-  let i = start;
+  let depth = 0, i = start;
   while (i < svg.length) {
     const open  = svg.indexOf('<g', i);
     const close = svg.indexOf('</g>', i);
@@ -64,25 +70,42 @@ function extractFieldBlocks(svg) {
 function applyNewOrder(svg, newOrderFullIds) {
   const blocks = extractFieldBlocks(svg);
   if (!blocks.length) return svg;
-
   const contentMap = Object.fromEntries(blocks.map(b => [b.fullId, b.content]));
-
-  // Only reorder blocks whose id appears in newOrderFullIds
   const inOrder      = new Set(newOrderFullIds.filter(id => id in contentMap));
   const orderedBlocks = blocks.filter(b => inOrder.has(b.fullId));
   const filteredOrder = newOrderFullIds.filter(id => id in contentMap);
-
   if (orderedBlocks.length !== filteredOrder.length) return svg;
-
-  // Each orderedBlock position gets content from filteredOrder at same index
   const replacements = orderedBlocks
     .map((b, i) => ({ start: b.start, end: b.end, newContent: contentMap[filteredOrder[i]] }))
     .sort((a, b) => b.start - a.start);
-
   let result = svg;
   for (const { start, end, newContent } of replacements) {
     result = result.slice(0, start) + newContent + result.slice(end);
   }
+  return result;
+}
+
+// Apply required toggles + reorder in one pass
+function applyFieldChanges(svg, fields) {
+  // fields: [{ id, required }, ...] in desired order
+  let result = svg;
+
+  // Step 1: apply required changes (add/remove * from g id)
+  for (const { id, required } of fields) {
+    const e = escapeRegex(id);
+    if (required) {
+      // id="X" → id="X*"  (only if not already starred)
+      result = result.replace(new RegExp(`\\bid="${e}"`, 'g'), `id="${id}*"`);
+    } else {
+      // id="X*" → id="X"
+      result = result.replace(new RegExp(`\\bid="${e}\\*"`, 'g'), `id="${id}"`);
+    }
+  }
+
+  // Step 2: reorder using the now-updated fullIds
+  const desiredFullIds = fields.map(f => f.required ? `${f.id}*` : f.id);
+  result = applyNewOrder(result, desiredFullIds);
+
   return result;
 }
 
@@ -116,6 +139,17 @@ async function getFieldsForFolder(folderPath) {
     ({ fullId, id, required, placeholder }));
 }
 
+async function getOverview() {
+  const folders = await getSvgFolders();
+  const result = [];
+  for (const folder of folders) {
+    const fields = await getFieldsForFolder(folder);
+    const parts  = folder.replace(TEMPLATES_DIR + '/', '').split('/');
+    result.push({ folder, category: parts[0], name: parts[parts.length - 1], fields });
+  }
+  return result;
+}
+
 // ── HTML ──────────────────────────────────────────────────────────────────────
 
 const HTML = /* html */`<!DOCTYPE html>
@@ -123,76 +157,122 @@ const HTML = /* html */`<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Reorder Fields — Joy Send</title>
+<title>Field Manager — Joy Send</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;background:#f8f9fa;color:#1e293b;display:flex;height:100vh;overflow:hidden}
 
 /* Sidebar */
-#sidebar{width:260px;background:white;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;flex-shrink:0}
-#sidebar h2{padding:14px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;border-bottom:1px solid #f1f5f9;flex-shrink:0}
+#sidebar{width:240px;background:white;border-right:1px solid #e2e8f0;display:flex;flex-direction:column;flex-shrink:0}
+#sidebar-header{padding:12px 16px;border-bottom:1px solid #f1f5f9;flex-shrink:0;display:flex;flex-direction:column;gap:8px}
+#sidebar-header h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8}
+.tab-bar{display:flex;gap:4px}
+.tab{padding:5px 10px;font-size:12px;font-weight:600;border-radius:6px;cursor:pointer;border:none;background:transparent;color:#64748b;transition:.12s}
+.tab.active{background:#eff6ff;color:#1d4ed8}
 #folder-list{overflow-y:auto;flex:1}
-.folder-item{padding:9px 16px;font-size:13px;cursor:pointer;border-left:3px solid transparent;transition:.12s}
+.folder-item{padding:8px 16px;font-size:13px;cursor:pointer;border-left:3px solid transparent;transition:.12s}
 .folder-item:hover{background:#f8fafc}
 .folder-item.active{background:#eff6ff;border-left-color:#3b82f6;color:#1d4ed8;font-weight:600}
 .folder-cat{font-size:11px;color:#94a3b8;margin-top:1px}
 
 /* Main */
 #main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-#toolbar{padding:14px 24px;background:white;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px;flex-shrink:0}
+#toolbar{padding:12px 24px;background:white;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px;flex-shrink:0}
 #toolbar h1{font-size:16px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #status{font-size:13px;color:#64748b;white-space:nowrap}
-#save-btn{padding:8px 22px;background:#3b82f6;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:.12s;flex-shrink:0}
+#save-btn{padding:7px 20px;background:#3b82f6;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.12s;flex-shrink:0}
 #save-btn:hover:not(:disabled){background:#2563eb}
 #save-btn:disabled{background:#cbd5e1;cursor:not-allowed}
 
 #content{flex:1;overflow-y:auto;padding:24px}
 #empty{display:flex;align-items:center;justify-content:center;height:100%;color:#94a3b8;font-size:15px}
 
-/* Field list */
-#field-list{max-width:540px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
-.field-item{
-  background:white;border:1.5px solid #e2e8f0;border-radius:12px;
-  padding:12px 14px;display:flex;align-items:center;gap:10px;
-  cursor:grab;transition:.15s;user-select:none
-}
+/* Field editor */
+#field-list{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+.field-item{background:white;border:1.5px solid #e2e8f0;border-radius:12px;padding:11px 14px;display:flex;align-items:center;gap:10px;cursor:grab;transition:.15s;user-select:none}
 .field-item:active{cursor:grabbing}
 .field-item:hover{border-color:#cbd5e1;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .field-item.dragging{opacity:.35;border-style:dashed}
 .field-item.over{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.15)}
 .drag-handle{color:#cbd5e1;flex-shrink:0}
-.badge{font-size:10px;font-weight:700;padding:3px 7px;border-radius:99px;flex-shrink:0;letter-spacing:.04em}
-.req{background:#dbeafe;color:#1d4ed8}
-.opt{background:#f1f5f9;color:#64748b}
 .field-id{font-size:13px;font-weight:600;font-family:monospace;flex:1}
-.field-preview{font-size:12px;color:#94a3b8;direction:rtl;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.field-preview{font-size:12px;color:#94a3b8;direction:rtl;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+
+/* Badges — clickable */
+.badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;flex-shrink:0;letter-spacing:.04em;cursor:pointer;border:none;transition:.12s}
+.badge:hover{opacity:.8}
+.badge.req{background:#dbeafe;color:#1d4ed8}
+.badge.opt{background:#f1f5f9;color:#64748b}
+
+/* Overview */
+#overview{display:flex;flex-direction:column;gap:0}
+.ov-category{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;padding:20px 0 8px}
+.ov-row{background:white;border:1px solid #e2e8f0;border-radius:10px;padding:12px 16px;display:flex;align-items:flex-start;gap:14px;margin-bottom:8px}
+.ov-name{font-size:13px;font-weight:600;color:#374151;width:120px;flex-shrink:0;padding-top:2px}
+.ov-fields{display:flex;flex-wrap:wrap;gap:5px;flex:1}
+.ov-badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;cursor:pointer;border:none;transition:.12s;display:flex;align-items:center;gap:4px}
+.ov-badge:hover{opacity:.75}
+.ov-badge.req{background:#dbeafe;color:#1d4ed8}
+.ov-badge.opt{background:#f1f5f9;color:#64748b}
+.ov-badge .ov-id{font-family:monospace;font-size:10px}
+.ov-saving{opacity:.5;pointer-events:none}
 </style>
 </head>
 <body>
 
 <div id="sidebar">
-  <h2>Folders</h2>
+  <div id="sidebar-header">
+    <h2>Joy Send Fields</h2>
+    <div class="tab-bar">
+      <button class="tab active" onclick="showTab('editor')">Editor</button>
+      <button class="tab" onclick="showTab('overview')">Overview</button>
+    </div>
+  </div>
   <div id="folder-list"><div style="padding:16px;color:#94a3b8;font-size:13px">Loading…</div></div>
 </div>
 
 <div id="main">
   <div id="toolbar">
-    <h1 id="folder-title">Reorder Fields</h1>
+    <h1 id="folder-title">Field Manager</h1>
     <span id="status"></span>
-    <button id="save-btn" disabled>Save order</button>
+    <button id="save-btn" disabled>Save changes</button>
   </div>
   <div id="content">
-    <div id="empty">← Select a folder to reorder its fields</div>
+    <div id="empty">← Select a folder to manage its fields</div>
     <div id="field-list" style="display:none"></div>
+    <div id="overview" style="display:none"></div>
   </div>
 </div>
 
 <script>
-let dragSrc = null;
-let dirty   = false;
+let dragSrc    = null;
+let dirty      = false;
+let activeTab  = 'editor';
+let allFolders = [];
+
+// ── Tabs ──────────────────────────────────────────────────────────────────
+function showTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase() === tab));
+  if (tab === 'editor') {
+    document.getElementById('overview').style.display = 'none';
+    document.getElementById('folder-title').textContent = 'Field Manager';
+    document.getElementById('save-btn').style.display = '';
+    setStatus('');
+    setSaveEnabled(false);
+    dirty = false;
+    showEmpty('← Select a folder to manage its fields');
+  } else {
+    document.getElementById('field-list').style.display  = 'none';
+    document.getElementById('save-btn').style.display    = 'none';
+    showEmpty('');
+    loadOverview();
+  }
+}
 
 // ── Load folders ──────────────────────────────────────────────────────────
 fetch('/api/folders').then(r=>r.json()).then(folders=>{
+  allFolders = folders;
   const el = document.getElementById('folder-list');
   el.innerHTML = '';
   folders.forEach(f=>{
@@ -201,12 +281,12 @@ fetch('/api/folders').then(r=>r.json()).then(folders=>{
     d.className = 'folder-item';
     d.innerHTML = '<div>'+escHtml(parts[parts.length-1])+'</div>'
       +(parts.length>1?'<div class="folder-cat">'+escHtml(parts[0])+'</div>':'');
-    d.onclick = ()=>loadFolder(f,d);
+    d.onclick = ()=>{ if(activeTab!=='editor') showTab('editor'); loadFolder(f,d); };
     el.appendChild(d);
   });
 });
 
-// ── Load a folder ─────────────────────────────────────────────────────────
+// ── Editor: load folder ───────────────────────────────────────────────────
 function loadFolder(path, el){
   document.querySelectorAll('.folder-item').forEach(e=>e.classList.remove('active'));
   el.classList.add('active');
@@ -214,21 +294,17 @@ function loadFolder(path, el){
   setSaveEnabled(false);
   dirty = false;
   document.getElementById('folder-title').textContent = path.split('/').pop();
-
   fetch('/api/fields?folder='+encodeURIComponent(path)).then(r=>r.json()).then(fields=>{
-    renderFields(fields, path);
+    renderEditor(fields, path);
   });
 }
 
-// ── Render drag list ──────────────────────────────────────────────────────
-function renderFields(fields, folderPath){
+// ── Editor: render ────────────────────────────────────────────────────────
+function renderEditor(fields, folderPath){
   const list  = document.getElementById('field-list');
   const empty = document.getElementById('empty');
-
   if(!fields.length){
-    empty.textContent = 'No editable fields found in this folder.';
-    empty.style.display = 'flex';
-    list.style.display  = 'none';
+    showEmpty('No editable fields found in this folder.');
     return;
   }
   empty.style.display = 'none';
@@ -237,77 +313,148 @@ function renderFields(fields, folderPath){
 
   fields.forEach(f=>{
     const div = document.createElement('div');
-    div.className   = 'field-item';
-    div.draggable   = true;
-    div.dataset.id  = f.fullId;
+    div.className      = 'field-item';
+    div.draggable      = true;
+    div.dataset.id     = f.id;
+    div.dataset.req    = f.required ? '1' : '0';
     div.dataset.folder = folderPath;
+
+    const badge = document.createElement('button');
+    badge.className = 'badge ' + (f.required ? 'req' : 'opt');
+    badge.textContent = f.required ? 'required' : 'optional';
+    badge.title = 'Click to toggle';
+    badge.onclick = (e)=>{
+      e.stopPropagation();
+      const isReq = div.dataset.req === '1';
+      div.dataset.req = isReq ? '0' : '1';
+      badge.className   = 'badge ' + (!isReq ? 'req' : 'opt');
+      badge.textContent = !isReq ? 'required' : 'optional';
+      div.dataset.id    = f.id; // keep base id (no *)
+      markDirty();
+    };
+
     div.innerHTML = \`
       <svg class="drag-handle" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
         <rect x="3" y="2" width="10" height="2" rx="1"/>
         <rect x="3" y="7" width="10" height="2" rx="1"/>
         <rect x="3" y="12" width="10" height="2" rx="1"/>
       </svg>
-      <span class="badge \${f.required?'req':'opt'}">\${f.required?'required':'optional'}</span>
-      <span class="field-id">\${escHtml(f.id)}</span>
-      <span class="field-preview">\${escHtml(f.placeholder)}</span>
     \`;
+    div.appendChild(badge);
 
-    div.addEventListener('dragstart', e=>{
-      dragSrc = div;
-      requestAnimationFrame(()=>div.classList.add('dragging'));
-      e.dataTransfer.effectAllowed = 'move';
-    });
-    div.addEventListener('dragend', ()=>{
-      div.classList.remove('dragging');
-      list.querySelectorAll('.field-item').forEach(el=>el.classList.remove('over'));
-    });
-    div.addEventListener('dragover', e=>{
-      e.preventDefault();
-      if(dragSrc===div) return;
-      list.querySelectorAll('.field-item').forEach(el=>el.classList.remove('over'));
-      div.classList.add('over');
-    });
+    const idSpan = document.createElement('span');
+    idSpan.className = 'field-id';
+    idSpan.textContent = f.id;
+    div.appendChild(idSpan);
+
+    const prev = document.createElement('span');
+    prev.className = 'field-preview';
+    prev.textContent = f.placeholder;
+    div.appendChild(prev);
+
+    div.addEventListener('dragstart', e=>{ dragSrc=div; requestAnimationFrame(()=>div.classList.add('dragging')); e.dataTransfer.effectAllowed='move'; });
+    div.addEventListener('dragend', ()=>{ div.classList.remove('dragging'); list.querySelectorAll('.field-item').forEach(el=>el.classList.remove('over')); });
+    div.addEventListener('dragover', e=>{ e.preventDefault(); if(dragSrc===div) return; list.querySelectorAll('.field-item').forEach(el=>el.classList.remove('over')); div.classList.add('over'); });
     div.addEventListener('dragleave', ()=>div.classList.remove('over'));
-    div.addEventListener('drop', e=>{
-      e.preventDefault();
-      div.classList.remove('over');
-      if(!dragSrc||dragSrc===div) return;
-      const items = [...list.querySelectorAll('.field-item')];
-      const si = items.indexOf(dragSrc), di = items.indexOf(div);
-      list.insertBefore(dragSrc, si<di ? div.nextSibling : div);
-      dirty = true;
-      setStatus('Unsaved changes');
-      setSaveEnabled(true);
-    });
+    div.addEventListener('drop', e=>{ e.preventDefault(); div.classList.remove('over'); if(!dragSrc||dragSrc===div) return; const items=[...list.querySelectorAll('.field-item')]; const si=items.indexOf(dragSrc),di=items.indexOf(div); list.insertBefore(dragSrc, si<di?div.nextSibling:div); markDirty(); });
 
     list.appendChild(div);
   });
 }
 
-// ── Save ──────────────────────────────────────────────────────────────────
+function markDirty(){ dirty=true; setStatus('Unsaved changes'); setSaveEnabled(true); }
+
+// ── Editor: save ──────────────────────────────────────────────────────────
 document.getElementById('save-btn').onclick = async ()=>{
-  const items     = [...document.querySelectorAll('.field-item')];
-  const newOrder  = items.map(el=>el.dataset.id);
-  const folder    = items[0]?.dataset.folder;
+  const items  = [...document.querySelectorAll('.field-item')];
+  const folder = items[0]?.dataset.folder;
   if(!folder) return;
+  const fields = items.map(el=>({ id: el.dataset.id, required: el.dataset.req==='1' }));
 
   setSaveEnabled(false);
   document.getElementById('save-btn').textContent = 'Saving…';
-
-  const res  = await fetch('/api/reorder',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({folder,newOrder})});
+  const res  = await fetch('/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({folder,fields})});
   const data = await res.json();
-
-  document.getElementById('save-btn').textContent = 'Save order';
-  if(data.ok){
-    dirty = false;
-    setStatus('✓ Saved '+data.count+' file'+(data.count===1?'':'s'));
-  } else {
-    setSaveEnabled(true);
-    setStatus('✗ '+data.error);
-  }
+  document.getElementById('save-btn').textContent = 'Save changes';
+  if(data.ok){ dirty=false; setStatus('✓ Saved to '+data.count+' file'+(data.count===1?'':'s')); }
+  else { setSaveEnabled(true); setStatus('✗ '+data.error); }
 };
 
+// ── Overview ──────────────────────────────────────────────────────────────
+async function loadOverview(){
+  const ov = document.getElementById('overview');
+  ov.innerHTML = '<div style="color:#94a3b8;padding:8px 0">Loading…</div>';
+  ov.style.display = 'flex';
+  ov.style.flexDirection = 'column';
+
+  const data = await fetch('/api/overview').then(r=>r.json());
+
+  // Group by category
+  const cats = {};
+  for (const row of data) {
+    if(!cats[row.category]) cats[row.category] = [];
+    cats[row.category].push(row);
+  }
+
+  ov.innerHTML = '';
+  document.getElementById('folder-title').textContent = 'Overview — All Categories';
+
+  for (const [cat, rows] of Object.entries(cats)) {
+    const catLabel = document.createElement('div');
+    catLabel.className = 'ov-category';
+    catLabel.textContent = cat;
+    ov.appendChild(catLabel);
+
+    for (const row of rows) {
+      const r = document.createElement('div');
+      r.className = 'ov-row';
+
+      const name = document.createElement('div');
+      name.className = 'ov-name';
+      name.textContent = row.name;
+      r.appendChild(name);
+
+      const fields = document.createElement('div');
+      fields.className = 'ov-fields';
+
+      for (const f of row.fields) {
+        const b = document.createElement('button');
+        b.className = 'ov-badge ' + (f.required ? 'req' : 'opt');
+        b.innerHTML = \`<span class="ov-id">\${escHtml(f.id)}</span>\`;
+        b.title = (f.required ? 'required' : 'optional') + ' — click to toggle';
+        b.dataset.folder   = row.folder;
+        b.dataset.id       = f.id;
+        b.dataset.required = f.required ? '1' : '0';
+
+        b.onclick = async ()=>{
+          const wasReq = b.dataset.required === '1';
+          const nowReq = !wasReq;
+          b.classList.add('ov-saving');
+
+          const res  = await fetch('/api/toggle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({folder:b.dataset.folder,id:b.dataset.id,required:nowReq})});
+          const data = await res.json();
+          b.classList.remove('ov-saving');
+
+          if(data.ok){
+            b.dataset.required = nowReq ? '1' : '0';
+            b.className = 'ov-badge ' + (nowReq ? 'req' : 'opt');
+            b.title = (nowReq ? 'required' : 'optional') + ' — click to toggle';
+            setStatus('✓ '+escHtml(f.id)+' → '+(nowReq?'required':'optional')+' in '+row.name);
+          } else {
+            setStatus('✗ '+data.error);
+          }
+        };
+        fields.appendChild(b);
+      }
+
+      r.appendChild(fields);
+      ov.appendChild(r);
+    }
+  }
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────
+function showEmpty(msg){ const e=document.getElementById('empty'); e.textContent=msg; e.style.display=msg?'flex':'none'; document.getElementById('field-list').style.display='none'; }
 function setStatus(msg){ document.getElementById('status').textContent = msg; }
 function setSaveEnabled(on){ document.getElementById('save-btn').disabled = !on; }
 function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -323,38 +470,53 @@ const server = createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost`);
 
   try {
-    // GET /api/folders
     if (url.pathname === '/api/folders') {
-      const folders = await getSvgFolders();
-      return json(res, folders);
+      return json(res, await getSvgFolders());
     }
 
-    // GET /api/fields?folder=...
     if (url.pathname === '/api/fields') {
       const folder = url.searchParams.get('folder');
       if (!folder) return json(res, []);
       return json(res, await getFieldsForFolder(folder));
     }
 
-    // POST /api/reorder  { folder, newOrder }
-    if (url.pathname === '/api/reorder' && req.method === 'POST') {
-      const body = await readBody(req);
-      const { folder, newOrder } = JSON.parse(body);
+    if (url.pathname === '/api/overview') {
+      return json(res, await getOverview());
+    }
 
+    // POST /api/save  { folder, fields: [{ id, required }] }
+    if (url.pathname === '/api/save' && req.method === 'POST') {
+      const { folder, fields } = JSON.parse(await readBody(req));
       const entries  = await readdir(folder);
       const svgFiles = entries.filter(f => f.toLowerCase().endsWith('.svg') && !f.startsWith('_'));
-
       let count = 0;
       for (const file of svgFiles) {
         const filePath = join(folder, file);
         const svg      = await readFile(filePath, 'utf-8');
-        const newSvg   = applyNewOrder(svg, newOrder);
+        const newSvg   = applyFieldChanges(svg, fields);
         if (newSvg !== svg) { await writeFile(filePath, newSvg); count++; }
       }
       return json(res, { ok: true, count });
     }
 
-    // Serve HTML
+    // POST /api/toggle  { folder, id, required }  — toggle one field in all SVGs
+    if (url.pathname === '/api/toggle' && req.method === 'POST') {
+      const { folder, id, required } = JSON.parse(await readBody(req));
+      const entries  = await readdir(folder);
+      const svgFiles = entries.filter(f => f.toLowerCase().endsWith('.svg') && !f.startsWith('_'));
+      const e = escapeRegex(id);
+      let count = 0;
+      for (const file of svgFiles) {
+        const filePath = join(folder, file);
+        let svg = await readFile(filePath, 'utf-8');
+        const newSvg = required
+          ? svg.replace(new RegExp(`\\bid="${e}"`, 'g'), `id="${id}*"`)
+          : svg.replace(new RegExp(`\\bid="${e}\\*"`, 'g'), `id="${id}"`);
+        if (newSvg !== svg) { await writeFile(filePath, newSvg); count++; }
+      }
+      return json(res, { ok: true, count });
+    }
+
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.end(HTML);
 
@@ -378,8 +540,8 @@ function readBody(req) {
 }
 
 server.listen(PORT, () => {
-  console.log(`\n  Reorder Fields — Joy Send`);
-  console.log(`  ─────────────────────────`);
+  console.log(`\n  Field Manager — Joy Send`);
+  console.log(`  ────────────────────────`);
   console.log(`  http://localhost:${PORT}`);
   console.log(`\n  Ctrl+C to stop\n`);
 });
