@@ -4,7 +4,8 @@ import path from 'path';
 import type { Template, SvgField } from '@/lib/templates';
 import { FOLDER_TO_CATEGORY } from '@/lib/categories';
 
-export const revalidate = 3600; // cache for 1 hour
+export const dynamic    = 'force-dynamic'; // always read from filesystem — admin saves must reflect immediately
+export const revalidate = 0;
 
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL?.replace(/\/$/, '') ?? '';
 const IS_DEV = process.env.NODE_ENV === 'development';
