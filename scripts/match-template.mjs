@@ -162,6 +162,66 @@ function applyIds(svg, newTexts, refTexts) {
   return result;
 }
 
+// ── Reorder document to match reference ──────────────────────────────────────
+
+function findMatchingClose(svg, start) {
+  let depth = 0, i = start;
+  while (i < svg.length) {
+    const open  = svg.indexOf('<g', i);
+    const close = svg.indexOf('</g>', i);
+    if (close === -1) return -1;
+    if (open !== -1 && open < close) {
+      const c = svg[open + 2];
+      if (c === ' ' || c === '\t' || c === '\n' || c === '\r' || c === '>') depth++;
+      i = open + 2;
+    } else {
+      if (--depth === 0) return close + 4;
+      i = close + 4;
+    }
+  }
+  return -1;
+}
+
+function reorderToMatch(svg, refDocOrder) {
+  // Extract all <g id> blocks from the new SVG
+  const blocks = [];
+  const re = /<g\b[^>]*\bid="([A-Za-z][^"]*)"/g;
+  let m;
+  while ((m = re.exec(svg)) !== null) {
+    const fullId = m[1];
+    const start  = m.index;
+    const end    = findMatchingClose(svg, start);
+    if (end === -1) continue;
+    blocks.push({ fullId, start, end, content: svg.slice(start, end) });
+  }
+  if (!blocks.length) return svg;
+
+  // Desired order: reference document order (fieldId list, nulls excluded)
+  const desiredOrder = refDocOrder
+    .filter(t => t.fieldId)
+    .map(t => t.fieldId);
+
+  // Build content map keyed by fullId
+  const contentMap = Object.fromEntries(blocks.map(b => [b.fullId, b.content]));
+
+  // Only reorder blocks that exist in both desired order and the new SVG
+  const toReorder  = desiredOrder.filter(id => id in contentMap);
+  const toReorderBlocks = blocks.filter(b => toReorder.includes(b.fullId));
+
+  if (toReorder.length !== toReorderBlocks.length) return svg;
+
+  // Apply in reverse order to preserve string positions
+  const replacements = toReorderBlocks
+    .map((b, i) => ({ start: b.start, end: b.end, newContent: contentMap[toReorder[i]] }))
+    .sort((a, b) => b.start - a.start);
+
+  let result = svg;
+  for (const { start, end, newContent } of replacements) {
+    result = result.slice(0, start) + newContent + result.slice(end);
+  }
+  return result;
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 console.log(`\nmatching: ${filePath}`);
@@ -176,10 +236,43 @@ if (!ref) {
   process.exit(1);
 }
 
-console.log(`reference: ${path.relative(process.cwd(), ref.path)}`);
-console.log(`  ref fields: ${ref.texts.length}  new fields: ${newTexts.length}\n`);
+// Y-sorted for content matching, document-order for final reorder
+const refTextsYSorted = ref.texts; // already sorted by Y in findReference
+const refTextsDocOrder = extractTexts(ref.content).sort((a, b) => {
+  // Re-extract in document order (by start position, not Y)
+  return 0; // will be overridden below
+});
 
-const result = applyIds(newSvg, newTexts, ref.texts);
+// Extract reference texts in document order (not Y order)
+const refDocOrder = (() => {
+  const results = [];
+  const textRe  = /<text\b([^>]*)>([\s\S]*?)<\/text>/g;
+  let m;
+  while ((m = textRe.exec(ref.content)) !== null) {
+    const attrs = m[1];
+    const inner = m[2];
+    const tspan = inner.match(/<tspan[^>]*>([^<]+)</);
+    const placeholder = tspan ? tspan[1].trim() : '';
+    if (!placeholder) continue;
+    const before    = ref.content.slice(0, m.index);
+    const lastOpen  = before.lastIndexOf('<g');
+    const lastClose = before.lastIndexOf('</g>');
+    let fieldId = null;
+    if (lastOpen !== -1 && (lastClose === -1 || lastOpen > lastClose)) {
+      const tagSnippet = ref.content.slice(lastOpen, ref.content.indexOf('>', lastOpen) + 1);
+      const idMatch    = tagSnippet.match(/\bid="([A-Za-z][^"]*)"/);
+      if (idMatch) fieldId = idMatch[1];
+    }
+    results.push({ placeholder, fieldId, pos: m.index });
+  }
+  return results; // already in document order
+})();
+
+console.log(`reference: ${path.relative(process.cwd(), ref.path)}`);
+console.log(`  ref fields: ${refTextsYSorted.length}  new fields: ${newTexts.length}\n`);
+
+let result = applyIds(newSvg, newTexts, refTextsYSorted);
+result = reorderToMatch(result, refDocOrder);
 
 if (isDry) {
   process.stdout.write(result);
