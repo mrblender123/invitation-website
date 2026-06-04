@@ -93,6 +93,53 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `GitHub PUT failed: ${err}` }, { status: 500 });
   }
 
+  // Also upload directly to R2 so the website shows the change immediately
+  // (GitHub commit alone won't update R2 — the site serves SVGs from R2 in production)
+  const r2AccountId  = process.env.R2_ACCOUNT_ID;
+  const r2AccessKey  = process.env.R2_ACCESS_KEY_ID;
+  const r2SecretKey  = process.env.R2_SECRET_ACCESS_KEY;
+  const r2Bucket     = process.env.R2_BUCKET;
+
+  if (r2AccountId && r2AccessKey && r2SecretKey && r2Bucket) {
+    const r2Key = `templates${relativePath}`;
+    const r2Endpoint = `https://${r2AccountId}.r2.cloudflarestorage.com`;
+
+    // Build AWS Signature v4 for the PUT request
+    const { createHmac, createHash } = await import('crypto');
+    const now = new Date();
+    const dateStamp  = now.toISOString().slice(0, 10).replace(/-/g, '');
+    const amzDate    = now.toISOString().replace(/[:-]|\.\d{3}/g, '').slice(0, 15) + 'Z';
+    const region     = 'auto';
+    const service    = 's3';
+    const bodyBytes  = Buffer.from(svgContent, 'utf-8');
+    const payloadHash = createHash('sha256').update(bodyBytes).digest('hex');
+
+    const canonicalHeaders = `content-type:image/svg+xml\nhost:${r2Bucket}.${r2AccountId}.r2.cloudflarestorage.com\nx-amz-content-sha256:${payloadHash}\nx-amz-date:${amzDate}\n`;
+    const signedHeaders    = 'content-type;host;x-amz-content-sha256;x-amz-date';
+    const canonicalRequest = `PUT\n/${encodeURIComponent(r2Key).replace(/%2F/g, '/')}\n\n${canonicalHeaders}\n${signedHeaders}\n${payloadHash}`;
+
+    const credentialScope  = `${dateStamp}/${region}/${service}/aws4_request`;
+    const stringToSign     = `AWS4-HMAC-SHA256\n${amzDate}\n${credentialScope}\n${createHash('sha256').update(canonicalRequest).digest('hex')}`;
+
+    const sign = (key: Buffer, msg: string) => createHmac('sha256', key).update(msg).digest();
+    const signingKey = sign(sign(sign(sign(Buffer.from(`AWS4${r2SecretKey}`), dateStamp), region), service), 'aws4_request');
+    const signature  = createHmac('sha256', signingKey).update(stringToSign).digest('hex');
+
+    const authorization = `AWS4-HMAC-SHA256 Credential=${r2AccessKey}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
+
+    await fetch(`${r2Endpoint}/${r2Bucket}/${encodeURIComponent(r2Key).replace(/%2F/g, '/')}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'image/svg+xml',
+        'x-amz-content-sha256': payloadHash,
+        'x-amz-date': amzDate,
+        Authorization: authorization,
+        'Cache-Control': 'public, max-age=0, must-revalidate',
+      },
+      body: bodyBytes,
+    });
+  }
+
   revalidatePath('/api/templates');
   return NextResponse.json({ ok: true });
 }

@@ -88,6 +88,39 @@ function applyFieldChanges(svg: string, fields: { id: string; required: boolean 
 
 // ── GitHub helper (same pattern as update-svg) ────────────────────────────────
 
+async function uploadToR2(relativePath: string, content: string): Promise<void> {
+  const r2AccountId = process.env.R2_ACCOUNT_ID;
+  const r2AccessKey = process.env.R2_ACCESS_KEY_ID;
+  const r2SecretKey = process.env.R2_SECRET_ACCESS_KEY;
+  const r2Bucket    = process.env.R2_BUCKET;
+  if (!r2AccountId || !r2AccessKey || !r2SecretKey || !r2Bucket) return;
+
+  const r2Key = `templates/${relativePath}`;
+  const { createHmac, createHash } = await import('crypto');
+  const now = new Date();
+  const dateStamp   = now.toISOString().slice(0, 10).replace(/-/g, '');
+  const amzDate     = now.toISOString().replace(/[:-]|\.\d{3}/g, '').slice(0, 15) + 'Z';
+  const bodyBytes   = Buffer.from(content, 'utf-8');
+  const payloadHash = createHash('sha256').update(bodyBytes).digest('hex');
+  const host        = `${r2Bucket}.${r2AccountId}.r2.cloudflarestorage.com`;
+
+  const canonicalHeaders = `content-type:image/svg+xml\nhost:${host}\nx-amz-content-sha256:${payloadHash}\nx-amz-date:${amzDate}\n`;
+  const signedHeaders    = 'content-type;host;x-amz-content-sha256;x-amz-date';
+  const canonicalRequest = `PUT\n/${encodeURIComponent(r2Key).replace(/%2F/g, '/')}\n\n${canonicalHeaders}\n${signedHeaders}\n${payloadHash}`;
+  const credentialScope  = `${dateStamp}/auto/s3/aws4_request`;
+  const stringToSign     = `AWS4-HMAC-SHA256\n${amzDate}\n${credentialScope}\n${createHash('sha256').update(canonicalRequest).digest('hex')}`;
+  const sign = (key: Buffer, msg: string) => createHmac('sha256', key).update(msg).digest();
+  const signingKey  = sign(sign(sign(sign(Buffer.from(`AWS4${r2SecretKey}`), dateStamp), 'auto'), 's3'), 'aws4_request');
+  const signature   = createHmac('sha256', signingKey).update(stringToSign).digest('hex');
+  const authorization = `AWS4-HMAC-SHA256 Credential=${r2AccessKey}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
+
+  await fetch(`https://${host}/${encodeURIComponent(r2Key).replace(/%2F/g, '/')}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'image/svg+xml', 'x-amz-content-sha256': payloadHash, 'x-amz-date': amzDate, Authorization: authorization, 'Cache-Control': 'public, max-age=0, must-revalidate' },
+    body: bodyBytes,
+  });
+}
+
 async function writeFileToGitHub(relativePath: string, content: string): Promise<void> {
   const githubToken = process.env.GITHUB_TOKEN!;
   const repo        = process.env.GITHUB_REPO!;
@@ -144,7 +177,10 @@ export async function POST(req: NextRequest) {
       await writeFile(absPath, updated, 'utf-8');
     } else {
       const relPath = path.relative(path.join(process.cwd(), 'public'), absPath).replace(/\\/g, '/');
-      await writeFileToGitHub(relPath, updated);
+      await Promise.all([
+        writeFileToGitHub(relPath, updated),
+        uploadToR2(relPath, updated),
+      ]);
     }
     count++;
   }
