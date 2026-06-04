@@ -37,23 +37,23 @@
       "required": true
     },
     {
-      "id": "text2",
+      "id": "line_2",
       "required": false
     },
     {
-      "id": "text3",
+      "id": "line_3",
       "required": false
     },
     {
-      "id": "text4",
+      "id": "line_4",
       "required": false
     },
     {
-      "id": "text5",
+      "id": "line_5",
       "required": false
     },
     {
-      "id": "text6",
+      "id": "line_6",
       "required": false
     }
   ]
