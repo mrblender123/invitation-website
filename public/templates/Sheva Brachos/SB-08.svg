@@ -6,8 +6,8 @@
   <g id="groom_name_2*" data-name="* מרדכי זאב ראטה">
     <text text-anchor="middle" transform="translate(180 377.1)" fill="#e89ba2" font-family="Heebo" font-size="16.1" font-weight="800"><tspan x="0" y="0">ברענאוויטש</tspan></text>
   </g>
-  <g id="address*" data-name="5015 15th Ave *">
-    <text text-anchor="middle" transform="translate(180 323.7)" fill="#eec3af" font-family="Heebo" font-size="9.9" font-weight="600"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+  <g id="line_5">
+    <text text-anchor="middle" transform="translate(180 251.2)" fill="#eec3af" font-family="Heebo" font-size="13.5" font-weight="800"><tspan x="0" y="0">מנשה וחנה</tspan></text>
   </g>
   <g id="location*" data-name="* בבאולם פרדס נח">
     <text text-anchor="middle" transform="translate(180 313.8)" fill="#eec3af" font-family="Heebo" font-size="9.9" font-weight="600"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
@@ -17,9 +17,6 @@
   </g>
   <g id="hebrew_date*" data-name=" * בליל ג׳ פרשת שמות">
     <text text-anchor="middle" transform="translate(180 294.8)" fill="#eec3af" font-family="Heebo" font-size="8.7" font-weight="600"><tspan x="0" y="0">ט״ו טבת תשפ״ו</tspan></text>
-  </g>
-    <g id="line_5">
-    <text text-anchor="middle" transform="translate(180 251.2)" fill="#eec3af" font-family="Heebo" font-size="13.5" font-weight="800"><tspan x="0" y="0">מנשה וחנה</tspan></text>
   </g>
     <g id="line_4">
     <text text-anchor="middle" transform="translate(180 264.8)" fill="#eec3af" font-family="Heebo" font-size="13.5" font-weight="800"><tspan x="0" y="0">בערקאוויטש</tspan></text>
@@ -32,6 +29,9 @@
   </g>
     <g id="date*" data-name=" * בליל ג׳ פרשת שמות">
     <text text-anchor="middle" transform="translate(180 284.9)" fill="#eec3af" font-family="Heebo" font-size="8.7" font-weight="600"><tspan x="0" y="0">ביום ג׳ פרשת שמות</tspan></text>
+  </g>
+    <g id="address*" data-name="5015 15th Ave *">
+    <text text-anchor="middle" transform="translate(180 323.7)" fill="#eec3af" font-family="Heebo" font-size="9.9" font-weight="600"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
     <g id="line_1">
     <text text-anchor="middle" transform="translate(180 127.1)" fill="#eec3af" font-family="Heebo" font-size="6.3"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
