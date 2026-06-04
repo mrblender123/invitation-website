@@ -11,7 +11,7 @@
     </g>
   </g>
   <g id="_החתן" data-name=" החתן">
-    <g id="text1">
+    <g id="line_1">
       <text transform="translate(180 353.1)" fill="#808a92" font-family="Heebo" font-weight="600" font-size="18.5" text-anchor="middle"><tspan x="0" y="0">החתן</tspan></text>
     </g>
   </g>
@@ -35,13 +35,13 @@
       <text transform="translate(180 250.2)" fill="#626d73" font-family="Heebo" font-weight="900" font-size="15.7" text-anchor="middle"><tspan x="0" y="0">דינסטאג</tspan></text>
     </g>
   </g>
-  <g id="text2">
+  <g id="line_2">
     <text transform="translate(180 293.8)" fill="#808a92" font-family="Heebo" font-weight="600" font-size="11" text-anchor="middle"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
   </g>
-  <g id="text3">
+  <g id="line_3">
     <text transform="translate(180 224.9)" fill="#808a92" font-family="Heebo" font-weight="600" font-size="11" text-anchor="middle"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
   </g>
-  <g id="text4">
+  <g id="line_4">
     <text transform="translate(180 126.2)" fill="#606a73" font-family="Heebo" font-weight="600" font-size="12" text-anchor="middle"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
   </g>
   <g>

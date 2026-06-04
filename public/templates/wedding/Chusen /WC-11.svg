@@ -6,7 +6,7 @@
   <g id="groom_last_name*">
     <text transform="translate(107.5 233.7)" fill="#e6b765" font-family="Heebo" font-weight="900" font-size="13.4" text-anchor="middle"><tspan x="0" y="0">וייס</tspan></text>
   </g>
-    <g id="text5">
+    <g id="line_5">
     <text transform="translate(107.5 205.3)" fill="#218b77" font-family="Heebo" font-weight="600" font-size="10.5" text-anchor="middle"><tspan x="0" y="0">החתן</tspan></text>
   </g>
   <g id="address*">
@@ -21,13 +21,13 @@
   <g id="day*">
     <text transform="translate(107.5 143.6)" fill="#e6b765" font-family="Heebo" font-weight="900" font-size="9.1" text-anchor="middle"><tspan x="0" y="0">דינסטאג</tspan></text>
   </g>
-    <g id="text4">
+    <g id="line_4">
     <text transform="translate(107.5 169)" fill="#218b77" font-family="Heebo" font-weight="600" font-size="6.4" text-anchor="middle"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
   </g>
-    <g id="text3">
+    <g id="line_3">
     <text transform="translate(107.5 132)" fill="#218b77" font-family="Heebo" font-weight="600" font-size="6.4" text-anchor="middle"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
   </g>
-    <g id="text2">
+    <g id="line_2">
     <text transform="translate(107.5 80.6)" fill="#218b77" font-family="Heebo" font-weight="600" font-size="7" text-anchor="middle"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
   </g>
   <g>

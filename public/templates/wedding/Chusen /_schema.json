@@ -9,7 +9,7 @@
       "required": true
     },
     {
-      "id": "text1",
+      "id": "line_1",
       "required": false
     },
     {
@@ -29,15 +29,15 @@
       "required": true
     },
     {
-      "id": "text2",
+      "id": "line_2",
       "required": false
     },
     {
-      "id": "text3",
+      "id": "line_3",
       "required": false
     },
     {
-      "id": "text4",
+      "id": "line_4",
       "required": false
     }
   ]

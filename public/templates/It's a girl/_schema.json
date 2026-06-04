@@ -13,7 +13,7 @@
       "required": true
     },
     {
-      "id": "text1",
+      "id": "line_1",
       "required": false
     },
     {
