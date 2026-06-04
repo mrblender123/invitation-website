@@ -24,10 +24,10 @@
   <g id="host_name*">
     <text transform="translate(180 392)" fill="#061e10" font-family="Heebo" font-size="17.9" font-weight="800" text-anchor="middle"><tspan x="0" y="0">חייםמשה ראטה</tspan></text>
   </g>
-  <g id="father_name_1">
+  <g id="father_name_1*">
     <text transform="translate(180 401.5)" fill="#061e10" font-family="Heebo" font-size="6.9" font-weight="800" text-anchor="middle"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
   </g>
-  <g id="father_name_2">
+  <g id="father_name_2*">
     <text transform="translate(180 408.6)" fill="#061e10" font-family="Heebo" font-size="6.9" font-weight="800" text-anchor="middle"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
   </g>
 </svg>
