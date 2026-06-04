@@ -63,10 +63,10 @@
     <g id="line_2">
     <text transform="translate(180 415.7)" text-anchor="middle" font-family="Heebo" font-size="6" font-weight="400"><tspan x="0" y="0">ובעזהשי״ת ביום שמחתכם ישמח ליבי גם אנו</tspan></text>
   </g>
-  <g id="groom_parents">
+  <g id="groom_parents*">
     <text transform="translate(180 426.7)" text-anchor="middle" font-family="Heebo" font-size="8" font-weight="400"><tspan x="0" y="0">הורי החתן שמאול זאנוויל שווארץ וריעיתו</tspan></text>
   </g>
-  <g id="bride_parents">
+  <g id="bride_parents*">
     <text transform="translate(180 439.9)" text-anchor="middle" font-family="Heebo" font-size="8" font-weight="400"><tspan x="0" y="0">הורי הכלה דוד ברעכער וריעיתו</tspan></text>
   </g>
 </svg>

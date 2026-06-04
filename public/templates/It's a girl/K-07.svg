@@ -31,9 +31,9 @@
     <text transform="translate(180 290.9)" text-anchor="middle" fill="#c5a47b" font-family="Heebo" font-size="9.2" font-weight="700"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
   </g><g id="street*">
     <text transform="translate(180 302.6)" text-anchor="middle" fill="#c5a47b" font-family="Heebo" font-size="9.2" font-weight="700"><tspan x="0" y="0">1247 38th St</tspan></text>
-  </g><g id="time*">
+  </g><g id="time">
     <text transform="translate(180 316.7)" text-anchor="middle" fill="#d7806f" font-family="Heebo" font-size="11" font-weight="700"><tspan x="0" y="0">שחרית</tspan></text>
-  </g><g id="shachrit_time"><text font-family="Heebo" font-size="11" font-weight="700" fill="#d7806f" text-anchor="middle" transform="translate(180 328.3)"><tspan x="0">בשעה 9:00</tspan></text></g><g id="greeting">
+  </g><g id="shachrit_time*"><text font-family="Heebo" font-size="11" font-weight="700" fill="#d7806f" text-anchor="middle" transform="translate(180 328.3)"><tspan x="0">בשעה 9:00</tspan></text></g><g id="greeting">
     <text transform="translate(180 348.3)" text-anchor="middle" fill="#c5a47b" font-family="Heebo" font-size="8" font-weight="700"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g><g id="host_name*">
     <text transform="translate(180 362.8)" text-anchor="middle" fill="#d7806f" font-family="Heebo" font-size="14.3" font-weight="800"><tspan x="0" y="0">ברוך זאב ראטנבערג</tspan></text>

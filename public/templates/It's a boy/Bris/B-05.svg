@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
     <g id="line_6">
     <text transform="translate(180 163.1)" text-anchor="middle" fill="#ddab55" font-family="Heebo" font-size="6.2" font-weight="400"><tspan x="0" y="0">ברוב שמחה והודאה להשי״ת הננו מתכבדים להזמין את</tspan></text>
   </g>
@@ -30,7 +29,7 @@
   <g id="bris_time*">
     <text transform="translate(180 368.8)" text-anchor="middle" fill="#ddab55" font-family="Heebo" font-size="6.5" font-weight="400"><tspan x="0" y="0">ברית בשעה</tspan></text>
   </g>
-  <g id="closing*">
+  <g id="closing">
     <text transform="translate(180 436.2)" text-anchor="middle" fill="#ddab55" font-family="Heebo" font-size="11.6" font-weight="400"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
   <g id="baby_name*">

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 215 288">
-    <g id="line_9">
-    <text text-anchor="middle" transform="translate(107.5 202.8) rotate(.6)" fill="#020202" font-family="Heebo" font-weight="600" font-size="5.7"><tspan x="0" y="0">החתן</tspan></text>
-  </g>
-    <g id="line_8">
-    <text text-anchor="middle" transform="translate(107.5 211.1) rotate(.6)" fill="#6a280d" font-family="Heebo" font-weight="900" font-size="7.9"><tspan x="0" y="0">דוד ברוך</tspan></text>
-  </g>
-    <g id="line_7">
-    <text text-anchor="middle" transform="translate(107.5 220.1) rotate(.6)" fill="#6a280d" font-family="Heebo" font-weight="900" font-size="7.9"><tspan x="0" y="0">ווייסמאן</tspan></text>
-  </g>
-    <g id="line_6">
-    <text text-anchor="middle" transform="translate(107.5 145.7)" fill="#020202" font-family="Heebo" font-weight="900" font-size="8.6"><tspan x="0" y="0">פרשת וירא</tspan></text>
-  </g>
-    <g id="line_5">
-    <text text-anchor="middle" transform="translate(107.5 136.4)" fill="#020202" font-family="Heebo" font-weight="900" font-size="8.6"><tspan x="0" y="0">דינסטאג</tspan></text>
-  </g>
-    <g id="line_4">
-    <text text-anchor="middle" transform="translate(107.5 163.5)" fill="#020202" font-family="Heebo" font-weight="600" font-size="5.8"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
+    <g id="line_2">
+    <text text-anchor="middle" transform="translate(107.5 75.8)" fill="#020202" font-family="Heebo" font-weight="600" font-size="7.5"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
   </g>
     <g id="line_3">
     <text text-anchor="middle" transform="translate(107.5 126.8)" fill="#020202" font-family="Heebo" font-weight="600" font-size="5.8"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
   </g>
-    <g id="line_2">
-    <text text-anchor="middle" transform="translate(107.5 75.8)" fill="#020202" font-family="Heebo" font-weight="600" font-size="7.5"><tspan x="0" y="0">אנליידינען צו מיין</tspan></text>
+    <g id="line_5*">
+    <text text-anchor="middle" transform="translate(107.5 136.4)" fill="#020202" font-family="Heebo" font-weight="900" font-size="8.6"><tspan x="0" y="0">דינסטאג</tspan></text>
+  </g>
+    <g id="line_6*">
+    <text text-anchor="middle" transform="translate(107.5 145.7)" fill="#020202" font-family="Heebo" font-weight="900" font-size="8.6"><tspan x="0" y="0">פרשת וירא</tspan></text>
+  </g>
+    <g id="line_4">
+    <text text-anchor="middle" transform="translate(107.5 163.5)" fill="#020202" font-family="Heebo" font-weight="600" font-size="5.8"><tspan x="0" y="0">אין די זאלן פון</tspan></text>
+  </g>
+    <g id="hall*">
+    <text text-anchor="middle" transform="translate(107.5 174.6)" fill="#020202" font-family="Heebo" font-weight="900" font-size="8.6"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+  </g>
+    <g id="address*">
+    <text text-anchor="middle" transform="translate(107.5 183.3)" fill="#020202" font-family="Heebo" font-weight="900" font-size="6.3"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+  </g>
+    <g id="line_9">
+    <text text-anchor="middle" transform="translate(107.5 202.8) rotate(.6)" fill="#020202" font-family="Heebo" font-weight="600" font-size="5.7"><tspan x="0" y="0">החתן</tspan></text>
   </g>
   <g>
     <path d="M82.4,70v-5.1h-2v-.7h3v5.9h-.9Z" fill="#020202"/>
@@ -45,10 +45,10 @@
     <path d="M140,66.6v-1.7h-.7v-.7h1.7v2.5h-.9Z" fill="#020202"/>
     <path d="M144.8,68.5l-3.1-4.4h1.1l3.1,4.4h-1.1ZM141.9,68.5v-1.5c0-.4,0-.8.2-1s.4-.4.7-.6l.3.5c-.3.1-.4.4-.4.7v1.9h-.9ZM145.9,64.1l-1.5,2.7-.6-.7,1-2h1.1Z" fill="#020202"/>
   </g>
-  <g id="address*">
-    <text text-anchor="middle" transform="translate(107.5 183.3)" fill="#020202" font-family="Heebo" font-weight="900" font-size="6.3"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+  <g id="line_8*">
+    <text text-anchor="middle" transform="translate(107.5 211.1) rotate(.6)" fill="#6a280d" font-family="Heebo" font-weight="900" font-size="7.9"><tspan x="0" y="0">דוד ברוך</tspan></text>
   </g>
-  <g id="hall*">
-    <text text-anchor="middle" transform="translate(107.5 174.6)" fill="#020202" font-family="Heebo" font-weight="900" font-size="8.6"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+  <g id="line_7*">
+    <text text-anchor="middle" transform="translate(107.5 220.1) rotate(.6)" fill="#6a280d" font-family="Heebo" font-weight="900" font-size="7.9"><tspan x="0" y="0">ווייסמאן</tspan></text>
   </g>
 </svg>

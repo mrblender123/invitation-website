@@ -26,9 +26,10 @@
   <g id="street*">
     <text transform="translate(180 279.1)" text-anchor="middle" fill="#a5a8a7" font-family="Heebo" font-size="9.1" font-weight="600"><tspan x="0" y="0">1247 38th St</tspan></text>
   </g>
-  <g id="time*">
+  <g id="time">
     <text transform="translate(180 296.9)" text-anchor="middle" fill="#ca8888" font-family="Heebo" font-size="13.5" font-weight="600"><tspan x="0" y="0">שחרית</tspan></text>
   </g>
+  <g id="shachrit_time*"><text font-family="Heebo" font-size="13.5" font-weight="600" fill="#ca8888" text-anchor="middle" transform="translate(180 311.1)"><tspan x="0">בשעה 9:00</tspan></text></g>
   <g id="greeting">
     <text transform="translate(180 329.7)" text-anchor="middle" fill="#a5a8a7" font-family="Heebo" font-size="9.1" font-weight="600"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
@@ -38,7 +39,6 @@
   <g id="father_name_2*">
     <text transform="translate(180 360.7)" text-anchor="middle" fill="#a5a8a7" font-family="Heebo" font-size="9.1" font-weight="600"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
   </g>
-  <g id="father_name_1*">
+<g id="father_name_1*">
     <text transform="translate(180 371.9)" text-anchor="middle" fill="#a5a8a7" font-family="Heebo" font-size="9.1" font-weight="600"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
-  </g>
-<g id="shachrit_time"><text font-family="Heebo" font-size="13.5" font-weight="600" fill="#ca8888" text-anchor="middle" transform="translate(180 311.1)"><tspan x="0">בשעה 9:00</tspan></text></g></svg>
+  </g></svg>
