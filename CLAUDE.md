@@ -57,7 +57,15 @@ Rules for field IDs:
 - No `*` for optional fields (hidden behind "Show all fields")
 - Forbidden IDs (silently skipped): `static_text`, `layer_1`, `layer 1`, `background`, anything matching `/^layer/i`
 
-#### Step 3 — Check field order
+#### Step 3 — Wrap any remaining bare text (mandatory)
+
+Every `<text>` must be in a `<g id>`. Run:
+```bash
+node scripts/wrap-static-texts.mjs "public/templates/Category/Sub"
+```
+This wraps any bare text in `<g id="line_N">` (optional). Run it even if you think all texts are already wrapped — it's a no-op if nothing is bare.
+
+#### Step 4 — Check field order (was Step 3)
 
 The order `<g id>` elements appear in the SVG document is the order fields appear in the editor. It must follow the category standard (see table below).
 
@@ -70,7 +78,7 @@ If the order is wrong, either:
   ```
   This rewrites all SVGs in the folder at once.
 
-#### Step 4 — Validate (mandatory before committing)
+#### Step 5 — Validate (mandatory before committing)
 
 ```bash
 npm run validate-templates
@@ -78,7 +86,7 @@ npm run validate-templates
 
 Must complete with **0 errors**. Fix anything it flags before proceeding.
 
-#### Step 5 — Commit both files
+#### Step 6 — Commit both files
 
 ```bash
 git add -f "public/templates/Category/Sub/FILE.png"
@@ -170,7 +178,10 @@ Browsers and Illustrator handle Hebrew text anchoring differently. Raw Illustrat
 - When editing: `text-anchor="middle"` fields stay centered at their translate X; `text-anchor="start"` fields center at the original placeholder's visual midpoint.
 
 **Editable fields:**
-- Wrap each editable `<text>` in `<g id="field_id">…</g>`.
+- **Every `<text>` element must be wrapped in a `<g id>` — no bare static text allowed.**
+- Named fields (e.g. `host_name*`, `day*`) use descriptive snake_case ids.
+- Previously-static intro/filler lines use `line_1`, `line_2`, … as ids (all optional).
+- Use `node scripts/wrap-static-texts.mjs "<folder>"` to automatically wrap any remaining bare text in a folder.
 - The `id` becomes the field key; auto-label is generated as Title Case from the id (e.g. `host_name` → "Host Name").
 - For **required fields** (always shown), append `*` to the id: `<g id="field_name*">`. Fields WITHOUT `*` are optional (hidden behind "Show all fields"). If NO fields have `*`, all are treated as required.
 - Forbidden ids (silently skipped): `static_text`, `layer_1`, `layer 1`, `background`, anything matching `/^layer/i`.

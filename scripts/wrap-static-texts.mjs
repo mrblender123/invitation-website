@@ -85,15 +85,15 @@ async function fixSvg(filePath) {
     return;
   }
 
-  // Find max existing textN id to avoid collisions
-  const existingNums = [...content.matchAll(/<g id="text(\d+)[^"]*"/g)].map(m => parseInt(m[1], 10));
-  let nextId = existingNums.length > 0 ? Math.max(...existingNums) + 1 : 2;
+  // Find max existing line_N id to avoid collisions
+  const existingNums = [...content.matchAll(/<g id="line_(\d+)[^"]*"/g)].map(m => parseInt(m[1], 10));
+  let nextId = existingNums.length > 0 ? Math.max(...existingNums) + 1 : 1;
 
   // Apply replacements in reverse order to preserve indices
   const sorted = [...unwrapped].sort((a, b) => b.start - a.start);
   let result = content;
   for (const { start, end, content: textBlock } of sorted) {
-    const id = `text${nextId++}`;
+    const id = `line_${nextId++}`;
     // Detect the indentation of the <text> tag
     const lineStart = result.lastIndexOf('\n', start) + 1;
     const indent = result.slice(lineStart, start).match(/^\s*/)?.[0] ?? '  ';
