@@ -57,7 +57,20 @@ Rules for field IDs:
 - No `*` for optional fields (hidden behind "Show all fields")
 - Forbidden IDs (silently skipped): `static_text`, `layer_1`, `layer 1`, `background`, anything matching `/^layer/i`
 
-#### Step 3 — Validate (mandatory before committing)
+#### Step 3 — Check field order
+
+The order `<g id>` elements appear in the SVG document is the order fields appear in the editor. It must follow the category standard (see table below).
+
+If the order is wrong, either:
+- Edit the SVG manually (move `<g id>` blocks to the correct position), or
+- Use the GUI reorder tool:
+  ```bash
+  node scripts/reorder-fields.mjs
+  # then open http://localhost:3333 — drag fields, click Save
+  ```
+  This rewrites all SVGs in the folder at once.
+
+#### Step 4 — Validate (mandatory before committing)
 
 ```bash
 npm run validate-templates
@@ -65,12 +78,15 @@ npm run validate-templates
 
 Must complete with **0 errors**. Fix anything it flags before proceeding.
 
-#### Step 4 — Commit both files
+#### Step 5 — Commit both files
 
 ```bash
-git add "public/templates/Category/Sub/FILE.svg" "public/templates/Category/Sub/FILE.png"
+git add -f "public/templates/Category/Sub/FILE.png"
+git add "public/templates/Category/Sub/FILE.svg" "public/templates/Category/Sub/FILE-thumb.png"
 git commit -m "Add FILE template to Category/Sub"
 ```
+
+Note: PNG files are in `.gitignore` — always use `git add -f` for them.
 
 ---
 
@@ -80,56 +96,58 @@ Use these exact field IDs and required/optional status. Consistency across templ
 
 #### It's a girl / It's a boy
 
-| Field ID | REQ/OPT | Placeholder example |
-|---|---|---|
-| `day*` | **REQ** | ביום שבת קודש |
-| `parasha*` | **REQ** | פרשת ויגש |
-| `location*` | **REQ** | בביהמ״ד קהל חסידי בעלזא |
-| `street*` | **REQ** | 1247 38th St |
-| `time*` | **REQ** | שחרית |
-| `shachrit_time*` | **REQ** | 9:30 (only if separate from `time*`) |
-| `greeting` | OPT | ידידכם המצפה לקבל פניכם |
-| `host_name*` | **REQ** | ברוך זאב ראטנבערג |
-| `father_name_1` | OPT | ב״ר בנימין משה הי״ו |
-| `father_name_2` | OPT | חתן בערל גרינפעלד הי״ו |
+Order in editor (top → bottom) matches this table order:
+
+| # | Field ID | REQ/OPT | Placeholder example |
+|---|---|---|---|
+| 1 | `day*` | **REQ** | ביום שבת קודש |
+| 2 | `parasha*` | **REQ** | פרשת ויגש |
+| 3 | `location*` | **REQ** | בביהמ״ד קהל חסידי בעלזא |
+| 4 | `street*` | **REQ** | 1247 38th St |
+| 5 | `greeting` | OPT | ידידכם המצפה לקבל פניכם |
+| 6 | `time*` | **REQ** | שחרית |
+| 7 | `shachrit_time*` | **REQ** | 9:30 (only if separate from `time*`) |
+| 8 | `host_name*` | **REQ** | ברוך זאב ראטנבערג |
+| 9 | `father_name_1` | OPT | ב״ר בנימין משה הי״ו |
+| 10 | `father_name_2` | OPT | חתן בערל גרינפעלד הי״ו |
 
 #### Bavarfen / Father
 
-| Field ID | REQ/OPT | Placeholder example |
-|---|---|---|
-| `day*` | **REQ** | ביום שבת קודש |
-| `parasha*` | **REQ** | פרשת ויגש |
-| `location*` | **REQ** | בביהמ״ד קהל חסידי בעלזא |
-| `street*` | **REQ** | 1247 38th St |
-| `time` | OPT | שחרית (optional in Bavarfen) |
-| `greeting*` | **REQ** | ידידכם המצפה לקבל פניכם |
-| `host_name*` | **REQ** | ברוך זאב ראטנבערג |
-| `father_name_1*` | **REQ** | ב״ר בנימין משה הי״ו |
-| `father_name_2*` | **REQ** | חתן בערל גרינפעלד הי״ו |
+| # | Field ID | REQ/OPT | Placeholder example |
+|---|---|---|---|
+| 1 | `day*` | **REQ** | ביום שבת קודש |
+| 2 | `parasha*` | **REQ** | פרשת ויגש |
+| 3 | `location*` | **REQ** | בביהמ״ד קהל חסידי בעלזא |
+| 4 | `street*` | **REQ** | 1247 38th St |
+| 5 | `greeting*` | **REQ** | ידידכם המצפה לקבל פניכם |
+| 6 | `time` | OPT | שחרית |
+| 7 | `host_name*` | **REQ** | ברוך זאב ראטנבערג |
+| 8 | `father_name_1*` | **REQ** | ב״ר בנימין משה הי״ו |
+| 9 | `father_name_2*` | **REQ** | חתן בערל גרינפעלד הי״ו |
 
 #### Bar Mitzvah
 
-| Field ID | REQ/OPT | Placeholder example |
-|---|---|---|
-| `day*` | **REQ** | ביום א׳ פרשת שמות |
-| `location*` | **REQ** | באולם פרדס נח |
-| `address*` | **REQ** | 5015 15th Ave |
-| `time*` | **REQ** | 7:00 |
-| `greeting` | OPT | ידידכם המצפה לקבל פניכם |
-| `host_name*` | **REQ** | חייםמשה ראטה |
-| `father_name_1*` | **REQ** | ב״ר בנימין משה הי״ו |
-| `father_name_2*` | **REQ** | חתן בערל גרינפעלד הי״ו |
+| # | Field ID | REQ/OPT | Placeholder example |
+|---|---|---|---|
+| 1 | `day*` | **REQ** | ביום א׳ פרשת שמות |
+| 2 | `location*` | **REQ** | באולם פרדס נח |
+| 3 | `address*` | **REQ** | 5015 15th Ave |
+| 4 | `time*` | **REQ** | 7:00 |
+| 5 | `greeting` | OPT | ידידכם המצפה לקבל פניכם |
+| 6 | `host_name*` | **REQ** | חייםמשה ראטה |
+| 7 | `father_name_1*` | **REQ** | ב״ר בנימין משה הי״ו |
+| 8 | `father_name_2*` | **REQ** | חתן בערל גרינפעלד הי״ו |
 
 #### Sheva Brachos
 
-| Field ID | REQ/OPT | Placeholder example |
-|---|---|---|
-| `date*` | **REQ** | ביום ג׳ פרשת שמות |
-| `hebrew_date*` | **REQ** | ט״ו טבת תשפ״ו |
-| `location*` | **REQ** | באולם פרדס נח |
-| `address*` | **REQ** | 5015 15th Ave |
-| `groom_name*` | **REQ** | שמעון לוי |
-| `groom_name_2*` | **REQ** | ברענאוויטש |
+| # | Field ID | REQ/OPT | Placeholder example |
+|---|---|---|---|
+| 1 | `date*` | **REQ** | ביום ג׳ פרשת שמות |
+| 2 | `hebrew_date*` | **REQ** | ט״ו טבת תשפ״ו |
+| 3 | `location*` | **REQ** | באולם פרדס נח |
+| 4 | `address*` | **REQ** | 5015 15th Ave |
+| 5 | `groom_name*` | **REQ** | שמעון לוי |
+| 6 | `groom_name_2*` | **REQ** | ברענאוויטש |
 
 ---
 
