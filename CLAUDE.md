@@ -15,7 +15,125 @@ When the user says "add this template" or provides new PNG/SVG files, follow thi
 
 ---
 
-### 2. SVG Structure Rules
+### 2. Script-Based Processing Workflow
+
+**Always use the scripts — never manually edit SVG attributes that the scripts handle.**
+
+#### Step 1 — Run `clean-svg.mjs` first (mandatory)
+
+```bash
+node scripts/clean-svg.mjs "public/templates/Category/Sub/FILE.svg"
+```
+
+This automatically fixes every mechanical issue:
+- PostScript/variable font names → clean CSS (`Heebo-ExtraBold, Heebo` → `font-family="Heebo" font-weight="800"`)
+- Removes `font-variation-settings`
+- Removes trailing-space tspans (RTL artifacts)
+- Removes `scale()` transforms on text
+- Removes `@import url(...)` and `<image>` tags
+- Centers all text at `viewBoxWidth / 2` with `text-anchor="middle"` and `tspan x="0"`
+
+For side-aligned designs (text intentionally left/right): add `--side` flag.
+To preview without writing: add `--dry` flag.
+
+The script **reports** the current `<g id>` field list after cleaning. Review it.
+
+#### Step 2 — Assign / rename field IDs
+
+After cleaning, check whether the SVG already has `<g id>` wrappers:
+
+**Case A — No `<g id>` wrappers yet (bare `<text>` elements):**
+```bash
+npm run wrap-svg -- "public/templates/Category/Sub/FILE.svg"
+```
+Interactive: type a field ID for each text element, Enter to make it static.
+
+**Case B — Has Illustrator `<g id>` wrappers** (bad IDs like `_מרדכי_זאב_ראטה`):
+Manually rename the `id` attribute on each `<g>` to the correct field name from the category table below. Do not change the `<text>` content or positions.
+
+Rules for field IDs:
+- Use `snake_case`, English only
+- Append `*` for required fields (always shown in editor)
+- No `*` for optional fields (hidden behind "Show all fields")
+- Forbidden IDs (silently skipped): `static_text`, `layer_1`, `layer 1`, `background`, anything matching `/^layer/i`
+
+#### Step 3 — Validate (mandatory before committing)
+
+```bash
+npm run validate-templates
+```
+
+Must complete with **0 errors**. Fix anything it flags before proceeding.
+
+#### Step 4 — Commit both files
+
+```bash
+git add "public/templates/Category/Sub/FILE.svg" "public/templates/Category/Sub/FILE.png"
+git commit -m "Add FILE template to Category/Sub"
+```
+
+---
+
+### 3. Category Field Reference (REQ/OPT Patterns)
+
+Use these exact field IDs and required/optional status. Consistency across templates in the same category is critical.
+
+#### It's a girl / It's a boy
+
+| Field ID | REQ/OPT | Placeholder example |
+|---|---|---|
+| `day*` | **REQ** | ביום שבת קודש |
+| `parasha*` | **REQ** | פרשת ויגש |
+| `location*` | **REQ** | בביהמ״ד קהל חסידי בעלזא |
+| `street*` | **REQ** | 1247 38th St |
+| `time*` | **REQ** | שחרית |
+| `shachrit_time*` | **REQ** | 9:30 (only if separate from `time*`) |
+| `greeting` | OPT | ידידכם המצפה לקבל פניכם |
+| `host_name*` | **REQ** | ברוך זאב ראטנבערג |
+| `father_name_1` | OPT | ב״ר בנימין משה הי״ו |
+| `father_name_2` | OPT | חתן בערל גרינפעלד הי״ו |
+
+#### Bavarfen / Father
+
+| Field ID | REQ/OPT | Placeholder example |
+|---|---|---|
+| `day*` | **REQ** | ביום שבת קודש |
+| `parasha*` | **REQ** | פרשת ויגש |
+| `location*` | **REQ** | בביהמ״ד קהל חסידי בעלזא |
+| `street*` | **REQ** | 1247 38th St |
+| `time` | OPT | שחרית (optional in Bavarfen) |
+| `greeting*` | **REQ** | ידידכם המצפה לקבל פניכם |
+| `host_name*` | **REQ** | ברוך זאב ראטנבערג |
+| `father_name_1*` | **REQ** | ב״ר בנימין משה הי״ו |
+| `father_name_2*` | **REQ** | חתן בערל גרינפעלד הי״ו |
+
+#### Bar Mitzvah
+
+| Field ID | REQ/OPT | Placeholder example |
+|---|---|---|
+| `day*` | **REQ** | ביום א׳ פרשת שמות |
+| `location*` | **REQ** | באולם פרדס נח |
+| `address*` | **REQ** | 5015 15th Ave |
+| `time*` | **REQ** | 7:00 |
+| `greeting` | OPT | ידידכם המצפה לקבל פניכם |
+| `host_name*` | **REQ** | חייםמשה ראטה |
+| `father_name_1*` | **REQ** | ב״ר בנימין משה הי״ו |
+| `father_name_2*` | **REQ** | חתן בערל גרינפעלד הי״ו |
+
+#### Sheva Brachos
+
+| Field ID | REQ/OPT | Placeholder example |
+|---|---|---|
+| `date*` | **REQ** | ביום ג׳ פרשת שמות |
+| `hebrew_date*` | **REQ** | ט״ו טבת תשפ״ו |
+| `location*` | **REQ** | באולם פרדס נח |
+| `address*` | **REQ** | 5015 15th Ave |
+| `groom_name*` | **REQ** | שמעון לוי |
+| `groom_name_2*` | **REQ** | ברענאוויטש |
+
+---
+
+### 4. SVG Structure Rules
 
 **Alignment — Hebrew SVG text requires explicit centering:**
 
@@ -25,9 +143,9 @@ Browsers and Illustrator handle Hebrew text anchoring differently. Raw Illustrat
 - Add `text-anchor="middle"` to every `<text>` element.
 - Set every `<tspan x="0">` so the center is at the translate origin.
 
-This matches how R-001 (Vachnacht) was fixed and confirmed working.
+**`clean-svg.mjs` does this automatically — do not do it manually.**
 
-**Exception — non-Hebrew / specifically side-positioned designs:** If a template intentionally has text aligned to the left or right (not centered), keep the original translate X and use `text-anchor="start"` or `text-anchor="end"` as appropriate. The app will still center edited text at the visual midpoint of the placeholder.
+**Exception — non-Hebrew / specifically side-positioned designs:** If a template intentionally has text aligned to the left or right (not centered), keep the original translate X and use `text-anchor="start"` or `text-anchor="end"` as appropriate. Pass `--side` to `clean-svg.mjs`.
 
 - **Never use** `data-no-center="true"`.
 - Initial render is pixel-perfect (fields with placeholder values are left completely untouched).
@@ -47,7 +165,7 @@ This matches how R-001 (Vachnacht) was fixed and confirmed working.
 
 ---
 
-### 3. Fonts
+### 5. Fonts
 
 **Only Google Fonts are supported** (no Adobe Fonts — domain whitelist issues).
 
@@ -74,7 +192,7 @@ Currently loaded fonts in `app/layout.tsx` (available in SVGs via their plain CS
 
 ---
 
-### 4. Font Map in SvgCardPreview.tsx
+### 6. Font Map in SvgCardPreview.tsx
 
 The mapping block (search for `fontMapStyle`) must cover every font used across all templates:
 
@@ -89,28 +207,10 @@ The mapping block (search for `fontMapStyle`) must cover every font used across 
 
 ---
 
-### 5. Template Auto-Discovery
+### 7. Template Auto-Discovery
 
 Templates are discovered at runtime by `app/api/templates/route.ts`:
 - Scans `/public/templates/` recursively (1 or 2 levels deep).
 - Pairs `.png`/`.jpg` files with same-stem `.svg` files.
 - Parses the SVG to extract: `viewBox` → canvas size, `<g id>` elements → fields.
 - No manual registration needed.
-
----
-
-### 6. Checklist When Adding a Template
-
-Do all of the following **in order**:
-
-- [ ] Read the raw SVG the user provided
-- [ ] Fix `font-family` — strip PostScript names (e.g. `Heebo-SemiBold, Heebo` → `Heebo`)
-- [ ] Remove `font-variation-settings` attributes (redundant with `font-weight`)
-- [ ] Remove trailing-space tspans (Illustrator RTL artifacts: `<tspan x="..." y="0"> </tspan>`)
-- [ ] Remove any `<image>` tags (background is loaded from the PNG, not the SVG)
-- [ ] Remove any `@import url(...)` or embedded `<image>` in `<defs>`
-- [ ] Set all `translate X` to `viewBoxWidth / 2` (e.g. `180`) and add `text-anchor="middle"` to every `<text>`
-- [ ] Set all `tspan x="0"`
-- [ ] Wrap each editable `<text>` in `<g id="field_id">` with a meaningful id
-- [ ] Write the cleaned SVG back to the file
-- [ ] `git add` both the PNG and SVG files and `git commit` them

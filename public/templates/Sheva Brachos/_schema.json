@@ -1,0 +1,16 @@
+{
+  "fields": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    { "id": "date", "required": true },
+    { "id": "hebrew_date", "required": true },
+    { "id": "location", "required": true },
+    { "id": "address", "required": true },
+    { "id": "groom_name", "required": true },
+    { "id": "groom_name_2", "required": true }
+  ]
+}
