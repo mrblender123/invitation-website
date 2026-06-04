@@ -18,10 +18,22 @@
   <g id="hebrew_date*" data-name=" * בליל ג׳ פרשת שמות">
     <text text-anchor="middle" transform="translate(180 296.8)" fill="#5d7c63" font-family="Heebo" font-size="8.6" font-weight="600"><tspan x="0" y="0">ט״ו טבת תשפ״ו</tspan></text>
   </g>
-  <text text-anchor="middle" transform="translate(180 234.6)" fill="#5d7c63" font-family="Heebo" font-size="7" font-weight="600"><tspan x="0" y="0">אשר נערך לכבוד שמחת נישוא׳</tspan></text>
-  <text text-anchor="middle" transform="translate(180 253.8)" fill="#5d7c63" font-family="Heebo" font-size="13.2" font-weight="800"><tspan x="0" y="0">מנשה וחנה</tspan></text>
-  <text text-anchor="middle" transform="translate(180 267)" fill="#5d7c63" font-family="Heebo" font-size="13.2" font-weight="800"><tspan x="0" y="0">בערקאוויטש</tspan></text>
-  <text text-anchor="middle" transform="translate(180 136)" fill="#5d7c63" font-family="Heebo" font-size="7.1"><tspan x="0" y="0">הננו מתכבדים בזה להזמין את מע״כ</tspan></text>
-  <text text-anchor="middle" transform="translate(180 144.3)" fill="#5d7c63" font-family="Heebo" font-size="6.2"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
-  <text text-anchor="middle" transform="translate(180 128.9)" fill="#5d7c63" font-family="Heebo" font-size="6.2"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
+    <g id="line_6">
+    <text text-anchor="middle" transform="translate(180 234.6)" fill="#5d7c63" font-family="Heebo" font-size="7" font-weight="600"><tspan x="0" y="0">אשר נערך לכבוד שמחת נישוא׳</tspan></text>
+  </g>
+    <g id="line_5">
+    <text text-anchor="middle" transform="translate(180 253.8)" fill="#5d7c63" font-family="Heebo" font-size="13.2" font-weight="800"><tspan x="0" y="0">מנשה וחנה</tspan></text>
+  </g>
+    <g id="line_4">
+    <text text-anchor="middle" transform="translate(180 267)" fill="#5d7c63" font-family="Heebo" font-size="13.2" font-weight="800"><tspan x="0" y="0">בערקאוויטש</tspan></text>
+  </g>
+    <g id="line_3">
+    <text text-anchor="middle" transform="translate(180 136)" fill="#5d7c63" font-family="Heebo" font-size="7.1"><tspan x="0" y="0">הננו מתכבדים בזה להזמין את מע״כ</tspan></text>
+  </g>
+    <g id="line_2">
+    <text text-anchor="middle" transform="translate(180 144.3)" fill="#5d7c63" font-family="Heebo" font-size="6.2"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
+  </g>
+    <g id="line_1">
+    <text text-anchor="middle" transform="translate(180 128.9)" fill="#5d7c63" font-family="Heebo" font-size="6.2"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
+  </g>
 </svg>

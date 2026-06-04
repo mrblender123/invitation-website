@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <text transform="translate(180 119.5)" fill="#061e10" font-family="Heebo" font-size="7.8" font-weight="800" text-anchor="middle"><tspan x="0" y="0">ברוב שמחה והודאה להשי״ת הננו מתכבדים להזמין את</tspan></text>
-  <text transform="translate(180 129.7)" fill="#061e10" font-family="Heebo" font-size="9.8" font-weight="800" text-anchor="middle"><tspan x="0" y="0">ידידינו וקרובינו ומכובדינו שיחיו</tspan></text>
-  <text transform="translate(180 138.5)" fill="#061e10" font-family="Heebo" font-size="7.8" font-weight="800" text-anchor="middle"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
-  <text transform="translate(180 249.8)" fill="#061e10" font-family="Heebo" font-size="8.6" font-weight="800" text-anchor="middle"><tspan x="0" y="0">של בני היקר</tspan></text>
-  <text transform="translate(180 265.1)" fill="#061e10" font-family="Heebo" font-size="16.6" font-weight="800" text-anchor="middle"><tspan x="0" y="0">אברהם</tspan></text>
-  <text transform="translate(180 280.8)" fill="#061e10" font-family="Heebo" font-size="7.8" font-weight="800" text-anchor="middle"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+    <g id="line_6">
+    <text transform="translate(180 119.5)" fill="#061e10" font-family="Heebo" font-size="7.8" font-weight="800" text-anchor="middle"><tspan x="0" y="0">ברוב שמחה והודאה להשי״ת הננו מתכבדים להזמין את</tspan></text>
+  </g>
+    <g id="line_5">
+    <text transform="translate(180 129.7)" fill="#061e10" font-family="Heebo" font-size="9.8" font-weight="800" text-anchor="middle"><tspan x="0" y="0">ידידינו וקרובינו ומכובדינו שיחיו</tspan></text>
+  </g>
+    <g id="line_4">
+    <text transform="translate(180 138.5)" fill="#061e10" font-family="Heebo" font-size="7.8" font-weight="800" text-anchor="middle"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
+  </g>
+    <g id="line_3">
+    <text transform="translate(180 249.8)" fill="#061e10" font-family="Heebo" font-size="8.6" font-weight="800" text-anchor="middle"><tspan x="0" y="0">של בני היקר</tspan></text>
+  </g>
+    <g id="line_2">
+    <text transform="translate(180 265.1)" fill="#061e10" font-family="Heebo" font-size="16.6" font-weight="800" text-anchor="middle"><tspan x="0" y="0">אברהם</tspan></text>
+  </g>
+    <g id="line_1">
+    <text transform="translate(180 280.8)" fill="#061e10" font-family="Heebo" font-size="7.8" font-weight="800" text-anchor="middle"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+  </g>
   <g id="day*">
     <text transform="translate(180 297.8)" fill="#061e10" font-family="Heebo" font-size="17.9" font-weight="800" text-anchor="middle"><tspan x="0" y="0">ביום א׳ פרשת שמות</tspan></text>
   </g>
