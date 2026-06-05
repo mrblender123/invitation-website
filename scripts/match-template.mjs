@@ -116,8 +116,18 @@ async function findReference(folder, skipFile) {
 // ── Apply field IDs ───────────────────────────────────────────────────────────
 
 function applyIds(svg, newTexts, refTexts) {
-  // Build a map: position index (by Y order) → reference field id
-  // Only match if counts align within ±2
+  // Strategy 1: content-based matching — find the reference element with the
+  // same placeholder text. More reliable when templates share the same text
+  // but have different visual layouts (different Y positions).
+  // Strategy 2: Y-position index fallback when no content match is found.
+
+  // Build content → fieldId map from reference
+  const contentMap = new Map(
+    refTexts
+      .filter(t => t.fieldId)
+      .map(t => [t.placeholder.trim(), t.fieldId])
+  );
+
   const countDiff = Math.abs(newTexts.length - refTexts.length);
   if (countDiff > 2) {
     console.warn(`\n⚠  Text element count mismatch: new=${newTexts.length}, ref=${refTexts.length}`);
@@ -129,13 +139,17 @@ function applyIds(svg, newTexts, refTexts) {
   let result = svg;
 
   for (const t of sorted) {
-    // Find this element's position in the Y-sorted list
-    const idx    = newTexts.indexOf(t);
-    const refEl  = refTexts[idx];
-    if (!refEl) continue; // no reference for this position
+    // Try content match first
+    let refId = contentMap.get(t.placeholder.trim()) ?? null;
 
-    const refId  = refEl.fieldId;
-    if (!refId) continue; // reference element is bare static text
+    // Fallback: Y-position index match
+    if (!refId) {
+      const idx = newTexts.indexOf(t);
+      const refEl = refTexts[idx];
+      refId = refEl?.fieldId ?? null;
+    }
+
+    if (!refId) continue; // no match found
 
     // Check if already properly wrapped
     if (t.fieldId && /^[A-Za-z]/.test(t.fieldId) && !/^_/.test(t.fieldId)) {
