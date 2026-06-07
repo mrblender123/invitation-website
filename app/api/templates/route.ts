@@ -44,6 +44,23 @@ function idToLabel(id: string): string {
 
 const SKIP_IDS = new Set(['static_text', 'layer_1', 'layer 1', 'background']);
 
+/** Decode the five predefined XML entities so placeholder strings match DOMParser output. */
+function decodeXmlEntities(s: string): string {
+  return s
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&'); // must be last
+}
+
+/** True when a string's majority of letter characters are Hebrew/Arabic (RTL scripts). */
+function isRtlText(text: string): boolean {
+  const rtl   = (text.match(/[֑-״؀-ۿ]/g) ?? []).length;
+  const latin = (text.match(/[A-Za-z]/g) ?? []).length;
+  return rtl >= latin; // ties go RTL (Hebrew numerals, mixed abbrevs)
+}
+
 function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' | 'fields' | 'style'> {
   // Extract viewBox → canvas size
   let canvasWidth = 444, canvasHeight = 630;
@@ -83,7 +100,7 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
     // Find first <tspan> after this group's opening tag to use as placeholder
     const afterTag = content.slice(m.index + m[0].length);
     const tspanMatch = afterTag.match(/<tspan[^>]*>([^<]*)</);
-    const placeholder = tspanMatch?.[1]?.trim() ?? '';
+    const placeholder = decodeXmlEntities(tspanMatch?.[1]?.trim() ?? '');
 
     entries.push({ id: gId, label: idToLabel(gId), placeholder, hasStar });
   }
@@ -92,7 +109,7 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
   // Exception: if NO fields have *, treat all as required (legacy templates with no stars).
   const anyHasStar = entries.some(e => e.hasStar);
   const fields: SvgField[] = entries.map(e => ({
-    id: e.id, label: e.label, placeholder: e.placeholder, rtl: true,
+    id: e.id, label: e.label, placeholder: e.placeholder, rtl: isRtlText(e.placeholder),
     ...(anyHasStar && !e.hasStar && { optional: true }),
   }));
 
