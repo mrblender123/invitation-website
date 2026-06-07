@@ -725,7 +725,7 @@ export default function TemplateEditorPage() {
     setFmSaving(false);
     if (data.ok) {
       setFmDirty(false);
-      setFmStatus(`✓ Saved ${data.count} file${data.count === 1 ? '' : 's'}`);
+      setFmStatus(data.count === 0 ? '✗ 0 files changed — field IDs may be stale, click Refresh' : `✓ Saved ${data.count} file${data.count === 1 ? '' : 's'}`);
       // update local fmData cache
       setFmData(prev => prev ? prev.map(d => d.folder === fmFolder.folder ? { ...d, fields: fmFields } : d) : prev);
     } else {
@@ -789,7 +789,8 @@ export default function TemplateEditorPage() {
           </div>
           {mainTab === 'fields' && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              {fmStatus && <span style={{ fontSize: 13, color: fmStatus.startsWith('✗') ? '#f87171' : '#4ade80' }}>{fmStatus}</span>}
+              {fmStatus && <span style={{ fontSize: 13, color: fmStatus.startsWith('✗') || fmStatus.includes('0 file') ? '#f87171' : '#4ade80' }}>{fmStatus}</span>}
+              <button onClick={() => { setFmData(null); setFmFolder(null); setFmFields([]); setFmStatus(''); }} title="Reload field data from disk" style={{ padding: '7px 12px', borderRadius: 8, fontSize: 13, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>↺ Refresh</button>
               {fmFolder && (
                 <button onClick={fmSave} disabled={fmSaving || !fmDirty} style={{ padding: '7px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600, background: fmDirty ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.15)', color: fmDirty ? '#fff' : 'rgba(255,255,255,0.3)', cursor: fmDirty ? 'pointer' : 'not-allowed' }}>
                   {fmSaving ? 'Saving…' : 'Save to folder'}
