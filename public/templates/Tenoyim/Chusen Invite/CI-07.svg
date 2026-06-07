@@ -6,10 +6,10 @@
     <g id="line_3">
     <text text-anchor="middle" transform="translate(180 197.1)" fill="#9e654b" font-family="Heebo" font-weight="600" font-size="12.6"><tspan x="0" y="0">וואס וועט אי״ה פארקומען</tspan></text>
   </g>
-    <g id="line_5*">
+    <g id="day*">
     <text text-anchor="middle" transform="translate(180 218.1)" fill="#56200e" font-family="Heebo" font-weight="900" font-size="18.8"><tspan x="0" y="0">דינסטאג</tspan></text>
   </g>
-    <g id="line_6*">
+    <g id="parasha*">
     <text text-anchor="middle" transform="translate(180 238.5)" fill="#56200e" font-family="Heebo" font-weight="900" font-size="18.8"><tspan x="0" y="0">פרשת וירא</tspan></text>
   </g>
     <g id="line_4">
@@ -45,10 +45,10 @@
     <path d="M307,51.2v-3.8h-1.6v-1.6h3.7v5.4h-2.1Z" fill="#9e654b"/>
     <path d="M317.4,55.3l-6.7-9.5h2.3l6.7,9.5h-2.3ZM311,55.3v-3.3c0-.9.2-1.7.5-2.2.3-.5.9-1,1.6-1.2l.8,1c-.6.3-.9.8-.9,1.6v4.1h-2ZM319.8,45.8l-3.2,5.9-1.3-1.6,2.2-4.3h2.3Z" fill="#9e654b"/>
   </g>
-  <g id="line_8*">
+  <g id="groom_name*">
     <text text-anchor="middle" transform="translate(180 405.7) rotate(.6)" fill="#713e29" font-family="Heebo" font-weight="900" font-size="18.7"><tspan x="0" y="0">דוד ברוך</tspan></text>
   </g>
-  <g id="line_7*">
+  <g id="groom_last*">
     <text text-anchor="middle" transform="translate(180 427.9) rotate(.6)" fill="#713e29" font-family="Heebo" font-weight="900" font-size="18.7"><tspan x="0" y="0">ווייסמאן</tspan></text>
   </g>
 </svg>
