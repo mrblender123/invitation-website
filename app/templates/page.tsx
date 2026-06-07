@@ -387,29 +387,36 @@ const [windowWidth, setWindowWidth] = useState(1200);
 
   // Fetch templates from the API (auto-discovered from public/templates/*/)
   useEffect(() => {
-    fetch('/api/templates')
-      .then(r => r.json())
-      .then(({ templates: data }) => {
-        setTemplates(data ?? []);
-        // Auto-select template from URL param
-        if (templateParam) {
-          const t = (data ?? []).find((t: Template) => t.id === templateParam);
-          if (t) { setSelected(t); return; }
-        }
-        // Check if we need to reload a saved design
-        const raw = localStorage.getItem('joysend-template-load');
-        if (!raw) return;
-        localStorage.removeItem('joysend-template-load');
-        try {
-          const { templateId, fieldValues: saved } = JSON.parse(raw);
-          const template = (data ?? []).find((t: Template) => t.id === templateId);
-          if (template) {
-            setSelected(template);
-            setFieldValues(saved ?? {});
+    const load = () =>
+      fetch('/api/templates', { cache: 'no-store' })
+        .then(r => r.json())
+        .then(({ templates: data }) => {
+          setTemplates(data ?? []);
+          // Auto-select template from URL param
+          if (templateParam) {
+            const t = (data ?? []).find((t: Template) => t.id === templateParam);
+            if (t) { setSelected(t); return; }
           }
-        } catch {}
-      })
-      .finally(() => setLoadingTemplates(false));
+          // Check if we need to reload a saved design
+          const raw = localStorage.getItem('joysend-template-load');
+          if (!raw) return;
+          localStorage.removeItem('joysend-template-load');
+          try {
+            const { templateId, fieldValues: saved } = JSON.parse(raw);
+            const template = (data ?? []).find((t: Template) => t.id === templateId);
+            if (template) {
+              setSelected(template);
+              setFieldValues(saved ?? {});
+            }
+          } catch {}
+        })
+        .finally(() => setLoadingTemplates(false));
+
+    load();
+    // Re-fetch when user switches back to this tab (admin changes in another tab)
+    const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
   }, []);
 
   // Restore field values from draft link (?draft=1&restore=...)
