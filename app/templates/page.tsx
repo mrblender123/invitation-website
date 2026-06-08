@@ -344,7 +344,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   useEffect(() => {
     if (!tokenParam || !templateParam) return;
 
-    const cacheKey = piParam ? `joysend-edit-${piParam}` : null;
+    const cacheKey = piParam ? `joynote-edit-${piParam}` : null;
     const cached = cacheKey ? sessionStorage.getItem(cacheKey) : null;
 
     const apply = (valid: boolean, remaining: number | null) => {
@@ -398,9 +398,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
             if (t) { setSelected(t); return; }
           }
           // Check if we need to reload a saved design
-          const raw = localStorage.getItem('joysend-template-load');
+          const raw = localStorage.getItem('joynote-template-load');
           if (!raw) return;
-          localStorage.removeItem('joysend-template-load');
+          localStorage.removeItem('joynote-template-load');
           try {
             const { templateId, fieldValues: saved } = JSON.parse(raw);
             const template = (data ?? []).find((t: Template) => t.id === templateId);
@@ -679,7 +679,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
       canvasWidth: style.canvasWidth,
       canvasHeight: style.canvasHeight,
     };
-    localStorage.setItem('joysend-state', JSON.stringify(state));
+    localStorage.setItem('joynote-state', JSON.stringify(state));
     router.push('/studio?load=1');
   };
 
@@ -698,7 +698,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
           padding: '0 24px',
         }}>
           <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.svg" alt="Joy Send" style={{ height: 32, width: 'auto' }} />
+            <img src="/logo.svg" alt="Joy Note" style={{ height: 32, width: 'auto' }} />
           </Link>
           <nav style={{ display: 'flex', alignItems: 'center', gap: 16 }} />
         </div>
@@ -1196,7 +1196,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 10px' }}>Your invitation is ready!</h2>
                 {emailError ? (
                   <p style={{ fontSize: 14, color: '#ef4444', lineHeight: 1.6, margin: '0 0 24px', background: '#fef2f2', borderRadius: 8, padding: '10px 14px' }}>
-                    We couldn&apos;t send your email. Download your files now — or contact <a href="mailto:info@joy-send.com" style={{ color: '#ef4444' }}>info@joy-send.com</a> with your payment ID to get them later.
+                    We couldn&apos;t send your email. Download your files now — or contact <a href="mailto:info@joy-note.com" style={{ color: '#ef4444' }}>info@joy-note.com</a> with your payment ID to get them later.
                   </p>
                 ) : (
                   <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 24px' }}>

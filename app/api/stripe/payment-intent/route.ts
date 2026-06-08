@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       currency: 'usd',
       payment_method_types: ['card'],
       receipt_email: email || undefined,
-      description: `Joy Send – ${templateName}`,
+      description: `Joy Note – ${templateName}`,
       metadata: {
         templateId,
         email: email || '',

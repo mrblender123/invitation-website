@@ -25,7 +25,7 @@ export default function LoginPage() {
 
       {/* Logo */}
       <Link href="/" style={{ textDecoration: 'none', marginBottom: 48, display: 'block' }}>
-        <img src="/logo.svg" alt="Joy Send" style={{ height: 40, width: 'auto', filter: 'brightness(0) invert(1)' }} />
+        <img src="/logo.svg" alt="Joy Note" style={{ height: 40, width: 'auto', filter: 'brightness(0) invert(1)' }} />
       </Link>
 
       {/* Card */}

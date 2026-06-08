@@ -57,7 +57,7 @@ const frankRuhlLibre = Frank_Ruhl_Libre({
 
 
 export const metadata: Metadata = {
-  title: "Joy Send | Jewish Simcha Invitations — Vachnacht, Bris, Bar Mitzvah & More",
+  title: "Joy Note | Jewish Simcha Invitations — Vachnacht, Bris, Bar Mitzvah & More",
   description: "Custom Jewish simcha invitation templates for vachnacht, bris, bar mitzvah, sheva brachos, upsherin, tenoyim and weddings. Design, personalize, and download in minutes.",
   keywords: [
     "vachnacht invitation",
@@ -74,25 +74,25 @@ export const metadata: Metadata = {
     "Pidyon haben invitation",
     "shulem zucher invitation",
   ],
-  metadataBase: new URL('https://www.joy-send.com'),
+  metadataBase: new URL('https://www.joy-note.com'),
   openGraph: {
-    title: "Joy Send | Jewish Simcha Invitations",
+    title: "Joy Note | Jewish Simcha Invitations",
     description: "Beautiful invitation templates for every simcha — vachnacht, bris, bar mitzvah, sheva brachos and more. Personalize and download instantly.",
     type: "website",
-    url: "https://www.joy-send.com",
-    siteName: "Joy Send",
+    url: "https://www.joy-note.com",
+    siteName: "Joy Note",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Joy Send — Jewish Simcha Invitations",
+        alt: "Joy Note — Jewish Simcha Invitations",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Joy Send | Jewish Simcha Invitations",
+    title: "Joy Note | Jewish Simcha Invitations",
     description: "Beautiful invitation templates for every simcha. Personalize and download instantly.",
     images: ["/og-image.png"],
   },

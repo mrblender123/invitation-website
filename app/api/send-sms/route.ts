@@ -59,7 +59,7 @@ export async function POST(req: Request) {
   await client.messages.create({
     from: process.env.TWILIO_PHONE_NUMBER!,
     to: phone,
-    body: 'Here is your Joy Send invitation!',
+    body: 'Here is your Joy Note invitation!',
     mediaUrl: [mediaUrl],
   });
 

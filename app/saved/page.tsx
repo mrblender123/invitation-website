@@ -32,14 +32,14 @@ export default function SavedPage() {
   const handleLoad = (inv: Invitation) => {
     if (inv.settings.isTemplate && inv.settings.templateId) {
       // Template-based design: reopen in the template editor
-      localStorage.setItem('joysend-template-load', JSON.stringify({
+      localStorage.setItem('joynote-template-load', JSON.stringify({
         templateId: inv.settings.templateId,
         fieldValues: inv.settings.fieldValues ?? {},
       }));
       router.push('/templates');
     } else {
       // Studio-based design: reopen in the AI studio
-      localStorage.setItem('joysend-state', JSON.stringify({
+      localStorage.setItem('joynote-state', JSON.stringify({
         data: {
           eventTitle: inv.event_title,
           hostName: inv.host_name,
@@ -75,7 +75,7 @@ export default function SavedPage() {
       }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.svg" alt="Joy Send" style={{ height: 34, width: 'auto', filter: 'brightness(0) invert(1)' }} />
+            <img src="/logo.svg" alt="Joy Note" style={{ height: 34, width: 'auto', filter: 'brightness(0) invert(1)' }} />
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <Link href="/gallery" style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>

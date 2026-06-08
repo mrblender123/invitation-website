@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const BASE = 'https://www.joy-send.com';
+const BASE = 'https://www.joy-note.com';
 
 const CATEGORIES = [
   "It's a Boy",

@@ -1,8 +1,8 @@
 import LandingHeader from '../components/LandingHeader';
 
 export const metadata = {
-  title: 'Contact — Joy Send',
-  description: 'Get in touch with Joy Send. We\'d love to hear from you.',
+  title: 'Contact — Joy Note',
+  description: 'Get in touch with Joy Note. We\'d love to hear from you.',
 };
 
 export default function ContactPage() {
@@ -23,7 +23,7 @@ export default function ContactPage() {
         </p>
 
         <a
-          href="mailto:info@joy-send.com"
+          href="mailto:info@joy-note.com"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -41,7 +41,7 @@ export default function ContactPage() {
             <rect x="2" y="4" width="20" height="16" rx="2"/>
             <path d="M2 7l10 7 10-7"/>
           </svg>
-          info@joy-send.com
+          info@joy-note.com
         </a>
 
         <p style={{ fontSize: 13, color: 'var(--muted-faint)', marginTop: 24 }}>
@@ -51,7 +51,7 @@ export default function ContactPage() {
 
       <footer style={{ borderTop: '1px solid var(--border)', padding: '32px 24px', textAlign: 'center' }}>
         <p style={{ fontSize: 12, color: 'var(--muted-faint)', margin: 0 }}>
-          © {new Date().getFullYear()} Joy Send. All rights reserved.
+          © {new Date().getFullYear()} Joy Note. All rights reserved.
         </p>
       </footer>
 

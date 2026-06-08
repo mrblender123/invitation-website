@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Joy Send — Jewish Simcha Invitations';
+export const alt = 'Joy Note — Jewish Simcha Invitations';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 

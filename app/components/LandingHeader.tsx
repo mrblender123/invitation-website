@@ -118,7 +118,7 @@ export default function LandingHeader() {
       }}>
         {/* Logo — left */}
         <a href="/" style={{ pointerEvents: 'auto', paddingLeft: 20, display: 'flex', alignItems: 'center' }}>
-          <img src="/logo.svg" alt="Joy Send" style={{ height: 40, width: 'auto' }} />
+          <img src="/logo.svg" alt="Joy Note" style={{ height: 40, width: 'auto' }} />
         </a>
 
         {/* Right — About + WhatsApp */}
@@ -127,7 +127,7 @@ export default function LandingHeader() {
             About
           </a>
           <a
-            href="mailto:info@joy-send.com"
+            href="mailto:info@joy-note.com"
             title="Email us"
             style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 9999, border: '1px solid rgba(0,0,0,0.18)' }}
           >

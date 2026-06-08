@@ -123,7 +123,7 @@ export default function GalleryPage() {
   }, [accessToken]);
 
   const loadIntoStudio = (inv: Invitation, dest: '/studio' | '/export') => {
-    localStorage.setItem('joysend-state', JSON.stringify({
+    localStorage.setItem('joynote-state', JSON.stringify({
       data: { eventTitle: inv.event_title, hostName: inv.host_name, dateTime: inv.date_time },
       ...inv.settings,
     }));
@@ -144,7 +144,7 @@ export default function GalleryPage() {
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.svg" alt="Joy Send" style={{ height: 34, width: 'auto', filter: 'brightness(0) invert(1)' }} />
+            <img src="/logo.svg" alt="Joy Note" style={{ height: 34, width: 'auto', filter: 'brightness(0) invert(1)' }} />
           </Link>
           <nav style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
             <Link href="/saved" style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>

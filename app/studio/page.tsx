@@ -77,7 +77,7 @@ function StudioContent() {
   // Load saved design from localStorage when ?load=1
   useEffect(() => {
     if (searchParams.get('load') !== '1') return;
-    const raw = localStorage.getItem('joysend-state');
+    const raw = localStorage.getItem('joynote-state');
     if (!raw) return;
     const s = JSON.parse(raw);
     if (s.data) setData(s.data);
@@ -129,7 +129,7 @@ function StudioContent() {
   };
 
   const handleGoToExport = () => {
-    localStorage.setItem('joysend-state', JSON.stringify({ data, ...settings, canvasWidth: canvasSize.width, canvasHeight: canvasSize.height }));
+    localStorage.setItem('joynote-state', JSON.stringify({ data, ...settings, canvasWidth: canvasSize.width, canvasHeight: canvasSize.height }));
     router.push('/export');
   };
 
@@ -182,7 +182,7 @@ function StudioContent() {
         padding: '0 20px', gap: 14, zIndex: 40,
       }}>
         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-          <img src="/logo.svg" alt="Joy Send" style={{ height: 32, width: 'auto', filter: 'brightness(0) invert(1)' }} />
+          <img src="/logo.svg" alt="Joy Note" style={{ height: 32, width: 'auto', filter: 'brightness(0) invert(1)' }} />
         </Link>
         <div style={{ width: 1, height: 18, background: 'rgba(255,255,255,0.1)' }} />
         <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Studio</span>

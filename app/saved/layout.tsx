@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Saved Designs — Joy Send',
+  title: 'Saved Designs — Joy Note',
   description: 'Your saved invitation designs, ready to edit or export.',
 };
 

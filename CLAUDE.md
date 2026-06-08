@@ -1,4 +1,4 @@
-# Joy Send — Developer Guide for Claude
+# Joy Note — Developer Guide for Claude
 
 ## Adding a New Template
 

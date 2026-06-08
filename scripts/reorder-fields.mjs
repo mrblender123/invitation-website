@@ -157,7 +157,7 @@ const HTML = /* html */`<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Field Manager — Joy Send</title>
+<title>Field Manager — Joy Note</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;background:#f8f9fa;color:#1e293b;display:flex;height:100vh;overflow:hidden}
@@ -222,7 +222,7 @@ body{font-family:system-ui,sans-serif;background:#f8f9fa;color:#1e293b;display:f
 
 <div id="sidebar">
   <div id="sidebar-header">
-    <h2>Joy Send Fields</h2>
+    <h2>Joy Note Fields</h2>
     <div class="tab-bar">
       <button class="tab active" onclick="showTab('editor')">Editor</button>
       <button class="tab" onclick="showTab('overview')">Overview</button>
@@ -540,7 +540,7 @@ function readBody(req) {
 }
 
 server.listen(PORT, () => {
-  console.log(`\n  Field Manager — Joy Send`);
+  console.log(`\n  Field Manager — Joy Note`);
   console.log(`  ────────────────────────`);
   console.log(`  http://localhost:${PORT}`);
   console.log(`\n  Ctrl+C to stop\n`);

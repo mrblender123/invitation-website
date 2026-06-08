@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { CANVAS_SIZES } from '@/lib/canvasSizes';
 
 export const metadata: Metadata = {
-  title: 'New Design — Joy Send',
+  title: 'New Design — Joy Note',
   description: 'Choose a canvas size and start designing your invitation.',
 };
 
@@ -59,7 +59,7 @@ export default function NewPage() {
       }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.svg" alt="Joy Send" style={{ height: 34, width: 'auto', filter: 'brightness(0) invert(1)' }} />
+            <img src="/logo.svg" alt="Joy Note" style={{ height: 34, width: 'auto', filter: 'brightness(0) invert(1)' }} />
           </Link>
           <Link href="/gallery" style={{ fontSize: 14, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>
             Gallery

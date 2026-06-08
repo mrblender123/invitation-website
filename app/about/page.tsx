@@ -3,7 +3,7 @@ import FaqAccordion from '../components/FaqAccordion';
 import GlassPill from '../components/GlassPill';
 
 export const metadata = {
-  title: 'About — Joy Send',
+  title: 'About — Joy Note',
   description: 'Simple. Easy. Done. Create beautiful Jewish celebration invitations in minutes.',
 };
 
@@ -34,7 +34,7 @@ export default function AboutPage() {
       {/* Hero */}
       <section style={{ maxWidth: 720, margin: '0 auto', padding: '100px 24px 80px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <p style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.14em', color: 'var(--muted-faint)', textTransform: 'uppercase', marginBottom: 20 }}>
-          About Joy Send
+          About Joy Note
         </p>
         <h1 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1.1, margin: '0 0 28px' }}>
           Browse.{' '}
@@ -42,7 +42,7 @@ export default function AboutPage() {
           Download.
         </h1>
         <p style={{ fontSize: 18, lineHeight: 1.75, color: 'var(--muted)', maxWidth: 500, margin: '0 auto' }}>
-          Joy Send was built for the Jewish community — so anyone can create a beautiful, professional invitation for their simcha in minutes, no design experience needed.
+          Joy Note was built for the Jewish community — so anyone can create a beautiful, professional invitation for their simcha in minutes, no design experience needed.
         </p>
       </section>
 
@@ -122,7 +122,7 @@ export default function AboutPage() {
       {/* Footer */}
       <footer style={{ borderTop: '1px solid var(--border)', padding: '32px 24px', textAlign: 'center' }}>
         <p style={{ fontSize: 12, color: 'var(--muted-faint)', margin: 0 }}>
-          © {new Date().getFullYear()} Joy Send. All rights reserved.
+          © {new Date().getFullYear()} Joy Note. All rights reserved.
         </p>
       </footer>
 

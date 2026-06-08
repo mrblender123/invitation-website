@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 // Only proxy images from these known domains
 const ALLOWED_HOSTS = [
   'pub-85c54822fbab4a3d8a76a9ac5c583022.r2.dev',
-  'joy-send.com',
-  'www.joy-send.com',
+  'joy-note.com',
+  'www.joy-note.com',
 ];
 
 export async function GET(req: NextRequest) {

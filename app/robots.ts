@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin', '/api/', '/login'],
     },
-    sitemap: 'https://www.joy-send.com/sitemap.xml',
+    sitemap: 'https://www.joy-note.com/sitemap.xml',
   };
 }
