@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readdir, readFile } from 'fs/promises';
 import path from 'path';
-import { createAuthenticatedClient } from '@/lib/supabase';
+import { createServiceClient } from '@/lib/supabase';
 
 const ADMIN_EMAIL   = 'bycheshin@gmail.com';
 const TEMPLATES_DIR = path.join(process.cwd(), 'public', 'templates');
 
 async function verifyAdmin(req: NextRequest): Promise<boolean> {
-  const auth = req.headers.get('Authorization');
-  if (!auth?.startsWith('Bearer ')) return false;
-  const token = auth.slice(7);
-  const { data: { user }, error } = await createAuthenticatedClient(token).auth.getUser();
+  const auth  = req.headers.get('Authorization') ?? '';
+  const token = auth.replace('Bearer ', '');
+  if (!token) return false;
+  const db = createServiceClient();
+  const { data: { user }, error } = await db.auth.getUser(token);
   return !error && user?.email === ADMIN_EMAIL;
 }
 
