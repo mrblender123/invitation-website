@@ -1,4 +1,4 @@
-# Joy Note — Developer Guide for Claude
+# Share Your Simcha — Developer Guide for Claude
 
 ## Adding a New Template
 

@@ -75,7 +75,7 @@ export default function StylePreviewPage() {
             {options.map(opt => (
               <div key={opt.label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
                 <div style={{ ...pillStyle, ...opt.style }}>
-                  Joy Note
+                  Share Your Simcha
                 </div>
                 <div style={{ ...pillStyle, ...opt.style, fontStyle: 'normal', fontSize: '0.82rem', gap: 12, paddingLeft: 12 }}>
                   About

@@ -57,7 +57,7 @@ const frankRuhlLibre = Frank_Ruhl_Libre({
 
 
 export const metadata: Metadata = {
-  title: "Joy Note | Jewish Simcha Invitations — Vachnacht, Bris, Bar Mitzvah & More",
+  title: "Share Your Simcha | Jewish Simcha Invitations — Vachnacht, Bris, Bar Mitzvah & More",
   description: "Custom Jewish simcha invitation templates for vachnacht, bris, bar mitzvah, sheva brachos, upsherin, tenoyim and weddings. Design, personalize, and download in minutes.",
   keywords: [
     "vachnacht invitation",
@@ -76,23 +76,23 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL('https://www.shareyoursimcha.com'),
   openGraph: {
-    title: "Joy Note | Jewish Simcha Invitations",
+    title: "Share Your Simcha | Jewish Simcha Invitations",
     description: "Beautiful invitation templates for every simcha — vachnacht, bris, bar mitzvah, sheva brachos and more. Personalize and download instantly.",
     type: "website",
     url: "https://www.shareyoursimcha.com",
-    siteName: "Joy Note",
+    siteName: "Share Your Simcha",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Joy Note — Jewish Simcha Invitations",
+        alt: "Share Your Simcha — Jewish Simcha Invitations",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Joy Note | Jewish Simcha Invitations",
+    title: "Share Your Simcha | Jewish Simcha Invitations",
     description: "Beautiful invitation templates for every simcha. Personalize and download instantly.",
     images: ["/og-image.png"],
   },

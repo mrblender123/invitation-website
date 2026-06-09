@@ -5,7 +5,7 @@ import Link from 'next/link';
 import InvitationCard from '../components/InvitationCard';
 import { useAuth } from '../components/AuthProvider';
 
-type JoyNoteState = {
+type ShareYourSimchaState = {
   data: { eventTitle: string; hostName: string; dateTime: string };
   bg: string;
   overlayOpacity: number;
@@ -25,7 +25,7 @@ export default function ExportPage() {
   const router = useRouter();
   const { accessToken } = useAuth();
   const cardRef = useRef<HTMLDivElement>(null);
-  const [state, setState] = useState<JoyNoteState | null>(null);
+  const [state, setState] = useState<ShareYourSimchaState | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
 
@@ -37,7 +37,7 @@ export default function ExportPage() {
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
-    const raw = localStorage.getItem('joynote-state');
+    const raw = localStorage.getItem('shareyoursimcha-state');
     if (!raw) { router.replace('/studio'); return; }
     const parsed = JSON.parse(raw);
     setState(parsed);
@@ -192,7 +192,7 @@ export default function ExportPage() {
       }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.svg" alt="Joy Note" style={{ height: 34, width: 'auto', filter: 'brightness(0) invert(1)' }} />
+            <img src="/logo.svg" alt="Share Your Simcha" style={{ height: 34, width: 'auto', filter: 'brightness(0) invert(1)' }} />
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
             <Link href="/saved" style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }}>Saved Designs</Link>

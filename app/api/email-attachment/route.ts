@@ -57,16 +57,16 @@ export async function POST(req: Request) {
 
   try {
     const { error: sendError } = await resend.emails.send({
-      from: process.env.RESEND_FROM ?? 'Joy Note <noreply@shareyoursimcha.com>',
+      from: process.env.RESEND_FROM ?? 'Share Your Simcha <noreply@shareyoursimcha.com>',
       to: email,
-      subject: 'Your Joy Note invitation files 🎉',
+      subject: 'Your Share Your Simcha invitation files 🎉',
       attachments: [
         { filename: 'invitation.png', content: pngBuf },
         { filename: 'invitation.pdf', content: pdfBuf },
       ],
       html: `
         <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1a1a1a;">
-          <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo.png" alt="Joy Note" style="height: 70px; width: auto; margin-bottom: 24px; display: block;" />
+          <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo.png" alt="Share Your Simcha" style="height: 70px; width: auto; margin-bottom: 24px; display: block;" />
           <p style="font-size: 15px; color: #555; margin: 0 0 32px;">Beautiful invitations for every simcha</p>
           <p style="font-size: 16px; line-height: 1.6; margin: 0 0 24px;">
             Your customized invitation is attached to this email as a PNG and PDF.
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
              style="display: inline-block; background: #0f172a; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 9999px; font-size: 15px; font-weight: 600; margin-bottom: 32px;">
             Edit &amp; re-download →
           </a>
-          <p style="font-size: 13px; color: #bbb; margin: 0;">© ${new Date().getFullYear()} Joy Note</p>
+          <p style="font-size: 13px; color: #bbb; margin: 0;">© ${new Date().getFullYear()} Share Your Simcha</p>
         </div>
       `,
     });

@@ -1,8 +1,8 @@
 import LandingHeader from '../components/LandingHeader';
 
 export const metadata = {
-  title: 'Contact — Joy Note',
-  description: 'Get in touch with Joy Note. We\'d love to hear from you.',
+  title: 'Contact — Share Your Simcha',
+  description: 'Get in touch with Share Your Simcha. We\'d love to hear from you.',
 };
 
 export default function ContactPage() {
@@ -51,7 +51,7 @@ export default function ContactPage() {
 
       <footer style={{ borderTop: '1px solid var(--border)', padding: '32px 24px', textAlign: 'center' }}>
         <p style={{ fontSize: 12, color: 'var(--muted-faint)', margin: 0 }}>
-          © {new Date().getFullYear()} Joy Note. All rights reserved.
+          © {new Date().getFullYear()} Share Your Simcha. All rights reserved.
         </p>
       </footer>
 

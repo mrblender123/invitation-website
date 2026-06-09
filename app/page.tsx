@@ -35,7 +35,7 @@ export default function Home() {
 
             {/* Brand */}
             <div style={{ maxWidth: 260 }}>
-              <img src="/logo.svg" alt="Joy Note" style={{ height: 36, width: 'auto', marginBottom: 10 }} />
+              <img src="/logo.svg" alt="Share Your Simcha" style={{ height: 36, width: 'auto', marginBottom: 10 }} />
               <p style={{ fontSize: 13, lineHeight: 1.7, color: 'var(--muted-faint)', margin: 0 }}>
                 Beautiful invitation designs for every simcha. Customize, download, and share in minutes.
               </p>
@@ -77,7 +77,7 @@ export default function Home() {
             display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 8,
           }}>
             <p style={{ fontSize: 12, color: 'var(--muted-faint)', margin: 0 }}>
-              © {new Date().getFullYear()} Joy Note. All rights reserved.
+              © {new Date().getFullYear()} Share Your Simcha. All rights reserved.
             </p>
 <a href="/admin" style={{ fontSize: 12, color: 'transparent', textDecoration: 'none', userSelect: 'none' }}>Admin</a>
           </div>

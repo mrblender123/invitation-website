@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       currency: 'usd',
       payment_method_types: ['card'],
       receipt_email: email || undefined,
-      description: `Joy Note – ${templateName}`,
+      description: `Share Your Simcha – ${templateName}`,
       metadata: {
         templateId,
         email: email || '',

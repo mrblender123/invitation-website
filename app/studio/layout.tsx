@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Studio — Joy Note',
+  title: 'Studio — Share Your Simcha',
   description: 'Design your invitation with custom backgrounds and full typography control.',
 };
 

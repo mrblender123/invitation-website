@@ -12,7 +12,7 @@ export async function POST(req: Request) {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: `Joy Note – ${templateName}`,
+            name: `Share Your Simcha – ${templateName}`,
             description: 'Custom invitation — download link sent by email after payment',
           },
           unit_amount: 899,

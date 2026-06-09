@@ -1,5 +1,5 @@
 /**
- * clean-svg.mjs — Auto-cleans Illustrator-exported SVGs for Joy Note templates.
+ * clean-svg.mjs — Auto-cleans Illustrator-exported SVGs for Share Your Simcha templates.
  *
  * What it does:
  *   - Normalizes font-family names (PostScript → CSS) and sets correct font-weight
