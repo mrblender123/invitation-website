@@ -93,6 +93,21 @@ git commit -m "Add FILE template to Category/Sub"
 
 Note: PNG files are in `.gitignore` — always use `git add -f` for them.
 
+#### Step 7 — Sync to R2 (mandatory — prevents 404 on live site)
+
+The production site serves SVGs and PNGs from R2 (Cloudflare). Git/Vercel deploys the files to the server but does **not** upload them to R2 automatically. Always run this after committing new template files:
+
+```bash
+node scripts/sync-r2.mjs "Category/Sub"
+```
+
+Or to sync an entire category:
+```bash
+node scripts/sync-r2.mjs "Category"
+```
+
+This reads from local `public/templates/` and uploads to R2 using the credentials in `.env.local`. Without this step, new templates will show a 404 error on the live site.
+
 ---
 
 ### 3. Category Field Reference (REQ/OPT Patterns)
