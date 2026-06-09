@@ -118,6 +118,8 @@ export default function AdminToolsPage() {
   const [saving, setSaving]       = useState(false);
   const [saved, setSaved]         = useState(false);
   const [saveError, setSaveError] = useState('');
+  const [syncing, setSyncing]     = useState(false);
+  const [syncMsg, setSyncMsg]     = useState('');
 
   useEffect(() => {
     if (loading) return;
@@ -289,6 +291,28 @@ export default function AdminToolsPage() {
           {saving ? 'Saving…' : saved ? 'Saved ✓' : 'Save & Publish'}
         </button>
         {saveError && <p style={{ marginTop: 12, fontSize: 13, color: '#f87171', textAlign: 'center' }}>Error: {saveError}</p>}
+
+        {/* Sync to R2 */}
+        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', marginBottom: 12 }}>
+            Upload all template SVGs &amp; PNGs from this deployment to R2. Use when new templates show a 404 on the live site.
+          </p>
+          <button
+            onClick={async () => {
+              setSyncing(true); setSyncMsg('');
+              try {
+                const res  = await fetch('/api/admin/sync-r2', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` }, body: JSON.stringify({}) });
+                const data = await res.json();
+                setSyncMsg(data.ok ? `✓ Synced ${data.count} files` : `✗ ${data.error}`);
+              } catch (e) { setSyncMsg(`✗ ${e}`); }
+              setSyncing(false);
+            }}
+            disabled={syncing}
+            style={{ width: '100%', padding: '14px', borderRadius: 10, fontSize: 15, fontWeight: 600, background: 'rgba(99,200,255,0.15)', color: '#63c8ff', border: '1px solid rgba(99,200,255,0.3)', cursor: syncing ? 'not-allowed' : 'pointer', opacity: syncing ? 0.7 : 1 }}>
+            {syncing ? 'Syncing…' : '↑ Sync all templates to R2'}
+          </button>
+          {syncMsg && <p style={{ marginTop: 10, fontSize: 13, color: syncMsg.startsWith('✓') ? '#4ade80' : '#f87171', textAlign: 'center' }}>{syncMsg}</p>}
+        </div>
       </main>
     </div>
   );
