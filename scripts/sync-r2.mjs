@@ -83,15 +83,23 @@ console.log(`Uploading ${files.length} files…`);
 
 let ok = 0, fail = 0;
 for (const f of files) {
-  try {
-    const abs = path.join(TEMPLATES_DIR, f);
-    const content = f.endsWith('.svg') ? await readFile(abs, 'utf-8') : await readFile(abs);
-    await upload(f, content);
-    process.stdout.write('.');
-    ok++;
-  } catch (e) {
-    console.error(`\nFAIL ${f}: ${e.message}`);
-    fail++;
+  const abs = path.join(TEMPLATES_DIR, f);
+  let done = false;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const content = f.endsWith('.svg') ? await readFile(abs, 'utf-8') : await readFile(abs);
+      await upload(f, content);
+      process.stdout.write('.');
+      ok++; done = true; break;
+    } catch (e) {
+      if (attempt < 3) {
+        await new Promise(r => setTimeout(r, 1000 * attempt)); // wait 1s, then 2s
+      } else {
+        console.error(`\nFAIL ${f}: ${e.message}`);
+        fail++;
+      }
+    }
   }
+  void done;
 }
 console.log(`\n✓ ${ok} uploaded, ${fail} failed`);
