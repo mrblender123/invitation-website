@@ -42,6 +42,13 @@ async function collect(dir, base = '') {
   return out;
 }
 
+// Encode a path for AWS4 canonical requests — encodes everything except unreserved chars and /
+function encodePath(p) {
+  return p.split('/').map(seg =>
+    encodeURIComponent(seg).replace(/[!'()*]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase())
+  ).join('/');
+}
+
 async function upload(relPath, content) {
   const r2Key = `templates/${relPath}`;
   const ct    = relPath.endsWith('.svg') ? 'image/svg+xml' : 'image/png';
@@ -53,14 +60,15 @@ async function upload(relPath, content) {
   const ph    = createHash('sha256').update(body).digest('hex');
   const ch    = `content-type:${ct}\nhost:${host}\nx-amz-content-sha256:${ph}\nx-amz-date:${ad}\n`;
   const sh    = 'content-type;host;x-amz-content-sha256;x-amz-date';
-  const cr    = `PUT\n/${encodeURIComponent(r2Key).replace(/%2F/g,'/')}\n\n${ch}\n${sh}\n${ph}`;
+  const encodedPath = encodePath(r2Key);
+  const cr    = `PUT\n/${encodedPath}\n\n${ch}\n${sh}\n${ph}`;
   const sc    = `${ds}/auto/s3/aws4_request`;
   const sts   = `AWS4-HMAC-SHA256\n${ad}\n${sc}\n${createHash('sha256').update(cr).digest('hex')}`;
   const s     = (k,m) => createHmac('sha256',k).update(m).digest();
   const sk    = s(s(s(s(Buffer.from(`AWS4${R2_SECRET_ACCESS_KEY}`),ds),'auto'),'s3'),'aws4_request');
   const sig   = createHmac('sha256',sk).update(sts).digest('hex');
   const auth  = `AWS4-HMAC-SHA256 Credential=${R2_ACCESS_KEY_ID}/${sc}, SignedHeaders=${sh}, Signature=${sig}`;
-  const res   = await fetch(`https://${host}/${encodeURIComponent(r2Key).replace(/%2F/g,'/')}`, {
+  const res   = await fetch(`https://${host}/${encodedPath}`, {
     method: 'PUT',
     headers: { 'Content-Type': ct, 'x-amz-content-sha256': ph, 'x-amz-date': ad, Authorization: auth, 'Cache-Control': 'public, max-age=0, must-revalidate' },
     body,
