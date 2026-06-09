@@ -57,7 +57,7 @@ export async function POST(req: Request) {
 
   try {
     const { error: sendError } = await resend.emails.send({
-      from: process.env.RESEND_FROM ?? 'Joy Note <noreply@joy-note.com>',
+      from: process.env.RESEND_FROM ?? 'Joy Note <noreply@shareyoursimcha.com>',
       to: email,
       subject: 'Your Joy Note invitation files 🎉',
       attachments: [

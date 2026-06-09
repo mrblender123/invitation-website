@@ -1196,7 +1196,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 10px' }}>Your invitation is ready!</h2>
                 {emailError ? (
                   <p style={{ fontSize: 14, color: '#ef4444', lineHeight: 1.6, margin: '0 0 24px', background: '#fef2f2', borderRadius: 8, padding: '10px 14px' }}>
-                    We couldn&apos;t send your email. Download your files now — or contact <a href="mailto:info@joy-note.com" style={{ color: '#ef4444' }}>info@joy-note.com</a> with your payment ID to get them later.
+                    We couldn&apos;t send your email. Download your files now — or contact <a href="mailto:info@shareyoursimcha.com" style={{ color: '#ef4444' }}>info@shareyoursimcha.com</a> with your payment ID to get them later.
                   </p>
                 ) : (
                   <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 24px' }}>

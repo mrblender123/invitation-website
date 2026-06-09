@@ -74,12 +74,12 @@ export const metadata: Metadata = {
     "Pidyon haben invitation",
     "shulem zucher invitation",
   ],
-  metadataBase: new URL('https://www.joy-note.com'),
+  metadataBase: new URL('https://www.shareyoursimcha.com'),
   openGraph: {
     title: "Joy Note | Jewish Simcha Invitations",
     description: "Beautiful invitation templates for every simcha — vachnacht, bris, bar mitzvah, sheva brachos and more. Personalize and download instantly.",
     type: "website",
-    url: "https://www.joy-note.com",
+    url: "https://www.shareyoursimcha.com",
     siteName: "Joy Note",
     images: [
       {

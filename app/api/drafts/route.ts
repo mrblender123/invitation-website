@@ -13,10 +13,10 @@ export async function POST(req: NextRequest) {
     }
 
     const token = createDraftToken(templateId, fieldValues ?? {}, email);
-    const draftUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://joy-note.com'}/draft/${token}`;
+    const draftUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://shareyoursimcha.com'}/draft/${token}`;
 
     const { error: emailError } = await resend.emails.send({
-      from: process.env.RESEND_FROM ?? 'Joy Note <noreply@joy-note.com>',
+      from: process.env.RESEND_FROM ?? 'Joy Note <noreply@shareyoursimcha.com>',
       to: email,
       subject: 'Your invitation draft is saved',
       html: `

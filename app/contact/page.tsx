@@ -23,7 +23,7 @@ export default function ContactPage() {
         </p>
 
         <a
-          href="mailto:info@joy-note.com"
+          href="mailto:info@shareyoursimcha.com"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -41,7 +41,7 @@ export default function ContactPage() {
             <rect x="2" y="4" width="20" height="16" rx="2"/>
             <path d="M2 7l10 7 10-7"/>
           </svg>
-          info@joy-note.com
+          info@shareyoursimcha.com
         </a>
 
         <p style={{ fontSize: 13, color: 'var(--muted-faint)', marginTop: 24 }}>

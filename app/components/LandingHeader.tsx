@@ -127,7 +127,7 @@ export default function LandingHeader() {
             About
           </a>
           <a
-            href="mailto:info@joy-note.com"
+            href="mailto:info@shareyoursimcha.com"
             title="Email us"
             style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 9999, border: '1px solid rgba(0,0,0,0.18)' }}
           >

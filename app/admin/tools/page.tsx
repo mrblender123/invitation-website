@@ -267,7 +267,7 @@ export default function AdminToolsPage() {
         {/* Link */}
         <div style={card}>
           <span style={sectionLabel}>Link (optional)</span>
-          <input style={{ ...inputStyle, marginBottom: 12 }} placeholder="https://joy-note.com/templates"
+          <input style={{ ...inputStyle, marginBottom: 12 }} placeholder="https://shareyoursimcha.com/templates"
             value={cfg.link} onChange={e => set('link', e.target.value)} />
           <span style={{ ...sectionLabel, marginTop: 4 }}>Link label</span>
           <input style={inputStyle} placeholder="Browse now →"
