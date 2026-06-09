@@ -44,7 +44,7 @@ async function uploadToR2(relPath: string, content: string | Buffer): Promise<vo
   await fetch(`https://${host}/${encodeURIComponent(r2Key).replace(/%2F/g, '/')}`, {
     method: 'PUT',
     headers: { 'Content-Type': ct, 'x-amz-content-sha256': payloadHash, 'x-amz-date': amzDate, Authorization: auth, 'Cache-Control': 'public, max-age=0, must-revalidate' },
-    body: bodyBytes,
+    body: bodyBytes as unknown as BodyInit,
   });
 }
 
