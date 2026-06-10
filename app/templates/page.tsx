@@ -698,7 +698,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
           padding: '0 24px',
         }}>
           <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.svg" alt="Share Your Simcha" style={{ height: 32, width: 'auto' }} />
+            <img src="/logo.svg" alt="Share Your Simcha" style={{ height: 52, width: 'auto' }} />
           </Link>
           <nav style={{ display: 'flex', alignItems: 'center', gap: 16 }} />
         </div>
