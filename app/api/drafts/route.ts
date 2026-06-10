@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       subject: 'Your invitation draft is saved',
       html: `
         <div style="font-family:system-ui,sans-serif;max-width:520px;margin:0 auto;padding:40px 24px;color:#1a1a1a;">
-          <img src="${logoSrc}" alt="Share Your Simcha" style="height:70px;width:auto;margin-bottom:24px;display:block;" />
+          <img src="${logoSrc}" alt="Share Your Simcha" style="height:140px;width:auto;margin-bottom:24px;display:block;" />
           <h1 style="font-size:22px;font-weight:700;margin:0 0 12px;">Your draft is saved</h1>
           <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 32px;">
             Click the button below to pick up where you left off.
