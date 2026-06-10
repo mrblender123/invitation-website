@@ -152,5 +152,5 @@
       </g>
     </pattern>
   </defs>
-  <rect x="0" width="360" height="504" fill="url(#ijijij)" opacity=".2" stroke="#231f20" stroke-miterlimit="10"/>
+  <rect x="0" width="360" height="504" fill="url(#ijijij)" opacity=".1" stroke="#231f20" stroke-miterlimit="10"/>
 </svg>
