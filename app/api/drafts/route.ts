@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createDraftToken } from '@/lib/draft-token';
-import { EMAIL_LOGO_BASE64 } from '@/lib/email-logo';
-
 const resend = new Resend(process.env.RESEND_API_KEY ?? '');
+const EMAIL_LOGO_SRC = 'https://i.imgur.com/FmKgjXg.png';
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,7 +14,7 @@ export async function POST(req: NextRequest) {
 
     const token = createDraftToken(templateId, fieldValues ?? {}, email);
     const draftUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://shareyoursimcha.com'}/draft/${token}`;
-    const logoSrc = EMAIL_LOGO_BASE64;
+    const logoSrc = EMAIL_LOGO_SRC;
 
     const { error: emailError } = await resend.emails.send({
       from: process.env.RESEND_FROM ?? 'Share Your Simcha <noreply@shareyoursimcha.com>',

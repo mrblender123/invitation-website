@@ -3,10 +3,9 @@ import { Resend } from 'resend';
 import { PDFDocument } from 'pdf-lib';
 import { createDownloadToken } from '@/lib/download-token';
 import { initEditRecord, markEmailSent } from '@/lib/edit-tracking';
-import { EMAIL_LOGO_BASE64 } from '@/lib/email-logo';
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
+const EMAIL_LOGO_SRC = 'https://i.imgur.com/FmKgjXg.png';
 
 export async function POST(req: Request) {
   const piId = req.headers.get('x-pi-id') ?? '';
@@ -56,7 +55,7 @@ export async function POST(req: Request) {
   );
   const downloadUrl = `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${encodeURIComponent(templateId)}&token=${token}&restore=${restoreParam}&pi=${encodeURIComponent(piId)}`;
 
-  const logoSrc = EMAIL_LOGO_BASE64;
+  const logoSrc = EMAIL_LOGO_SRC;
 
   try {
     const { error: sendError } = await resend.emails.send({
