@@ -5,7 +5,7 @@ import { createDownloadToken } from '@/lib/download-token';
 import { initEditRecord, markEmailSent } from '@/lib/edit-tracking';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
-const EMAIL_LOGO_SRC = 'https://i.imgur.com/sInuEHF.png';
+const EMAIL_LOGO_SRC = 'https://i.imgur.com/t8uy4eg.png';
 
 export async function POST(req: Request) {
   const piId = req.headers.get('x-pi-id') ?? '';
