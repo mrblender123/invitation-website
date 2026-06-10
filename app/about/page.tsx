@@ -98,26 +98,6 @@ export default function AboutPage() {
         <FaqAccordion />
       </section>
 
-      {/* CTA */}
-      <section style={{ padding: '0 24px 120px', position: 'relative', zIndex: 1 }}>
-        <div style={{
-          maxWidth: 600,
-          margin: '0 auto',
-          textAlign: 'center',
-          borderRadius: 24,
-          border: '1px solid var(--border)',
-          background: 'rgba(255,255,255,0.6)',
-          padding: '56px 40px',
-        }}>
-          <h2 style={{ fontFamily: 'var(--font-playfair)', fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: 700, letterSpacing: '-0.02em', marginBottom: 16, color: 'var(--foreground)' }}>
-            Ready to create yours?
-          </h2>
-          <p style={{ fontSize: 15, color: 'var(--muted)', marginBottom: 32 }}>
-            Browse templates for every simcha and have your invitation ready in minutes.
-          </p>
-          <GlassPill text="Browse Templates" href="/templates" />
-        </div>
-      </section>
 
       {/* Footer */}
       <footer style={{ borderTop: '1px solid var(--border)', padding: '32px 24px', textAlign: 'center' }}>
