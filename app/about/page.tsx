@@ -3,8 +3,8 @@ import FaqAccordion from '../components/FaqAccordion';
 import GlassPill from '../components/GlassPill';
 
 export const metadata = {
-  title: 'About — Share Your Simcha',
-  description: 'Simple. Easy. Done. Create beautiful Jewish celebration invitations in minutes.',
+  title: 'About Share Your Simcha | Jewish Simcha Invitations Made Easy',
+  description: 'Share Your Simcha makes it easy to create beautiful Jewish simcha invitations. Browse templates, personalize your details, and download instantly — no design skills needed.',
 };
 
 const STEPS = [
