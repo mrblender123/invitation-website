@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { readFileSync } from 'fs';
+import path from 'path';
 import { createDraftToken } from '@/lib/draft-token';
 
 const resend = new Resend(process.env.RESEND_API_KEY ?? '');
+
+const logoBase64 = (() => {
+  try {
+    const buf = readFileSync(path.join(process.cwd(), 'public', 'logo.png'));
+    return `data:image/png;base64,${buf.toString('base64')}`;
+  } catch { return ''; }
+})();
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,7 +30,7 @@ export async function POST(req: NextRequest) {
       subject: 'Your invitation draft is saved',
       html: `
         <div style="font-family:system-ui,sans-serif;max-width:520px;margin:0 auto;padding:40px 24px;color:#1a1a1a;">
-          <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo.png" alt="Share Your Simcha" style="height:70px;width:auto;margin-bottom:24px;display:block;" />
+          ${logoBase64 ? `<img src="${logoBase64}" alt="Share Your Simcha" style="height:70px;width:auto;margin-bottom:24px;display:block;" />` : '<p style="font-size:16px;font-weight:600;margin:0 0 16px;">Share Your Simcha</p>'}
           <h1 style="font-size:22px;font-weight:700;margin:0 0 12px;">Your draft is saved</h1>
           <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 32px;">
             Click the button below to pick up where you left off.
