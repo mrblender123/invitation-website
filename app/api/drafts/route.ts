@@ -8,7 +8,7 @@ const resend = new Resend(process.env.RESEND_API_KEY ?? '');
 
 const logoBase64 = (() => {
   try {
-    const buf = readFileSync(path.join(process.cwd(), 'public', 'logo.png'));
+    const buf = readFileSync(path.join(process.cwd(), 'public', 'logo-email.png'));
     return `data:image/png;base64,${buf.toString('base64')}`;
   } catch { return ''; }
 })();
