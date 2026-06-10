@@ -9,11 +9,11 @@ const resend = new Resend(process.env.RESEND_API_KEY!);
 
 async function getLogoSrc(): Promise<string> {
   try {
-    const res = await fetch('https://www.shareyoursimcha.com/SYC_02.png');
+    const res = await fetch('https://i.imgur.com/TCE8hxb.png');
     const buf = Buffer.from(await res.arrayBuffer());
     return `data:image/png;base64,${buf.toString('base64')}`;
   } catch {
-    return 'https://www.shareyoursimcha.com/SYC_02.png';
+    return 'https://i.imgur.com/TCE8hxb.png';
   }
 }
 
