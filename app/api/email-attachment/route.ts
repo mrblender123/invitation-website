@@ -1,22 +1,21 @@
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { PDFDocument } from 'pdf-lib';
-import { readFileSync } from 'fs';
-import path from 'path';
 import { createDownloadToken } from '@/lib/download-token';
 import { initEditRecord, markEmailSent } from '@/lib/edit-tracking';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
-const logoSrc = (() => {
+async function getLogoSrc(): Promise<string> {
   try {
-    const buf = readFileSync(path.join(process.cwd(), 'public', 'SYC_02.png'));
+    const res = await fetch('https://www.shareyoursimcha.com/SYC_02.png');
+    const buf = Buffer.from(await res.arrayBuffer());
     return `data:image/png;base64,${buf.toString('base64')}`;
   } catch {
     return 'https://www.shareyoursimcha.com/SYC_02.png';
   }
-})();
+}
 
 export async function POST(req: Request) {
   const piId = req.headers.get('x-pi-id') ?? '';
@@ -65,6 +64,8 @@ export async function POST(req: Request) {
     Buffer.from(JSON.stringify(fieldValues)).toString('base64'),
   );
   const downloadUrl = `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${encodeURIComponent(templateId)}&token=${token}&restore=${restoreParam}&pi=${encodeURIComponent(piId)}`;
+
+  const logoSrc = await getLogoSrc();
 
   try {
     const { error: sendError } = await resend.emails.send({

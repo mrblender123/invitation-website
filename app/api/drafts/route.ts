@@ -1,19 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { readFileSync } from 'fs';
-import path from 'path';
 import { createDraftToken } from '@/lib/draft-token';
 
 const resend = new Resend(process.env.RESEND_API_KEY ?? '');
 
-const logoSrc = (() => {
+async function getLogoSrc(): Promise<string> {
   try {
-    const buf = readFileSync(path.join(process.cwd(), 'public', 'SYC_02.png'));
+    const res = await fetch('https://www.shareyoursimcha.com/SYC_02.png');
+    const buf = Buffer.from(await res.arrayBuffer());
     return `data:image/png;base64,${buf.toString('base64')}`;
   } catch {
     return 'https://www.shareyoursimcha.com/SYC_02.png';
   }
-})();
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -25,6 +24,7 @@ export async function POST(req: NextRequest) {
 
     const token = createDraftToken(templateId, fieldValues ?? {}, email);
     const draftUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://shareyoursimcha.com'}/draft/${token}`;
+    const logoSrc = await getLogoSrc();
 
     const { error: emailError } = await resend.emails.send({
       from: process.env.RESEND_FROM ?? 'Share Your Simcha <noreply@shareyoursimcha.com>',
