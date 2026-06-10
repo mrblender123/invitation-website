@@ -311,6 +311,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [keyboardRect, setKeyboardRect] = useState<DOMRect | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const editConsumedThisSession = useRef(false);
 
   // Draft modal state
   const [showDraftModal, setShowDraftModal] = useState(false);
@@ -529,6 +530,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
   // Returns false if the edit limit is reached.
   const consumeEditSlot = async (): Promise<boolean> => {
     if (!piParam) return true; // not an edit session — no consumption needed
+    // PNG + PDF downloads in the same session count as one edit
+    if (editConsumedThisSession.current) return true;
     try {
       const res = await fetch('/api/consume-edit', {
         method: 'POST',
@@ -540,7 +543,14 @@ const [windowWidth, setWindowWidth] = useState(1200);
         setDownloadAllowed(false);
         return false;
       }
-      if (data.editsRemaining !== null) setEditsRemaining(data.editsRemaining);
+      editConsumedThisSession.current = true;
+      const newRemaining = data.editsRemaining;
+      if (newRemaining !== null) {
+        setEditsRemaining(newRemaining);
+        // Keep session cache in sync so refresh shows correct count
+        const cacheKey = `shareyoursimcha-edit-${piParam}`;
+        sessionStorage.setItem(cacheKey, JSON.stringify({ valid: newRemaining > 0, editsRemaining: newRemaining }));
+      }
       return true;
     } catch {
       return true; // network error — let the download proceed
