@@ -57,28 +57,28 @@ export async function POST(req: Request) {
 
   try {
     const { error: sendError } = await resend.emails.send({
-      from: process.env.RESEND_FROM ?? 'Share Your Simcha <noreply@shareyoursimcha.com>',
+      from: process.env.RESEND_FROM ?? 'Share Your Simcha <info@shareyoursimcha.com>',
       to: email,
-      subject: 'Your Share Your Simcha invitation files 🎉',
+      subject: 'Your invitation is ready',
+      headers: {
+        'X-Entity-Ref-ID': piId,
+      },
       attachments: [
         { filename: 'invitation.png', content: pngBuf },
         { filename: 'invitation.pdf', content: pdfBuf },
       ],
+      text: `Your invitation files are attached to this email (PNG and PDF).\n\nYou can edit and re-download up to 3 times within 7 days:\n${downloadUrl}\n\n— Share Your Simcha`,
       html: `
         <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1a1a1a;">
-          <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo.png" alt="Share Your Simcha" style="height: 70px; width: auto; margin-bottom: 24px; display: block;" />
-          <p style="font-size: 15px; color: #555; margin: 0 0 32px;">Beautiful invitations for every simcha</p>
-          <p style="font-size: 16px; line-height: 1.6; margin: 0 0 24px;">
-            Your customized invitation is attached to this email as a PNG and PDF.
+          <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo.png" alt="Share Your Simcha" style="height: 48px; width: auto; display: block; margin-bottom: 24px;" />
+          <p style="font-size: 16px; line-height: 1.6; margin: 0 0 16px;">
+            Your invitation files are attached to this email as a PNG and PDF.
           </p>
-          <p style="font-size: 14px; color: #555; margin: 0 0 24px;">
-            You can also edit and re-download using the link below — up to 3 times within 7 days:
+          <p style="font-size: 15px; line-height: 1.6; margin: 0 0 16px;">
+            Need to make a change? You can edit and re-download up to 3 times within 7 days:<br/>
+            <a href="${downloadUrl}" style="color: #0f172a;">Edit your invitation</a>
           </p>
-          <a href="${downloadUrl}"
-             style="display: inline-block; background: #0f172a; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 9999px; font-size: 15px; font-weight: 600; margin-bottom: 32px;">
-            Edit &amp; re-download →
-          </a>
-          <p style="font-size: 13px; color: #bbb; margin: 0;">© ${new Date().getFullYear()} Share Your Simcha</p>
+          <p style="font-size: 13px; color: #999; margin: 24px 0 0;">Share Your Simcha &middot; <a href="https://shareyoursimcha.com" style="color: #999;">shareyoursimcha.com</a></p>
         </div>
       `,
     });
