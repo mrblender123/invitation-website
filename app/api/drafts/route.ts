@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createDraftToken } from '@/lib/draft-token';
 const resend = new Resend(process.env.RESEND_API_KEY ?? '');
-const EMAIL_LOGO_SRC = 'https://i.imgur.com/FmKgjXg.png';
+const EMAIL_LOGO_SRC = 'https://i.imgur.com/sInuEHF.png';
 
 export async function POST(req: NextRequest) {
   try {
