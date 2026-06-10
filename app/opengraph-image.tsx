@@ -27,10 +27,10 @@ export default function OGImage() {
         {/* Logo text */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 28 }}>
           <div style={{ fontSize: 72, fontWeight: 800, color: '#fff', letterSpacing: '-2px', display: 'flex' }}>
-            Joy
+            Share Your
           </div>
           <div style={{ fontSize: 72, fontWeight: 800, color: '#fbbf24', letterSpacing: '-2px', display: 'flex' }}>
-            Send
+            Simcha
           </div>
         </div>
 
