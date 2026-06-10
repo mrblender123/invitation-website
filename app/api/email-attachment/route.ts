@@ -1,11 +1,20 @@
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { PDFDocument } from 'pdf-lib';
+import { readFileSync } from 'fs';
+import path from 'path';
 import { createDownloadToken } from '@/lib/download-token';
 import { initEditRecord, markEmailSent } from '@/lib/edit-tracking';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
+
+const logoBase64 = (() => {
+  try {
+    const buf = readFileSync(path.join(process.cwd(), 'public', 'logo.png'));
+    return `data:image/png;base64,${buf.toString('base64')}`;
+  } catch { return ''; }
+})();
 
 export async function POST(req: Request) {
   const piId = req.headers.get('x-pi-id') ?? '';
@@ -70,7 +79,7 @@ export async function POST(req: Request) {
       text: `Your invitation files are attached to this email (PNG and PDF).\n\nYou can edit and re-download up to 3 times within 7 days:\n${downloadUrl}\n\n— Share Your Simcha`,
       html: `
         <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1a1a1a;">
-          <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo.png" alt="Share Your Simcha" style="height: 48px; width: auto; display: block; margin-bottom: 24px;" />
+          ${logoBase64 ? `<img src="${logoBase64}" alt="Share Your Simcha" style="height: 48px; width: auto; display: block; margin-bottom: 24px;" />` : '<p style="font-size: 16px; font-weight: 600; margin: 0 0 16px;">Share Your Simcha</p>'}
           <p style="font-size: 16px; line-height: 1.6; margin: 0 0 16px;">
             Your invitation files are attached to this email as a PNG and PDF.
           </p>
