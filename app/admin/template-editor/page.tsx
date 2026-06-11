@@ -225,6 +225,7 @@ export default function TemplateEditorPage() {
   const [fmDragSrc, setFmDragSrc]       = useState<number | null>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const rightPanelRef = useRef<HTMLDivElement>(null);
+  const colorInputRef = useRef<HTMLInputElement>(null);
 
   // Refs for undo (avoid stale closures)
   const layersRef = useRef(layers);
@@ -524,6 +525,12 @@ export default function TemplateEditorPage() {
       if ((e.metaKey || e.ctrlKey) && e.key === 'a') {
         e.preventDefault();
         setSelection(new Set(layers.map((_, i) => i)));
+        return;
+      }
+      // I — open color picker
+      if (e.key === 'i' || e.key === 'I') {
+        e.preventDefault();
+        colorInputRef.current?.click();
         return;
       }
       if (selection.size === 0) return;
@@ -1079,6 +1086,7 @@ export default function TemplateEditorPage() {
             <label style={{ display: 'flex', alignItems: 'center', gap: 4, paddingLeft: 10 }}>
               <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>Color</span>
               <input
+                ref={colorInputRef}
                 type="color"
                 value={firstSel?.fill && /^#[0-9a-f]{6}$/i.test(firstSel.fill) ? firstSel.fill : '#ffffff'}
                 onChange={e => setSelectionStyle('fill', e.target.value)}
