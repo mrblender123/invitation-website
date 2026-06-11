@@ -20,18 +20,16 @@ export async function POST(req: NextRequest) {
       from: process.env.RESEND_FROM ?? 'Share Your Simcha <noreply@shareyoursimcha.com>',
       to: email,
       subject: 'Your invitation draft is saved',
+      headers: {
+        'X-Entity-Ref-ID': `draft-${email}-${Date.now()}`,
+      },
+      text: `Your invitation draft is saved.\n\nContinue editing here (link expires in 7 days):\n${draftUrl}\n\n— Share Your Simcha`,
       html: `
         <div style="font-family:system-ui,sans-serif;max-width:520px;margin:0 auto;padding:40px 24px;color:#1a1a1a;">
           <img src="${logoSrc}" alt="Share Your Simcha" style="height:140px;width:auto;margin-bottom:24px;display:block;" />
-          <h1 style="font-size:22px;font-weight:700;margin:0 0 12px;">Your draft is saved</h1>
-          <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 32px;">
-            Click the button below to pick up where you left off.
-            This link expires in <strong>7 days</strong>.
-          </p>
-          <a href="${draftUrl}"
-             style="display:inline-block;background:#0f172a;color:#fff;text-decoration:none;padding:14px 28px;border-radius:9999px;font-size:15px;font-weight:600;margin-bottom:32px;">
-            Continue Editing →
-          </a>
+          <p style="font-size:16px;line-height:1.6;margin:0 0 16px;">Your invitation draft has been saved.</p>
+          <p style="font-size:15px;line-height:1.6;color:#555;margin:0 0 16px;">Use the link below to continue editing. It expires in 7 days.</p>
+          <p style="font-size:15px;margin:0 0 32px;"><a href="${draftUrl}" style="color:#0f172a;">Continue editing your invitation</a></p>
           <p style="font-size:12px;color:#bbb;margin:0;">© ${new Date().getFullYear()} Share Your Simcha</p>
         </div>
       `,
