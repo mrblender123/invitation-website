@@ -3,7 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/components/AuthProvider';
-import type { Template } from '@/lib/templates';
+import type { Template, WatermarkConfig } from '@/lib/templates';
+
+// companyname.svg viewBox: 75 225 420 55 → aspect ratio 420/55
+const WM_SVG_ASPECT = 420 / 55;
 
 const ADMIN_EMAIL = 'bycheshin@gmail.com';
 const CARD_DISPLAY_WIDTH = 420;
@@ -202,6 +205,15 @@ export default function TemplateEditorPage() {
   const [keyboardInset, setKeyboardInset] = useState(0);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
+  // ── watermark state ───────────────────────────────────────────────────────────
+  const [watermark, setWatermark] = useState<WatermarkConfig | null>(null);
+  const [wmSvgText, setWmSvgText] = useState<string>('');
+  const [wmDrag, setWmDrag] = useState<{ startMouseX: number; startMouseY: number; startX: number; startY: number } | null>(null);
+  const [wmSaving, setWmSaving] = useState(false);
+  const [wmMsg, setWmMsg] = useState('');
+  const wmDragRef = useRef(wmDrag);
+  useEffect(() => { wmDragRef.current = wmDrag; }, [wmDrag]);
+
   // ── field manager state ───────────────────────────────────────────────────
   const [mainTab, setMainTab]           = useState<'editor' | 'fields'>('editor');
   const [fmData, setFmData]             = useState<FolderData[] | null>(null);
@@ -253,12 +265,25 @@ export default function TemplateEditorPage() {
       .then(d => setTemplates((d.templates ?? []).filter((t: Template) => t.textSvg)));
   }, []);
 
+  // Load companyname.svg content once
+  useEffect(() => {
+    fetch('/companyname.svg').then(r => r.text()).then(setWmSvgText).catch(() => {});
+  }, []);
+
   // Load SVG
   useEffect(() => {
     if (!selected?.textSvg) return;
     setSvgSource(null); setLayers([]); setSaveMsg(''); setSelection(new Set());
     setHistory([]); setRenamingIdx(null);
     setImageOverlays([]); setSelectedImageId(null);
+    setWatermark(null); setWmMsg('');
+    // Load saved watermark for this template
+    fetch('/api/watermarks')
+      .then(r => r.json())
+      .then((map: Record<string, WatermarkConfig>) => {
+        if (map[selected.id]) setWatermark(map[selected.id]);
+      })
+      .catch(() => {});
     const w = selected.style.canvasWidth;
     const h = selected.style.canvasHeight;
     setGuideX(w / 2);
@@ -399,6 +424,23 @@ export default function TemplateEditorPage() {
     window.addEventListener('mouseup', onUp);
     return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
   }, [imageDrag, imageResize, scale]);
+
+  // ── watermark drag ───────────────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (!wmDrag) return;
+    const onMove = (e: MouseEvent) => {
+      const d = wmDragRef.current;
+      if (!d) return;
+      const dx = (e.clientX - d.startMouseX) / scale;
+      const dy = (e.clientY - d.startMouseY) / scale;
+      setWatermark(prev => prev ? { ...prev, x: d.startX + dx, y: d.startY + dy } : prev);
+    };
+    const onUp = () => setWmDrag(null);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+  }, [wmDrag, scale]);
 
   // ── guide drag ───────────────────────────────────────────────────────────────
 
@@ -640,6 +682,33 @@ export default function TemplateEditorPage() {
     setSaving(false);
     if (res.ok) { setSvgSource(content); setLayers(parseLayers(content)); setSaveMsg('Saved ✓'); setTimeout(() => setSaveMsg(''), 3000); }
     else setSaveMsg('Error saving');
+  };
+
+  const handleSaveWatermark = async () => {
+    if (!selected || !watermark || !accessToken) return;
+    setWmSaving(true); setWmMsg('');
+    const res = await fetch('/api/admin/watermark', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify({ templateId: selected.id, ...watermark }),
+    });
+    setWmSaving(false);
+    setWmMsg(res.ok ? 'Saved ✓' : 'Error saving');
+    setTimeout(() => setWmMsg(''), 3000);
+  };
+
+  const handleRemoveWatermark = async () => {
+    if (!selected || !accessToken) return;
+    setWatermark(null);
+    setWmSaving(true); setWmMsg('');
+    const res = await fetch('/api/admin/watermark', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify({ templateId: selected.id }),
+    });
+    setWmSaving(false);
+    setWmMsg(res.ok ? 'Removed ✓' : 'Error removing');
+    setTimeout(() => setWmMsg(''), 3000);
   };
 
   const handleRevalidate = async () => {
@@ -1251,6 +1320,33 @@ export default function TemplateEditorPage() {
                     );
                   })}
 
+                  {/* Watermark overlay */}
+                  {watermark && wmSvgText && (() => {
+                    const wh = watermark.w / WM_SVG_ASPECT;
+                    const left = (watermark.x - watermark.w / 2) * scale;
+                    const top  = (watermark.y - wh / 2) * scale;
+                    const w    = watermark.w * scale;
+                    const h    = wh * scale;
+                    const coloredSvg = wmSvgText.replace(/fill="[^"]*"/, `fill="${watermark.color}"`);
+                    const svgDataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(coloredSvg)}`;
+                    return (
+                      <div
+                        onMouseDown={e => {
+                          e.stopPropagation();
+                          setWmDrag({ startMouseX: e.clientX, startMouseY: e.clientY, startX: watermark.x, startY: watermark.y });
+                        }}
+                        style={{
+                          position: 'absolute', left, top, width: w, height: h,
+                          cursor: wmDrag ? 'grabbing' : 'grab',
+                          outline: '1px dashed rgba(255,200,100,0.6)',
+                          zIndex: 12, opacity: watermark.opacity,
+                        }}
+                      >
+                        <img src={svgDataUrl} style={{ width: '100%', height: '100%', display: 'block', pointerEvents: 'none' }} draggable={false} alt="watermark" />
+                      </div>
+                    );
+                  })()}
+
                   {/* Guide lines */}
                   {showGuides && (
                     <>
@@ -1532,6 +1628,76 @@ export default function TemplateEditorPage() {
                     </p>
                   </div>
                 )}
+
+                {/* Watermark section */}
+                <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                    <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'rgba(255,255,255,0.3)', margin: 0, flex: 1 }}>Watermark</p>
+                    {wmMsg && <span style={{ fontSize: 11, color: wmMsg.includes('Error') ? '#f87171' : '#4ade80' }}>{wmMsg}</span>}
+                  </div>
+
+                  {!watermark ? (
+                    <button
+                      onClick={() => setWatermark({ x: svgW / 2, y: svgH - 40, w: Math.round(svgW * 0.35), color: '#bfa67c', opacity: 0.8 })}
+                      style={{ fontSize: 12, padding: '6px 12px', borderRadius: 7, background: 'rgba(191,166,124,0.12)', border: '1px solid rgba(191,166,124,0.3)', color: '#bfa67c', cursor: 'pointer', width: '100%' }}
+                    >
+                      + Add Watermark
+                    </button>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 8 }}>
+                      {/* Color */}
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 50 }}>Color</span>
+                        <input type="color" value={watermark.color} onChange={e => setWatermark(w => w ? { ...w, color: e.target.value } : w)}
+                          style={{ width: 26, height: 24, padding: '1px', background: 'none', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 4, cursor: 'pointer' }} />
+                        <input type="text" value={watermark.color} onChange={e => setWatermark(w => w ? { ...w, color: e.target.value } : w)}
+                          style={{ flex: 1, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 5, color: '#fff', fontSize: 11, padding: '3px 6px', outline: 'none', fontFamily: 'monospace' }} />
+                      </label>
+
+                      {/* Opacity */}
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 50 }}>Opacity</span>
+                        <input type="range" min="0.05" max="1" step="0.05" value={watermark.opacity}
+                          onChange={e => setWatermark(w => w ? { ...w, opacity: parseFloat(e.target.value) } : w)}
+                          style={{ flex: 1, accentColor: '#bfa67c' }} />
+                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 28, textAlign: 'right' as const }}>{Math.round(watermark.opacity * 100)}%</span>
+                      </label>
+
+                      {/* Size */}
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 50 }}>Size</span>
+                        <input type="range" min="20" max={svgW} step="1" value={watermark.w}
+                          onChange={e => setWatermark(w => w ? { ...w, w: parseFloat(e.target.value) } : w)}
+                          style={{ flex: 1, accentColor: '#bfa67c' }} />
+                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 28, textAlign: 'right' as const }}>{Math.round(watermark.w)}</span>
+                      </label>
+
+                      {/* X / Y coordinates */}
+                      <div style={{ display: 'flex', gap: 6 }}>
+                        {(['x', 'y'] as const).map(axis => (
+                          <label key={axis} style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 1 }}>
+                            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', width: 10 }}>{axis.toUpperCase()}</span>
+                            <input type="number" step="1" value={Math.round(watermark[axis])}
+                              onChange={e => setWatermark(w => w ? { ...w, [axis]: parseFloat(e.target.value) } : w)}
+                              style={{ flex: 1, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 5, color: '#fff', fontSize: 11, padding: '3px 5px', outline: 'none' }} />
+                          </label>
+                        ))}
+                      </div>
+
+                      {/* Buttons */}
+                      <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+                        <button onClick={handleSaveWatermark} disabled={wmSaving}
+                          style={{ flex: 1, padding: '6px 0', borderRadius: 6, border: 'none', background: '#bfa67c', color: '#000', fontSize: 12, fontWeight: 700, cursor: wmSaving ? 'not-allowed' : 'pointer', opacity: wmSaving ? 0.5 : 1 }}>
+                          {wmSaving ? 'Saving…' : 'Save Watermark'}
+                        </button>
+                        <button onClick={handleRemoveWatermark}
+                          style={{ padding: '6px 10px', borderRadius: 6, border: '1px solid rgba(255,80,80,0.3)', background: 'rgba(255,80,80,0.12)', color: 'rgba(255,120,120,0.9)', fontSize: 12, cursor: 'pointer' }}>
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 {/* Image overlay controls */}
                 {selectedImageId && (() => {

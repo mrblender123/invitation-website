@@ -12,7 +12,7 @@ import { useAuth } from '../components/AuthProvider';
 import VirtualKeyboard from '../components/VirtualKeyboard';
 import { CATEGORY_SUBS, SUB_DISPLAY_NAMES } from '@/lib/categories';
 import GlassPill from '../components/GlassPill';
-import type { Template } from '@/lib/templates';
+import type { Template, WatermarkConfig } from '@/lib/templates';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -299,6 +299,7 @@ function TemplatesContent() {
   const draftParam  = searchParams.get('draft');
   const subs        = category ? (CATEGORY_SUBS[category] ?? []) : [];
 
+  const [watermarks, setWatermarks] = useState<Record<string, WatermarkConfig>>({});
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [selected, setSelected] = useState<Template | null>(null);
@@ -385,6 +386,11 @@ const [windowWidth, setWindowWidth] = useState(1200);
     const el = inputRefs.current[activeField.id];
     if (el) setKeyboardRect(el.getBoundingClientRect());
   }, [activeField]);
+
+  // Fetch watermark configs once
+  useEffect(() => {
+    fetch('/api/watermarks').then(r => r.json()).then(setWatermarks).catch(() => {});
+  }, []);
 
   // Fetch templates from the API (auto-discovered from public/templates/*/)
   useEffect(() => {
@@ -518,6 +524,25 @@ const [windowWidth, setWindowWidth] = useState(1200);
       const svgEl = overlayDiv?.querySelector('svg');
       if (svgEl) {
         drawSvgTextToCanvas(ctx, svgEl as SVGElement, outW, outH);
+      }
+      // Bake watermark if configured for this template
+      const wm = selected ? watermarks[selected.id] : null;
+      if (wm) {
+        try {
+          const wmSvgText = await fetch('/companyname.svg').then(r => r.text());
+          const colored = wmSvgText.replace(/fill="[^"]*"/, `fill="${wm.color}"`);
+          const blob2 = new Blob([colored], { type: 'image/svg+xml;charset=utf-8' });
+          const url2 = URL.createObjectURL(blob2);
+          const wmImg = new Image();
+          await new Promise<void>(res => { wmImg.onload = () => res(); wmImg.onerror = () => res(); wmImg.src = url2; });
+          const wmH = wm.w / (420 / 55); // aspect ratio from SVG viewBox
+          const kx = outW / (selected?.style.canvasWidth ?? outW);
+          const ky = outH / (selected?.style.canvasHeight ?? outH);
+          ctx.globalAlpha = wm.opacity;
+          ctx.drawImage(wmImg, (wm.x - wm.w / 2) * kx, (wm.y - wmH / 2) * ky, wm.w * kx, wmH * ky);
+          ctx.globalAlpha = 1;
+          URL.revokeObjectURL(url2);
+        } catch { /* watermark failed — skip silently */ }
       }
       return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
     }

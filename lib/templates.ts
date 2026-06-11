@@ -21,6 +21,14 @@ export type SvgField = {
   optional?: boolean;  // hidden by default; shown when "Show all fields" is on
 };
 
+export type WatermarkConfig = {
+  x: number;       // center X in SVG units
+  y: number;       // center Y in SVG units
+  w: number;       // width in SVG units (height derived from SVG aspect ratio)
+  color: string;   // hex color e.g. "#bfa67c"
+  opacity: number; // 0–1
+};
+
 export type Template = {
   id: string;
   name: string;
