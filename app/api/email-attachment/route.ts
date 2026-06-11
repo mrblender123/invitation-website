@@ -67,7 +67,6 @@ export async function POST(req: Request) {
         { filename: 'invitation.png', content: pngBuf },
         { filename: 'invitation.pdf', content: pdfBuf },
       ],
-      text: `Your invitation files are attached to this email (PNG and PDF).\n\nYou can edit and re-download up to 3 times within 7 days:\n${downloadUrl}\n\n— Share Your Simcha`,
       html: `
         <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1a1a1a;">
           <img src="${EMAIL_LOGO_SRC}" alt="Share Your Simcha" style="height: 140px; width: auto; margin-bottom: 24px; display: block;" />

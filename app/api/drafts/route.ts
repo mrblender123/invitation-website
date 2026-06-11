@@ -22,7 +22,6 @@ export async function POST(req: NextRequest) {
       headers: {
         'X-Entity-Ref-ID': `draft-${email}-${Date.now()}`,
       },
-      text: `Your invitation draft has been saved.\n\nContinue editing here (link expires in 7 days):\n${draftUrl}\n\n— Share Your Simcha`,
       html: `
         <div style="font-family:system-ui,sans-serif;max-width:520px;margin:0 auto;padding:40px 24px;color:#1a1a1a;">
           <img src="${EMAIL_LOGO_SRC}" alt="Share Your Simcha" style="height:140px;width:auto;margin-bottom:24px;display:block;" />
