@@ -186,7 +186,7 @@ export default function TemplateEditorPage() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [snapActive, setSnapActive] = useState<{ x: boolean; y: boolean }>({ x: false, y: false });
   const [showGuides, setShowGuides] = useState(true);
-  const [showDots, setShowDots] = useState(true);
+  const [showDots, setShowDots] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState('');
   const [renamingIdx, setRenamingIdx] = useState<number | null>(null);
