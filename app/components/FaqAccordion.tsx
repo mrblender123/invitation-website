@@ -16,6 +16,10 @@ const FAQS = [
     a: 'Yes. Every purchase includes up to 3 edits within 7 days. A link in your confirmation email lets you reopen your invitation, make changes, and re-download.',
   },
   {
+    q: "I paid but didn't receive my invitation email — what should I do?",
+    a: "Check your Promotions tab (in Gmail) or your Spam folder — the email sometimes lands there. If you still can\'t find it, contact us and we\'ll resend it.",
+  },
+  {
     q: 'What simchas are supported?',
     a: "We cover the full lifecycle of Jewish celebrations: Bris, Vachnacht, Pidyon Haben, It's a Girl, Upsherin, Bar Mitzvah, Tenoyim, Bavarfen, Wedding, and Sheva Brachos — with more added regularly.",
   },
