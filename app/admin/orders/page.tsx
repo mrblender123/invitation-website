@@ -25,9 +25,7 @@ function formatDate(iso: string) {
 }
 
 function templateLabel(order: Order) {
-  if (order.template_name) return order.template_name;
-  const parts = order.template_id.split('-');
-  return parts.slice(0, -1).join(' ') || order.template_id;
+  return order.template_name || order.template_id;
 }
 
 export default function OrdersPage() {
