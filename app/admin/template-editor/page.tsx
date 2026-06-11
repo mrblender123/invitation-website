@@ -1712,17 +1712,6 @@ export default function TemplateEditorPage() {
                         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 30, textAlign: 'right' as const }}>{Math.round(watermark.rotation ?? 0)}°</span>
                       </div>
 
-                      {/* X / Y coordinates */}
-                      <div style={{ display: 'flex', gap: 6 }}>
-                        {(['x', 'y'] as const).map(axis => (
-                          <label key={axis} style={{ display: 'flex', alignItems: 'center', gap: 4, flex: 1 }}>
-                            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', width: 10 }}>{axis.toUpperCase()}</span>
-                            <input type="number" step="1" value={Math.round(watermark[axis])}
-                              onChange={e => setWatermark(w => w ? { ...w, [axis]: parseFloat(e.target.value) } : w)}
-                              style={{ flex: 1, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 5, color: '#fff', fontSize: 11, padding: '3px 5px', outline: 'none' }} />
-                          </label>
-                        ))}
-                      </div>
 
                       {/* Buttons */}
                       <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
