@@ -42,7 +42,7 @@ export default function AboutPage() {
           Download.
         </h1>
         <p style={{ fontSize: 18, lineHeight: 1.75, color: 'var(--muted)', maxWidth: 500, margin: '0 auto' }}>
-          Share Your Simcha was built for the Jewish community — so anyone can create a beautiful, professional invitation for their simcha in minutes, no design experience needed.
+          Beautiful invitations for every simcha — ready in minutes, no designer needed.
         </p>
       </section>
 
