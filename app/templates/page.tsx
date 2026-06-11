@@ -300,6 +300,7 @@ function TemplatesContent() {
   const subs        = category ? (CATEGORY_SUBS[category] ?? []) : [];
 
   const [watermarks, setWatermarks] = useState<Record<string, WatermarkConfig>>({});
+  const [wmSvgText, setWmSvgText] = useState('');
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [selected, setSelected] = useState<Template | null>(null);
@@ -387,9 +388,10 @@ const [windowWidth, setWindowWidth] = useState(1200);
     if (el) setKeyboardRect(el.getBoundingClientRect());
   }, [activeField]);
 
-  // Fetch watermark configs once
+  // Fetch watermark configs + SVG content once
   useEffect(() => {
     fetch('/api/watermarks').then(r => r.json()).then(setWatermarks).catch(() => {});
+    fetch('/companyname.svg').then(r => r.text()).then(setWmSvgText).catch(() => {});
   }, []);
 
   // Fetch templates from the API (auto-discovered from public/templates/*/)
@@ -902,6 +904,29 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     }}
                   />
                 )}
+                {(() => {
+                  const wm = selected ? watermarks[selected.id] : null;
+                  if (!wm || !wmSvgText) return null;
+                  const WM_ASPECT = 420 / 55;
+                  const wmH = wm.w / WM_ASPECT;
+                  const svgW = selected.style.canvasWidth;
+                  const svgH = selected.style.canvasHeight;
+                  const leftPct = ((wm.x - wm.w / 2) / svgW) * 100;
+                  const topPct  = ((wm.y - wmH / 2) / svgH) * 100;
+                  const widthPct = (wm.w / svgW) * 100;
+                  const colored = wmSvgText.replace(/fill="[^"]*"/, `fill="${wm.color}"`);
+                  return (
+                    <div
+                      aria-hidden="true"
+                      style={{
+                        position: 'absolute',
+                        left: `${leftPct}%`, top: `${topPct}%`, width: `${widthPct}%`,
+                        opacity: wm.opacity, pointerEvents: 'none', userSelect: 'none', zIndex: 11,
+                      }}
+                      dangerouslySetInnerHTML={{ __html: colored }}
+                    />
+                  );
+                })()}
                 </div>
               ) : (
                 <div style={{
