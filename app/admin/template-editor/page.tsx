@@ -711,9 +711,10 @@ export default function TemplateEditorPage() {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
       body: JSON.stringify({ templateId: selected.id, ...watermark }),
     });
+    const json = await res.json().catch(() => ({}));
     setWmSaving(false);
-    setWmMsg(res.ok ? 'Saved ✓' : 'Error saving');
-    setTimeout(() => setWmMsg(''), 3000);
+    setWmMsg(res.ok ? 'Saved ✓' : `Error: ${json.error ?? res.status}`);
+    setTimeout(() => setWmMsg(''), 6000);
   };
 
   const handleRemoveWatermark = async () => {
