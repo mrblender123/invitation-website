@@ -1721,7 +1721,7 @@ export default function TemplateEditorPage() {
                         if (!b01) return null;
                         return (
                           <button
-                            onClick={() => setWatermark(w => w ? { ...w, ...b01 } : { ...b01 })}
+                            onClick={() => setWatermark(w => w ? { ...w, ...b01, color: '#d0bf98' } : { ...b01, color: '#d0bf98' })}
                             style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 10px', borderRadius: 6, border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', cursor: 'pointer', width: '100%' }}>
                             <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#d0bf98', flexShrink: 0 }} />
                             <span style={{ fontSize: 11, color: '#808080' }}>Default Style</span>
