@@ -211,6 +211,7 @@ export default function TemplateEditorPage() {
   const [wmDrag, setWmDrag] = useState<{ startMouseX: number; startMouseY: number; startX: number; startY: number } | null>(null);
   const [wmSaving, setWmSaving] = useState(false);
   const [wmMsg, setWmMsg] = useState('');
+  const [allWatermarks, setAllWatermarks] = useState<Record<string, WatermarkConfig>>({});
   const wmDragRef = useRef(wmDrag);
   useEffect(() => { wmDragRef.current = wmDrag; }, [wmDrag]);
 
@@ -290,6 +291,7 @@ export default function TemplateEditorPage() {
     fetch('/api/watermarks')
       .then(r => r.json())
       .then((map: Record<string, WatermarkConfig>) => {
+        setAllWatermarks(map);
         if (map[selected.id]) setWatermark(map[selected.id]);
       })
       .catch(() => {});
@@ -1712,6 +1714,20 @@ export default function TemplateEditorPage() {
                         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 30, textAlign: 'right' as const }}>{Math.round(watermark.rotation ?? 0)}°</span>
                       </div>
 
+
+                      {/* Default Style button */}
+                      {(() => {
+                        const b01 = allWatermarks["It's a boy-Bris-B-01"];
+                        if (!b01) return null;
+                        return (
+                          <button
+                            onClick={() => setWatermark(w => w ? { ...w, color: '#d0bf98', w: b01.w, rotation: b01.rotation, opacity: b01.opacity } : w)}
+                            style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 10px', borderRadius: 6, border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', cursor: 'pointer', width: '100%' }}>
+                            <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#d0bf98', flexShrink: 0 }} />
+                            <span style={{ fontSize: 11, color: '#808080' }}>Default Style</span>
+                          </button>
+                        );
+                      })()}
 
                       {/* Buttons */}
                       <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
