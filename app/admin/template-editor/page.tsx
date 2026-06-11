@@ -1695,13 +1695,21 @@ export default function TemplateEditorPage() {
                       </label>
 
                       {/* Rotation */}
-                      <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 50 }}>Rotate</span>
-                        <input type="range" min="-180" max="180" step="1" value={watermark.rotation ?? 0}
-                          onChange={e => setWatermark(w => w ? { ...w, rotation: parseFloat(e.target.value) } : w)}
-                          style={{ flex: 1, accentColor: '#bfa67c' }} />
+                        {[
+                          { label: '↺ 90°', delta: -90 },
+                          { label: '↻ 90°', delta: 90 },
+                          { label: '⇆ Flip', delta: 180 },
+                        ].map(({ label, delta }) => (
+                          <button key={label}
+                            onClick={() => setWatermark(w => w ? { ...w, rotation: ((w.rotation ?? 0) + delta + 360) % 360 } : w)}
+                            style={{ flex: 1, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 5, color: '#fff', fontSize: 11, padding: '4px 0', cursor: 'pointer' }}>
+                            {label}
+                          </button>
+                        ))}
                         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 30, textAlign: 'right' as const }}>{Math.round(watermark.rotation ?? 0)}°</span>
-                      </label>
+                      </div>
 
                       {/* X / Y coordinates */}
                       <div style={{ display: 'flex', gap: 6 }}>
