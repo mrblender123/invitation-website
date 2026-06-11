@@ -435,13 +435,17 @@ export default function TemplateEditorPage() {
       if (!d) return;
       const dx = (e.clientX - d.startMouseX) / scale;
       const dy = (e.clientY - d.startMouseY) / scale;
-      setWatermark(prev => prev ? { ...prev, x: d.startX + dx, y: d.startY + dy } : prev);
+      let newX = d.startX + dx;
+      let newY = d.startY + dy;
+      if (Math.abs(newX - guideX) < SNAP_PX) newX = guideX;
+      if (Math.abs(newY - guideY) < SNAP_PX) newY = guideY;
+      setWatermark(prev => prev ? { ...prev, x: newX, y: newY } : prev);
     };
     const onUp = () => setWmDrag(null);
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onUp);
     return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
-  }, [wmDrag, scale]);
+  }, [wmDrag, scale, guideX, guideY]);
 
   // ── guide drag ───────────────────────────────────────────────────────────────
 
@@ -1348,6 +1352,8 @@ export default function TemplateEditorPage() {
                           cursor: wmDrag ? 'grabbing' : 'grab',
                           outline: '1px dashed rgba(255,200,100,0.6)',
                           zIndex: 12, opacity: watermark.opacity,
+                          transform: `rotate(${watermark.rotation ?? 0}deg)`,
+                          transformOrigin: 'center center',
                         }}
                       >
                         <img src={svgDataUrl} style={{ width: '100%', height: '100%', display: 'block', pointerEvents: 'none' }} draggable={false} alt="watermark" />
@@ -1678,6 +1684,15 @@ export default function TemplateEditorPage() {
                           onChange={e => setWatermark(w => w ? { ...w, w: parseFloat(e.target.value) } : w)}
                           style={{ flex: 1, accentColor: '#bfa67c' }} />
                         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 28, textAlign: 'right' as const }}>{Math.round(watermark.w)}</span>
+                      </label>
+
+                      {/* Rotation */}
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 50 }}>Rotate</span>
+                        <input type="range" min="-180" max="180" step="1" value={watermark.rotation ?? 0}
+                          onChange={e => setWatermark(w => w ? { ...w, rotation: parseFloat(e.target.value) } : w)}
+                          style={{ flex: 1, accentColor: '#bfa67c' }} />
+                        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 30, textAlign: 'right' as const }}>{Math.round(watermark.rotation ?? 0)}°</span>
                       </label>
 
                       {/* X / Y coordinates */}

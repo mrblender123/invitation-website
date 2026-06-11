@@ -21,7 +21,7 @@ export async function GET() {
     const db = createServiceClient();
     const { data, error } = await db
       .from('template_watermarks')
-      .select('template_id, x, y, w, color, opacity');
+      .select('*');
 
     if (error) {
       // Table doesn't exist yet — return empty object gracefully
@@ -31,7 +31,7 @@ export async function GET() {
 
     const map: Record<string, WatermarkConfig> = {};
     for (const row of data ?? []) {
-      map[row.template_id] = { x: row.x, y: row.y, w: row.w, color: row.color, opacity: row.opacity };
+      map[row.template_id] = { x: row.x, y: row.y, w: row.w, color: row.color, opacity: row.opacity, rotation: row.rotation ?? 0 };
     }
     return NextResponse.json(map);
   } catch (err) {

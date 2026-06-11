@@ -540,9 +540,17 @@ const [windowWidth, setWindowWidth] = useState(1200);
           const wmH = wm.w / (420 / 55); // aspect ratio from SVG viewBox
           const kx = outW / (selected?.style.canvasWidth ?? outW);
           const ky = outH / (selected?.style.canvasHeight ?? outH);
+          const pxCX = wm.x * kx;
+          const pxCY = wm.y * ky;
+          const pxW  = wm.w * kx;
+          const pxH  = wmH * ky;
+          ctx.save();
+          ctx.translate(pxCX, pxCY);
+          ctx.rotate(((wm.rotation ?? 0) * Math.PI) / 180);
           ctx.globalAlpha = wm.opacity;
-          ctx.drawImage(wmImg, (wm.x - wm.w / 2) * kx, (wm.y - wmH / 2) * ky, wm.w * kx, wmH * ky);
+          ctx.drawImage(wmImg, -pxW / 2, -pxH / 2, pxW, pxH);
           ctx.globalAlpha = 1;
+          ctx.restore();
           URL.revokeObjectURL(url2);
         } catch { /* watermark failed — skip silently */ }
       }
@@ -922,6 +930,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                         position: 'absolute',
                         left: `${leftPct}%`, top: `${topPct}%`, width: `${widthPct}%`,
                         opacity: wm.opacity, pointerEvents: 'none', userSelect: 'none', zIndex: 11,
+                        transform: `rotate(${wm.rotation ?? 0}deg)`, transformOrigin: 'center center',
                       }}
                       dangerouslySetInnerHTML={{ __html: colored }}
                     />
