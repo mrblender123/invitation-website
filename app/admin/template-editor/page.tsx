@@ -4,9 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/components/AuthProvider';
 import type { Template, WatermarkConfig } from '@/lib/templates';
-
-// companyname.svg viewBox: 75 225 420 55 → aspect ratio 420/55
-const WM_SVG_ASPECT = 420 / 55;
+import { measureAndTightenSvg } from '@/lib/watermark-utils';
 
 const ADMIN_EMAIL = 'bycheshin@gmail.com';
 const CARD_DISPLAY_WIDTH = 420;
@@ -208,6 +206,8 @@ export default function TemplateEditorPage() {
   // ── watermark state ───────────────────────────────────────────────────────────
   const [watermark, setWatermark] = useState<WatermarkConfig | null>(null);
   const [wmSvgText, setWmSvgText] = useState<string>('');
+  const [wmTightSvg, setWmTightSvg] = useState<string>('');
+  const [wmAspect, setWmAspect] = useState<number>(420 / 55);
   const [wmDrag, setWmDrag] = useState<{ startMouseX: number; startMouseY: number; startX: number; startY: number } | null>(null);
   const [wmSaving, setWmSaving] = useState(false);
   const [wmMsg, setWmMsg] = useState('');
@@ -266,9 +266,17 @@ export default function TemplateEditorPage() {
       .then(d => setTemplates((d.templates ?? []).filter((t: Template) => t.textSvg)));
   }, []);
 
-  // Load companyname.svg content once
+  // Load companyname.svg content once, then measure actual text bounds
   useEffect(() => {
-    fetch('/companyname.svg').then(r => r.text()).then(setWmSvgText).catch(() => {});
+    fetch('/companyname.svg')
+      .then(r => r.text())
+      .then(async text => {
+        setWmSvgText(text);
+        const { tightSvg, aspect } = await measureAndTightenSvg(text);
+        setWmTightSvg(tightSvg);
+        setWmAspect(aspect);
+      })
+      .catch(() => {});
   }, []);
 
   // Load SVG
@@ -1333,13 +1341,13 @@ export default function TemplateEditorPage() {
                   })}
 
                   {/* Watermark overlay */}
-                  {watermark && wmSvgText && (() => {
-                    const wh = watermark.w / WM_SVG_ASPECT;
+                  {watermark && wmTightSvg && (() => {
+                    const wh = watermark.w / wmAspect;
                     const left = (watermark.x - watermark.w / 2) * scale;
                     const top  = (watermark.y - wh / 2) * scale;
                     const w    = watermark.w * scale;
                     const h    = wh * scale;
-                    const coloredSvg = wmSvgText.replace(/fill="[^"]*"/, `fill="${watermark.color}"`);
+                    const coloredSvg = wmTightSvg.replace(/fill="[^"]*"/, `fill="${watermark.color}"`);
                     const svgDataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(coloredSvg)}`;
                     return (
                       <div

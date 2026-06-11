@@ -13,6 +13,7 @@ import VirtualKeyboard from '../components/VirtualKeyboard';
 import { CATEGORY_SUBS, SUB_DISPLAY_NAMES } from '@/lib/categories';
 import GlassPill from '../components/GlassPill';
 import type { Template, WatermarkConfig } from '@/lib/templates';
+import { measureAndTightenSvg } from '@/lib/watermark-utils';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -301,6 +302,8 @@ function TemplatesContent() {
 
   const [watermarks, setWatermarks] = useState<Record<string, WatermarkConfig>>({});
   const [wmSvgText, setWmSvgText] = useState('');
+  const [wmTightSvg, setWmTightSvg] = useState('');
+  const [wmAspect, setWmAspect] = useState(420 / 55);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [selected, setSelected] = useState<Template | null>(null);
@@ -388,10 +391,18 @@ const [windowWidth, setWindowWidth] = useState(1200);
     if (el) setKeyboardRect(el.getBoundingClientRect());
   }, [activeField]);
 
-  // Fetch watermark configs + SVG content once
+  // Fetch watermark configs + SVG content once; measure actual text bounds after SVG loads
   useEffect(() => {
     fetch('/api/watermarks').then(r => r.json()).then(setWatermarks).catch(() => {});
-    fetch('/companyname.svg').then(r => r.text()).then(setWmSvgText).catch(() => {});
+    fetch('/companyname.svg')
+      .then(r => r.text())
+      .then(async text => {
+        setWmSvgText(text);
+        const { tightSvg, aspect } = await measureAndTightenSvg(text);
+        setWmTightSvg(tightSvg);
+        setWmAspect(aspect);
+      })
+      .catch(() => {});
   }, []);
 
   // Fetch templates from the API (auto-discovered from public/templates/*/)
@@ -531,13 +542,13 @@ const [windowWidth, setWindowWidth] = useState(1200);
       const wm = selected ? watermarks[selected.id] : null;
       if (wm) {
         try {
-          const wmSvgText = await fetch('/companyname.svg').then(r => r.text());
-          const colored = wmSvgText.replace(/fill="[^"]*"/, `fill="${wm.color}"`);
+          const svgForBake = wmTightSvg || wmSvgText;
+          const colored = svgForBake.replace(/fill="[^"]*"/, `fill="${wm.color}"`);
           const blob2 = new Blob([colored], { type: 'image/svg+xml;charset=utf-8' });
           const url2 = URL.createObjectURL(blob2);
           const wmImg = new Image();
           await new Promise<void>(res => { wmImg.onload = () => res(); wmImg.onerror = () => res(); wmImg.src = url2; });
-          const wmH = wm.w / (420 / 55); // aspect ratio from SVG viewBox
+          const wmH = wm.w / wmAspect;
           const kx = outW / (selected?.style.canvasWidth ?? outW);
           const ky = outH / (selected?.style.canvasHeight ?? outH);
           const pxCX = wm.x * kx;
@@ -914,15 +925,14 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 )}
                 {(() => {
                   const wm = selected ? watermarks[selected.id] : null;
-                  if (!wm || !wmSvgText) return null;
-                  const WM_ASPECT = 420 / 55;
-                  const wmH = wm.w / WM_ASPECT;
+                  if (!wm || !wmTightSvg) return null;
+                  const wmH = wm.w / wmAspect;
                   const svgW = selected.style.canvasWidth;
                   const svgH = selected.style.canvasHeight;
                   const leftPct = ((wm.x - wm.w / 2) / svgW) * 100;
                   const topPct  = ((wm.y - wmH / 2) / svgH) * 100;
                   const widthPct = (wm.w / svgW) * 100;
-                  const colored = wmSvgText.replace(/fill="[^"]*"/, `fill="${wm.color}"`);
+                  const colored = wmTightSvg.replace(/fill="[^"]*"/, `fill="${wm.color}"`);
                   return (
                     <div
                       aria-hidden="true"
