@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createDraftToken } from '@/lib/draft-token';
+import { createServiceClient } from '@/lib/supabase';
 const resend = new Resend(process.env.RESEND_API_KEY ?? '');
 const EMAIL_LOGO_SRC = 'https://i.imgur.com/t8uy4eg.png';
 
@@ -43,6 +44,13 @@ export async function POST(req: NextRequest) {
       console.error('[drafts] Resend error:', emailError);
       return NextResponse.json({ error: `Email error: ${emailError.message}` }, { status: 500 });
     }
+
+    // Record in orders table (best-effort — don't fail the request if this errors)
+    try {
+      await createServiceClient()
+        .from('orders')
+        .insert({ type: 'draft', email, template_id: templateId, field_values: fieldValues ?? {} });
+    } catch (e) { console.error('[orders] record draft failed:', e); }
 
     return NextResponse.json({ ok: true });
   } catch (err) {

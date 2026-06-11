@@ -137,6 +137,17 @@ export default function AdminPage() {
           >
             Site Tools →
           </a>
+          <a
+            href="/admin/orders"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '10px 20px', borderRadius: 10, fontSize: 13, fontWeight: 600,
+              background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.2)',
+              color: '#4ade80', textDecoration: 'none',
+            }}
+          >
+            Orders & Drafts →
+          </a>
         </div>
 
         {/* Stats */}
