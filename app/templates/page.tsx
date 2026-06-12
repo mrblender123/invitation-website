@@ -739,8 +739,51 @@ const [windowWidth, setWindowWidth] = useState(1200);
     router.push('/studio?load=1');
   };
 
+  const schemaJson = JSON.stringify(
+    category
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: `${category} Invitation Templates — Share Your Simcha`,
+          description: `Browse ${category} Jewish simcha invitation templates. Customize and download for $8.99.`,
+          url: `https://www.shareyoursimcha.com/templates?category=${encodeURIComponent(category)}`,
+          isPartOf: { '@type': 'WebSite', name: 'Share Your Simcha', url: 'https://www.shareyoursimcha.com' },
+          ...(templates.length > 0 && {
+            mainEntity: {
+              '@type': 'ItemList',
+              itemListElement: templates.map((t, i) => ({
+                '@type': 'ListItem',
+                position: i + 1,
+                item: {
+                  '@type': 'Product',
+                  name: `${t.name} — ${t.category} Invitation`,
+                  description: `Customizable Jewish ${t.category.toLowerCase()} invitation template. Edit in Hebrew or English and download instantly.`,
+                  image: t.thumbnailSrc,
+                  offers: {
+                    '@type': 'Offer',
+                    price: '8.99',
+                    priceCurrency: 'USD',
+                    availability: 'https://schema.org/InStock',
+                    seller: { '@type': 'Organization', name: 'Share Your Simcha' },
+                  },
+                },
+              })),
+            },
+          }),
+        }
+      : {
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: 'Jewish Simcha Invitation Templates — Share Your Simcha',
+          description: 'Browse all Jewish simcha invitation templates for bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding and more.',
+          url: 'https://www.shareyoursimcha.com/templates',
+          isPartOf: { '@type': 'WebSite', name: 'Share Your Simcha', url: 'https://www.shareyoursimcha.com' },
+        }
+  );
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)', fontFamily: 'var(--font-inter), system-ui, sans-serif' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schemaJson }} />
 
       {/* Header */}
       <header>
