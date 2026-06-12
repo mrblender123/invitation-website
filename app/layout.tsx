@@ -85,7 +85,7 @@ export const metadata: Metadata = {
     siteName: "Share Your Simcha",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-image.png?v=2",
         width: 1200,
         height: 630,
         alt: "Share Your Simcha — Jewish Simcha Invitation Templates",
