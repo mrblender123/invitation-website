@@ -196,7 +196,7 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
           {/* Background image — thumb shown immediately, full image swapped in silently */}
           <img
             src={thumb ? (template.thumbnailSrc ?? template.backgroundSrc) : imgSrc}
-            alt={template.name}
+            alt={`${template.category}${template.subcategory ? ` ${template.subcategory}` : ''} invitation template — ${template.name}`}
             width={canvasWidth}
             height={canvasHeight}
             style={{ display: 'block', userSelect: 'none' }}
