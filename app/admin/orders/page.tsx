@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../components/AuthProvider';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 const ADMIN_EMAIL = 'bycheshin@gmail.com';
 
@@ -61,6 +62,20 @@ export default function OrdersPage() {
   const drafts = orders.filter(o => o.type === 'draft').length;
   const revenue = orders.filter(o => o.type === 'purchase' && o.amount_cents).reduce((s, o) => s + (o.amount_cents ?? 0), 0);
 
+  const chartData = (() => {
+    const days: { date: string; revenue: number; sales: number }[] = [];
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().slice(0, 10);
+      days.push({ date: d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }), revenue: 0, sales: 0 });
+      const dayOrders = orders.filter(o => o.type === 'purchase' && o.created_at.slice(0, 10) === key);
+      days[days.length - 1].revenue = dayOrders.reduce((s, o) => s + (o.amount_cents ?? 0), 0) / 100;
+      days[days.length - 1].sales = dayOrders.length;
+    }
+    return days;
+  })();
+
   if (loading || dataLoading) {
     return <div style={{ minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>Loading…</div>;
   }
@@ -85,6 +100,24 @@ export default function OrdersPage() {
             <div style={{ fontSize: 26, fontWeight: 700, color }}>{value}</div>
           </div>
         ))}
+      </div>
+
+      {/* Revenue Chart */}
+      <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: '20px 24px', marginBottom: 28 }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: '#94a3b8', marginBottom: 16 }}>Revenue — Last 30 Days</div>
+        <ResponsiveContainer width="100%" height={180}>
+          <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+            <XAxis dataKey="date" tick={{ fill: '#475569', fontSize: 10 }} tickLine={false} axisLine={false} interval={4} />
+            <YAxis tick={{ fill: '#475569', fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={v => `$${v}`} />
+            <Tooltip
+              contentStyle={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 12 }}
+              labelStyle={{ color: '#94a3b8' }}
+              formatter={(value, name) => [name === 'revenue' ? `$${Number(value).toFixed(2)}` : value, name === 'revenue' ? 'Revenue' : 'Sales']}
+            />
+            <Bar dataKey="revenue" fill="#fbbf24" radius={[3, 3, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
 
       {/* Search + Filter */}
