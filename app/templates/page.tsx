@@ -346,6 +346,28 @@ const [windowWidth, setWindowWidth] = useState(1200);
     return () => window.removeEventListener('resize', update);
   }, []);
 
+  useEffect(() => {
+    const META: Record<string, { title: string; description: string }> = {
+      "It's a Boy":    { title: "It's a Boy Invitation Templates — Bris, Shulem Zucher & More | Share Your Simcha",   description: "Beautiful bris, shulem zucher, vachnacht and kiddush invitation templates. Customize in Hebrew or Yiddish and download instantly for $8.99." },
+      "It's a Girl":   { title: "It's a Girl Kiddush Invitation Templates | Share Your Simcha",                        description: "Elegant kiddush invitation templates for a baby girl. Customize in Hebrew or Yiddish and download instantly for $8.99." },
+      'Bar Mitzvah':   { title: "Bar Mitzvah Invitation Templates | Share Your Simcha",                                description: "Professional bar mitzvah invitation templates in Hebrew, Yiddish and English. Customize and download instantly for $8.99." },
+      'Upsherin':      { title: "Upsherin Invitation Templates | Share Your Simcha",                                   description: "Upsherin invitation templates in Hebrew and Yiddish. Customize and download instantly for $8.99." },
+      'Tenoyim':       { title: "Tenoyim Invitation Templates | Share Your Simcha",                                    description: "Beautiful tenoyim invitation templates for the chusen and kallah side. Customize in Hebrew or Yiddish and download for $8.99." },
+      'Bavarfen':      { title: "Bavarfen Invitation Templates | Share Your Simcha",                                   description: "Bavarfen and chusen invite templates in Hebrew and Yiddish. Customize and download instantly for $8.99." },
+      'Wedding':       { title: "Jewish Wedding Invitation Templates | Share Your Simcha",                             description: "Elegant Jewish wedding invitation templates in Hebrew, Yiddish and English. Customize and download instantly for $8.99." },
+      'Sheva Brachos': { title: "Sheva Brachos Invitation Templates | Share Your Simcha",                              description: "Sheva brachos invitation templates in Hebrew and Yiddish. Customize and download instantly for $8.99." },
+    };
+    const DEFAULT = {
+      title: 'Jewish Simcha Invitation Templates | Share Your Simcha',
+      description: 'Create beautiful Jewish simcha invitations for bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding and more. Personalize and download for $8.99.',
+    };
+    const meta = (category && META[category]) ? META[category] : DEFAULT;
+    document.title = meta.title;
+    let descTag = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (!descTag) { descTag = document.createElement('meta'); descTag.name = 'description'; document.head.appendChild(descTag); }
+    descTag.content = meta.description;
+  }, [category]);
+
   // Verify payment token and restore saved field values from email link
   useEffect(() => {
     if (!tokenParam || !templateParam) return;
