@@ -4,11 +4,16 @@ import path from 'path';
 import type { Template, SvgField } from '@/lib/templates';
 import { FOLDER_TO_CATEGORY } from '@/lib/categories';
 
-export const dynamic    = 'force-dynamic'; // always read from filesystem — admin saves must reflect immediately
+export const dynamic    = 'force-dynamic';
 export const revalidate = 0;
 
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL?.replace(/\/$/, '') ?? '';
 const IS_DEV = process.env.NODE_ENV === 'development';
+
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+let _cache: { data: Template[]; at: number } | null = null;
+
+export function clearTemplateCache() { _cache = null; }
 
 /** In dev: find a local image file for a stem (tries webp, png, jpg). Returns filename or null. */
 async function findLocalFile(dir: string, stem: string, suffix = ''): Promise<string | null> {
@@ -121,6 +126,10 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
 }
 
 export async function GET() {
+  if (!IS_DEV && _cache && Date.now() - _cache.at < CACHE_TTL) {
+    return NextResponse.json({ templates: _cache.data });
+  }
+
   try {
     const templatesDir = path.join(process.cwd(), 'public', 'templates');
     const entries = await readdir(templatesDir, { withFileTypes: true });
@@ -234,6 +243,7 @@ export async function GET() {
       }
     }
 
+    if (!IS_DEV) _cache = { data: templates, at: Date.now() };
     return NextResponse.json({ templates });
   } catch (err) {
     console.error('[/api/templates]', err);

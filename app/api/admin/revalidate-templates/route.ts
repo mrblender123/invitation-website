@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
 import { createAuthenticatedClient } from '@/lib/supabase';
+import { clearTemplateCache } from '@/app/api/templates/route';
 
 const ADMIN_EMAIL = 'bycheshin@gmail.com';
 
@@ -11,6 +11,6 @@ export async function POST(req: NextRequest) {
   const { data: { user }, error } = await createAuthenticatedClient(token).auth.getUser();
   if (error || user?.email !== ADMIN_EMAIL) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  revalidatePath('/api/templates');
+  clearTemplateCache();
   return NextResponse.json({ ok: true });
 }
