@@ -93,7 +93,17 @@ git commit -m "Add FILE template to Category/Sub"
 
 Note: PNG files are in `.gitignore` — always use `git add -f` for them.
 
-#### Step 7 — Sync to R2 (mandatory — prevents 404 on live site)
+#### Step 7 — Compress thumbnails (mandatory — prevents slow loading)
+
+Thumbnail PNGs straight from Illustrator are 2-3MB each. Always compress them to WebP before syncing:
+
+```bash
+node scripts/convert-thumbs-to-webp.mjs
+```
+
+This converts every `*-thumb.png` → `*-thumb.webp` (3-20KB) and uploads directly to R2. Without this step, thumbnails will load slowly for all users.
+
+#### Step 8 — Sync to R2 (mandatory — prevents 404 on live site)
 
 The production site serves SVGs and PNGs from R2 (Cloudflare). Git/Vercel deploys the files to the server but does **not** upload them to R2 automatically. Always run this after committing new template files:
 
