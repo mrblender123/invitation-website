@@ -205,6 +205,7 @@ export default function TemplateEditorPage() {
 
   // ── watermark state ───────────────────────────────────────────────────────────
   const [watermark, setWatermark] = useState<WatermarkConfig | null>(null);
+  const [wmFile, setWmFile] = useState<string>('companyname.svg');
   const [wmSvgText, setWmSvgText] = useState<string>('');
   const [wmTightSvg, setWmTightSvg] = useState<string>('');
   const [wmAspect, setWmAspect] = useState<number>(420 / 55);
@@ -267,9 +268,9 @@ export default function TemplateEditorPage() {
       .then(d => setTemplates((d.templates ?? []).filter((t: Template) => t.textSvg)));
   }, []);
 
-  // Load companyname.svg content once, then measure actual text bounds
+  // Load watermark SVG whenever the selected file changes
   useEffect(() => {
-    fetch('/companyname.svg')
+    fetch(`/${wmFile}`)
       .then(r => r.text())
       .then(async text => {
         setWmSvgText(text);
@@ -278,7 +279,7 @@ export default function TemplateEditorPage() {
         setWmAspect(aspect);
       })
       .catch(() => {});
-  }, []);
+  }, [wmFile]);
 
   // Load SVG
   useEffect(() => {
@@ -1350,7 +1351,7 @@ export default function TemplateEditorPage() {
                     const top  = (watermark.y - wh / 2) * scale;
                     const w    = watermark.w * scale;
                     const h    = wh * scale;
-                    const coloredSvg = wmTightSvg.replace(/fill="[^"]*"/, `fill="${watermark.color}"`);
+                    const coloredSvg = wmTightSvg.replace(/fill="(?!none)[^"]*"/g, `fill="${watermark.color}"`);
                     const svgDataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(coloredSvg)}`;
                     return (
                       <div
@@ -1670,6 +1671,22 @@ export default function TemplateEditorPage() {
                     </button>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column' as const, gap: 8 }}>
+                      {/* Watermark file selector */}
+                      <div style={{ display: 'flex', gap: 4 }}>
+                        {[
+                          { file: 'companyname.svg', label: 'Logo' },
+                          { file: '111.svg',         label: 'Text' },
+                        ].map(({ file, label }) => (
+                          <button key={file} onClick={() => setWmFile(file)}
+                            style={{ flex: 1, fontSize: 11, padding: '4px 0', borderRadius: 5, cursor: 'pointer',
+                              background: wmFile === file ? 'rgba(191,166,124,0.25)' : 'rgba(255,255,255,0.05)',
+                              border: wmFile === file ? '1px solid rgba(191,166,124,0.6)' : '1px solid rgba(255,255,255,0.12)',
+                              color: wmFile === file ? '#bfa67c' : 'rgba(255,255,255,0.45)' }}>
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+
                       {/* Color */}
                       <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 50 }}>Color</span>
