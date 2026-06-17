@@ -1,34 +1,46 @@
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { PDFDocument } from 'pdf-lib';
+import { S3Client, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { createDownloadToken } from '@/lib/download-token';
 import { initEditRecord, markEmailSent, resetEmailSent } from '@/lib/edit-tracking';
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
 const EMAIL_LOGO_SRC = 'https://i.imgur.com/t8uy4eg.png';
 
+const s3 = new S3Client({
+  region: 'auto',
+  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+  },
+});
+
 export async function POST(req: Request) {
   const piId = req.headers.get('x-pi-id') ?? '';
-  if (!piId.startsWith('pi_')) {
-    return new Response('Invalid ID', { status: 400 });
-  }
+  const r2Key = req.headers.get('x-r2-key') ?? '';
+
+  if (!piId.startsWith('pi_')) return new Response('Invalid ID', { status: 400 });
+  if (!r2Key.startsWith('temp-invitations/')) return new Response('Invalid key', { status: 400 });
 
   // Verify payment actually succeeded
   const pi = await stripe.paymentIntents.retrieve(piId);
-  if (pi.status !== 'succeeded') {
-    return new Response('Payment not confirmed', { status: 402 });
-  }
+  if (pi.status !== 'succeeded') return new Response('Payment not confirmed', { status: 402 });
 
   const email = pi.metadata?.email || pi.receipt_email;
   const templateId = pi.metadata?.templateId;
-  if (!email || !templateId) {
-    return new Response('Missing metadata', { status: 400 });
-  }
+  if (!email || !templateId) return new Response('Missing metadata', { status: 400 });
 
-  const pngBuf = Buffer.from(await req.arrayBuffer());
-  if (!pngBuf.length) return new Response('Empty body', { status: 400 });
+  // Download PNG from R2 (fast — same region, ~100ms)
+  const { Body } = await s3.send(new GetObjectCommand({ Bucket: process.env.R2_BUCKET!, Key: r2Key }));
+  if (!Body) return new Response('PNG not found in R2', { status: 404 });
+  const chunks: Buffer[] = [];
+  for await (const chunk of Body as AsyncIterable<Uint8Array>) chunks.push(Buffer.from(chunk));
+  const pngBuf = Buffer.concat(chunks);
 
-  // Wrap PNG in a PDF (fast — just embeds the image, no re-rendering)
+  // Wrap PNG in a PDF
   const pdfDoc = await PDFDocument.create();
   const pngImage = await pdfDoc.embedPng(pngBuf);
   const page = pdfDoc.addPage([pngImage.width, pngImage.height]);
@@ -37,16 +49,15 @@ export async function POST(req: Request) {
 
   try { await initEditRecord(piId, templateId); } catch (e) { console.error('initEditRecord failed:', e); }
 
-  // Dedup guard — check if already sent, but don't mark yet (mark only on success)
   const canSend = await markEmailSent(piId);
   if (!canSend) {
+    await s3.send(new DeleteObjectCommand({ Bucket: process.env.R2_BUCKET!, Key: r2Key })).catch(() => {});
     console.log('[email-attachment] Already sent for pi=%s, skipping', piId);
     return new Response('OK');
   }
 
   const token = createDownloadToken(templateId);
 
-  // Reassemble chunked fv0, fv1, ... keys (fallback: legacy fieldValues key)
   let fieldValues: Record<string, string> = {};
   try {
     const meta = pi.metadata ?? {};
@@ -93,13 +104,15 @@ export async function POST(req: Request) {
     `,
   };
 
-  // Retry up to 3 times with exponential backoff (1s, 2s)
   let lastError = '';
   for (let attempt = 0; attempt < 3; attempt++) {
     if (attempt > 0) await new Promise(r => setTimeout(r, 1000 * attempt));
     try {
       const { error: sendError } = await resend.emails.send(emailPayload);
-      if (!sendError) return new Response('OK');
+      if (!sendError) {
+        await s3.send(new DeleteObjectCommand({ Bucket: process.env.R2_BUCKET!, Key: r2Key })).catch(() => {});
+        return new Response('OK');
+      }
       lastError = sendError.message;
       console.error('[email-attachment] Resend attempt %d failed for pi=%s: %s', attempt + 1, piId, lastError);
     } catch (e) {
@@ -108,7 +121,6 @@ export async function POST(req: Request) {
     }
   }
 
-  // All retries failed — reset the dedup flag so the customer can retry
   await resetEmailSent(piId);
   return new Response(JSON.stringify({ error: 'email_failed', piId }), { status: 500 });
 }

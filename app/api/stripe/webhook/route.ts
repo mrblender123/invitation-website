@@ -1,12 +1,8 @@
 import Stripe from 'stripe';
-import { Resend } from 'resend';
-import { initEditRecord, markEmailSent } from '@/lib/edit-tracking';
-import { createDownloadToken } from '@/lib/download-token';
+import { initEditRecord } from '@/lib/edit-tracking';
 import { createServiceClient } from '@/lib/supabase';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-const resend = new Resend(process.env.RESEND_API_KEY!);
-const EMAIL_LOGO_SRC = 'https://i.imgur.com/t8uy4eg.png';
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -30,7 +26,6 @@ export async function POST(req: Request) {
       let templateName: string | null = null;
       let fieldValues: Record<string, string> = {};
 
-      // Reassemble chunked fv0, fv1, ... keys (fallback: legacy fieldValues key)
       try {
         const meta = pi.metadata ?? {};
         let json = '';
@@ -52,7 +47,7 @@ export async function POST(req: Request) {
         }
       } catch { /* ignore */ }
 
-      // Record order
+      // Record order in admin panel
       try {
         await createServiceClient()
           .from('orders')
@@ -61,47 +56,6 @@ export async function POST(req: Request) {
             { onConflict: 'payment_intent_id', ignoreDuplicates: true },
           );
       } catch (e) { console.error('[orders] record purchase failed:', e); }
-
-      // Send email with download link — server-side, no client upload needed
-      if (email) {
-        const canSend = await markEmailSent(pi.id);
-        if (canSend) {
-          try {
-            const token = createDownloadToken(templateId);
-            const restoreParam = encodeURIComponent(
-              Buffer.from(JSON.stringify(fieldValues)).toString('base64'),
-            );
-            const downloadUrl = `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${encodeURIComponent(templateId)}&token=${token}&restore=${restoreParam}&pi=${encodeURIComponent(pi.id)}`;
-
-            const { error } = await resend.emails.send({
-              from: process.env.RESEND_FROM ?? 'Share Your Simcha <info@shareyoursimcha.com>',
-              to: email,
-              subject: 'Your invitation is ready — download now',
-              headers: { 'X-Entity-Ref-ID': pi.id },
-              html: `
-                <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1a1a1a;">
-                  <img src="${EMAIL_LOGO_SRC}" alt="Share Your Simcha" style="height: 140px; width: auto; margin-bottom: 24px; display: block;" />
-                  <p style="font-size: 15px; color: #555; margin: 0 0 32px;">Beautiful invitations for every simcha</p>
-                  <p style="font-size: 16px; line-height: 1.6; margin: 0 0 24px;">
-                    Your invitation is ready! Use the link below to download your PNG and PDF files.
-                  </p>
-                  <p style="font-size: 14px; color: #555; margin: 0 0 24px;">
-                    The link lets you edit and re-download up to 3 times within 7 days.
-                  </p>
-                  <a href="${downloadUrl}"
-                     style="display: inline-block; background: #0f172a; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 9999px; font-size: 15px; font-weight: 600; margin-bottom: 32px;">
-                    Download your invitation →
-                  </a>
-                  <p style="font-size: 13px; color: #bbb; margin: 0;">© ${new Date().getFullYear()} Share Your Simcha</p>
-                </div>
-              `,
-            });
-            if (error) console.error('[webhook] Resend error for pi=%s: %s', pi.id, error.message);
-          } catch (e) {
-            console.error('[webhook] Email send failed for pi=%s:', pi.id, e);
-          }
-        }
-      }
     }
   }
 

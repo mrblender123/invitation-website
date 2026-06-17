@@ -1452,6 +1452,36 @@ const [windowWidth, setWindowWidth] = useState(1200);
                           const pdfBytes = await pdf.save();
                           successPdfRef.current = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
                         } catch { /* PDF pre-gen failed — PDF button will fallback */ }
+
+                        // Send email with PNG + PDF attachments via R2 (no Vercel timeout)
+                        const piId = checkoutClientSecret?.split('_secret_')[0];
+                        if (piId?.startsWith('pi_')) {
+                          (async () => {
+                            try {
+                              const presignRes = await fetch('/api/r2-presign', {
+                                method: 'POST',
+                                headers: { 'content-type': 'application/json' },
+                                body: JSON.stringify({ piId }),
+                              });
+                              if (!presignRes.ok) throw new Error('presign failed');
+                              const { url: uploadUrl, key: r2Key } = await presignRes.json();
+                              // Upload full-res PNG directly to R2 (browser → R2, no Vercel timeout)
+                              const putRes = await fetch(uploadUrl, {
+                                method: 'PUT',
+                                headers: { 'content-type': 'image/png' },
+                                body: blob,
+                              });
+                              if (!putRes.ok) throw new Error('R2 upload failed');
+                              // Trigger email — server downloads from R2, generates PDF, sends Resend
+                              fetch('/api/email-attachment', {
+                                method: 'POST',
+                                headers: { 'x-pi-id': piId, 'x-r2-key': r2Key },
+                              }).catch(e => console.error('[email-attachment] trigger failed:', e));
+                            } catch (e) {
+                              console.error('[email-attachment] upload flow failed:', e);
+                            }
+                          })();
+                        }
                       }
                     } catch (e) {
                       console.error('post-payment blob generation failed:', e);

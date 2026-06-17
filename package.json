@@ -12,6 +12,7 @@
     "validate-templates": "node scripts/validate-templates.mjs"
   },
   "dependencies": {
+    "@aws-sdk/s3-request-presigner": "^3.1071.0",
     "@resvg/resvg-js": "^2.6.2",
     "@stripe/react-stripe-js": "^6.4.0",
     "@stripe/stripe-js": "^9.6.0",
