@@ -107,12 +107,17 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
     if (dragging.current) e.preventDefault();
   };
 
-  const onWheel = (e: React.WheelEvent) => {
-    if (!scrollRef.current) return;
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // already horizontal (trackpad)
-    e.preventDefault();
-    scrollRef.current.scrollLeft += e.deltaY;
-  };
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const handleWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // trackpad horizontal — let it pass
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+    el.addEventListener('wheel', handleWheel, { passive: false });
+    return () => el.removeEventListener('wheel', handleWheel);
+  }, []);
 
   return (
     <section style={{ marginBottom: 48 }}>
@@ -140,7 +145,6 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
         ref={scrollRef}
         onMouseDown={onMouseDown}
         onContextMenu={onContextMenu}
-        onWheel={onWheel}
         style={{
           overflowX: 'auto',
           scrollbarWidth: 'none',
