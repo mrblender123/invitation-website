@@ -1122,8 +1122,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                               ref={el => { inputRefs.current[field.id] = el; }}
                               style={{
                                 ...inputStyle,
-                                paddingLeft: 30,
-                                paddingRight: 30,
+                                paddingLeft: 50,
+                                paddingRight: 8,
                                 textAlign: 'center',
                                 direction: field.rtl ? 'rtl' : 'ltr',
                                 borderColor: isActive ? 'rgba(0,0,0,0.4)' : field.optional ? 'rgba(160,130,70,0.5)' : undefined,
@@ -1135,7 +1135,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                               onBlur={() => setActiveField(null)}
                               onChange={e => setFieldValues(v => ({ ...v, [field.id]: e.target.value }))}
                             />
-                          {/* Clear field */}
+                          {/* Clear field — always visible */}
                           <button
                             onMouseDown={e => {
                               e.preventDefault();
@@ -1144,7 +1144,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                             title="Clear field"
                             style={{
                               position: 'absolute',
-                              right: 8,
+                              left: 6,
                               top: '50%',
                               transform: 'translateY(-50%)',
                               width: 16, height: 16,
@@ -1161,7 +1161,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                           >
                             ×
                           </button>
-                          {/* Restore default */}
+                          {/* Restore default — only when field has been edited */}
+                          {fieldValues[field.id] !== field.placeholder && (
                           <button
                             onMouseDown={e => {
                               e.preventDefault();
@@ -1170,7 +1171,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                             title="Restore default"
                             style={{
                               position: 'absolute',
-                              left: 8,
+                              left: 26,
                               top: '50%',
                               transform: 'translateY(-50%)',
                               width: 16, height: 16,
@@ -1187,6 +1188,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                           >
                             ↺
                           </button>
+                          )}
                         </div>
                       </div>
                       );
