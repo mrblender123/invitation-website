@@ -86,3 +86,13 @@ export async function markEmailSent(piId: string): Promise<boolean> {
     return true; // if DB fails, allow send so user isn't left without their file
   }
 }
+
+// Reset email_sent flag so the email can be retried after a send failure.
+export async function resetEmailSent(piId: string): Promise<void> {
+  try {
+    await db()
+      .from('invitation_edits')
+      .update({ email_sent: false })
+      .eq('payment_intent_id', piId);
+  } catch { /* best-effort */ }
+}

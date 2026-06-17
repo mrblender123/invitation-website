@@ -340,6 +340,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [buyStep, setBuyStep] = useState<'email' | 'card' | 'success'>('email');
   const [buyError, setBuyError] = useState('');
   const [emailError, setEmailError] = useState(false);
+  const [isResendingEmail, setIsResendingEmail] = useState(false);
 
   useEffect(() => {
     const update = () => setWindowWidth(window.innerWidth);
@@ -1362,9 +1363,33 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 <p style={{ fontSize: 40, margin: '0 0 16px' }}>🎉</p>
                 <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 10px' }}>Your invitation is ready!</h2>
                 {emailError ? (
-                  <p style={{ fontSize: 14, color: '#ef4444', lineHeight: 1.6, margin: '0 0 24px', background: '#fef2f2', borderRadius: 8, padding: '10px 14px' }}>
-                    We couldn&apos;t send your email. Download your files now — or contact <a href="mailto:info@shareyoursimcha.com" style={{ color: '#ef4444' }}>info@shareyoursimcha.com</a> with your payment ID to get them later.
-                  </p>
+                  <div style={{ margin: '0 0 24px', background: '#fef2f2', borderRadius: 8, padding: '10px 14px' }}>
+                    <p style={{ fontSize: 14, color: '#ef4444', lineHeight: 1.6, margin: '0 0 10px' }}>
+                      We couldn&apos;t send your email. Download your files below or try again.
+                    </p>
+                    <button
+                      disabled={isResendingEmail}
+                      onClick={async () => {
+                        const blob = successBlobRef.current;
+                        const piId = checkoutClientSecret?.split('_secret_')[0];
+                        if (!blob || !piId) return;
+                        setIsResendingEmail(true);
+                        try {
+                          const res = await fetch('/api/email-attachment', {
+                            method: 'POST',
+                            headers: { 'x-pi-id': piId },
+                            body: blob,
+                          });
+                          if (res.ok) setEmailError(false);
+                        } finally {
+                          setIsResendingEmail(false);
+                        }
+                      }}
+                      style={{ fontSize: 13, color: '#ef4444', background: 'none', border: '1px solid #ef4444', borderRadius: 6, padding: '4px 12px', cursor: isResendingEmail ? 'not-allowed' : 'pointer', opacity: isResendingEmail ? 0.6 : 1 }}
+                    >
+                      {isResendingEmail ? 'Sending…' : 'Retry email'}
+                    </button>
+                  </div>
                 ) : (
                   <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 24px' }}>
                     We also sent a 7-day edit &amp; download link to <strong>{buyEmail}</strong>.

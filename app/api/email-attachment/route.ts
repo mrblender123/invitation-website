@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { PDFDocument } from 'pdf-lib';
 import { createDownloadToken } from '@/lib/download-token';
-import { initEditRecord, markEmailSent } from '@/lib/edit-tracking';
+import { initEditRecord, markEmailSent, resetEmailSent } from '@/lib/edit-tracking';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
 const EMAIL_LOGO_SRC = 'https://i.imgur.com/t8uy4eg.png';
@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
   try { await initEditRecord(piId, templateId); } catch (e) { console.error('initEditRecord failed:', e); }
 
-  // Dedup guard — if email already sent for this payment, skip to avoid duplicates
+  // Dedup guard — check if already sent, but don't mark yet (mark only on success)
   const canSend = await markEmailSent(piId);
   if (!canSend) {
     console.log('[email-attachment] Already sent for pi=%s, skipping', piId);
@@ -65,44 +65,50 @@ export async function POST(req: Request) {
   );
   const downloadUrl = `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${encodeURIComponent(templateId)}&token=${token}&restore=${restoreParam}&pi=${encodeURIComponent(piId)}`;
 
-  try {
-    const { error: sendError } = await resend.emails.send({
-      from: process.env.RESEND_FROM ?? 'Share Your Simcha <info@shareyoursimcha.com>',
-      to: email,
-      subject: 'Your invitation is ready',
-      headers: {
-        'X-Entity-Ref-ID': piId,
-      },
-      attachments: [
-        { filename: 'invitation.png', content: pngBuf },
-        { filename: 'invitation.pdf', content: pdfBuf },
-      ],
-      html: `
-        <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1a1a1a;">
-          <img src="${EMAIL_LOGO_SRC}" alt="Share Your Simcha" style="height: 140px; width: auto; margin-bottom: 24px; display: block;" />
-          <p style="font-size: 15px; color: #555; margin: 0 0 32px;">Beautiful invitations for every simcha</p>
-          <p style="font-size: 16px; line-height: 1.6; margin: 0 0 24px;">
-            Your customized invitation is attached to this email as a PNG and PDF.
-          </p>
-          <p style="font-size: 14px; color: #555; margin: 0 0 24px;">
-            You can also edit and re-download using the link below — up to 3 times within 7 days:
-          </p>
-          <a href="${downloadUrl}"
-             style="display: inline-block; background: #0f172a; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 9999px; font-size: 15px; font-weight: 600; margin-bottom: 32px;">
-            Edit &amp; re-download →
-          </a>
-          <p style="font-size: 13px; color: #bbb; margin: 0;">© ${new Date().getFullYear()} Share Your Simcha</p>
-        </div>
-      `,
-    });
-    if (sendError) {
-      console.error('[email-attachment] Resend error for pi=%s: %s', piId, sendError.message);
-      return new Response(JSON.stringify({ error: 'email_failed', piId }), { status: 500 });
+  const emailPayload = {
+    from: process.env.RESEND_FROM ?? 'Share Your Simcha <info@shareyoursimcha.com>',
+    to: email,
+    subject: 'Your invitation is ready',
+    headers: { 'X-Entity-Ref-ID': piId },
+    attachments: [
+      { filename: 'invitation.png', content: pngBuf },
+      { filename: 'invitation.pdf', content: pdfBuf },
+    ],
+    html: `
+      <div style="font-family: system-ui, sans-serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1a1a1a;">
+        <img src="${EMAIL_LOGO_SRC}" alt="Share Your Simcha" style="height: 140px; width: auto; margin-bottom: 24px; display: block;" />
+        <p style="font-size: 15px; color: #555; margin: 0 0 32px;">Beautiful invitations for every simcha</p>
+        <p style="font-size: 16px; line-height: 1.6; margin: 0 0 24px;">
+          Your customized invitation is attached to this email as a PNG and PDF.
+        </p>
+        <p style="font-size: 14px; color: #555; margin: 0 0 24px;">
+          You can also edit and re-download using the link below — up to 3 times within 7 days:
+        </p>
+        <a href="${downloadUrl}"
+           style="display: inline-block; background: #0f172a; color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 9999px; font-size: 15px; font-weight: 600; margin-bottom: 32px;">
+          Edit &amp; re-download →
+        </a>
+        <p style="font-size: 13px; color: #bbb; margin: 0;">© ${new Date().getFullYear()} Share Your Simcha</p>
+      </div>
+    `,
+  };
+
+  // Retry up to 3 times with exponential backoff (1s, 2s)
+  let lastError = '';
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) await new Promise(r => setTimeout(r, 1000 * attempt));
+    try {
+      const { error: sendError } = await resend.emails.send(emailPayload);
+      if (!sendError) return new Response('OK');
+      lastError = sendError.message;
+      console.error('[email-attachment] Resend attempt %d failed for pi=%s: %s', attempt + 1, piId, lastError);
+    } catch (e) {
+      lastError = e instanceof Error ? e.message : String(e);
+      console.error('[email-attachment] Unexpected error attempt %d for pi=%s:', attempt + 1, piId, e);
     }
-  } catch (e) {
-    console.error('[email-attachment] Unexpected send error for pi=%s:', piId, e);
-    return new Response(JSON.stringify({ error: 'email_failed', piId }), { status: 500 });
   }
 
-  return new Response('OK');
+  // All retries failed — reset the dedup flag so the customer can retry
+  await resetEmailSent(piId);
+  return new Response(JSON.stringify({ error: 'email_failed', piId }), { status: 500 });
 }
