@@ -37,92 +37,92 @@
   <circle cx="129" cy="361.7" r="1.5" fill="#f6c694" opacity=".5"/>
   <circle cx="228.1" cy="361.7" r="1.5" fill="#f6c694" opacity=".5"/>
 
-<g id="host_name*">
-    <text transform="translate(89.2 440)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="16.5"><tspan x="0" y="0">משה אהרון הלוי בערקאוויטש</tspan></text>
-  </g>
-<g id="havdala_address*" data-name="5015 15th Ave *">
-    <text transform="translate(119.5 394.9)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">789 st</tspan></text>
-  </g>
-<g id="shachrit_location*" data-name="* בבאולם פרדס נח">
-    <text transform="translate(121.6 387.6)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">בביתי</tspan></text>
-  </g>
-<g id="shachrit*">
-    <text transform="translate(116.2 377.5)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">הבדלה</tspan></text>
-  </g>
-<g id="shalesh_address*" data-name="1247 38th St *">
-    <text transform="translate(109.8 350.7)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">1247 38th St</tspan></text>
-  </g>
-<g id="shalesh_location*" data-name="* בביהמ״ד קהל חסידי בעלזא">
-    <text transform="translate(94 342.3)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
-  </g>
-<g id="shalesh*">
-    <text transform="translate(105.9 332.9)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">מנחה ושל״ס</tspan></text>
-  </g>
-<g id="morning_meal_adress*" data-name="5015 15th Ave *">
-    <text transform="translate(107.4 305.6)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">5015 15th Ave</tspan></text>
-  </g>
-<g id="morning_meal_location*" data-name="* בבאולם פרדס נח">
-    <text transform="translate(109.4 297.8)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
-  </g>
-<g id="morning_meal*">
-    <text transform="translate(105.8 288.3)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">סעודת שב״ק</tspan></text>
-  </g>
-<g id="shachrit_address*" data-name="1247 38th St *">
-    <text transform="translate(109.8 266.4)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">1247 38th St</tspan></text>
-  </g>
-<g id="shachrit_location-2*" data-name="* בביהמ״ד קהל חסידי בעלזא">
-    <text transform="translate(94 258.2)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
-  </g>
-<g id="shachrit-2*">
-    <text transform="translate(102.9 247.4)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">תפילת שחרית</tspan></text>
-  </g>
-<g id="bagleiten_address*" data-name="5015 15th Ave *">
-    <text transform="translate(218.7 395.7)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">789 st</tspan></text>
-  </g>
-<g id="bagleiten_location*" data-name="* בבאולם פרדס נח">
-    <text transform="translate(220.8 388.4)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">בביתי</tspan></text>
-  </g>
-<g id="bagleiten*">
-    <text transform="translate(198.1 377.5)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">באגלייטן דו חתן</tspan></text>
-  </g>
-<g id="night_seudah_address*" data-name="5015 15th Ave *">
-    <text transform="translate(208.4 350.7)" fill="#f6c694" font-family="Heebo" font-weight="600" font-size="6.1"><tspan x="0" y="0">5015 15th Ave</tspan></text>
-  </g>
-<g id="night_seudah_hall*" data-name="* בבאולם פרדס נח">
-    <text transform="translate(208.6 342.3)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
-  </g>
-<g id="night_seudah*">
-    <text transform="translate(197.2 332.9)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">סעודת ליל שב״ק</tspan></text>
-  </g>
-<g id="mincha_hall*" data-name="* בביהמ״ד קהל חסידי בעלזא">
-    <text transform="translate(193.2 297.8)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
-  </g>
-<g id="mincha_address*" data-name="1247 38th St *">
-    <text transform="translate(208.9 305.6)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">1247 38th St</tspan></text>
-  </g>
-<g id="Mincha_loaction*">
-    <text transform="translate(194.4 288.3)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">מנחה וקבלת שבת</tspan></text>
-  </g>
-<g id="toamehu_address*" data-name="5015 15th Ave *">
-    <text transform="translate(211.5 264.7)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="5.3"><tspan x="0" y="0">5015 15th Ave</tspan></text>
-  </g>
-<g id="toamehu_hall*" data-name="* בבאולם פרדס נח">
-    <text transform="translate(208.6 258.2)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
-  </g>
-<g id="toamehu*">
-    <text transform="translate(217.5 247.4)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">טועמ׳</tspan></text>
-  </g>
-<g id="parsha*">
-    <text transform="translate(132.8 219)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="14.9"><tspan x="0" y="0">שב״ק פרשת חקת</tspan></text>
-  </g>
-<g id="name_of_chusen*">
-    <text transform="translate(104.2 202.3)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10.9"><tspan x="0" y="0">של החתן אברהם מנחם פריעדמאן ני״ו</tspan></text>
+<g id="letter*">
+    <text transform="translate(159.9 92.5)" fill="#c49a6c" font-family="Frank Ruhl Libre" font-weight="900" font-size="63.5"><tspan x="0" y="0">א</tspan></text>
   </g>
 <g id="static_1">
     <text transform="translate(113.3 160.9)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="5.9"><tspan x="0" y="0">הננו מתכבדים בזה להזמין את מע״כ לבוא להשתתף בשמחת</tspan></text>
   </g>
-<g id="letter*">
-    <text transform="translate(159.9 92.5)" fill="#c49a6c" font-family="Frank Ruhl Libre" font-weight="900" font-size="63.5"><tspan x="0" y="0">א</tspan></text>
+<g id="name_of_chusen*">
+    <text transform="translate(104.2 202.3)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10.9"><tspan x="0" y="0">של החתן אברהם מנחם פריעדמאן ני״ו</tspan></text>
+  </g>
+<g id="parsha*">
+    <text transform="translate(132.8 219)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="14.9"><tspan x="0" y="0">שב״ק פרשת חקת</tspan></text>
+  </g>
+<g id="toamehu*">
+    <text transform="translate(217.5 247.4)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">טועמ׳</tspan></text>
+  </g>
+<g id="toamehu_hall*" data-name="* בבאולם פרדס נח">
+    <text transform="translate(208.6 258.2)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+  </g>
+<g id="toamehu_address*" data-name="5015 15th Ave *">
+    <text transform="translate(211.5 264.7)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="5.3"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+  </g>
+<g id="Mincha_loaction*">
+    <text transform="translate(194.4 288.3)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">מנחה וקבלת שבת</tspan></text>
+  </g>
+<g id="mincha_address*" data-name="1247 38th St *">
+    <text transform="translate(208.9 305.6)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">1247 38th St</tspan></text>
+  </g>
+<g id="mincha_hall*" data-name="* בביהמ״ד קהל חסידי בעלזא">
+    <text transform="translate(193.2 297.8)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
+  </g>
+<g id="night_seudah*">
+    <text transform="translate(197.2 332.9)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">סעודת ליל שב״ק</tspan></text>
+  </g>
+<g id="night_seudah_hall*" data-name="* בבאולם פרדס נח">
+    <text transform="translate(208.6 342.3)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+  </g>
+<g id="night_seudah_address*" data-name="5015 15th Ave *">
+    <text transform="translate(208.4 350.7)" fill="#f6c694" font-family="Heebo" font-weight="600" font-size="6.1"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+  </g>
+<g id="bagleiten*">
+    <text transform="translate(198.1 377.5)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">באגלייטן דו חתן</tspan></text>
+  </g>
+<g id="bagleiten_location*" data-name="* בבאולם פרדס נח">
+    <text transform="translate(220.8 388.4)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">בביתי</tspan></text>
+  </g>
+<g id="bagleiten_address*" data-name="5015 15th Ave *">
+    <text transform="translate(218.7 395.7)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">789 st</tspan></text>
+  </g>
+<g id="shachrit-2*">
+    <text transform="translate(102.9 247.4)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">תפילת שחרית</tspan></text>
+  </g>
+<g id="shachrit_location-2*" data-name="* בביהמ״ד קהל חסידי בעלזא">
+    <text transform="translate(94 258.2)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
+  </g>
+<g id="shachrit_address*" data-name="1247 38th St *">
+    <text transform="translate(109.8 266.4)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">1247 38th St</tspan></text>
+  </g>
+<g id="morning_meal*">
+    <text transform="translate(105.8 288.3)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">סעודת שב״ק</tspan></text>
+  </g>
+<g id="morning_meal_location*" data-name="* בבאולם פרדס נח">
+    <text transform="translate(109.4 297.8)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+  </g>
+<g id="morning_meal_adress*" data-name="5015 15th Ave *">
+    <text transform="translate(107.4 305.6)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+  </g>
+<g id="shalesh*">
+    <text transform="translate(105.9 332.9)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">מנחה ושל״ס</tspan></text>
+  </g>
+<g id="shalesh_location*" data-name="* בביהמ״ד קהל חסידי בעלזא">
+    <text transform="translate(94 342.3)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
+  </g>
+<g id="shalesh_address*" data-name="1247 38th St *">
+    <text transform="translate(109.8 350.7)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">1247 38th St</tspan></text>
+  </g>
+<g id="shachrit*">
+    <text transform="translate(116.2 377.5)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="10"><tspan x="0" y="0">הבדלה</tspan></text>
+  </g>
+<g id="shachrit_location*" data-name="* בבאולם פרדס נח">
+    <text transform="translate(121.6 387.6)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">בביתי</tspan></text>
+  </g>
+<g id="havdala_address*" data-name="5015 15th Ave *">
+    <text transform="translate(119.5 394.9)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.9"><tspan x="0" y="0">789 st</tspan></text>
+  </g>
+<g id="host_name*">
+    <text transform="translate(89.2 440)" fill="#f6c694" font-family="Frank Ruhl Libre" font-weight="900" font-size="16.5"><tspan x="0" y="0">משה אהרון הלוי בערקאוויטש</tspan></text>
   </g>
 
 </svg>
