@@ -45,3 +45,9 @@ public/templates/**/*.ai
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Media / download files in repo root
+*.webm
+*.mp4
+*.mp4.part
+*.zip
