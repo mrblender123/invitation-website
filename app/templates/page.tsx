@@ -317,7 +317,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const cardRef = useRef<HTMLDivElement>(null);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const editConsumedThisSession = useRef(false);
-  const successBlobRef = useRef<Blob | null>(null); // cached PNG from payment flow
+  const successBlobRef = useRef<Blob | null>(null);    // cached PNG from payment flow
+  const successPdfRef  = useRef<Blob | null>(null);    // cached PDF from payment flow
 
   // Draft modal state
   const [showDraftModal, setShowDraftModal] = useState(false);
@@ -1387,17 +1388,10 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   Download PNG
                 </button>
                 <button
-                  onClick={async () => {
-                    const blob = successBlobRef.current;
+                  onClick={() => {
+                    const blob = successPdfRef.current;
                     if (!blob) { handleDownloadPdf(); return; }
-                    const { PDFDocument } = await import('pdf-lib');
-                    const pngBytes = new Uint8Array(await blob.arrayBuffer());
-                    const pdf = await PDFDocument.create();
-                    const img = await pdf.embedPng(pngBytes);
-                    const page = pdf.addPage([img.width, img.height]);
-                    page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
-                    const pdfBytes = await pdf.save();
-                    const url = URL.createObjectURL(new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' }));
+                    const url = URL.createObjectURL(blob);
                     const link = document.createElement('a');
                     link.href = url;
                     link.download = `${selected?.id ?? 'invitation'}.pdf`;
@@ -1452,7 +1446,19 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     try {
                       const piId = checkoutClientSecret?.split('_secret_')[0];
                       const blob = await generateBlob();
-                      successBlobRef.current = blob; // cache for instant download
+                      successBlobRef.current = blob;
+                      // Pre-generate PDF so download is synchronous (no iOS gesture-chain break)
+                      if (blob) {
+                        try {
+                          const { PDFDocument } = await import('pdf-lib');
+                          const pngBytes = new Uint8Array(await blob.arrayBuffer());
+                          const pdf = await PDFDocument.create();
+                          const img = await pdf.embedPng(pngBytes);
+                          const pg = pdf.addPage([img.width, img.height]);
+                          pg.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+                          successPdfRef.current = new Blob([await pdf.save()], { type: 'application/pdf' });
+                        } catch { /* PDF pre-gen failed — PDF button will fallback */ }
+                      }
                       if (blob && piId) {
                         const res = await fetch('/api/email-attachment', {
                           method: 'POST',
