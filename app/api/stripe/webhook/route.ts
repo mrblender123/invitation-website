@@ -26,7 +26,17 @@ export async function POST(req: Request) {
       let email: string | null = pi.receipt_email ?? pi.metadata?.email ?? null;
       let templateName: string | null = null;
       let fieldValues: Record<string, string> | null = null;
-      try { fieldValues = JSON.parse(pi.metadata?.fieldValues ?? '{}'); } catch { /* ignore */ }
+      try {
+        const meta = pi.metadata ?? {};
+        let json = '';
+        if (meta.fv0 !== undefined) {
+          let i = 0;
+          while (meta[`fv${i}`] !== undefined) { json += meta[`fv${i}`]; i++; }
+        } else {
+          json = meta.fieldValues ?? '{}';
+        }
+        fieldValues = JSON.parse(json);
+      } catch { /* ignore */ }
       try {
         const sessions = await stripe.checkout.sessions.list({ payment_intent: pi.id, limit: 1 });
         const session = sessions.data[0];

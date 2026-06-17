@@ -12,12 +12,15 @@ export async function POST(req: Request) {
       payment_method_types: ['card'],
       receipt_email: email || undefined,
       description: `Share Your Simcha – ${templateName}`,
-      metadata: {
-        templateId,
-        email: email || '',
-        // Stripe allows 500 chars per key; 2000 is safe within the 8KB object limit
-        fieldValues: JSON.stringify(fieldValues).slice(0, 2000),
-      },
+      metadata: (() => {
+        const json = JSON.stringify(fieldValues);
+        const chunks: Record<string, string> = { templateId, email: email || '' };
+        // Stripe: 500 chars max per value — split across fv0, fv1, fv2, ...
+        for (let i = 0; i * 500 < json.length; i++) {
+          chunks[`fv${i}`] = json.slice(i * 500, (i + 1) * 500);
+        }
+        return chunks;
+      })(),
     });
 
     return Response.json({ clientSecret: paymentIntent.client_secret });
