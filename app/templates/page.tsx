@@ -1135,6 +1135,32 @@ const [windowWidth, setWindowWidth] = useState(1200);
                               onBlur={() => setActiveField(null)}
                               onChange={e => setFieldValues(v => ({ ...v, [field.id]: e.target.value }))}
                             />
+                          {/* Clear field */}
+                          <button
+                            onMouseDown={e => {
+                              e.preventDefault();
+                              setFieldValues(v => ({ ...v, [field.id]: '' }));
+                            }}
+                            title="Clear field"
+                            style={{
+                              position: 'absolute',
+                              right: 8,
+                              top: '50%',
+                              transform: 'translateY(-50%)',
+                              width: 16, height: 16,
+                              borderRadius: '50%',
+                              border: 'none',
+                              background: 'none',
+                              color: 'var(--muted)',
+                              fontSize: 14,
+                              cursor: 'pointer',
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              padding: 0,
+                              lineHeight: 1,
+                            }}
+                          >
+                            ×
+                          </button>
                           {/* Restore default */}
                           <button
                             onMouseDown={e => {
