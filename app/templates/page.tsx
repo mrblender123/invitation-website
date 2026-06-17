@@ -1075,15 +1075,16 @@ const [windowWidth, setWindowWidth] = useState(1200);
                       onClick={() => setShowKeyboard(v => !v)}
                       title={showKeyboard ? 'Hide keyboard' : 'Show keyboard'}
                       style={{
-                        display: 'flex', alignItems: 'center', gap: 6,
-                        padding: '6px 12px', borderRadius: 20,
+                        display: 'flex', alignItems: 'center',
+                        padding: '6px 8px', borderRadius: 8,
                         border: '1px solid rgba(0,0,0,0.15)',
-                        background: showKeyboard ? 'rgba(0,0,0,0.06)' : 'transparent',
-                        cursor: 'pointer', fontSize: 13, color: '#555',
-                        transition: 'background 0.15s',
+                        background: 'transparent',
+                        cursor: 'pointer',
+                        color: showKeyboard ? '#333' : 'rgba(0,0,0,0.25)',
+                        transition: 'color 0.15s',
                       }}
                     >
-                      <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <svg width="20" height="14" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="0.5" y="0.5" width="17" height="11" rx="1.5" stroke="currentColor"/>
                         <rect x="2" y="2" width="2" height="2" rx="0.5" fill="currentColor"/>
                         <rect x="5" y="2" width="2" height="2" rx="0.5" fill="currentColor"/>
@@ -1097,7 +1098,6 @@ const [windowWidth, setWindowWidth] = useState(1200);
                         <rect x="14" y="5" width="2" height="2" rx="0.5" fill="currentColor"/>
                         <rect x="3" y="8" width="12" height="2" rx="0.5" fill="currentColor"/>
                       </svg>
-                      {showKeyboard ? 'Keyboard on' : 'Keyboard off'}
                     </button>
                   )}
                 </div>
