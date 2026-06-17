@@ -339,8 +339,6 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
   const [buyStep, setBuyStep] = useState<'email' | 'card' | 'success'>('email');
   const [buyError, setBuyError] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [isResendingEmail, setIsResendingEmail] = useState(false);
 
   useEffect(() => {
     const update = () => setWindowWidth(window.innerWidth);
@@ -494,7 +492,6 @@ const [windowWidth, setWindowWidth] = useState(1200);
     setEditsRemaining(null);
     setCheckoutClientSecret(null);
     setBuyStep('email');
-    setEmailError(false);
     if (template.fields) {
       const initial: Record<string, string> = {};
       for (const f of template.fields) initial[f.id] = f.placeholder;
@@ -1362,39 +1359,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
               <div style={{ textAlign: 'center', padding: '16px 0' }}>
                 <p style={{ fontSize: 40, margin: '0 0 16px' }}>🎉</p>
                 <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 10px' }}>Your invitation is ready!</h2>
-                {emailError ? (
-                  <div style={{ margin: '0 0 24px', background: '#fef2f2', borderRadius: 8, padding: '10px 14px' }}>
-                    <p style={{ fontSize: 14, color: '#ef4444', lineHeight: 1.6, margin: '0 0 10px' }}>
-                      We couldn&apos;t send your email. Download your files below or try again.
-                    </p>
-                    <button
-                      disabled={isResendingEmail}
-                      onClick={async () => {
-                        const blob = successBlobRef.current;
-                        const piId = checkoutClientSecret?.split('_secret_')[0];
-                        if (!blob || !piId) return;
-                        setIsResendingEmail(true);
-                        try {
-                          const res = await fetch('/api/email-attachment', {
-                            method: 'POST',
-                            headers: { 'x-pi-id': piId },
-                            body: blob,
-                          });
-                          if (res.ok) setEmailError(false);
-                        } finally {
-                          setIsResendingEmail(false);
-                        }
-                      }}
-                      style={{ fontSize: 13, color: '#ef4444', background: 'none', border: '1px solid #ef4444', borderRadius: 6, padding: '4px 12px', cursor: isResendingEmail ? 'not-allowed' : 'pointer', opacity: isResendingEmail ? 0.6 : 1 }}
-                    >
-                      {isResendingEmail ? 'Sending…' : 'Retry email'}
-                    </button>
-                  </div>
-                ) : (
-                  <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 24px' }}>
-                    We also sent a 7-day edit &amp; download link to <strong>{buyEmail}</strong>.
-                  </p>
-                )}
+                <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 24px' }}>
+                  A 7-day edit &amp; download link was sent to <strong>{buyEmail}</strong>.
+                </p>
                 <button
                   onClick={() => {
                     const blob = successBlobRef.current;
@@ -1467,12 +1434,10 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   <CheckoutForm clientSecret={checkoutClientSecret!} onSuccess={async () => {
                     setBuyStep('success');
                     setDownloadAllowed(true);
-                    setEmailError(false);
+                    // Pre-generate PNG + PDF blobs for instant download (no async before link.click)
                     try {
-                      const piId = checkoutClientSecret?.split('_secret_')[0];
                       const blob = await generateBlob();
                       successBlobRef.current = blob;
-                      // Pre-generate PDF so download is synchronous (no iOS gesture-chain break)
                       if (blob) {
                         try {
                           const { PDFDocument } = await import('pdf-lib');
@@ -1485,19 +1450,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                           successPdfRef.current = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
                         } catch { /* PDF pre-gen failed — PDF button will fallback */ }
                       }
-                      if (blob && piId) {
-                        const res = await fetch('/api/email-attachment', {
-                          method: 'POST',
-                          headers: { 'x-pi-id': piId },
-                          body: blob,
-                        });
-                        if (!res.ok) setEmailError(true);
-                      } else {
-                        setEmailError(true);
-                      }
                     } catch (e) {
-                      console.error('post-payment email failed:', e);
-                      setEmailError(true);
+                      console.error('post-payment blob generation failed:', e);
                     }
                   }} />
                 </Elements>
