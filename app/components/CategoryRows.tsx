@@ -83,6 +83,7 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
 
   const onMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
+    e.preventDefault(); // prevent browser native drag-and-drop hijack; click still fires
     dragging.current = true;
     hasDragged.current = false;
     startX.current = e.clientX;
@@ -105,7 +106,8 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
     document.addEventListener('mouseup', onUp);
   };
 
-  const onClick = (e: React.MouseEvent) => {
+  const onClickCapture = (e: React.MouseEvent) => {
+    // Capture phase fires before the Link child — cancel navigation if user dragged
     if (hasDragged.current) {
       e.preventDefault();
       e.stopPropagation();
@@ -153,7 +155,7 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
       <div
         ref={scrollRef}
         onMouseDown={onMouseDown}
-        onClick={onClick}
+        onClickCapture={onClickCapture}
         onContextMenu={onContextMenu}
         style={{
           overflowX: 'auto',
