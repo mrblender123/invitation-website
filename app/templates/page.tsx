@@ -313,6 +313,7 @@ function TemplatesContent() {
   const [hoveredField, setHoveredField] = useState<string | null>(null);
 const [windowWidth, setWindowWidth] = useState(1200);
   const [showAllFields, setShowAllFields] = useState(false);
+  const [showKeyboard, setShowKeyboard] = useState(true);
   const [keyboardRect, setKeyboardRect] = useState<DOMRect | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
@@ -1060,14 +1061,46 @@ const [windowWidth, setWindowWidth] = useState(1200);
               {/* Edit panel */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {/* Text inputs — dynamic for SVG templates, legacy for InvitationCard */}
-                {selected.fields?.some(f => f.optional) && (
-                  <div style={{ alignSelf: 'flex-start', marginBottom: 16 }}>
-                    <GlassPill
-                      text={showAllFields ? '− Hide extra fields' : '+ Show all fields'}
-                      onClick={() => setShowAllFields(v => !v)}
-                    />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                  <div>
+                    {selected.fields?.some(f => f.optional) && (
+                      <GlassPill
+                        text={showAllFields ? '− Hide extra fields' : '+ Show all fields'}
+                        onClick={() => setShowAllFields(v => !v)}
+                      />
+                    )}
                   </div>
-                )}
+                  {windowWidth >= 768 && (
+                    <button
+                      onClick={() => setShowKeyboard(v => !v)}
+                      title={showKeyboard ? 'Hide keyboard' : 'Show keyboard'}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 6,
+                        padding: '6px 12px', borderRadius: 20,
+                        border: '1px solid rgba(0,0,0,0.15)',
+                        background: showKeyboard ? 'rgba(0,0,0,0.06)' : 'transparent',
+                        cursor: 'pointer', fontSize: 13, color: '#555',
+                        transition: 'background 0.15s',
+                      }}
+                    >
+                      <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0.5" y="0.5" width="17" height="11" rx="1.5" stroke="currentColor"/>
+                        <rect x="2" y="2" width="2" height="2" rx="0.5" fill="currentColor"/>
+                        <rect x="5" y="2" width="2" height="2" rx="0.5" fill="currentColor"/>
+                        <rect x="8" y="2" width="2" height="2" rx="0.5" fill="currentColor"/>
+                        <rect x="11" y="2" width="2" height="2" rx="0.5" fill="currentColor"/>
+                        <rect x="14" y="2" width="2" height="2" rx="0.5" fill="currentColor"/>
+                        <rect x="2" y="5" width="2" height="2" rx="0.5" fill="currentColor"/>
+                        <rect x="5" y="5" width="2" height="2" rx="0.5" fill="currentColor"/>
+                        <rect x="8" y="5" width="2" height="2" rx="0.5" fill="currentColor"/>
+                        <rect x="11" y="5" width="2" height="2" rx="0.5" fill="currentColor"/>
+                        <rect x="14" y="5" width="2" height="2" rx="0.5" fill="currentColor"/>
+                        <rect x="3" y="8" width="12" height="2" rx="0.5" fill="currentColor"/>
+                      </svg>
+                      {showKeyboard ? 'Keyboard on' : 'Keyboard off'}
+                    </button>
+                  )}
+                </div>
                 <div style={{
                   display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 32,
                   maxHeight: 420, overflowY: 'auto', overflowX: 'hidden',
@@ -1426,7 +1459,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
       )}
 
       {/* Virtual keyboard portal — fixed below the active input, not clipped by any overflow container */}
-      {activeField && keyboardRect && windowWidth >= 768 && createPortal(
+      {activeField && keyboardRect && windowWidth >= 768 && showKeyboard && createPortal(
         <div style={{ position: 'fixed', top: keyboardRect.bottom + 8, left: keyboardRect.left, width: keyboardRect.width, zIndex: 1000 }}>
           <VirtualKeyboard
             lang={activeField.rtl ? 'he' : 'en'}
