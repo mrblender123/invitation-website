@@ -33,7 +33,13 @@ This automatically fixes every mechanical issue:
 - Removes `@import url(...)` and `<image>` tags
 - Centers all text at `viewBoxWidth / 2` with `text-anchor="middle"` and `tspan x="0"`
 
-For side-aligned designs (text intentionally left/right): add `--side` flag.
+**Before running, always check for multi-column designs:**
+```bash
+grep -o 'translate([^)]*)' FILE.svg | sort | uniq -d
+```
+If any duplicate translate positions exist (same X Y appearing on multiple text elements), the SVG has overlapping columns — **always use `--side`** for these. `--side` preserves the original translate X positions so columns stay separated.
+
+For side-aligned or multi-column designs: add `--side` flag.
 To preview without writing: add `--dry` flag.
 
 The script **reports** the current `<g id>` field list after cleaning. Review it.
