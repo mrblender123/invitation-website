@@ -1453,29 +1453,30 @@ const [windowWidth, setWindowWidth] = useState(1200);
                           successPdfRef.current = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
                         } catch { /* PDF pre-gen failed — PDF button will fallback */ }
 
-                        // Send email with PNG + PDF attachments via R2 (no Vercel timeout)
+                        // Send email with PNG + PDF attachments via Supabase Storage (no Vercel timeout)
                         const piId = checkoutClientSecret?.split('_secret_')[0];
                         if (piId?.startsWith('pi_')) {
                           (async () => {
                             try {
-                              const presignRes = await fetch('/api/r2-presign', {
+                              // Get signed upload URL from server
+                              const urlRes = await fetch('/api/storage-upload-url', {
                                 method: 'POST',
                                 headers: { 'content-type': 'application/json' },
                                 body: JSON.stringify({ piId }),
                               });
-                              if (!presignRes.ok) throw new Error('presign failed');
-                              const { url: uploadUrl, key: r2Key } = await presignRes.json();
-                              // Upload full-res PNG directly to R2 (browser → R2, no Vercel timeout)
-                              const putRes = await fetch(uploadUrl, {
+                              if (!urlRes.ok) throw new Error('upload-url failed');
+                              const { signedUrl, path: storagePath } = await urlRes.json();
+                              // Upload full-res PNG directly to Supabase (browser → Supabase, no Vercel timeout)
+                              const putRes = await fetch(signedUrl, {
                                 method: 'PUT',
-                                headers: { 'content-type': 'image/png' },
+                                headers: { 'content-type': 'image/png', 'x-upsert': 'true' },
                                 body: blob,
                               });
-                              if (!putRes.ok) throw new Error('R2 upload failed');
-                              // Trigger email — server downloads from R2, generates PDF, sends Resend
+                              if (!putRes.ok) throw new Error(`storage upload failed: ${putRes.status}`);
+                              // Trigger email — server downloads from Supabase, generates PDF, sends Resend
                               fetch('/api/email-attachment', {
                                 method: 'POST',
-                                headers: { 'x-pi-id': piId, 'x-r2-key': r2Key },
+                                headers: { 'x-pi-id': piId, 'x-storage-path': storagePath },
                               }).catch(e => console.error('[email-attachment] trigger failed:', e));
                             } catch (e) {
                               console.error('[email-attachment] upload flow failed:', e);

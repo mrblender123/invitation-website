@@ -1,29 +1,21 @@
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { PDFDocument } from 'pdf-lib';
-import { S3Client, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { createServiceClient } from '@/lib/supabase';
 import { createDownloadToken } from '@/lib/download-token';
 import { initEditRecord, markEmailSent, resetEmailSent } from '@/lib/edit-tracking';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
 const EMAIL_LOGO_SRC = 'https://i.imgur.com/t8uy4eg.png';
-
-const s3 = new S3Client({
-  region: 'auto',
-  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
-  },
-});
+const BUCKET = 'temp-invitations';
 
 export async function POST(req: Request) {
   const piId = req.headers.get('x-pi-id') ?? '';
-  const r2Key = req.headers.get('x-r2-key') ?? '';
+  const storagePath = req.headers.get('x-storage-path') ?? '';
 
   if (!piId.startsWith('pi_')) return new Response('Invalid ID', { status: 400 });
-  if (!r2Key.startsWith('temp-invitations/')) return new Response('Invalid key', { status: 400 });
+  if (!storagePath.endsWith('.png')) return new Response('Invalid path', { status: 400 });
 
   // Verify payment actually succeeded
   const pi = await stripe.paymentIntents.retrieve(piId);
@@ -33,12 +25,14 @@ export async function POST(req: Request) {
   const templateId = pi.metadata?.templateId;
   if (!email || !templateId) return new Response('Missing metadata', { status: 400 });
 
-  // Download PNG from R2 (fast — same region, ~100ms)
-  const { Body } = await s3.send(new GetObjectCommand({ Bucket: process.env.R2_BUCKET!, Key: r2Key }));
-  if (!Body) return new Response('PNG not found in R2', { status: 404 });
-  const chunks: Buffer[] = [];
-  for await (const chunk of Body as AsyncIterable<Uint8Array>) chunks.push(Buffer.from(chunk));
-  const pngBuf = Buffer.concat(chunks);
+  // Download PNG from Supabase Storage (fast — server-to-server)
+  const sb = createServiceClient();
+  const { data: pngData, error: dlError } = await sb.storage.from(BUCKET).download(storagePath);
+  if (dlError || !pngData) {
+    console.error('[email-attachment] storage download failed:', dlError);
+    return new Response('PNG not found in storage', { status: 404 });
+  }
+  const pngBuf = Buffer.from(await pngData.arrayBuffer());
 
   // Wrap PNG in a PDF
   const pdfDoc = await PDFDocument.create();
@@ -51,7 +45,7 @@ export async function POST(req: Request) {
 
   const canSend = await markEmailSent(piId);
   if (!canSend) {
-    await s3.send(new DeleteObjectCommand({ Bucket: process.env.R2_BUCKET!, Key: r2Key })).catch(() => {});
+    await sb.storage.from(BUCKET).remove([storagePath]).catch(() => {});
     console.log('[email-attachment] Already sent for pi=%s, skipping', piId);
     return new Response('OK');
   }
@@ -110,7 +104,7 @@ export async function POST(req: Request) {
     try {
       const { error: sendError } = await resend.emails.send(emailPayload);
       if (!sendError) {
-        await s3.send(new DeleteObjectCommand({ Bucket: process.env.R2_BUCKET!, Key: r2Key })).catch(() => {});
+        await sb.storage.from(BUCKET).remove([storagePath]).catch(() => {});
         return new Response('OK');
       }
       lastError = sendError.message;
