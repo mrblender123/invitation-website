@@ -317,6 +317,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const cardRef = useRef<HTMLDivElement>(null);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const editConsumedThisSession = useRef(false);
+  const successBlobRef = useRef<Blob | null>(null); // cached PNG from payment flow
 
   // Draft modal state
   const [showDraftModal, setShowDraftModal] = useState(false);
@@ -1369,18 +1370,45 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   </p>
                 )}
                 <button
-                  onClick={handleDownload}
-                  disabled={isDownloading || isDownloadingPdf}
-                  style={{ display: 'block', width: '100%', background: '#0f172a', color: '#fff', border: 'none', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: (isDownloading || isDownloadingPdf) ? 'not-allowed' : 'pointer', opacity: (isDownloading || isDownloadingPdf) ? 0.6 : 1, marginBottom: 10 }}
+                  onClick={() => {
+                    const blob = successBlobRef.current;
+                    if (!blob) { handleDownload(); return; }
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `${selected?.id ?? 'invitation'}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  }}
+                  style={{ display: 'block', width: '100%', background: '#0f172a', color: '#fff', border: 'none', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: 'pointer', marginBottom: 10 }}
                 >
-                  {isDownloading ? 'Generating…' : 'Download PNG'}
+                  Download PNG
                 </button>
                 <button
-                  onClick={handleDownloadPdf}
-                  disabled={isDownloading || isDownloadingPdf}
-                  style={{ display: 'block', width: '100%', background: '#fff', color: '#0f172a', border: '1.5px solid #0f172a', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: (isDownloading || isDownloadingPdf) ? 'not-allowed' : 'pointer', opacity: (isDownloading || isDownloadingPdf) ? 0.6 : 1, marginBottom: 12 }}
+                  onClick={async () => {
+                    const blob = successBlobRef.current;
+                    if (!blob) { handleDownloadPdf(); return; }
+                    const { PDFDocument } = await import('pdf-lib');
+                    const pngBytes = new Uint8Array(await blob.arrayBuffer());
+                    const pdf = await PDFDocument.create();
+                    const img = await pdf.embedPng(pngBytes);
+                    const page = pdf.addPage([img.width, img.height]);
+                    page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+                    const pdfBytes = await pdf.save();
+                    const url = URL.createObjectURL(new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' }));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `${selected?.id ?? 'invitation'}.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  }}
+                  style={{ display: 'block', width: '100%', background: '#fff', color: '#0f172a', border: '1.5px solid #0f172a', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: 'pointer', marginBottom: 12 }}
                 >
-                  {isDownloadingPdf ? 'Generating…' : 'Download PDF'}
+                  Download PDF
                 </button>
 
 <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 24px', cursor: 'pointer', fontSize: 14, marginTop: 16 }}>Done</button>
@@ -1424,6 +1452,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     try {
                       const piId = checkoutClientSecret?.split('_secret_')[0];
                       const blob = await generateBlob();
+                      successBlobRef.current = blob; // cache for instant download
                       if (blob && piId) {
                         const res = await fetch('/api/email-attachment', {
                           method: 'POST',

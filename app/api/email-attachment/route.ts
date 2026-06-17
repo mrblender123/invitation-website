@@ -46,9 +46,19 @@ export async function POST(req: Request) {
 
   const token = createDownloadToken(templateId);
 
-  // fieldValues may be truncated at 500 chars in Stripe metadata — parse defensively
+  // Reassemble chunked fv0, fv1, ... keys (fallback: legacy fieldValues key)
   let fieldValues: Record<string, string> = {};
-  try { fieldValues = JSON.parse(pi.metadata?.fieldValues ?? '{}'); } catch { /* restore link will be empty */ }
+  try {
+    const meta = pi.metadata ?? {};
+    let json = '';
+    if (meta.fv0 !== undefined) {
+      let i = 0;
+      while (meta[`fv${i}`] !== undefined) { json += meta[`fv${i}`]; i++; }
+    } else {
+      json = meta.fieldValues ?? '{}';
+    }
+    fieldValues = JSON.parse(json);
+  } catch { /* restore link will be empty */ }
 
   const restoreParam = encodeURIComponent(
     Buffer.from(JSON.stringify(fieldValues)).toString('base64'),
