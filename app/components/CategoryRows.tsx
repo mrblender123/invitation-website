@@ -76,14 +76,15 @@ function TemplateThumb({ template }: { template: Template }) {
 function CategoryRow({ category, templates }: { category: string; templates: Template[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
+  const hasDragged = useRef(false);
   const startX = useRef(0);
   const startScrollLeft = useRef(0);
   const [grabbing, setGrabbing] = useState(false);
 
   const onMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
-    e.preventDefault();
     dragging.current = true;
+    hasDragged.current = false;
     startX.current = e.clientX;
     startScrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
     setGrabbing(true);
@@ -91,6 +92,7 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
     const onMove = (ev: MouseEvent) => {
       if (!dragging.current) return;
       const dx = ev.clientX - startX.current;
+      if (Math.abs(dx) > 4) hasDragged.current = true;
       if (scrollRef.current) scrollRef.current.scrollLeft = startScrollLeft.current - dx;
     };
     const onUp = () => {
@@ -101,6 +103,13 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
     };
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseup', onUp);
+  };
+
+  const onClick = (e: React.MouseEvent) => {
+    if (hasDragged.current) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
   };
 
   const onContextMenu = (e: React.MouseEvent) => {
@@ -144,6 +153,7 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
       <div
         ref={scrollRef}
         onMouseDown={onMouseDown}
+        onClick={onClick}
         onContextMenu={onContextMenu}
         style={{
           overflowX: 'auto',
