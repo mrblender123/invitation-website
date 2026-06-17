@@ -339,6 +339,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [checkoutClientSecret, setCheckoutClientSecret] = useState<string | null>(null);
   const [buyStep, setBuyStep] = useState<'email' | 'card' | 'success'>('email');
   const [buyError, setBuyError] = useState('');
+  const [emailError, setEmailError] = useState(false);
 
   useEffect(() => {
     const update = () => setWindowWidth(window.innerWidth);
@@ -1362,9 +1363,15 @@ const [windowWidth, setWindowWidth] = useState(1200);
               <div style={{ textAlign: 'center', padding: '16px 0' }}>
                 <p style={{ fontSize: 40, margin: '0 0 16px' }}>🎉</p>
                 <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 10px' }}>Your invitation is ready!</h2>
-                <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 24px' }}>
-                  A 7-day edit &amp; download link was sent to <strong>{buyEmail}</strong>.
-                </p>
+                {emailError ? (
+                  <p style={{ fontSize: 14, color: '#ef4444', lineHeight: 1.6, margin: '0 0 24px', background: '#fef2f2', borderRadius: 8, padding: '10px 14px' }}>
+                    We couldn&apos;t send your email. Download your files now — or contact <a href="mailto:info@shareyoursimcha.com" style={{ color: '#ef4444' }}>info@shareyoursimcha.com</a> with your payment ID to get them later.
+                  </p>
+                ) : (
+                  <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 24px' }}>
+                    We also sent a 7-day edit &amp; download link to <strong>{buyEmail}</strong>.
+                  </p>
+                )}
                 <button
                   onClick={() => {
                     const blob = successBlobRef.current;
@@ -1437,11 +1444,13 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   <CheckoutForm clientSecret={checkoutClientSecret!} onSuccess={async () => {
                     setBuyStep('success');
                     setDownloadAllowed(true);
-                    // Pre-generate PNG + PDF blobs for instant download (no async before link.click)
+                    setEmailError(false);
                     try {
+                      const piId = checkoutClientSecret?.split('_secret_')[0];
                       const blob = await generateBlob();
                       successBlobRef.current = blob;
-                      if (blob) {
+                      if (blob && piId) {
+                        // Pre-generate PDF for download buttons
                         try {
                           const { PDFDocument } = await import('pdf-lib');
                           const pngBytes = new Uint8Array(await blob.arrayBuffer());
@@ -1452,40 +1461,19 @@ const [windowWidth, setWindowWidth] = useState(1200);
                           const pdfBytes = await pdf.save();
                           successPdfRef.current = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
                         } catch { /* PDF pre-gen failed — PDF button will fallback */ }
-
-                        // Send email with PNG + PDF attachments via Supabase Storage (no Vercel timeout)
-                        const piId = checkoutClientSecret?.split('_secret_')[0];
-                        if (piId?.startsWith('pi_')) {
-                          (async () => {
-                            try {
-                              // Get signed upload URL from server
-                              const urlRes = await fetch('/api/storage-upload-url', {
-                                method: 'POST',
-                                headers: { 'content-type': 'application/json' },
-                                body: JSON.stringify({ piId }),
-                              });
-                              if (!urlRes.ok) throw new Error('upload-url failed');
-                              const { signedUrl, path: storagePath } = await urlRes.json();
-                              // Upload full-res PNG directly to Supabase (browser → Supabase, no Vercel timeout)
-                              const putRes = await fetch(signedUrl, {
-                                method: 'PUT',
-                                headers: { 'content-type': 'image/png', 'x-upsert': 'true' },
-                                body: blob,
-                              });
-                              if (!putRes.ok) throw new Error(`storage upload failed: ${putRes.status}`);
-                              // Trigger email — server downloads from Supabase, generates PDF, sends Resend
-                              fetch('/api/email-attachment', {
-                                method: 'POST',
-                                headers: { 'x-pi-id': piId, 'x-storage-path': storagePath },
-                              }).catch(e => console.error('[email-attachment] trigger failed:', e));
-                            } catch (e) {
-                              console.error('[email-attachment] upload flow failed:', e);
-                            }
-                          })();
-                        }
+                        // Send email with PNG + PDF attachments
+                        const res = await fetch('/api/email-attachment', {
+                          method: 'POST',
+                          headers: { 'x-pi-id': piId },
+                          body: blob,
+                        });
+                        if (!res.ok) setEmailError(true);
+                      } else {
+                        setEmailError(true);
                       }
                     } catch (e) {
-                      console.error('post-payment blob generation failed:', e);
+                      console.error('post-payment email failed:', e);
+                      setEmailError(true);
                     }
                   }} />
                 </Elements>
