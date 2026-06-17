@@ -81,7 +81,7 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
   const [grabbing, setGrabbing] = useState(false);
 
   const onMouseDown = (e: React.MouseEvent) => {
-    if (e.button !== 2) return;
+    if (e.button !== 0) return;
     e.preventDefault();
     dragging.current = true;
     startX.current = e.clientX;
@@ -105,6 +105,13 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
 
   const onContextMenu = (e: React.MouseEvent) => {
     if (dragging.current) e.preventDefault();
+  };
+
+  const onWheel = (e: React.WheelEvent) => {
+    if (!scrollRef.current) return;
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // already horizontal (trackpad)
+    e.preventDefault();
+    scrollRef.current.scrollLeft += e.deltaY;
   };
 
   return (
@@ -133,6 +140,7 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
         ref={scrollRef}
         onMouseDown={onMouseDown}
         onContextMenu={onContextMenu}
+        onWheel={onWheel}
         style={{
           overflowX: 'auto',
           scrollbarWidth: 'none',
