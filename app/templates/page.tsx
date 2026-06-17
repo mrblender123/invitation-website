@@ -1122,7 +1122,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                               ref={el => { inputRefs.current[field.id] = el; }}
                               style={{
                                 ...inputStyle,
-                                paddingLeft: 50,
+                                paddingLeft: 30,
                                 paddingRight: 8,
                                 textAlign: 'center',
                                 direction: field.rtl ? 'rtl' : 'ltr',
@@ -1135,16 +1135,17 @@ const [windowWidth, setWindowWidth] = useState(1200);
                               onBlur={() => setActiveField(null)}
                               onChange={e => setFieldValues(v => ({ ...v, [field.id]: e.target.value }))}
                             />
-                          {/* Clear field — always visible */}
+                          {/* × normally; ↺ once edited */}
                           <button
                             onMouseDown={e => {
                               e.preventDefault();
-                              setFieldValues(v => ({ ...v, [field.id]: '' }));
+                              const isEdited = fieldValues[field.id] !== field.placeholder;
+                              setFieldValues(v => ({ ...v, [field.id]: isEdited ? field.placeholder : '' }));
                             }}
-                            title="Clear field"
+                            title={fieldValues[field.id] !== field.placeholder ? 'Restore default' : 'Clear field'}
                             style={{
                               position: 'absolute',
-                              left: 6,
+                              left: 8,
                               top: '50%',
                               transform: 'translateY(-50%)',
                               width: 16, height: 16,
@@ -1159,36 +1160,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                               lineHeight: 1,
                             }}
                           >
-                            ×
+                            {fieldValues[field.id] !== field.placeholder ? '↺' : '×'}
                           </button>
-                          {/* Restore default — only when field has been edited */}
-                          {fieldValues[field.id] !== field.placeholder && (
-                          <button
-                            onMouseDown={e => {
-                              e.preventDefault();
-                              setFieldValues(v => ({ ...v, [field.id]: field.placeholder }));
-                            }}
-                            title="Restore default"
-                            style={{
-                              position: 'absolute',
-                              left: 26,
-                              top: '50%',
-                              transform: 'translateY(-50%)',
-                              width: 16, height: 16,
-                              borderRadius: '50%',
-                              border: 'none',
-                              background: 'none',
-                              color: 'var(--muted)',
-                              fontSize: 14,
-                              cursor: 'pointer',
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              padding: 0,
-                              lineHeight: 1,
-                            }}
-                          >
-                            ↺
-                          </button>
-                          )}
                         </div>
                       </div>
                       );
