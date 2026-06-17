@@ -1,96 +1,95 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
   <g id="text_1">
-    <text transform="translate(110.2 126.2)" fill="#8a7a56" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.6"><tspan x="0" y="0">הננו מתכבדים בזה להזמין את מע״כ לבוא להשתתף בשמחת</tspan></text>
+    <text transform="translate(180 126.2)" fill="#8a7a56" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.6" text-anchor="middle"><tspan x="0" y="0">הננו מתכבדים בזה להזמין את מע״כ לבוא להשתתף בשמחת</tspan></text>
   </g>
   <g id="text_2">
-    <text transform="translate(114.3 145.3)" fill="#7b6f59" font-family="Frank Ruhl Libre" font-weight="900" font-size="23.9"><tspan x="0" y="0">שבת באווארפן</tspan></text>
+    <text transform="translate(180 145.3)" fill="#7b6f59" font-family="Frank Ruhl Libre" font-weight="900" font-size="23.9" text-anchor="middle"><tspan x="0" y="0">שבת באווארפן</tspan></text>
   </g>
   <g id="chusen*">
-    <text transform="translate(98.2 159.6)" fill="#8a7a56" font-family="Frank Ruhl Libre" font-weight="900" font-size="12.8"><tspan x="0" y="0">של החתן יצחק מנחם פריעדמאן ני״ו</tspan></text>
+    <text transform="translate(180 159.6)" fill="#8a7a56" font-family="Frank Ruhl Libre" font-weight="900" font-size="12.8" text-anchor="middle"><tspan x="0" y="0">של החתן יצחק מנחם פריעדמאן ני״ו</tspan></text>
   </g>
   <g id="parsha*">
-    <text transform="translate(141.6 174.7)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="12.8"><tspan x="0" y="0">שב״ק פרשת חקת</tspan></text>
+    <text transform="translate(180 174.7)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="12.8" text-anchor="middle"><tspan x="0" y="0">שב״ק פרשת חקת</tspan></text>
   </g>
   <g id="hadlakat*">
-    <text transform="translate(166.8 184.8)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.1"><tspan x="0" y="0">זמן הדלקת נירות </tspan></text>
+    <text transform="translate(180 184.8)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.1" text-anchor="middle"><tspan x="0" y="0">זמן הדלקת נירות</tspan></text>
   </g>
   <g id="motzei*">
-    <text transform="translate(168.9 191.1)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.1"><tspan x="0" y="0">זמן מוצאי שבת </tspan></text>
+    <text transform="translate(180 191.1)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.1" text-anchor="middle"><tspan x="0" y="0">זמן מוצאי שבת</tspan></text>
   </g>
   <g id="toamehu*">
-    <text transform="translate(228.9 214)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8"><tspan x="0" y="0">טועמ׳</tspan></text>
+    <text transform="translate(238.3 214)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8" text-anchor="middle"><tspan x="0" y="0">טועמ׳</tspan></text>
   </g>
   <g id="toamehu_location*">
-    <text transform="translate(218.4 226.7)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+    <text transform="translate(238.3 226.7)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
   </g>
   <g id="toamehu_address*">
-    <text transform="translate(221.4 234.5)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.3"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+    <text transform="translate(238.3 234.5)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="6.3" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
   <g id="mincha*">
-    <text transform="translate(201.5 262.5)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8"><tspan x="0" y="0">מנחה וקבלת שבת</tspan></text>
+    <text transform="translate(238.3 262.5)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8" text-anchor="middle"><tspan x="0" y="0">מנחה וקבלת שבת</tspan></text>
   </g>
   <g id="mincha_location*">
-    <text transform="translate(200.1 273.8)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
+    <text transform="translate(238.3 273.8)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
   </g>
   <g id="mincha_address*">
-    <text transform="translate(218.8 283)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">1247 38th St</tspan></text>
+    <text transform="translate(238.3 283)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">1247 38th St</tspan></text>
   </g>
   <g id="night_meal*">
-    <text transform="translate(204.9 315.5)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8"><tspan x="0" y="0">סעודת ליל שב״ק</tspan></text>
+    <text transform="translate(238.3 315.5)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8" text-anchor="middle"><tspan x="0" y="0">סעודת ליל שב״ק</tspan></text>
   </g>
   <g id="night_meal_location*">
-    <text transform="translate(218.4 328.1)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+    <text transform="translate(238.3 328.1)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
   </g>
   <g id="night_meal_address*">
-    <text transform="translate(218.1 336.6)" fill="#685c41" font-family="Heebo" font-weight="600" font-size="7.2"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+    <text transform="translate(238.3 336.6)" fill="#685c41" font-family="Heebo" font-weight="600" font-size="7.2" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
   <g id="bagleiten*">
-    <text transform="translate(205.9 368.4)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8"><tspan x="0" y="0">באגלייטן דו חתן</tspan></text>
+    <text transform="translate(238.3 368.4)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8" text-anchor="middle"><tspan x="0" y="0">באגלייטן דו חתן</tspan></text>
   </g>
   <g id="bagleiten_location*">
-    <text transform="translate(232.9 381.3)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">בביתי</tspan></text>
+    <text transform="translate(238.3 381.3)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">בביתי</tspan></text>
   </g>
   <g id="bagleiten_address*">
-    <text transform="translate(230.4 390)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">789 st</tspan></text>
+    <text transform="translate(238.3 390)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">789 st</tspan></text>
   </g>
   <g id="shachrit*">
-    <text transform="translate(93.2 214)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8"><tspan x="0" y="0">תפילת שחרית</tspan></text>
+    <text transform="translate(120 214)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8" text-anchor="middle"><tspan x="0" y="0">תפילת שחרית</tspan></text>
   </g>
   <g id="shachrit_location*">
-    <text transform="translate(82.7 226.7)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
+    <text transform="translate(120 226.7)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
   </g>
   <g id="shachrit_address*">
-    <text transform="translate(101.4 236.5)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">1247 38th St</tspan></text>
+    <text transform="translate(120 236.5)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">1247 38th St</tspan></text>
   </g>
   <g id="morning_meal*">
-    <text transform="translate(96.7 262.5)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8"><tspan x="0" y="0">סעודת שב״ק</tspan></text>
+    <text transform="translate(120 262.5)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8" text-anchor="middle"><tspan x="0" y="0">סעודת שב״ק</tspan></text>
   </g>
   <g id="morning_meal_location*">
-    <text transform="translate(101 273.8)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+    <text transform="translate(120 273.8)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
   </g>
   <g id="morning_meal_address*">
-    <text transform="translate(98.6 283)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+    <text transform="translate(120 283)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
   <g id="shaleshseudos*">
-    <text transform="translate(96.8 315.5)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8"><tspan x="0" y="0">מנחה ושל״ס</tspan></text>
+    <text transform="translate(120 315.5)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8" text-anchor="middle"><tspan x="0" y="0">מנחה ושל״ס</tspan></text>
   </g>
   <g id="shaleshseudos_location*">
-    <text transform="translate(82.7 326.6)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
+    <text transform="translate(120 326.6)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
   </g>
   <g id="shaleshseudos_address*">
-    <text transform="translate(101.4 336.6)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">1247 38th St</tspan></text>
+    <text transform="translate(120 336.6)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">1247 38th St</tspan></text>
   </g>
   <g id="havdala*">
-    <text transform="translate(109 368.4)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8"><tspan x="0" y="0">הבדלה</tspan></text>
+    <text transform="translate(120 368.4)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="11.8" text-anchor="middle"><tspan x="0" y="0">הבדלה</tspan></text>
   </g>
   <g id="havdala_location*">
-    <text transform="translate(115.5 380.4)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">בביתי</tspan></text>
+    <text transform="translate(120 380.4)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">בביתי</tspan></text>
   </g>
   <g id="havdala_address*">
-    <text transform="translate(113 389.1)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1"><tspan x="0" y="0">789 st</tspan></text>
+    <text transform="translate(120 389.1)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">789 st</tspan></text>
   </g>
 <g id="host_name*">
-    <text transform="translate(240.4 448.6)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="14.6"><tspan x="0" y="0">משה</tspan></text>
+    <text transform="translate(180 448.6)" fill="#685c41" font-family="Frank Ruhl Libre" font-weight="900" font-size="14.6" text-anchor="middle"><tspan x="0" y="0">משה</tspan></text>
   </g>
 </svg>
