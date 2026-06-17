@@ -1481,7 +1481,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                           const img = await pdf.embedPng(pngBytes);
                           const pg = pdf.addPage([img.width, img.height]);
                           pg.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
-                          successPdfRef.current = new Blob([await pdf.save()], { type: 'application/pdf' });
+                          const pdfBytes = await pdf.save();
+                          successPdfRef.current = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
                         } catch { /* PDF pre-gen failed — PDF button will fallback */ }
                       }
                       if (blob && piId) {
