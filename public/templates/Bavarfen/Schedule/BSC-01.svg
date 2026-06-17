@@ -106,19 +106,19 @@
 <g id="toamehu*">
     <text transform="translate(227.6 200.6)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="12.8"><tspan x="0" y="0">טועמ׳</tspan></text>
   </g>
-<g id="letter*">
-    <text transform="translate(162.5 102.8)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="62"><tspan x="0" y="0">א</tspan></text>
-  </g>
-<g id="line_14">
-    <text transform="translate(109.6 137.9)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="24"><tspan x="0" y="0">שבת באווארפן</tspan></text>
-  </g>
-<g id="line_12">
-    <text transform="translate(85.7 152.7)" fill="#8a7a56" font-family="Frank Ruhl Libre" font-weight="900" font-size="14"><tspan x="0" y="0">של החתן יצחק מנחם פריעדמאן ני״ו</tspan></text>
-  </g>
-<g id="line_11">
+<g id="parsha*">
     <text transform="translate(133.2 166.5)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="14"><tspan x="0" y="0">שב״ק פרשת חקת</tspan></text>
   </g>
-<g id="line_1">
+<g id="name_of_chusen*">
+    <text transform="translate(85.7 152.7)" fill="#8a7a56" font-family="Frank Ruhl Libre" font-weight="900" font-size="14"><tspan x="0" y="0">של החתן יצחק מנחם פריעדמאן ני״ו</tspan></text>
+  </g>
+<g id="static_2">
+    <text transform="translate(109.6 137.9)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="24"><tspan x="0" y="0">שבת באווארפן</tspan></text>
+  </g>
+<g id="static_1">
     <text transform="translate(121.5 120.7)" fill="#8a7a56" font-family="Frank Ruhl Libre" font-weight="900" font-size="5"><tspan x="0" y="0">הננו מתכבדים בזה להזמין את מע״כ לבוא להשתתף בשמחת</tspan></text>
+  </g>
+<g id="letter*">
+    <text transform="translate(162.5 102.8)" fill="#b8a373" font-family="Frank Ruhl Libre" font-weight="900" font-size="62"><tspan x="0" y="0">א</tspan></text>
   </g>
 </svg>
