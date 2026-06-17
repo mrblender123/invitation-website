@@ -309,7 +309,6 @@ function TemplatesContent() {
   const [selected, setSelected] = useState<Template | null>(null);
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
   const [activeField, setActiveField] = useState<{ id: string; rtl: boolean } | null>(null);
-  const [clearedFields, setClearedFields] = useState<Set<string>>(new Set());
   const [hoveredField, setHoveredField] = useState<string | null>(null);
 const [windowWidth, setWindowWidth] = useState(1200);
   const [showAllFields, setShowAllFields] = useState(false);
@@ -486,7 +485,6 @@ const [windowWidth, setWindowWidth] = useState(1200);
     params.set('template', template.id);
     router.push(`/templates?${params.toString()}`);
     setSelected(template);
-    setClearedFields(new Set());
     // Reset payment state so a new template always requires a new purchase
     setDownloadAllowed(false);
     setEditsExhausted(false);
@@ -1131,30 +1129,19 @@ const [windowWidth, setWindowWidth] = useState(1200);
                                 borderColor: isActive ? 'rgba(0,0,0,0.4)' : field.optional ? 'rgba(160,130,70,0.5)' : undefined,
                                 background: field.optional ? 'rgba(255,245,210,0.5)' : '#ffffff',
                               }}
-                              placeholder={clearedFields.has(field.id) ? '' : field.placeholder}
+                              placeholder={field.placeholder}
                               value={fieldValues[field.id] ?? ''}
                               onFocus={() => setActiveField({ id: field.id, rtl: field.rtl ?? false })}
                               onBlur={() => setActiveField(null)}
-                              onChange={e => {
-                                setFieldValues(v => ({ ...v, [field.id]: e.target.value }));
-                                if (clearedFields.has(field.id) && e.target.value !== '') {
-                                  setClearedFields(s => { const n = new Set(s); n.delete(field.id); return n; });
-                                }
-                              }}
+                              onChange={e => setFieldValues(v => ({ ...v, [field.id]: e.target.value }))}
                             />
-                          {/* Clear / Reload — always visible */}
+                          {/* Restore default */}
                           <button
                             onMouseDown={e => {
                               e.preventDefault();
-                              if (clearedFields.has(field.id)) {
-                                setFieldValues(v => ({ ...v, [field.id]: field.placeholder }));
-                                setClearedFields(s => { const n = new Set(s); n.delete(field.id); return n; });
-                              } else {
-                                setFieldValues(v => ({ ...v, [field.id]: '' }));
-                                setClearedFields(s => new Set(s).add(field.id));
-                              }
+                              setFieldValues(v => ({ ...v, [field.id]: field.placeholder }));
                             }}
-                            title={clearedFields.has(field.id) ? 'Restore default' : 'Clear field'}
+                            title="Restore default"
                             style={{
                               position: 'absolute',
                               left: 8,
@@ -1172,7 +1159,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                               lineHeight: 1,
                             }}
                           >
-                            {clearedFields.has(field.id) ? '↺' : '×'}
+                            ↺
                           </button>
                         </div>
                       </div>
