@@ -539,7 +539,10 @@ const [windowWidth, setWindowWidth] = useState(1200);
     await document.fonts.ready;
     await ensureFontsRegisteredUnderOriginalNames();
     if (selected.textSvg) {
-      const img = await new Promise<HTMLImageElement>(resolve => {
+      // Reuse the already-loaded <img> from the card DOM — avoids CORS re-fetch issues
+      const domImg = cardRef.current.querySelector('img') as HTMLImageElement | null;
+      const imgReady = domImg && domImg.complete && domImg.naturalWidth > 0 ? domImg : null;
+      const img = imgReady ?? await new Promise<HTMLImageElement>(resolve => {
         const i = new Image();
         i.crossOrigin = 'anonymous';
         i.onload = () => resolve(i);
@@ -547,13 +550,13 @@ const [windowWidth, setWindowWidth] = useState(1200);
         i.src = selected.backgroundSrc;
       });
       const { canvasWidth, canvasHeight } = selected.style;
-      const outW = img.naturalWidth || canvasWidth;
-      const outH = img.naturalHeight || canvasHeight;
+      const outW = (img.naturalWidth > 0 ? img.naturalWidth : null) ?? canvasWidth;
+      const outH = (img.naturalHeight > 0 ? img.naturalHeight : null) ?? canvasHeight;
       const canvas = document.createElement('canvas');
       canvas.width = outW;
       canvas.height = outH;
       const ctx = canvas.getContext('2d')!;
-      ctx.drawImage(img, 0, 0, outW, outH);
+      try { ctx.drawImage(img, 0, 0, outW, outH); } catch { /* skip background if tainted/broken */ }
       const overlayDiv = cardRef.current.querySelector('[data-svg-overlay="true"]');
       const svgEl = overlayDiv?.querySelector('svg');
       if (svgEl) {
