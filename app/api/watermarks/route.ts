@@ -31,7 +31,7 @@ export async function GET() {
 
     const map: Record<string, WatermarkConfig> = {};
     for (const row of data ?? []) {
-      map[row.template_id] = { x: row.x, y: row.y, w: row.w, color: row.color, opacity: row.opacity, rotation: row.rotation ?? 0 };
+      map[row.template_id] = { x: row.x, y: row.y, w: row.w, color: row.color, opacity: row.opacity, rotation: row.rotation ?? 0, file: row.file ?? 'companyname.svg' };
     }
     return NextResponse.json(map);
   } catch (err) {

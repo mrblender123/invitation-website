@@ -268,8 +268,18 @@ export default function TemplateEditorPage() {
       .then(d => setTemplates((d.templates ?? []).filter((t: Template) => t.textSvg)));
   }, []);
 
-  // Load watermark SVG whenever the selected file changes
+  // Load watermark file whenever the selected file changes
   useEffect(() => {
+    if (wmFile.endsWith('.png')) {
+      const img = new Image();
+      img.onload = () => {
+        if (img.naturalHeight > 0) setWmAspect(img.naturalWidth / img.naturalHeight);
+        setWmTightSvg('');
+        setWmSvgText('');
+      };
+      img.src = `/${wmFile}`;
+      return;
+    }
     fetch(`/${wmFile}`)
       .then(r => r.text())
       .then(async text => {
@@ -293,7 +303,10 @@ export default function TemplateEditorPage() {
       .then(r => r.json())
       .then((map: Record<string, WatermarkConfig>) => {
         setAllWatermarks(map);
-        if (map[selected.id]) setWatermark(map[selected.id]);
+        if (map[selected.id]) {
+          setWatermark(map[selected.id]);
+          if (map[selected.id].file) setWmFile(map[selected.id].file!);
+        }
       })
       .catch(() => {});
     const w = selected.style.canvasWidth;
@@ -712,7 +725,7 @@ export default function TemplateEditorPage() {
     const res = await fetch('/api/admin/watermark', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
-      body: JSON.stringify({ templateId: selected.id, ...watermark }),
+      body: JSON.stringify({ templateId: selected.id, ...watermark, file: wmFile }),
     });
     const json = await res.json().catch(() => ({}));
     setWmSaving(false);
@@ -1351,14 +1364,16 @@ export default function TemplateEditorPage() {
                   })}
 
                   {/* Watermark overlay */}
-                  {watermark && wmTightSvg && (() => {
+                  {watermark && (wmFile.endsWith('.png') || wmTightSvg) && (() => {
+                    const isPng = wmFile.endsWith('.png');
                     const wh = watermark.w / wmAspect;
                     const left = (watermark.x - watermark.w / 2) * scale;
                     const top  = (watermark.y - wh / 2) * scale;
                     const w    = watermark.w * scale;
                     const h    = wh * scale;
-                    const coloredSvg = wmTightSvg.replace(/fill="(?!none)[^"]*"/g, `fill="${watermark.color}"`);
-                    const svgDataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(coloredSvg)}`;
+                    const imgSrc = isPng
+                      ? `/${wmFile}`
+                      : `data:image/svg+xml;charset=utf-8,${encodeURIComponent(wmTightSvg.replace(/fill="(?!none)[^"]*"/g, `fill="${watermark.color}"`))}`;
                     return (
                       <div
                         onMouseDown={e => {
@@ -1374,7 +1389,7 @@ export default function TemplateEditorPage() {
                           transformOrigin: 'center center',
                         }}
                       >
-                        <img src={svgDataUrl} style={{ width: '100%', height: '100%', display: 'block', pointerEvents: 'none' }} draggable={false} alt="watermark" />
+                        <img src={imgSrc} style={{ width: '100%', height: '100%', display: 'block', pointerEvents: 'none' }} draggable={false} alt="watermark" />
                       </div>
                     );
                   })()}
@@ -1680,8 +1695,9 @@ export default function TemplateEditorPage() {
                       {/* Watermark file selector */}
                       <div style={{ display: 'flex', gap: 4 }}>
                         {[
-                          { file: 'companyname.svg', label: 'Logo' },
-                          { file: '111.svg',         label: 'Text' },
+                          { file: 'companyname.svg',  label: 'Logo' },
+                          { file: '111.svg',          label: 'Text' },
+                          { file: 'logo_side_01.png', label: 'Side' },
                         ].map(({ file, label }) => (
                           <button key={file} onClick={() => setWmFile(file)}
                             style={{ flex: 1, fontSize: 11, padding: '4px 0', borderRadius: 5, cursor: 'pointer',
@@ -1693,7 +1709,8 @@ export default function TemplateEditorPage() {
                         ))}
                       </div>
 
-                      {/* Color */}
+                      {/* Color — hidden for PNG watermarks (can't recolor a raster image) */}
+                      {!wmFile.endsWith('.png') && (
                       <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 50 }}>Color</span>
                         <input type="color" value={watermark.color} onChange={e => setWatermark(w => w ? { ...w, color: e.target.value } : w)}
@@ -1701,6 +1718,7 @@ export default function TemplateEditorPage() {
                         <input type="text" value={watermark.color} onChange={e => setWatermark(w => w ? { ...w, color: e.target.value } : w)}
                           style={{ flex: 1, background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 5, color: '#fff', fontSize: 11, padding: '3px 6px', outline: 'none', fontFamily: 'monospace' }} />
                       </label>
+                      )}
 
                       {/* Opacity */}
                       <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>

@@ -28,6 +28,7 @@ export type WatermarkConfig = {
   color: string;     // hex color e.g. "#bfa67c"
   opacity: number;   // 0–1
   rotation?: number; // degrees, default 0
+  file?: string;     // watermark asset, e.g. 'companyname.svg' or 'logo_side_01.png'
 };
 
 export type Template = {

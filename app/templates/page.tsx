@@ -415,10 +415,26 @@ const [windowWidth, setWindowWidth] = useState(1200);
     if (el) setKeyboardRect(el.getBoundingClientRect());
   }, [activeField]);
 
-  // Fetch watermark configs + SVG content once; measure actual text bounds after SVG loads
+  // Fetch watermark configs once on mount
   useEffect(() => {
     fetch('/api/watermarks').then(r => r.json()).then(setWatermarks).catch(() => {});
-    fetch('/companyname.svg')
+  }, []);
+
+  // Load the correct watermark file whenever the selected template or watermark configs change
+  useEffect(() => {
+    const wm = selected ? watermarks[selected.id] : null;
+    const file = wm?.file || 'companyname.svg';
+    if (file.endsWith('.png')) {
+      const img = new Image();
+      img.onload = () => {
+        if (img.naturalHeight > 0) setWmAspect(img.naturalWidth / img.naturalHeight);
+        setWmTightSvg('');
+        setWmSvgText('');
+      };
+      img.src = `/${file}`;
+      return;
+    }
+    fetch(`/${file}`)
       .then(r => r.text())
       .then(async text => {
         setWmSvgText(text);
@@ -427,7 +443,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
         setWmAspect(aspect);
       })
       .catch(() => {});
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected?.id, watermarks]);
 
   // Fetch templates from the API (auto-discovered from public/templates/*/)
   useEffect(() => {
@@ -567,12 +584,21 @@ const [windowWidth, setWindowWidth] = useState(1200);
       const wm = selected ? watermarks[selected.id] : null;
       if (wm) {
         try {
-          const svgForBake = wmTightSvg || wmSvgText;
-          const colored = svgForBake.replace(/fill="[^"]*"/, `fill="${wm.color}"`);
-          const blob2 = new Blob([colored], { type: 'image/svg+xml;charset=utf-8' });
-          const url2 = URL.createObjectURL(blob2);
+          const wmFile = wm.file || 'companyname.svg';
+          const isPng = wmFile.endsWith('.png');
+          let svgBlobUrl: string | null = null;
+          let wmSrc: string;
+          if (isPng) {
+            wmSrc = `/${wmFile}`;
+          } else {
+            const svgForBake = wmTightSvg || wmSvgText;
+            const colored = svgForBake.replace(/fill="[^"]*"/, `fill="${wm.color}"`);
+            const blob2 = new Blob([colored], { type: 'image/svg+xml;charset=utf-8' });
+            svgBlobUrl = URL.createObjectURL(blob2);
+            wmSrc = svgBlobUrl;
+          }
           const wmImg = new Image();
-          await new Promise<void>(res => { wmImg.onload = () => res(); wmImg.onerror = () => res(); wmImg.src = url2; });
+          await new Promise<void>(res => { wmImg.onload = () => res(); wmImg.onerror = () => res(); wmImg.src = wmSrc; });
           const wmH = wm.w / wmAspect;
           const kx = outW / (selected?.style.canvasWidth ?? outW);
           const ky = outH / (selected?.style.canvasHeight ?? outH);
@@ -587,7 +613,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
           ctx.drawImage(wmImg, -pxW / 2, -pxH / 2, pxW, pxH);
           ctx.globalAlpha = 1;
           ctx.restore();
-          URL.revokeObjectURL(url2);
+          if (svgBlobUrl) URL.revokeObjectURL(svgBlobUrl);
         } catch { /* watermark failed — skip silently */ }
       }
       return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
@@ -993,14 +1019,16 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 )}
                 {(() => {
                   const wm = selected ? watermarks[selected.id] : null;
-                  if (!wm || !wmTightSvg) return null;
+                  if (!wm) return null;
+                  const wmFile = wm.file || 'companyname.svg';
+                  const isPng = wmFile.endsWith('.png');
+                  if (!isPng && !wmTightSvg) return null;
                   const wmH = wm.w / wmAspect;
                   const svgW = selected.style.canvasWidth;
                   const svgH = selected.style.canvasHeight;
                   const leftPct = ((wm.x - wm.w / 2) / svgW) * 100;
                   const topPct  = ((wm.y - wmH / 2) / svgH) * 100;
                   const widthPct = (wm.w / svgW) * 100;
-                  const colored = wmTightSvg.replace(/fill="[^"]*"/, `fill="${wm.color}"`);
                   return (
                     <div
                       aria-hidden="true"
@@ -1010,8 +1038,12 @@ const [windowWidth, setWindowWidth] = useState(1200);
                         opacity: wm.opacity, pointerEvents: 'none', userSelect: 'none', zIndex: 11,
                         transform: `rotate(${wm.rotation ?? 0}deg)`, transformOrigin: 'center center',
                       }}
-                      dangerouslySetInnerHTML={{ __html: colored }}
-                    />
+                    >
+                      {isPng
+                        ? <img src={`/${wmFile}`} style={{ width: '100%', display: 'block' }} alt="" />
+                        : <div dangerouslySetInnerHTML={{ __html: wmTightSvg.replace(/fill="[^"]*"/, `fill="${wm.color}"`) }} />
+                      }
+                    </div>
                   );
                 })()}
                 </div>
