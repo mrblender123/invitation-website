@@ -34,9 +34,16 @@ export async function POST(req: NextRequest) {
   if (!templateId) return NextResponse.json({ error: 'Missing templateId' }, { status: 400 });
 
   const db = adminClient();
-  const { error } = await db
+  let { error } = await db
     .from('template_watermarks')
     .upsert({ template_id: templateId, x, y, w, color, opacity, rotation: rotation ?? 0, file: file ?? 'companyname.svg' }, { onConflict: 'template_id' });
+
+  // If the file column doesn't exist yet (migration pending), retry without it
+  if (error?.message?.includes("'file'")) {
+    ({ error } = await db
+      .from('template_watermarks')
+      .upsert({ template_id: templateId, x, y, w, color, opacity, rotation: rotation ?? 0 }, { onConflict: 'template_id' }));
+  }
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });
