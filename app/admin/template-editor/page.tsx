@@ -808,11 +808,13 @@ export default function TemplateEditorPage() {
   const fmSave = async () => {
     if (!fmFolder || !accessToken) return;
     setFmSaving(true);
+    try {
     const res  = await fetch('/api/admin/update-folder-fields', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
       body: JSON.stringify({ folderPath: fmFolder.folder, fields: fmFields }),
     });
+    if (!res.ok) { setFmSaving(false); setFmStatus(`✗ Server error ${res.status}`); return; }
     const data = await res.json();
     setFmSaving(false);
     if (data.ok) {
@@ -823,10 +825,12 @@ export default function TemplateEditorPage() {
     } else {
       setFmStatus(`✗ ${data.error}`);
     }
+    } catch (e) { setFmSaving(false); setFmStatus(`✗ ${e instanceof Error ? e.message : 'Network error'}`); }
   };
 
   const fmToggleOverview = async (folderPath: string, fieldId: string, required: boolean) => {
     if (!accessToken) return;
+    try {
     const res  = await fetch('/api/admin/update-folder-fields', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
@@ -837,6 +841,7 @@ export default function TemplateEditorPage() {
         ),
       }),
     });
+    if (!res.ok) { setFmStatus(`✗ Server error ${res.status}`); return; }
     const data = await res.json();
     if (data.ok) {
       setFmData(prev => prev ? prev.map(d => d.folder === folderPath
@@ -845,6 +850,7 @@ export default function TemplateEditorPage() {
       ) : prev);
       setFmStatus(`✓ ${fieldId} → ${required ? 'required' : 'optional'} in ${folderPath.split('/').pop()}`);
     }
+    } catch (e) { setFmStatus(`✗ ${e instanceof Error ? e.message : 'Network error'}`); }
   };
 
   if (loading || !user || user.email !== ADMIN_EMAIL) return null;
