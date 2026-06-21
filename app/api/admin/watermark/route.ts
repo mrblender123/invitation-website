@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
   const db = adminClient();
   let { error } = await db
     .from('template_watermarks')
-    .upsert({ template_id: templateId, x, y, w, color, opacity, rotation: rotation ?? 0, file: file ?? 'companyname.svg' }, { onConflict: 'template_id' });
+    .upsert({ template_id: templateId, x, y, w, color, opacity, rotation: rotation ?? 0, file: file ?? 'logo_side_01.png' }, { onConflict: 'template_id' });
 
   // If the file column doesn't exist yet (migration pending), retry without it
   if (error?.message?.includes("'file'")) {

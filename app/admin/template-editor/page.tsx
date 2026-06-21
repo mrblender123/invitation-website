@@ -205,7 +205,7 @@ export default function TemplateEditorPage() {
 
   // ── watermark state ───────────────────────────────────────────────────────────
   const [watermark, setWatermark] = useState<WatermarkConfig | null>(null);
-  const [wmFile, setWmFile] = useState<string>('companyname.svg');
+  const [wmFile, setWmFile] = useState<string>('logo_side_01.png');
   const [wmSvgText, setWmSvgText] = useState<string>('');
   const [wmTightSvg, setWmTightSvg] = useState<string>('');
   const [wmAspect, setWmAspect] = useState<number>(420 / 55);
