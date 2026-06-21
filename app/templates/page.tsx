@@ -1134,7 +1134,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                                 background: field.optional ? 'rgba(255,245,210,0.5)' : '#ffffff',
                               }}
                               placeholder={field.placeholder}
-                              value={fieldValues[field.id] ?? ''}
+                              value={fieldValues[field.id] ?? field.placeholder}
                               onFocus={() => setActiveField({ id: field.id, rtl: field.rtl ?? false })}
                               onBlur={() => setActiveField(null)}
                               onChange={e => setFieldValues(v => ({ ...v, [field.id]: e.target.value }))}
@@ -1143,10 +1143,10 @@ const [windowWidth, setWindowWidth] = useState(1200);
                           <button
                             onMouseDown={e => {
                               e.preventDefault();
-                              const isEdited = fieldValues[field.id] !== field.placeholder;
+                              const isEdited = fieldValues[field.id] !== undefined && fieldValues[field.id] !== field.placeholder;
                               setFieldValues(v => ({ ...v, [field.id]: isEdited ? field.placeholder : '' }));
                             }}
-                            title={fieldValues[field.id] !== field.placeholder ? 'Restore default' : 'Clear field'}
+                            title={fieldValues[field.id] !== undefined && fieldValues[field.id] !== field.placeholder ? 'Restore default' : 'Clear field'}
                             style={{
                               position: 'absolute',
                               left: 8,
@@ -1164,7 +1164,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                               lineHeight: 1,
                             }}
                           >
-                            {fieldValues[field.id] !== field.placeholder ? '↺' : '×'}
+                            {fieldValues[field.id] !== undefined && fieldValues[field.id] !== field.placeholder ? '↺' : '×'}
                           </button>
                         </div>
                       </div>
