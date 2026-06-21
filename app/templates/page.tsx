@@ -312,7 +312,7 @@ function TemplatesContent() {
   const [hoveredField, setHoveredField] = useState<string | null>(null);
 const [windowWidth, setWindowWidth] = useState(1200);
   const [showAllFields, setShowAllFields] = useState(false);
-  const [showKeyboard, setShowKeyboard] = useState(true);
+  const [showKeyboard, setShowKeyboard] = useState(false);
   const [keyboardRect, setKeyboardRect] = useState<DOMRect | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
