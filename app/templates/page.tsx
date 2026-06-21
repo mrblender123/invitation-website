@@ -142,7 +142,7 @@ function CheckoutForm({ clientSecret, onSuccess }: { clientSecret: string; onSuc
     setPaying(true);
     setError('');
     const cardNumber = elements.getElement(CardNumberElement);
-    if (!cardNumber) return;
+    if (!cardNumber) { setPaying(false); return; }
     const { error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
       payment_method: { card: cardNumber },
     });
