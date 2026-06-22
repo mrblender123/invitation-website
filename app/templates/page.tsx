@@ -304,7 +304,7 @@ function TemplatesContent() {
   const [wmSvgText, setWmSvgText] = useState('');
   const [wmTightSvg, setWmTightSvg] = useState('');
   const [wmAspect, setWmAspect] = useState(420 / 55);
-  const [lang, setLang] = useState<'he' | 'en'>('he');
+  const [lang, setLang] = useState<'he' | 'en' | 'all'>('all');
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [selected, setSelected] = useState<Template | null>(null);
@@ -871,27 +871,27 @@ const [windowWidth, setWindowWidth] = useState(1200);
             </div>
 
 
-            {/* Language toggle */}
-            <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
-              {(['he', 'en'] as const).map(l => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  style={{
-                    padding: '4px 12px',
-                    borderRadius: 9999,
-                    border: lang === l ? '1.5px solid #999' : '1.5px solid rgba(0,0,0,0.14)',
-                    background: lang === l ? '#999' : 'transparent',
-                    color: lang === l ? '#fff' : '#888',
-                    fontWeight: 500,
-                    fontSize: 12,
-                    cursor: 'pointer',
-                    transition: 'all .15s',
-                  }}
-                >
-                  {l === 'he' ? 'Hebrew' : 'English'}
-                </button>
-              ))}
+            {/* Language filter */}
+            <div style={{ marginBottom: 20 }}>
+              <select
+                value={lang}
+                onChange={e => setLang(e.target.value as 'all' | 'he' | 'en')}
+                style={{
+                  padding: '4px 28px 4px 10px',
+                  borderRadius: 6,
+                  border: '1.5px solid rgba(0,0,0,0.18)',
+                  background: 'white',
+                  color: '#666',
+                  fontWeight: 500,
+                  fontSize: 13,
+                  cursor: 'pointer',
+                  appearance: 'auto',
+                }}
+              >
+                <option value="all">All</option>
+                <option value="he">Hebrew</option>
+                <option value="en">English</option>
+              </select>
             </div>
 
             {/* Sub-category filter tabs */}
@@ -922,7 +922,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
             ) : (() => {
               const filtered = (category ? templates.filter(t => t.category === category) : templates)
                 .filter(t => !subcategory || t.subcategory === subcategory)
-                .filter(t => t.language === lang)
+                .filter(t => lang === 'all' || t.language === lang)
                 .sort((a, b) => {
                   const num = (s: string) => { const m = s.match(/(\d+)/); return m ? parseInt(m[1]) : 0; };
                   return num(a.name) - num(b.name);
