@@ -889,7 +889,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     transition: 'all .15s',
                   }}
                 >
-                  {l === 'he' ? 'עברית / יידיש' : 'English'}
+                  {l === 'he' ? 'Hebrew' : 'English'}
                 </button>
               ))}
             </div>
