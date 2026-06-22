@@ -880,8 +880,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   style={{
                     padding: '4px 12px',
                     borderRadius: 9999,
-                    border: lang === l ? '1.5px solid #222' : '1.5px solid rgba(0,0,0,0.14)',
-                    background: lang === l ? '#222' : 'transparent',
+                    border: lang === l ? '1.5px solid #999' : '1.5px solid rgba(0,0,0,0.14)',
+                    background: lang === l ? '#999' : 'transparent',
                     color: lang === l ? '#fff' : '#888',
                     fontWeight: 500,
                     fontSize: 12,
