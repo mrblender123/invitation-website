@@ -4,7 +4,7 @@ export const SUB_DISPLAY_NAMES: Record<string, string> = {
 };
 
 export const CATEGORY_SUBS: Record<string, string[]> = {
-  "It's a Boy":    ['Shulem Zucher', 'Vachnacht-Bris', 'Bris', 'Pidyon Haben', "Shlishi L'milah"],
+  "It's a Boy":    ['Shulem Zucher', 'Vach Nacht', 'Vachnacht-Bris', 'Bris', 'Pidyon Haben', "Shlishi L'milah"],
   "It's a Girl":   [],
   'Upsherin':      [],
   'Bar Mitzvah':   ['Bar Mizva'],
