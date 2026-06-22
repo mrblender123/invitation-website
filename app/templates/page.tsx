@@ -878,13 +878,13 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   key={l}
                   onClick={() => setLang(l)}
                   style={{
-                    padding: '6px 18px',
+                    padding: '4px 12px',
                     borderRadius: 9999,
-                    border: lang === l ? '1.5px solid #b8975a' : '1.5px solid rgba(0,0,0,0.14)',
-                    background: lang === l ? 'rgba(184,151,90,0.12)' : 'transparent',
-                    color: lang === l ? '#b8975a' : '#888',
-                    fontWeight: lang === l ? 700 : 500,
-                    fontSize: 14,
+                    border: lang === l ? '1.5px solid #222' : '1.5px solid rgba(0,0,0,0.14)',
+                    background: lang === l ? '#222' : 'transparent',
+                    color: lang === l ? '#fff' : '#888',
+                    fontWeight: 500,
+                    fontSize: 12,
                     cursor: 'pointer',
                     transition: 'all .15s',
                   }}
