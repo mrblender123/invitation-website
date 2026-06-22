@@ -304,7 +304,7 @@ function TemplatesContent() {
   const [wmSvgText, setWmSvgText] = useState('');
   const [wmTightSvg, setWmTightSvg] = useState('');
   const [wmAspect, setWmAspect] = useState(420 / 55);
-  const [lang, setLang] = useState<'he' | 'en' | 'all'>('all');
+  const [lang, setLang] = useState<'he' | 'en' | 'all' | ''>('');
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [selected, setSelected] = useState<Template | null>(null);
@@ -888,6 +888,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   appearance: 'auto',
                 }}
               >
+                <option value="" disabled>Language</option>
                 <option value="all">All</option>
                 <option value="he">Hebrew</option>
                 <option value="en">English</option>
@@ -922,7 +923,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
             ) : (() => {
               const filtered = (category ? templates.filter(t => t.category === category) : templates)
                 .filter(t => !subcategory || t.subcategory === subcategory)
-                .filter(t => lang === 'all' || t.language === lang)
+                .filter(t => !lang || lang === 'all' || t.language === lang)
                 .sort((a, b) => {
                   const num = (s: string) => { const m = s.match(/(\d+)/); return m ? parseInt(m[1]) : 0; };
                   return num(a.name) - num(b.name);
