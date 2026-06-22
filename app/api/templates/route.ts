@@ -118,10 +118,15 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
     ...(anyHasStar && !e.hasStar && { optional: true }),
   }));
 
+  // Detect language: if all non-empty placeholders are LTR → English, else Hebrew
+  const textFields = fields.filter(f => f.placeholder.trim().length > 0);
+  const language: 'he' | 'en' = textFields.length > 0 && textFields.every(f => !f.rtl) ? 'en' : 'he';
+
   return {
     textSvg: publicUrl,
     fields: fields.length > 0 ? fields : undefined,
     style: { canvasWidth, canvasHeight },
+    language,
   };
 }
 

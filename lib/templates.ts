@@ -41,4 +41,5 @@ export type Template = {
   textSvg?: string;    // path to SVG text overlay in /public/templates/{category}/
   fields?: SvgField[]; // auto-discovered from SVG <g id> elements
   style: TemplateStyle;
+  language: 'he' | 'en';
 };

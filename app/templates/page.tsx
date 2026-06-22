@@ -304,6 +304,7 @@ function TemplatesContent() {
   const [wmSvgText, setWmSvgText] = useState('');
   const [wmTightSvg, setWmTightSvg] = useState('');
   const [wmAspect, setWmAspect] = useState(420 / 55);
+  const [lang, setLang] = useState<'he' | 'en'>('he');
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [selected, setSelected] = useState<Template | null>(null);
@@ -870,6 +871,29 @@ const [windowWidth, setWindowWidth] = useState(1200);
             </div>
 
 
+            {/* Language toggle */}
+            <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
+              {(['he', 'en'] as const).map(l => (
+                <button
+                  key={l}
+                  onClick={() => setLang(l)}
+                  style={{
+                    padding: '6px 18px',
+                    borderRadius: 9999,
+                    border: lang === l ? '1.5px solid #b8975a' : '1.5px solid rgba(0,0,0,0.14)',
+                    background: lang === l ? 'rgba(184,151,90,0.12)' : 'transparent',
+                    color: lang === l ? '#b8975a' : '#888',
+                    fontWeight: lang === l ? 700 : 500,
+                    fontSize: 14,
+                    cursor: 'pointer',
+                    transition: 'all .15s',
+                  }}
+                >
+                  {l === 'he' ? 'עברית / יידיש' : 'English'}
+                </button>
+              ))}
+            </div>
+
             {/* Sub-category filter tabs */}
             {subs.length > 0 && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 40 }}>
@@ -898,6 +922,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
             ) : (() => {
               const filtered = (category ? templates.filter(t => t.category === category) : templates)
                 .filter(t => !subcategory || t.subcategory === subcategory)
+                .filter(t => t.language === lang)
                 .sort((a, b) => {
                   const num = (s: string) => { const m = s.match(/(\d+)/); return m ? parseInt(m[1]) : 0; };
                   return num(a.name) - num(b.name);
