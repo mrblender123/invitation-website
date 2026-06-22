@@ -152,7 +152,7 @@ if (!isSide) {
 
 const KNOWN_FONTS = [
   'Heebo', 'Playpen Sans Hebrew', 'Frank Ruhl Libre',
-  'Dancing Script', 'Lora', 'Montserrat', 'Oswald', 'Secular One',
+  'Dancing Script', 'Lora', 'Montserrat', 'Oswald', 'Secular One', 'Lexend',
 ];
 
 const unknownFonts = new Set(
