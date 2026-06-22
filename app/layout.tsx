@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Dancing_Script, Frank_Ruhl_Libre, Heebo, Lora, Montserrat, Oswald, Playpen_Sans_Hebrew, Secular_One } from "next/font/google";
+import { Dancing_Script, Frank_Ruhl_Libre, Heebo, Lexend, Lora, Montserrat, Oswald, Playpen_Sans_Hebrew, Secular_One } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./components/AuthProvider";
 
@@ -52,6 +52,13 @@ const frankRuhlLibre = Frank_Ruhl_Libre({
   variable: "--font-frank-ruhl-libre",
   subsets: ["latin", "hebrew"],
   weight: ["300", "400", "500", "700", "900"],
+  display: "fallback",
+});
+
+const lexend = Lexend({
+  variable: "--font-lexend",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
   display: "fallback",
 });
 
@@ -111,7 +118,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable} ${heebo.variable} ${frankRuhlLibre.variable} ${playpenSansHebrew.variable}`}>
+    <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable} ${heebo.variable} ${frankRuhlLibre.variable} ${playpenSansHebrew.variable} ${lexend.variable}`}>
       <head>
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link rel="stylesheet" href="https://use.typekit.net/hat2kft.css" />
