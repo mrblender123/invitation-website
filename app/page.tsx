@@ -69,6 +69,12 @@ export default function Home() {
     <div className="min-h-screen" style={{ background: 'var(--background)', color: 'var(--foreground)', fontFamily: 'var(--font-inter), system-ui, sans-serif', position: 'relative', overflowX: 'clip' }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }} />
 
+      {/* Visually hidden SEO content */}
+      <div style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 }}>
+        <h1>Jewish Simcha Invitation Templates</h1>
+        <p>Professional Hebrew and Yiddish invitation designs for bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding and more. Customize with your details and download instantly for $8.99.</p>
+      </div>
+
       {/* Ambient gradient orbs */}
       <div aria-hidden="true" style={{ position: 'fixed', top: '-10%', left: '-12%', width: 700, height: 700, borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,210,255,0.18) 0%, transparent 70%)', filter: 'blur(70px)', pointerEvents: 'none', zIndex: 0 }} />
       <div aria-hidden="true" style={{ position: 'fixed', top: '-8%', right: '-14%', width: 650, height: 650, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,220,180,0.18) 0%, transparent 70%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
