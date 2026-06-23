@@ -83,7 +83,7 @@ export default function Home() {
 
             {/* Brand */}
             <div style={{ maxWidth: 260 }}>
-              <img src="/logo.svg" alt="Share Your Simcha" style={{ height: 36, width: 'auto', marginBottom: 10 }} />
+              <img src="/logo.svg" alt="Share Your Simcha" style={{ height: 60, width: 'auto', marginBottom: 10 }} />
               <p style={{ fontSize: 13, lineHeight: 1.7, color: 'var(--muted-faint)', margin: 0 }}>
                 Beautiful invitation designs for every simcha. Customize, download, and share in minutes.
               </p>
