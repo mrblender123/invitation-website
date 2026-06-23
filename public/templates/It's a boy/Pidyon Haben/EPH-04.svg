@@ -9,8 +9,8 @@
   <g id="line_3">
     <text transform="translate(180 235.1)" fill="#5c656d" font-family="Montserrat" font-size="10.1" text-anchor="middle"><tspan x="0" y="0">Of our Baby son </tspan></text>
   </g>
-  <g id="date*">
-    <text transform="translate(180 286.7)" fill="#5c656d" font-family="Montserrat" font-size="10.1" text-anchor="middle"><tspan x="0" y="0">December 21</tspan></text>
+  <g id="line_4">
+    <text transform="translate(180 260.4)" fill="#5c656d" font-family="Montserrat" font-size="10.1" text-anchor="middle"><tspan x="0" y="0">That will take place</tspan></text>
   </g>
   <g>
     <path d="M160.9,266.3h1.4c1,2.2,2,4.4,3,6.7h0c1-2.2,2-4.4,3-6.7h1.4v8.4h-1.2v-6.2h0c-.9,2.1-1.8,4.1-2.8,6.2h-.9c-.9-2.1-1.8-4.1-2.8-6.2h0v6.2h-1.2v-8.4Z" fill="#212526"/>
@@ -20,13 +20,19 @@
     <path d="M192.2,273.2c0-1.1,1-1.6,2.1-1.8,1.2-.2,1.8-.3,1.8-.9s-.5-1.1-1.3-1.1-1.2.4-1.4,1.1l-1-.3c.4-1.2,1.4-1.7,2.5-1.7s2.3.6,2.3,2.1v2.2c0,1,0,1.4.2,1.9h-1.1c-.1-.3-.1-.6-.1-1h0c-.3.7-1.1,1.2-2,1.2s-2-.5-2-1.6ZM194.4,274c1,0,1.7-.9,1.7-1.6v-.7c-.3.2-.7.3-1.3.4-.6.1-1.4.4-1.4,1s.4.8,1,.8Z" fill="#212526"/>
     <path d="M200.3,274.9l-2.4-6.1h1.2c.6,1.5,1.1,3.1,1.7,4.7h0c.6-1.6,1.2-3.2,1.7-4.7h1.2l-3.2,8.3h-1.1l.9-2.2Z" fill="#212526"/>
   </g>
+  <g id="date*">
+    <text transform="translate(180 286.7)" fill="#5c656d" font-family="Montserrat" font-size="10.1" text-anchor="middle"><tspan x="0" y="0">December 21</tspan></text>
+  </g>
   <g id="hall*">
     <text transform="translate(180 314.1)" fill="#212526" font-family="Montserrat" font-size="10.8" font-weight="600" text-anchor="middle"><tspan x="0" y="0">At Pardes Noach</tspan></text>
+  </g>
+  <g id="street*">
+    <text transform="translate(180 327.2)" fill="#5c656d" font-family="Montserrat" font-size="10.1" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
   <g id="greeting">
     <text transform="translate(180 359.8)" fill="#5c656d" font-family="Lexend" font-size="10.1" text-anchor="middle"><tspan x="0" y="0">looking forward to see you</tspan></text>
   </g>
   <g id="host_name*">
-    <text transform="translate(180 375.6)" fill="#212526" font-family="Montserrat" font-size="13.5" font-weight="600" text-anchor="middle"><tspan x="0" y="0">shmuel &amp; Raizy gross</tspan></text>
+  <text transform="translate(180 375.6)" fill="#212526" font-family="Montserrat" font-size="13.5" font-weight="600" text-anchor="middle"><tspan x="0" y="0">shmuel &amp; Raizy gross</tspan></text>
   </g>
 </svg>
