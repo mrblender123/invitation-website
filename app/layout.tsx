@@ -64,7 +64,7 @@ const lexend = Lexend({
 
 
 export const metadata: Metadata = {
-  title: "Share Your Simcha | Jewish Simcha Invitation Templates",
+  title: "Simcha Invitations",
   description: "Create beautiful Jewish simcha invitations in minutes. Professional templates for bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding & more. Personalize and download instantly for $8.99.",
   keywords: [
     "Jewish simcha invitation",
