@@ -63,6 +63,7 @@ function decodeXmlEntities(s: string): string {
 function isRtlText(text: string): boolean {
   const rtl   = (text.match(/[֑-״؀-ۿ]/g) ?? []).length;
   const latin = (text.match(/[A-Za-z]/g) ?? []).length;
+  if (rtl === 0 && latin === 0) return false; // symbols, numbers, punctuation → neutral
   return rtl >= latin; // ties go RTL (Hebrew numerals, mixed abbrevs)
 }
 
