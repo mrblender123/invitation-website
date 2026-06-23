@@ -66,7 +66,7 @@ function isRtlText(text: string): boolean {
   return rtl >= latin; // ties go RTL (Hebrew numerals, mixed abbrevs)
 }
 
-function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' | 'fields' | 'style'> {
+function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' | 'fields' | 'style' | 'language'> {
   // Extract viewBox → canvas size
   let canvasWidth = 444, canvasHeight = 630;
   const vbMatch = content.match(/viewBox=["']([^"']+)["']/);
