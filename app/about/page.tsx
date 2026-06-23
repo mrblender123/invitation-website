@@ -7,6 +7,21 @@ export const metadata = {
   description: 'Share Your Simcha makes it easy to create beautiful Jewish simcha invitations. Browse templates, personalize your details, and download instantly — no design skills needed.',
 };
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'How much does it cost?', acceptedAnswer: { '@type': 'Answer', text: 'Browsing and customizing is completely free. When you\'re happy with your design, you pay $8.99 to download — your finished invitation arrives as a high-quality PNG straight to your email.' } },
+    { '@type': 'Question', name: 'Do I need to create an account?', acceptedAnswer: { '@type': 'Answer', text: 'No account needed. Browse, customize, pay, and receive your invitation — all without signing up.' } },
+    { '@type': 'Question', name: 'Can I make changes after I download?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Every purchase includes up to 3 edits within 7 days. A link in your confirmation email lets you reopen your invitation, make changes, and re-download.' } },
+    { '@type': 'Question', name: "I paid but didn't receive my invitation email — what should I do?", acceptedAnswer: { '@type': 'Answer', text: "Check your Promotions tab (in Gmail) or your Spam folder — the email sometimes lands there. If you still can't find it, contact us and we'll resend it." } },
+    { '@type': 'Question', name: 'What simchas are supported?', acceptedAnswer: { '@type': 'Answer', text: "We cover the full lifecycle of Jewish celebrations: Bris, Vachnacht, Pidyon Haben, It's a Girl, Upsherin, Bar Mitzvah, Tenoyim, Bavarfen, Wedding, and Sheva Brachos — with more added regularly." } },
+    { '@type': 'Question', name: 'Can I share the invitation digitally?', acceptedAnswer: { '@type': 'Answer', text: "Absolutely. Share the PNG directly on WhatsApp, email, or any messaging app. It's the perfect size for digital sharing." } },
+    { '@type': 'Question', name: 'Can I print the invitation?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. The downloaded image is high resolution and suitable for home printing or a professional print shop.' } },
+    { '@type': 'Question', name: 'Can I edit Hebrew text on the templates?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Templates that include Hebrew fields are fully editable. Just click the field and type your text.' } },
+  ],
+};
+
 const STEPS = [
   {
     number: '01',
@@ -28,6 +43,7 @@ const STEPS = [
 export default function AboutPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)', fontFamily: 'var(--font-inter), system-ui, sans-serif', position: 'relative', overflowX: 'clip' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       <LandingHeader />
 

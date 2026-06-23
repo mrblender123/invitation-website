@@ -46,6 +46,21 @@ const schemaOrg = {
         { '@type': 'ListItem', position: 8, name: 'Sheva Brachos Invitation Templates',             url: 'https://www.shareyoursimcha.com/templates?category=Sheva%20Brachos' },
       ],
     },
+    {
+      '@type': 'Product',
+      name: 'Jewish Simcha Invitation — Customize & Download',
+      description: 'Professional invitation templates for every Jewish simcha. Personalize with your own details and receive a print-ready, high-resolution PNG instantly by email.',
+      brand: { '@type': 'Brand', name: 'Share Your Simcha' },
+      image: 'https://www.shareyoursimcha.com/og-image.png',
+      offers: {
+        '@type': 'Offer',
+        price: '8.99',
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+        url: 'https://www.shareyoursimcha.com/templates',
+        seller: { '@type': 'Organization', name: 'Share Your Simcha' },
+      },
+    },
   ],
 };
 
