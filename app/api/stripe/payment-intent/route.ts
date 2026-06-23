@@ -10,7 +10,6 @@ export async function POST(req: Request) {
       amount: 899,
       currency: 'usd',
       payment_method_types: ['card'],
-      receipt_email: email || undefined,
       description: `Share Your Simcha – ${templateName}`,
       metadata: (() => {
         const json = JSON.stringify(fieldValues);
