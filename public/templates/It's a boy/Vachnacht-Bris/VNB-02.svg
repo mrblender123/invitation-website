@@ -1,41 +1,62 @@
-<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
-  <g id="line_2">
-    <text transform="translate(180 49.3) scale(.7 1)" text-anchor="middle" fill="#7c9cb6" font-family="Secular One" font-size="9"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+  <g id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו
+">
+    <g id="line_1">
+      <text transform="translate(180 492.1)" fill="#7fb6d6" font-family="Secular One" font-weight="400" font-size="9.3" text-anchor="middle"><tspan x="0" y="0">חתן יהודה גרינבערגער הי״וו</tspan></text>
+    </g>
   </g>
-  <g id="line_4">
-    <text transform="translate(180 54.9) scale(.7 1)" text-anchor="middle" fill="#7c9cb6" font-family="Secular One" font-size="6"><tspan x="0" y="0">הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳</tspan></text>
+  <g id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו
+">
+    <g id="line_2">
+      <text transform="translate(180 483.5)" fill="#7fb6d6" font-family="Secular One" font-weight="400" font-size="9.3" text-anchor="middle"><tspan x="0" y="0">ב״ר שמחה ברוך הי״וו</tspan></text>
+    </g>
   </g>
-  <g id="line_3">
-    <text transform="translate(180 61.9) scale(.7 1)" text-anchor="middle" fill="#7c9cb6" font-family="Secular One" font-size="7"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
+  <g id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה">
+    <g id="line_3">
+      <text transform="translate(180 471.5)" fill="#7fb6d6" font-family="Secular One" font-weight="400" font-size="23.3" text-anchor="middle"><tspan x="0" y="0">שמעון לוי ברענאוויטש</tspan></text>
+    </g>
   </g>
-  <g id="line_5">
-    <text transform="translate(180 129) scale(.7 1)" text-anchor="middle" fill="#7c9cb6" font-family="Secular One" font-size="8.5"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+  <g id="_1247_38th_St_" data-name="1247 38th St *">
+    <g id="line_4">
+      <text transform="translate(180 252.3)" fill="#5d849b" font-family="Heebo" font-weight="400" font-size="7" text-anchor="middle"><tspan x="0" y="0">1247 38th St</tspan></text>
+    </g>
   </g>
-  <g id="date*">
-    <text transform="translate(180 140.8) scale(.7 1)" text-anchor="middle" fill="#7c9cb6" font-family="Secular One" font-size="11"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
+  <g id="_בביהמ_ד_קהל_חסידי_בעלזא" data-name="* בביהמ״ד קהל חסידי בעלזא">
+    <g id="vachnacht_date*">
+      <text transform="translate(180 244.2)" fill="#5d849b" font-family="Heebo" font-weight="400" font-size="7" text-anchor="middle"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
+    </g>
   </g>
-  <g id="hall*">
-    <text transform="translate(180 153.7) scale(.7 1)" text-anchor="middle" fill="#7c9cb6" font-family="Secular One" font-size="9.5"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
-  </g>
-  <g id="street_2*">
-    <text transform="translate(180 165) scale(.7 1)" text-anchor="middle" fill="#7c9cb6" font-family="Secular One" font-size="9.5"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+  <g id="bris_location*">
+    <text transform="translate(180 237.5)" fill="#5d849b" font-family="Heebo" font-weight="400" font-size="3" text-anchor="middle"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
   </g>
   <g id="line_6">
-    <text transform="translate(180 210.4) scale(.7 1)" text-anchor="middle" fill="#7c9cb6" font-family="Secular One" font-size="9.3"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
+    <text transform="translate(180 219.9)" fill="#5d849b" font-family="Heebo" font-weight="700" font-size="14.6" text-anchor="middle"><tspan x="0" y="0">הברית</tspan></text>
   </g>
-  <g id="location*">
-    <text transform="translate(180 218.9) scale(.7 1)" text-anchor="middle" fill="#7c9cb6" font-family="Secular One" font-size="9.3"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
+  <g id="line_7">
+    <text transform="translate(180 232.6)" fill="#5d849b" font-family="Heebo" font-weight="700" font-size="14.6" text-anchor="middle"><tspan x="0" y="0">מילה</tspan></text>
   </g>
-  <g id="street*">
-    <text transform="translate(180 228) scale(.7 1)" text-anchor="middle" fill="#7c9cb6" font-family="Secular One" font-size="9.3"><tspan x="0" y="0">1247 38th St</tspan></text>
+  <g id="bris_address*">
+    <text id="_5015_15th_Ave_" data-name="5015 15th Ave *" transform="translate(180 224.4)" fill="#5d849b" font-family="Heebo" font-weight="400" font-size="11.1" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+  </g>
+  <g id="line_5">
+    <text id="_בבאולם_פרדס_נח" data-name="* בבאולם פרדס נח" transform="translate(180 211.6)" fill="#5d849b" font-family="Heebo" font-weight="400" font-size="11.1" text-anchor="middle"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+  </g>
+  <g id="_בליל_ג_פרשת_שמות" data-name=" * בליל ג׳ פרשת שמות">
+    <g id="vachnacht_location*">
+      <text transform="translate(180 224.8)" fill="#5d849b" font-family="Heebo" font-weight="400" font-size="11.1" text-anchor="middle"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
+    </g>
+  </g>
+  <g id="vachnacht_address*">
+    <text transform="translate(180 211.6)" fill="#5d849b" font-family="Heebo" font-weight="400" font-size="11.1" text-anchor="middle"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
   </g>
   <g id="host_name*">
-    <text transform="translate(180 462.5) scale(.7 1)" text-anchor="middle" fill="#bdd8ee" font-family="Secular One" font-size="9.3"><tspan x="0" y="0">שמעון לוי ברענאוויטש</tspan></text>
+    <text transform="translate(180 48.2)" fill="#5d849b" font-family="Heebo" font-weight="400" font-size="7" text-anchor="middle"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
   </g>
-  <g id="father_name_1*">
-    <text transform="translate(180 472) scale(.7 1)" text-anchor="middle" fill="#bdd8ee" font-family="Secular One" font-size="9.3"><tspan x="0" y="0">ב״ר שמחה ברוך הי״וו</tspan></text>
+  <g id="groom_father*">
+    <text transform="translate(180 41)" fill="#5d849b" font-family="Heebo" font-weight="400" font-size="7" text-anchor="middle"><tspan x="0" y="0">הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳</tspan></text>
   </g>
-  <g id="father_name_2*">
-    <text transform="translate(180 482.1) scale(.7 1)" text-anchor="middle" fill="#bdd8ee" font-family="Secular One" font-size="9.3"><tspan x="0" y="0">חתן יהודה גרינבערגער הי״וו</tspan></text>
+  <g id="groom_name*">
+    <text transform="translate(180 34.2)" fill="#5d849b" font-family="Heebo" font-weight="400" font-size="7" text-anchor="middle"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
   </g>
 </svg>
