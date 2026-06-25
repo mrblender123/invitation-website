@@ -1,8 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  outputFileTracingExcludes: {
-    '*': ['./public/templates/**'],
+  experimental: {
+    outputFileTracingExcludes: {
+      '*': ['public/templates/**'],
+    },
   },
   async headers() {
     const rules = [];
