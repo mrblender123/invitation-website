@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
   <defs>
     <linearGradient id="linear-gradient" x1="60.8" y1="443.9" x2="99.8" y2="443.9" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#3482bf"/>
@@ -7,56 +6,56 @@
     </linearGradient>
   </defs>
   <g id="father_name_2*">
-    <text transform="translate(88.1 411) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="7.3"><tspan x="0" y="0">חתן יהודה גרינבערגער הי״וו</tspan></text>
+    <text transform="translate(117.4 411) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="7.3" text-anchor="middle"><tspan x="0" y="0">חתן יהודה גרינבערגער הי״וו</tspan></text>
   </g>
   <g id="father_name_1*">
-    <text transform="translate(96.4 403.5) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="7.3"><tspan x="0" y="0">ב״ר שמחה ברוך הי״וו</tspan></text>
+    <text transform="translate(117.4 403.5) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="7.3" text-anchor="middle"><tspan x="0" y="0">ב״ר שמחה ברוך הי״וו</tspan></text>
   </g>
   <g id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה">
     <g id="line_4">
-      <text transform="translate(90.1 376.1) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="19.3"><tspan x="0" y="0">שמעון לוי</tspan></text>
+      <text transform="translate(117.4 376.1) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="19.3" text-anchor="middle"><tspan x="0" y="0">שמעון לוי</tspan></text>
     </g>
   </g>
   <g id="_מרדכי_זאב_ראטה-2" data-name="* מרדכי זאב ראטה">
     <g id="line_3">
-      <text transform="translate(83.8 393.5) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="19.3"><tspan x="0" y="0">ברענאוויטש</tspan></text>
+      <text transform="translate(117.4 393.5) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="19.3" text-anchor="middle"><tspan x="0" y="0">ברענאוויטש</tspan></text>
     </g>
   </g>
   <g id="_1247_38th_St_" data-name="1247 38th St *">
     <g id="line_1">
-      <text transform="translate(67 480.3) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="6.5"><tspan x="0" y="0">1247 38th St</tspan></text>
+      <text transform="translate(78.9 479.4) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="6.5" text-anchor="middle"><tspan x="0" y="0">1247 38th St</tspan></text>
     </g>
   </g>
   <g id="_בביהמ_ד_קהל_חסידי_בעלזא" data-name="* בביהמ״ד קהל חסידי בעלזא">
     <g id="vachnacht_date*">
-      <text transform="translate(53.4 474) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="6.5"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
+      <text transform="translate(78.9 473.1) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="6.5" text-anchor="middle"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
     </g>
   </g>
   <g id="bris_location*">
-    <text transform="translate(65.1 468) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="6.5"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
+    <text transform="translate(78.9 467.1) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="6.5" text-anchor="middle"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
   </g>
   <path d="M66,429.2c1.1,0,2,.4,2.6,1.2s.9,1.9.9,3.4v7.5h-2.7v-7.8c0-.4,0-.7-.2-1s-.3-.3-.5-.3h-1.1c0,.4,0,.8,0,1.1,0,.4,0,.7,0,1v3.2c0,1.3-.3,2.3-.8,3-.5.7-1.2,1.1-2.1,1.1s-.4,0-.6,0c-.2,0-.4,0-.6-.1v-2.9c0,0,.1,0,.2,0,0,0,.2,0,.2,0,.3,0,.5-.1.7-.3s.3-.6.3-1v-2.5c0-.3,0-.7,0-1.2,0-.5.2-.9.3-1.3h-1.2v-2.9h4.6ZM72,436.2v-4h-1.2v-2.9h4v6.9h-2.7ZM79.5,441.3v-7.7c0-.5,0-.8-.3-1.1-.2-.2-.5-.3-.8-.3h-2.5v-2.9h2.7c1.1,0,2,.4,2.7,1.2.6.8,1,1.9,1,3.3v7.6h-2.7ZM83.4,441.3v-2.9h6.7c0-.1,1,.1,1,.1v2.8h-7.6ZM87.4,440.4v-7c0-.4,0-.7-.3-.9-.2-.2-.4-.3-.7-.3h-2.4v-2.9h2.7c1.1,0,2,.4,2.6,1.2.6.8.9,1.8.9,3.2v6.8h-2.7ZM92.2,441.3v-4.1c0-.9,0-1.5.2-1.9s.3-.6.4-.7h2.1c0,.2,0,.5,0,.9,0,.4,0,.8,0,1.3v4.6h-2.6ZM97.1,441.3v-7.9c0-.4,0-.7-.3-.9-.2-.2-.4-.3-.8-.3h-3.8v-2.9h4c1.1,0,2,.4,2.6,1.2.6.8.9,1.8.9,3.2v7.7h-2.7ZM64.3,458.6v-4.1c0-.9,0-1.5.2-1.9s.3-.6.4-.7h2.1c0,.2,0,.5,0,.9,0,.4,0,.8,0,1.3v4.6h-2.6ZM69.2,458.6v-7.9c0-.4,0-.7-.3-.9-.2-.2-.4-.3-.8-.3h-3.8v-2.9h4c1.1,0,2,.4,2.6,1.2.6.8.9,1.8.9,3.2v7.7h-2.7ZM73.2,449.5v-6.2h2.7v3.2h3.7v2.9h-6.4ZM80.5,449l-2.7,9.6h-2.9l3.5-12h2v2.4ZM82.6,453.5v-4h-1.2v-2.9h4v6.9h-2.7ZM87.4,458.6l.5-6.3c0-.5.1-1,.3-1.5.1-.5.3-.9.5-1.2,0,0,0,0,0,0s0,0,0,0h0c-.2,0-.4,0-.6.1-.2,0-.4.2-.5.3l-.6-2.7c.4-.2.8-.4,1.3-.5.5-.1,1-.3,1.5-.3.5,0,1-.1,1.5-.1,1.4,0,2.5.5,3.2,1.5s1.1,2.4,1.1,4.3v6.6h-3.9v-2.9h1.2v-4.3c0-.7,0-1.2-.3-1.6-.2-.4-.4-.6-.7-.6s-.7.2-.8.6c-.2.4-.3,1-.4,1.9l-.5,6.9h-2.7Z" fill="url(#linear-gradient)"/>
   <g id="bris_address*">
-    <text id="_5015_15th_Ave_" data-name="5015 15th Ave *" transform="translate(148.6 488.4) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="11.6"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+    <text id="_5015_15th_Ave_" data-name="5015 15th Ave *" transform="translate(178.3 487.7) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="11.6" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
   <g id="line_5">
-    <text id="_בבאולם_פרדס_נח" data-name="* בבאולם פרדס נח" transform="translate(148.6 476.7) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="11.6"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+    <text id="_בבאולם_פרדס_נח" data-name="* בבאולם פרדס נח" transform="translate(178.3 474.9) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="11.6" text-anchor="middle"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
   </g>
   <g id="_בליל_ג_פרשת_שמות" data-name=" * בליל ג׳ פרשת שמות">
     <g id="vachnacht_location*">
-      <text transform="translate(226.1 488.8) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="11.6"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
+      <text transform="translate(253.7 487.7) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="11.6" text-anchor="middle"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
     </g>
   </g>
   <g id="vachnacht_address*">
-    <text transform="translate(234.7 477.4) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="11.6"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+    <text transform="translate(253.7 475.2) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="11.6" text-anchor="middle"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
   </g>
   <g id="host_name*">
-    <text transform="translate(209.7 355.7) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="5.5"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
+    <text transform="translate(226.3 354.8) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="5.5" text-anchor="middle"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
   </g>
   <g id="groom_father*">
-    <text transform="translate(185.8 351.1) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="5.5"><tspan x="0" y="0">הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳</tspan></text>
+    <text transform="translate(226.3 350.2) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="5.5" text-anchor="middle"><tspan x="0" y="0">הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳</tspan></text>
   </g>
   <g id="groom_name*">
-    <text transform="translate(188.3 346.7) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="5.5"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
+    <text transform="translate(226.3 345.8) scale(.7 1)" fill="#60a7de" font-family="Secular One" font-size="5.5" text-anchor="middle"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
   </g>
 </svg>
