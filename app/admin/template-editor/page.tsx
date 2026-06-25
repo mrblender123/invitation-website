@@ -703,6 +703,50 @@ export default function TemplateEditorPage() {
     });
   }, [svgSource, pushHistory]);
 
+  const handleDuplicateLayer = useCallback((idx: number) => {
+    if (!svgSource) return;
+    pushHistory();
+    const src = layers[idx];
+    const doc = new DOMParser().parseFromString(svgSource, 'image/svg+xml');
+    const textEls = Array.from(doc.querySelectorAll('text'));
+    const textEl = textEls[idx];
+    if (!textEl) return;
+
+    const rootEl = (() => {
+      const p = textEl.parentElement;
+      return (p && p.tagName.toLowerCase() === 'g' && p.id) ? p : textEl;
+    })();
+
+    const clone = rootEl.cloneNode(true) as Element;
+    const baseId = (src.id ?? `layer_${idx}`).replace(/\*$/, '');
+    const suffix = src.id?.endsWith('*') ? '*' : '';
+    const newId = `${baseId}_copy${suffix}`;
+    if (clone.tagName.toLowerCase() === 'g') {
+      clone.setAttribute('id', newId);
+    }
+    const cloneText = clone.tagName.toLowerCase() === 'text' ? clone : clone.querySelector('text');
+    if (cloneText) {
+      const newTy = src.ty + 20;
+      cloneText.setAttribute('transform', `translate(${src.tx} ${newTy})${src.restTransform}`);
+    }
+    rootEl.parentNode?.insertBefore(clone, rootEl.nextSibling);
+
+    const newLayer: Layer = {
+      ...src,
+      index: idx + 1,
+      id: newId,
+      originalId: newId,
+      ty: src.ty + 20,
+    };
+    setSvgSource(new XMLSerializer().serializeToString(doc.documentElement));
+    setLayers(prev => {
+      const next = [...prev];
+      next.splice(idx + 1, 0, newLayer);
+      return next.map((l, i) => ({ ...l, index: i }));
+    });
+    setSelection(new Set([idx + 1]));
+  }, [svgSource, layers, pushHistory]);
+
   // ── save ──────────────────────────────────────────────────────────────────────
 
   const handleSave = async () => {
@@ -1629,6 +1673,13 @@ export default function TemplateEditorPage() {
                                   title="Rename field id"
                                   style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.25)', cursor: 'pointer', padding: '0 2px', fontSize: 11, lineHeight: 1, flexShrink: 0 }}
                                 >✎</button>
+                              )}
+                              {isSel && !isMultiSel && (
+                                <button
+                                  onClick={e => { e.stopPropagation(); handleDuplicateLayer(idx); }}
+                                  title="Duplicate layer"
+                                  style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.35)', cursor: 'pointer', padding: '0 2px', fontSize: 12, lineHeight: 1, flexShrink: 0 }}
+                                >⧉</button>
                               )}
                               {isSel && !isMultiSel && (
                                 <button
