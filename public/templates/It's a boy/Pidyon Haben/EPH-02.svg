@@ -1,25 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
   <g id="line_1">
     <text transform="translate(180 101.5)" fill="#b08a55" font-family="Montserrat" font-size="9.9" text-anchor="middle"><tspan x="0" y="0">WIth Gratitude To Hashem</tspan></text>
   </g>
   <g id="line_2">
     <text transform="translate(180 114.2)" fill="#b08a55" font-family="Montserrat" font-size="9.9" text-anchor="middle"><tspan x="0" y="0">We Would Like To Invite You To The</tspan></text>
   </g>
-  <g id="line_3">
-    <text transform="translate(180 159.2)" fill="#784d18" font-family="Montserrat" font-size="34.2" font-weight="600" text-anchor="middle"><tspan x="0" y="0">Pidyon</tspan></text>
-  </g>
-  <g id="line_4">
-    <text transform="translate(180 202.8)" fill="#784d18" font-family="Montserrat" font-size="34.2" font-weight="600" text-anchor="middle"><tspan x="0" y="0">Haben</tspan></text>
-  </g>
+  
+  
   <g id="line_5">
-    <text transform="translate(180 234.4)" fill="#b08a55" font-family="Montserrat" font-size="12.4" text-anchor="middle"><tspan x="0" y="0">Of our Baby son </tspan></text>
+    <text transform="translate(180 234.4)" fill="#b08a55" font-family="Montserrat" font-size="12.4" text-anchor="middle"><tspan x="0" y="0">Of our Baby son</tspan></text>
   </g>
   <g id="line_6">
     <text transform="translate(180 271.9)" fill="#b08a55" font-family="Montserrat" font-size="12.4" text-anchor="middle"><tspan x="0" y="0">That will take place</tspan></text>
   </g>
   <g id="day*">
-    <text transform="translate(180 290.5)" fill="#784d18" font-family="Montserrat" font-size="13.3" font-weight="600" text-anchor="middle"><tspan x="0" y="0">Monday night </tspan></text>
+    <text transform="translate(180 290.5)" fill="#784d18" font-family="Montserrat" font-size="13.3" font-weight="600" text-anchor="middle"><tspan x="0" y="0">Monday night</tspan></text>
   </g>
   <g id="date*">
     <text transform="translate(180 308)" fill="#b08a55" font-family="Montserrat" font-size="12.4" text-anchor="middle"><tspan x="0" y="0">December 21</tspan></text>
@@ -34,6 +29,8 @@
     <text transform="translate(180 386.1)" fill="#b08a55" font-family="Lexend" font-size="13.7" text-anchor="middle"><tspan x="0" y="0">looking forward to see you</tspan></text>
   </g>
   <g id="host_name*">
-    <text transform="translate(180 406.6)" fill="#b08a55" font-family="Montserrat" font-size="14.9" font-weight="600" text-anchor="middle"><tspan x="0" y="0">shmuel &amp; Raizy gross</tspan></text>
+    <text transform="translate(180 406.6)" fill="#b08a55" font-family="Montserrat" font-size="14.9" font-weight="600" text-anchor="middle"><tspan x="0" y="0">shmuel &amp; Raizy </tspan></text>
+  </g><g id="host_name_copy*">
+    <text transform="translate(180 424.9)" fill="#b08a55" font-family="Montserrat" font-size="14.9" font-weight="600" text-anchor="middle"><tspan x="0" y="0">Rosenberg</tspan></text>
   </g>
 </svg>

@@ -24,10 +24,10 @@
     <text transform="translate(180 330.3)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="10.7" font-weight="600"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
   <g id="shacharis_time*">
-    <text transform="translate(180 347.9)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="7.1" font-weight="400"><tspan x="0" y="0">שחרית בשעה</tspan></text>
+    <text transform="translate(180 347.9)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="7.1" font-weight="400"><tspan x="0" y="0">שחרית בשעה 8:00</tspan></text>
   </g>
   <g id="bris_time*">
-    <text transform="translate(180 357.1)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="7.1" font-weight="400"><tspan x="0" y="0">ברית בשעה</tspan></text>
+    <text transform="translate(180 357.1)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="7.1" font-weight="400"><tspan x="0" y="0">ברית בשעה 10:00</tspan></text>
   </g>
   <g id="closing*">
     <text transform="translate(180 378.8)" text-anchor="middle" fill="#819cb3" font-family="Heebo" font-size="6.2" font-weight="400"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
