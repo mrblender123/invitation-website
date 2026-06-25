@@ -1,21 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <g id="father_name*" data-name="* חתן בערל גרינפעלד הי״וו
-">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
+  <g id="father_name*" data-name="* חתן בערל גרינפעלד הי״וו ">
     <text text-anchor="middle" transform="translate(180 389.9)" fill="#1a1a1b" font-family="Heebo" font-size="9.8"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
   </g>
-  <g id="grandfather*" data-name="* ב״ר בנימין משה הי״וו
-">
+  <g id="grandfather*" data-name="* ב״ר בנימין משה הי״וו ">
     <text text-anchor="middle" transform="translate(180 379)" fill="#1a1a1b" font-family="Heebo" font-size="9.8"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
   </g>
   <g id="baby_name*" data-name="* מרדכי זאב ראטה">
-    <text text-anchor="middle" transform="translate(180 361.2)" fill="#1a1a1b" font-family="Heebo" font-size="19"><tspan x="0" y="0">ברוך זאב ראטנבערג</tspan></text>
+    <text text-anchor="middle" transform="translate(180 361.2)" fill="#1a1a1b" font-family="Heebo" font-size="19" font-weight="500"><tspan x="0" y="0">ברוך זאב ראטנבערג</tspan></text>
   </g>
   <g id="host_line*" data-name=" ידידכם המצפה לקבל פניכם">
     <text text-anchor="middle" transform="translate(180 343.4)" fill="#1a1a1b" font-family="Heebo" font-size="9.8"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
   <g id="davening_time*" data-name="1247 38th St *">
-    <text text-anchor="middle" transform="translate(180 320.9)" fill="#1a1a1b" font-family="Heebo" font-size="12.6"><tspan x="0" y="0">שחרית </tspan></text>
+    <text text-anchor="middle" transform="translate(180 320.9)" fill="#1a1a1b" font-family="Heebo" font-size="12.6"><tspan x="0" y="0">שחרית</tspan></text>
   </g>
   <g id="address*" data-name="1247 38th St *">
     <text text-anchor="middle" transform="translate(180 303.9)" fill="#1a1a1b" font-family="Heebo" font-size="12.6"><tspan x="0" y="0">1247 38th St</tspan></text>
@@ -33,7 +30,7 @@
     <text text-anchor="middle" transform="translate(180 230.9)" fill="#1a1a1b" font-family="Heebo" font-size="9.1"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
   </g>
     <g id="line_4">
-    <text text-anchor="middle" transform="translate(180 203)" fill="#1a1a1b" font-family="Heebo" font-size="10.6"><tspan x="0" y="0">של בני החתן בנימין זאב נ״י</tspan></text>
+    <text text-anchor="middle" transform="translate(180 200.4)" fill="#1a1a1b" font-family="Heebo" font-size="15" font-weight="600"><tspan x="0" y="0">של בני החתן בנימין זאב נ״י</tspan></text>
   </g>
     <g id="line_3">
     <text text-anchor="middle" transform="translate(180 120.4)" fill="#1a1a1b" font-family="Heebo" font-size="9.1"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>

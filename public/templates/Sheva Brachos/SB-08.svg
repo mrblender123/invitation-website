@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
   <g id="groom_name*" data-name="* מרדכי זאב ראטה">
     <text text-anchor="middle" transform="translate(180 360.2)" fill="#e89ba2" font-family="Heebo" font-size="16.1" font-weight="800"><tspan x="0" y="0">שמעון לוי</tspan></text>
   </g>
@@ -22,10 +21,10 @@
     <text text-anchor="middle" transform="translate(180 264.8)" fill="#eec3af" font-family="Heebo" font-size="13.5" font-weight="800"><tspan x="0" y="0">בערקאוויטש</tspan></text>
   </g>
     <g id="line_3">
-    <text text-anchor="middle" transform="translate(180 134.3)" fill="#eec3af" font-family="Heebo" font-size="7.2"><tspan x="0" y="0">הננו מתכבדים בזה להזמין את מע״כ</tspan></text>
+    <text text-anchor="middle" transform="translate(180 134.3)" fill="#eec3af" font-family="Heebo" font-size="7"><tspan x="0" y="0">הננו מתכבדים בזה להזמין את מע״כ</tspan></text>
   </g>
     <g id="line_2">
-    <text text-anchor="middle" transform="translate(180 142.8)" fill="#eec3af" font-family="Heebo" font-size="6.3"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
+    <text text-anchor="middle" transform="translate(180 142.8)" fill="#eec3af" font-family="Heebo" font-size="7"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
   </g>
     <g id="date*" data-name=" * בליל ג׳ פרשת שמות">
     <text text-anchor="middle" transform="translate(180 284.9)" fill="#eec3af" font-family="Heebo" font-size="8.7" font-weight="600"><tspan x="0" y="0">ביום ג׳ פרשת שמות</tspan></text>
@@ -34,6 +33,6 @@
     <text text-anchor="middle" transform="translate(180 323.7)" fill="#eec3af" font-family="Heebo" font-size="9.9" font-weight="600"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
     <g id="line_1">
-    <text text-anchor="middle" transform="translate(180 127.1)" fill="#eec3af" font-family="Heebo" font-size="6.3"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
+    <text text-anchor="middle" transform="translate(180 126.1)" fill="#eec3af" font-family="Heebo" font-size="7"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת</tspan></text>
   </g>
 </svg>
