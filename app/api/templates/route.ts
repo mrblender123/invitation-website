@@ -161,7 +161,7 @@ export async function GET() {
           const subFiles      = await readdir(subFolderPath);
 
           // Discover templates from SVG files (PNGs live on R2, not local)
-          const svgFiles = subFiles.filter(f => /\.svg$/i.test(f)).sort();
+          const svgFiles = subFiles.filter(f => /\.svg$/i.test(f)).sort().reverse();
 
           for (const svgFile of svgFiles) {
             const stem      = svgFile.replace(/\.svg$/i, '');
@@ -206,7 +206,7 @@ export async function GET() {
       } else {
         // Flat structure: category/images (legacy / no sub-categories)
         const flatFileNames = files.map(f => f.name);
-        const svgFiles      = flatFileNames.filter(f => /\.svg$/i.test(f)).sort();
+        const svgFiles      = flatFileNames.filter(f => /\.svg$/i.test(f)).sort().reverse();
 
         for (const svgFile of svgFiles) {
           const stem      = svgFile.replace(/\.svg$/i, '');
