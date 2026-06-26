@@ -926,7 +926,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 .filter(t => !lang || lang === 'all' || t.language === lang)
                 .sort((a, b) => {
                   const num = (s: string) => { const m = s.match(/(\d+)/); return m ? parseInt(m[1]) : 0; };
-                  return num(a.name) - num(b.name);
+                  return num(b.name) - num(a.name);
                 });
               return filtered.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '80px 0', border: '1px dashed rgba(0,0,0,0.12)', borderRadius: 20 }}>
