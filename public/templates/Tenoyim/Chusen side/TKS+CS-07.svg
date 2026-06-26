@@ -1,51 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <g id="line_1">
-    <text fill="#546a6b" font-family="Heebo" font-weight="700" font-size="5.2" text-anchor="middle"><tspan x="180" y="244.3">תתקיים אי&quot;ה בשעה טובה ומוצלחת</tspan></text>
-  </g>
-  <g id="line_2">
-    <text fill="#546a6b" font-family="Heebo" font-weight="700" font-size="10.3" text-anchor="middle"><tspan x="180" y="255.5">ביום ג' פר' בהר-בחוקתי</tspan></text>
-  </g>
-  <g id="line_3">
+    <g id="line_1">
     <text transform="translate(180 133.9)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="6.8" text-anchor="middle"><tspan x="0" y="0">ברוב שבח והודאה להשי״ת</tspan></text>
   </g>
-  <g id="groom_name">
+    <g id="line_2*">
     <text transform="translate(180 142.6)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="6.8" text-anchor="middle"><tspan x="0" y="0">הנני בזה להזמין את כל מכירי שיחיו לבוא ולקחת חבל</tspan></text>
   </g>
-  <g id="line_4">
+    <g id="line_3*">
     <text transform="translate(180 151.2)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="6.8" text-anchor="middle"><tspan x="0" y="0">בשמחת אירוסי (בני / בתי) למז&quot;ט</tspan></text>
   </g>
-  <g id="father_title*">
+    <g id="groom_name*">
     <text transform="translate(180 166.8)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="10.3" text-anchor="middle"><tspan x="0" y="0">עב&quot;ג החתן מרדכי מאשקאוויטש נ&quot;י</tspan></text>
   </g>
-  <g id="line_5*">
+    <g id="line_4*">
     <text transform="translate(180 178.7)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="5.2" text-anchor="middle"><tspan x="0" y="0">בן/בת מחותני</tspan></text>
   </g>
-  <g id="day*">
+    <g id="father_title*">
     <text transform="translate(180 187.8)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="6.8" text-anchor="middle"><tspan x="0" y="0">הרה&quot;ח משה אהרן מאשקאוויטש הי&quot;ו</tspan></text>
   </g>
-  <g id="hebrew_date*">
+    <g id="line_5*">
+    <text fill="#546a6b" font-family="Heebo" font-weight="700" font-size="5.2" text-anchor="middle"><tspan x="180" y="244.3">תתקיים אי&quot;ה בשעה טובה ומוצלחת</tspan></text>
+  </g>
+    <g id="day*">
+    <text fill="#546a6b" font-family="Heebo" font-weight="700" font-size="10.3" text-anchor="middle"><tspan x="180" y="255.5">ביום ג' פר' בהר-בחוקתי</tspan></text>
+  </g>
+    <g id="hebrew_date*">
     <text transform="translate(180 267.8)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="8.8" text-anchor="middle"><tspan x="0" y="0">י&quot;ח אייר תשפ&quot;ו לפ&quot;ק</tspan></text>
   </g>
-  <g id="location*">
+    <g id="location*">
     <text transform="translate(180 290.4)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="8.6" text-anchor="middle"><tspan x="0" y="0">באולם עטרת צבי</tspan></text>
   </g>
-  <g id="address*">
+    <g id="address*">
     <text transform="translate(180 300.6)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="7.6" text-anchor="middle"><tspan x="0" y="0">89 S Main St, Spring Valley, NY`</tspan></text>
   </g>
-  <g id="time*">
+    <g id="time*">
     <text id="_בליל_ג_פרשת_שמות" data-name=" * בליל ג׳ פרשת שמות" transform="translate(180 311.1)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="7.6" text-anchor="middle"><tspan x="0" y="0">בשעה </tspan></text>
   </g>
-  <g id="greeting">
+    <g id="greeting">
     <text id="_ידידכם_המצפה_לקבל_פניכם" data-name=" ידידכם המצפה לקבל פניכם" transform="translate(180 334.8)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="8" text-anchor="middle"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
-  <g id="host_name*">
+    <g id="host_name*">
     <text id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה" transform="translate(180 350.9)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="15" text-anchor="middle"><tspan x="0" y="0">ברוך זאב ראטנבערג</tspan></text>
   </g>
-  <g id="father_name_1*">
-    <text id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו" transform="translate(180 364.8)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="8" text-anchor="middle"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
+    <g id="father_name_1*">
+    <text id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו
+" transform="translate(180 364.8)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="8" text-anchor="middle"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
   </g>
-  <g id="father_name_2*">
-    <text id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו" transform="translate(180 374.7)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="8" text-anchor="middle"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
+    <g id="father_name_2*">
+    <text id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו
+" transform="translate(180 374.7)" fill="#546a6b" font-family="Heebo" font-weight="700" font-size="8" text-anchor="middle"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
   </g>
 </svg>
