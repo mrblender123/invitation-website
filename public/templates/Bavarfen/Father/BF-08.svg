@@ -27,18 +27,20 @@
     <text transform="translate(180 312.8)" fill="#1a1a1b" font-family="Heebo" font-size="12.6" font-weight="700" text-anchor="middle"><tspan x="0" y="0">1247 38th St</tspan></text>
   </g>
   <g id="greeting*">
-    <text transform="translate(180 352.3)" fill="#1a1a1b" font-family="Heebo" font-size="9.8" font-weight="700" text-anchor="middle"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
+    <text transform="translate(180 350.6)" fill="#1a1a1b" font-family="Heebo" font-size="9.8" font-weight="700" text-anchor="middle"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
   <g id="time">
     <text transform="translate(180 329.8)" fill="#1a1a1b" font-family="Heebo" font-size="12.6" font-weight="700" text-anchor="middle"><tspan x="0" y="0">שחרית</tspan></text>
   </g>
   <g id="host_name*">
-    <text transform="translate(180 370.1)" fill="#703314" font-family="Heebo" font-size="19" font-weight="700" text-anchor="middle"><tspan x="0" y="0">ברוך זאב ראטנבערג</tspan></text>
+    <text transform="translate(180 370.1)" fill="#703314" font-family="Heebo" font-size="19" font-weight="700" text-anchor="middle"><tspan x="0" y="0">ברוך זאב</tspan></text>
+  </g><g id="host_name_copy*">
+    <text transform="translate(180 390.1)" fill="#703314" font-family="Heebo" font-size="19" font-weight="700" text-anchor="middle"><tspan x="0" y="0">ראטנבערג</tspan></text>
   </g>
   <g id="father_name_1*">
-    <text transform="translate(180 387.9)" fill="#1a1a1b" font-family="Heebo" font-size="9.8" font-weight="700" text-anchor="middle"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
+    <text transform="translate(180 403.3)" fill="#1a1a1b" font-family="Heebo" font-size="9" font-weight="700" text-anchor="middle"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
   </g>
   <g id="father_name_2*">
-    <text transform="translate(180 398.8)" fill="#1a1a1b" font-family="Heebo" font-size="9.8" font-weight="700" text-anchor="middle"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
+    <text transform="translate(180 414.2)" fill="#1a1a1b" font-family="Heebo" font-size="9" font-weight="700" text-anchor="middle"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
   </g>
 </svg>

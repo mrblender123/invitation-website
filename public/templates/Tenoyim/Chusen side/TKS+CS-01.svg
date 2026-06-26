@@ -1,18 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
   <g id="line_1">
     <text transform="translate(180 99)" fill="#5b3814" font-family="Heebo" font-weight="700" font-size="8" text-anchor="middle"><tspan x="0" y="0">ברוב שבח והודאה להשי״ת</tspan></text>
   </g>
-  <g id="line_2">
+  <g id="line_2*">
     <text transform="translate(180 109.3)" fill="#5b3814" font-family="Heebo" font-weight="700" font-size="8" text-anchor="middle"><tspan x="0" y="0">הנני בזה להזמין את כל מכירי שיחיו לבוא ולקחת חבל</tspan></text>
   </g>
-  <g id="line_3">
-    <text transform="translate(180 119.5)" fill="#5b3814" font-family="Heebo" font-weight="700" font-size="8" text-anchor="middle"><tspan x="0" y="0">בשמחת אירוסי (בני / בתי) למז״ט</tspan></text>
+  <g id="line_3*">
+    <text transform="translate(180 120.4)" fill="#5b3814" font-family="Heebo" font-weight="700" font-size="8" text-anchor="middle"><tspan x="0" y="0">בשמחת אירוסי (בני / בתי) למז״ט</tspan></text>
   </g>
-  <g id="groom_name">
+  <g id="groom_name*">
     <text transform="translate(180 137.8)" fill="#094b56" font-family="Heebo" font-weight="700" font-size="12.1" text-anchor="middle"><tspan x="0" y="0">עב״ג החתן מרדכי מאשקאוויטש נ״י</tspan></text>
   </g>
-  <g id="line_4">
+  <g id="line_4*">
     <text transform="translate(180 151.8)" fill="#5b3814" font-family="Heebo" font-weight="700" font-size="6.1" text-anchor="middle"><tspan x="0" y="0">בן/בת מחותני</tspan></text>
   </g>
   <g id="father_title*">
