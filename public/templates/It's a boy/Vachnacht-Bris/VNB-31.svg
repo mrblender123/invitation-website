@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 360 504">
+  <defs>
+    <linearGradient id="linear-gradient" x1="151.5" y1="384.9" x2="215.3" y2="332.4" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6b8eba"/>
+      <stop offset=".1" stop-color="#7799c3"/>
+      <stop offset=".5" stop-color="#99badf"/>
+      <stop offset=".8" stop-color="#aeceef"/>
+      <stop offset="1" stop-color="#b6d6f6"/>
+    </linearGradient>
+  </defs>
+  <g id="_1247_38th_St_" data-name="1247 38th St *">
+    <g id="bris_address*">
+      <text transform="translate(150.1 428.3) scale(.7 1)" fill="#6b8eba" font-family="Playpen Sans Hebrew" font-weight="700" font-size="13.6"><tspan x="0" y="0">1247 38th St</tspan></text>
+    </g>
+  </g>
+  <g id="_בביהמ_ד_קהל_חסידי_בעלזא" data-name="* בביהמ״ד קהל חסידי בעלזא">
+    <g id="bris_location*">
+      <text transform="translate(117.6 410.4) scale(.7 1)" fill="#6b8eba" font-family="Playpen Sans Hebrew" font-weight="700" font-size="13.6"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
+    </g>
+  </g>
+  <g id="line_2">
+    <text transform="translate(151.3 395.6) scale(.7 1)" fill="#6b8eba" font-family="Playpen Sans Hebrew" font-weight="700" font-size="11.6"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
+  </g>
+  <path d="M144.6,345.9c2.8,0,4.9,1,6.4,2.9,1.5,1.9,2.2,4.7,2.2,8.4v18.6h-6.7v-19.4c0-1-.2-1.8-.5-2.4-.3-.6-.8-.8-1.4-.8h-2.6c0,.9-.1,1.9-.2,2.8,0,.9,0,1.7,0,2.4v7.8c0,3.2-.6,5.6-1.9,7.4-1.3,1.8-3,2.7-5.2,2.7s-1.1,0-1.5,0-1-.2-1.5-.3v-7.1c.2,0,.4,0,.6,0s.4,0,.6,0c.7,0,1.3-.3,1.7-.8s.6-1.4.6-2.6v-6.2c0-.8,0-1.7.2-2.9.2-1.2.4-2.2.8-3.2h-3v-7.2h11.4ZM159.4,363.1v-10h-3.1v-7.2h9.8v17.2h-6.7ZM178,375.7v-19.1c0-1.2-.2-2-.7-2.6-.5-.6-1.2-.9-2.1-.9h-6.1v-7.2h6.7c2.8,0,5,1,6.6,2.9,1.6,2,2.4,4.7,2.4,8.2v18.7h-6.7ZM187.8,375.7v-7.2h9.7l6.7-.3,2.5.6v6.9h-18.9ZM197.5,373.6v-17.3c0-1-.2-1.7-.6-2.3-.4-.5-1-.8-1.9-.8h-6.1v-7.2h6.6c2.7,0,4.8,1,6.4,2.9,1.6,1.9,2.3,4.5,2.3,7.9v16.9h-6.7ZM209.5,375.7v-10.2c0-2.2.2-3.8.6-4.7s.7-1.5.9-1.7h5.3c0,.6-.1,1.3-.2,2.2s0,1.9,0,3.1v11.3h-6.5ZM221.6,375.7v-19.5c0-1-.2-1.7-.7-2.3-.4-.5-1.1-.8-1.9-.8h-9.4v-7.2h9.9c2.7,0,4.9,1,6.4,2.9,1.5,1.9,2.3,4.5,2.3,7.9v19h-6.7Z" fill="url(#linear-gradient)"/>
+  <g id="vachnacht_address*">
+    <text id="_5015_15th_Ave_" data-name="5015 15th Ave *" transform="translate(116.3 271.1) scale(.7 1)" fill="#6b8eba" font-family="Playpen Sans Hebrew" font-weight="700" font-size="7.6"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+  </g>
+  <g id="vachnacht_location*">
+    <text id="_בבאולם_פרדס_נח" data-name="* בבאולם פרדס נח" transform="translate(117 260.1) scale(.7 1)" fill="#6b8eba" font-family="Playpen Sans Hebrew" font-weight="700" font-size="7.6"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+  </g>
+  <g id="_בליל_ג_פרשת_שמות" data-name=" * בליל ג׳ פרשת שמות">
+    <g id="vachnacht_date*">
+      <text transform="translate(170.5 270.8) scale(.7 1)" fill="#6b8eba" font-family="Playpen Sans Hebrew" font-weight="700" font-size="7.6"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
+    </g>
+  </g>
+  <g id="line_1">
+    <text transform="translate(177.7 260.1) scale(.7 1)" fill="#6b8eba" font-family="Playpen Sans Hebrew" font-weight="700" font-size="7.6"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+  </g>
+  <g id="host_name*">
+    <text id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה" transform="translate(148.2 464.2) scale(.7 1)" fill="#8ba9d6" font-family="Heebo" font-size="22" font-weight="800"><tspan x="0" y="0">שמעון לוי</tspan></text>
+  </g>
+  <g id="line_3">
+    <text id="_מרדכי_זאב_ראטה-2" data-name="* מרדכי זאב ראטה" transform="translate(134.9 486.9) scale(.7 1)" fill="#8ba9d6" font-family="Heebo" font-size="24" font-weight="800"><tspan x="0" y="0">ברענאוויטש</tspan></text>
+  </g>
+</svg>
