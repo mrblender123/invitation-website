@@ -170,10 +170,33 @@ step('Looking for a reference template in the folder...');
     if ((mismatch || dupes.length) && !ackFieldMismatch) {
       if (mismatch) console.error(`\n  ✗ Field count mismatch: ref=${countsMatch[1]}, new=${countsMatch[2]}`);
       if (dupes.length) console.error(`  ✗ Same field id assigned more than once: ${[...new Set(dupes)].join(', ')}`);
+
+      // Print the reference template's own id → content map so the mismatch
+      // can be fixed by hand without going and reading the reference file
+      // separately — that round-trip was the actual recurring cost here.
+      const refLine = out.match(/reference:\s*(.+)/);
+      if (refLine) {
+        const refPath = path.join(ROOT, refLine[1].trim());
+        try {
+          const refContent = await readFile(refPath, 'utf-8');
+          const refFields = [];
+          const reGTag = /<g\b[^>]*\bid="([A-Za-z][^"]*)"[^>]*>/g;
+          let rm;
+          while ((rm = reGTag.exec(refContent)) !== null) {
+            const after = refContent.slice(rm.index + rm[0].length);
+            const tspan = after.match(/<tspan[^>]*>([^<]*)</);
+            refFields.push(`${rm[1]} -> ${JSON.stringify(tspan?.[1]?.trim() ?? '')}`);
+          }
+          console.error(`\n  Reference template's own fields (${path.relative(ROOT, refPath)}):`);
+          console.error(refFields.map(l => '    ' + l).join('\n'));
+        } catch { /* best-effort — don't block the failure message on this */ }
+      }
+
       fail('match-template\'s guesses are unreliable here (this is exactly how the TKS+CS\n' +
            '  scrambled-ID bug happened — it slipped through match-template\'s own >2 threshold).\n' +
-           '  Review and fix field IDs manually, or re-run with --ack-field-mismatch if you\'ve\n' +
-           '  confirmed the assignment is correct.');
+           '  Compare the reference fields above against your file\'s current <g id> tags and\n' +
+           '  fix the IDs by hand, or re-run with --ack-field-mismatch if you\'ve confirmed the\n' +
+           '  assignment is correct.');
     }
   }
 }

@@ -22,6 +22,7 @@ function parseFields(content) {
   const gTagRegex = /<g\b([^>]*)>/g;
   const seen = new Set();
   const fields = [];
+  const duplicates = new Set();
   let m;
   while ((m = gTagRegex.exec(content)) !== null) {
     const idMatch = m[1].match(/\bid="([^"]+)"/);
@@ -29,14 +30,14 @@ function parseFields(content) {
     const rawId = idMatch[1];
     const gId = rawId.replace(/\*/g, '').trim();
     if (!gId || !/^[A-Za-z]/.test(gId)) continue;
-    if (seen.has(gId)) continue;
     if (SKIP_IDS.has(gId.toLowerCase())) continue;
     if (/^layer/i.test(gId)) continue;
     if (/^text\d*$/i.test(gId)) continue;
+    if (seen.has(gId)) { duplicates.add(gId); continue; }
     seen.add(gId);
     fields.push(rawId);
   }
-  return fields;
+  return { fields, duplicates: [...duplicates] };
 }
 
 function validateSvg(content, filePath) {
@@ -49,9 +50,15 @@ function validateSvg(content, filePath) {
   }
 
   // 2. Must have at least one editable field
-  const fields = parseFields(content);
+  const { fields, duplicates } = parseFields(content);
   if (fields.length === 0) {
     errors.push('No editable fields found (no valid <g id="..."> elements)');
+  }
+
+  // 2b. Same field id used on more than one <g> — the later one silently
+  // shadows the earlier one in the editor (no error anywhere else catches this).
+  if (duplicates.length > 0) {
+    errors.push(`Same field id assigned to multiple <g> elements: ${duplicates.join(', ')}`);
   }
 
   // 3. No @import in style blocks
