@@ -84,7 +84,8 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
   const gTagRegex = /<g\b([^>]*)>/g;
   let m: RegExpExecArray | null;
 
-  const entries: Array<{ id: string; label: string; placeholder: string; hasStar: boolean }> = [];
+  const entries: Array<{ id: string; label: string; placeholder: string; hasStar: boolean; y: number; docIndex: number }> = [];
+  let docIndex = 0;
 
   while ((m = gTagRegex.exec(content)) !== null) {
     const attrs = m[1];
@@ -103,13 +104,31 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
     if (/^text\d*$/i.test(gId)) continue; // skip Illustrator auto-generated text group IDs
     seenIds.add(gId);
 
-    // Find first <tspan> after this group's opening tag to use as placeholder
+    // Find first <text>/<tspan> after this group's opening tag to use as placeholder + position
     const afterTag = content.slice(m.index + m[0].length);
-    const tspanMatch = afterTag.match(/<tspan[^>]*>([^<]*)</);
-    const placeholder = decodeXmlEntities(tspanMatch?.[1]?.trim() ?? '');
+    const textMatch = afterTag.match(/<text([^>]*)>/);
+    const tspanMatch = afterTag.match(/<tspan([^>]*)>([^<]*)</);
+    const placeholder = decodeXmlEntities(tspanMatch?.[2]?.trim() ?? '');
 
-    entries.push({ id: gId, label: idToLabel(gId), placeholder, hasStar });
+    // Visual Y position: prefer the <text> transform's translate(x y), fall back to the
+    // <tspan>'s own y="" attribute (older templates predating the transform convention).
+    let y = Number.POSITIVE_INFINITY;
+    const translateMatch = textMatch?.[1]?.match(/translate\(\s*[-\d.]+[\s,]+(-?[\d.]+)\s*\)/);
+    if (translateMatch) {
+      y = parseFloat(translateMatch[1]);
+    } else {
+      const tspanYMatch = tspanMatch?.[1]?.match(/\by="(-?[\d.]+)"/);
+      if (tspanYMatch) y = parseFloat(tspanYMatch[1]);
+    }
+
+    entries.push({ id: gId, label: idToLabel(gId), placeholder, hasStar, y, docIndex: docIndex++ });
   }
+
+  // Order fields top-to-bottom by their visual Y position on the card, not by where
+  // their <g id> happens to sit in the document (designers/exports don't always keep
+  // those in sync — see Tenoyim/Chusen side mismatches). Fields without a resolvable
+  // Y position keep their original document order, stably sorted to the end.
+  entries.sort((a, b) => a.y - b.y || a.docIndex - b.docIndex);
 
   // Star convention: * = required/always-shown. No star = optional (hidden until user expands).
   // Exception: if NO fields have *, treat all as required (legacy templates with no stars).

@@ -54,3 +54,6 @@ next-env.d.ts
 
 # Local cache for thumbnail->webp conversion (skip-if-unchanged tracking)
 .thumb-webp-cache.json
+
+# Scratch preview renders from add-template.mjs's pipeline
+.scratch-previews/
