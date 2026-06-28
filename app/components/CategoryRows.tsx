@@ -79,28 +79,79 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
   const hasDragged = useRef(false);
   const startX = useRef(0);
   const startScrollLeft = useRef(0);
+  const pendingDx = useRef<number | null>(null);
+  const rafId = useRef<number | null>(null);
+  const momentumId = useRef<number | null>(null);
+  const lastMoveX = useRef(0);
+  const lastMoveT = useRef(0);
+  const velocity = useRef(0);
   const [grabbing, setGrabbing] = useState(false);
+
+  const stopMomentum = () => {
+    if (momentumId.current !== null) {
+      cancelAnimationFrame(momentumId.current);
+      momentumId.current = null;
+    }
+  };
 
   const onMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
     e.preventDefault(); // prevent browser native drag-and-drop hijack; click still fires
+    stopMomentum();
     dragging.current = true;
     hasDragged.current = false;
     startX.current = e.clientX;
     startScrollLeft.current = scrollRef.current?.scrollLeft ?? 0;
+    lastMoveX.current = e.clientX;
+    lastMoveT.current = performance.now();
+    velocity.current = 0;
     setGrabbing(true);
+
+    const flush = () => {
+      rafId.current = null;
+      if (pendingDx.current === null || !scrollRef.current) return;
+      scrollRef.current.scrollLeft = startScrollLeft.current - pendingDx.current;
+      pendingDx.current = null;
+    };
 
     const onMove = (ev: MouseEvent) => {
       if (!dragging.current) return;
       const dx = ev.clientX - startX.current;
       if (Math.abs(dx) > 4) hasDragged.current = true;
-      if (scrollRef.current) scrollRef.current.scrollLeft = startScrollLeft.current - dx;
+
+      const now = performance.now();
+      const dt = now - lastMoveT.current;
+      if (dt > 0) velocity.current = (ev.clientX - lastMoveX.current) / dt; // px/ms
+      lastMoveX.current = ev.clientX;
+      lastMoveT.current = now;
+
+      pendingDx.current = dx;
+      if (rafId.current === null) rafId.current = requestAnimationFrame(flush);
     };
     const onUp = () => {
       dragging.current = false;
       setGrabbing(false);
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
+      if (rafId.current !== null) {
+        cancelAnimationFrame(rafId.current);
+        rafId.current = null;
+        flush(); // apply any pending position before momentum takes over
+      }
+
+      // Inertia: ease out from release velocity (px/ms -> px/frame at ~60fps)
+      let v = velocity.current * 16;
+      const friction = 0.94;
+      const step = () => {
+        if (!scrollRef.current || Math.abs(v) < 0.5) {
+          momentumId.current = null;
+          return;
+        }
+        scrollRef.current.scrollLeft -= v;
+        v *= friction;
+        momentumId.current = requestAnimationFrame(step);
+      };
+      if (Math.abs(v) > 0.5) momentumId.current = requestAnimationFrame(step);
     };
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseup', onUp);
@@ -117,6 +168,13 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
   const onContextMenu = (e: React.MouseEvent) => {
     if (dragging.current) e.preventDefault();
   };
+
+  useEffect(() => {
+    return () => {
+      if (rafId.current !== null) cancelAnimationFrame(rafId.current);
+      stopMomentum();
+    };
+  }, []);
 
 
   return (
@@ -153,6 +211,7 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
           paddingRight: 24,
           cursor: grabbing ? 'grabbing' : 'grab',
           userSelect: 'none',
+          willChange: 'scroll-position',
         }}
       >
         <div style={{ display: 'flex', gap: 12, width: 'max-content', paddingBottom: 4 }}>
