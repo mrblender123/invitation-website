@@ -70,6 +70,8 @@ const FONT_RULES = [
   // Comic Sans MS — not a Google Font, mapped to its open-source replacement
   [/font-family="ComicSansMS-Bold,\s*'Comic Sans MS'"/,  'Comic Neue', '700'],
   [/font-family="ComicSansMS,\s*'Comic Sans MS'"/,       'Comic Neue', '400'],
+  // Secular One — single weight, no bold variant
+  [/font-family="SecularOne-Regular,\s*'Secular One'"/,  'Secular One', '400'],
 ];
 
 // Apply specific rules first
@@ -82,6 +84,11 @@ for (const [pattern, family, weight] of FONT_RULES) {
 // Generic Heebo_NNN fallback (any numeric weight not covered above)
 svg = svg.replace(/font-family="'Heebo_(\d+)[^']*',\s*Heebo"/g,
   (_, w) => `font-family="Heebo" font-weight="${w}"`
+);
+
+// Generic PlaypenSansHebrew_NNN fallback (variable-font weight, any value not covered above)
+svg = svg.replace(/font-family="'PlaypenSansHebrew_(\d+)[^']*',\s*'Playpen Sans Hebrew'"/g,
+  (_, w) => `font-family="Playpen Sans Hebrew" font-weight="${w}"`
 );
 
 // ─── 3. Strip junk ───────────────────────────────────────────────────────────
