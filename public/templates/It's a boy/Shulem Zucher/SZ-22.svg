@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <g id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
+  <g id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו ">
     <g id="father_name_2*">
       <text transform="translate(180 412.7)" fill="#bad4e8" font-family="Secular One" font-weight="400" font-size="9.9" text-anchor="middle"><tspan x="0" y="0">חתן בערל גרינפעלד הי״וו</tspan></text>
     </g>
   </g>
-  <g id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו">
+  <g id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו ">
     <g id="father_name_1*">
       <text transform="translate(180 401.1)" fill="#bad4e8" font-family="Secular One" font-weight="400" font-size="9.9" text-anchor="middle"><tspan x="0" y="0">ב״ר בנימין משה הי״וו</tspan></text>
     </g>
@@ -30,7 +29,7 @@
       <text transform="translate(180 312.5)" fill="#849dba" font-family="Secular One" font-weight="400" font-size="13.3" text-anchor="middle"><tspan x="0" y="0">1693 49th Steet</tspan></text>
     </g>
   </g>
-  <g id="_בביהמ_ד_לעלוב_" data-name="* בביהמ״ד לעלוב ">
+  <g id="_בביהמ_ד_לעלוב_" data-name="* בביהמ״ד לעלוב  ">
     <g id="location*">
       <text transform="translate(180 296.8)" fill="#849dba" font-family="Secular One" font-weight="400" font-size="13.3" text-anchor="middle"><tspan x="0" y="0">בביהמ״ד לעלוב</tspan></text>
     </g>
@@ -53,6 +52,6 @@
     <text transform="translate(180 141)" fill="#bad4e8" font-family="Playpen Sans Hebrew" font-weight="583" font-size="7" text-anchor="middle"><tspan x="0" y="0">למזל טוב</tspan></text>
   </g>
   <g id="line_10">
-    <text transform="translate(180 128.7)" fill="#839fbd" font-size="14.1" text-anchor="middle"><tspan x="0" y="0" font-family="Playpen Sans Hebrew" font-weight="583">בשמחת</tspan></text>
+    <text transform="translate(180 128.7)" fill="#839fbd" font-size="8.5" text-anchor="middle"><tspan x="0" y="0" font-family="Playpen Sans Hebrew" font-weight="583">בשמחתבשמחת הולדת בני שיחי׳ </tspan></text>
   </g>
 </svg>
