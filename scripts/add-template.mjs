@@ -32,6 +32,7 @@ import { readFile, mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
+import { createInterface } from 'readline/promises';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -59,6 +60,91 @@ function fail(msg) {
   console.error(`\n✗ ${msg}`);
   console.error('  Nothing past this point ran.');
   process.exit(1);
+}
+
+// ── Interactive field-assignment wizard ─────────────────────────────────────
+// Used when match-template's Y-position guessing can't be trusted (field
+// count differs from the reference, or it produced duplicate ids). Instead of
+// requiring someone to hand-edit SVG XML, this walks each text line and lets
+// you pick its field id from a numbered list — no XML knowledge needed.
+
+async function runAssignWizard(targetPath, refFields, rl) {
+  let content = await readFile(targetPath, 'utf-8');
+
+  // Each <text> is preceded by zero or more stacked <g id="..."> openers
+  // (an Illustrator auto-id wrapping a real id, or just one, or none yet).
+  const textRe = /((?:<g\b[^>]*\bid="[^"]+">\s*)*)<text\b([^>]*)>([\s\S]*?)<\/text>/g;
+  const items = [];
+  let m;
+  while ((m = textRe.exec(content)) !== null) {
+    const openers = [...m[1].matchAll(/<g\b[^>]*\bid="([^"]+)">/g)].map(x => x[1]);
+    const yMatch = m[2].match(/translate\(\s*[-\d.]+[\s,]+(-?[\d.]+)\s*\)/);
+    const y = yMatch ? parseFloat(yMatch[1]) : Number.POSITIVE_INFINITY;
+    const tspan = m[3].match(/<tspan[^>]*>([^<]*)</);
+    items.push({ full: m[0], start: m.index, end: m.index + m[0].length, openers, y, text: (tspan?.[1] ?? '').trim() });
+  }
+  items.sort((a, b) => a.y - b.y);
+
+  const existingLineNums = [...content.matchAll(/\bid="line_(\d+)\*?"/g)].map(x => parseInt(x[1], 10));
+  let nextLineNum = existingLineNums.length ? Math.max(...existingLineNums) + 1 : 1;
+
+  console.log('\n  ── Field assignment wizard ──────────────────────────────────');
+  console.log('  Reference fields:');
+  refFields.forEach((f, i) => console.log(`    ${i + 1}) ${f.id}  (${f.text})`));
+  console.log('\n  For each line: type a number above, "o" for a new optional line,');
+  console.log('  a custom id (add * to make it required), or press Enter to keep it as-is.\n');
+
+  const choices = [];
+  for (const item of items) {
+    const currentId = item.openers[item.openers.length - 1];
+    const currentLabel = currentId && /^[A-Za-z]/.test(currentId) ? currentId : '(unassigned)';
+    console.log(`  "${item.text}"  — currently: ${currentLabel}`);
+    const answer = (await rl.question('  > ')).trim();
+    let chosen = null;
+    if (answer === '') {
+      chosen = /^[A-Za-z]/.test(currentId ?? '') ? currentId : null;
+    } else if (answer.toLowerCase() === 'o') {
+      chosen = `line_${nextLineNum++}`;
+    } else if (/^\d+$/.test(answer) && refFields[parseInt(answer, 10) - 1]) {
+      chosen = refFields[parseInt(answer, 10) - 1].id;
+    } else {
+      chosen = answer;
+    }
+    console.log(`    → ${chosen ?? '(left unchanged)'}\n`);
+    choices.push({ item, chosen });
+  }
+
+  // Apply back-to-front so earlier offsets stay valid as content shifts.
+  for (const { item, chosen } of choices.slice().reverse()) {
+    if (!chosen) continue;
+    const lastOpener = item.openers[item.openers.length - 1];
+    const lastOpenerIsNamed = lastOpener && /^[A-Za-z]/.test(lastOpener);
+    let newFull;
+    if (lastOpenerIsNamed) {
+      const needle = `id="${lastOpener}"`;
+      const idx = item.full.lastIndexOf(needle);
+      newFull = item.full.slice(0, idx) + `id="${chosen}"` + item.full.slice(idx + needle.length);
+    } else {
+      const textStart = item.full.indexOf('<text');
+      newFull = item.full.slice(0, textStart) + `<g id="${chosen}">\n      ` + item.full.slice(textStart) + '\n    </g>';
+    }
+    content = content.slice(0, item.start) + newFull + content.slice(item.end);
+  }
+
+  await writeFile(targetPath, content);
+}
+
+async function getReferenceFields(refPath) {
+  const refContent = await readFile(refPath, 'utf-8');
+  const fields = [];
+  const reGTag = /<g\b[^>]*\bid="([A-Za-z][^"]*)"[^>]*>/g;
+  let rm;
+  while ((rm = reGTag.exec(refContent)) !== null) {
+    const after = refContent.slice(rm.index + rm[0].length);
+    const tspan = after.match(/<tspan[^>]*>([^<]*)</);
+    fields.push({ id: rm[1], text: (tspan?.[1] ?? '').trim() });
+  }
+  return fields;
 }
 
 // ── Stage 1: auto-detect multi-column layout ──────────────────────────────────
@@ -170,33 +256,55 @@ step('Looking for a reference template in the folder...');
     if ((mismatch || dupes.length) && !ackFieldMismatch) {
       if (mismatch) console.error(`\n  ✗ Field count mismatch: ref=${countsMatch[1]}, new=${countsMatch[2]}`);
       if (dupes.length) console.error(`  ✗ Same field id assigned more than once: ${[...new Set(dupes)].join(', ')}`);
+      console.error('  match-template\'s guesses are unreliable here (this is exactly how the TKS+CS');
+      console.error('  scrambled-ID bug happened — it slipped through match-template\'s own >2 threshold).');
 
-      // Print the reference template's own id → content map so the mismatch
-      // can be fixed by hand without going and reading the reference file
-      // separately — that round-trip was the actual recurring cost here.
       const refLine = out.match(/reference:\s*(.+)/);
-      if (refLine) {
-        const refPath = path.join(ROOT, refLine[1].trim());
-        try {
-          const refContent = await readFile(refPath, 'utf-8');
-          const refFields = [];
-          const reGTag = /<g\b[^>]*\bid="([A-Za-z][^"]*)"[^>]*>/g;
-          let rm;
-          while ((rm = reGTag.exec(refContent)) !== null) {
-            const after = refContent.slice(rm.index + rm[0].length);
-            const tspan = after.match(/<tspan[^>]*>([^<]*)</);
-            refFields.push(`${rm[1]} -> ${JSON.stringify(tspan?.[1]?.trim() ?? '')}`);
-          }
-          console.error(`\n  Reference template's own fields (${path.relative(ROOT, refPath)}):`);
-          console.error(refFields.map(l => '    ' + l).join('\n'));
-        } catch { /* best-effort — don't block the failure message on this */ }
+      const refPath = refLine ? path.join(ROOT, refLine[1].trim()) : null;
+      let refFields = [];
+      if (refPath) {
+        try { refFields = await getReferenceFields(refPath); } catch { /* best-effort */ }
       }
 
-      fail('match-template\'s guesses are unreliable here (this is exactly how the TKS+CS\n' +
-           '  scrambled-ID bug happened — it slipped through match-template\'s own >2 threshold).\n' +
-           '  Compare the reference fields above against your file\'s current <g id> tags and\n' +
-           '  fix the IDs by hand, or re-run with --ack-field-mismatch if you\'ve confirmed the\n' +
-           '  assignment is correct.');
+      let wizardSucceeded = false;
+      if (refFields.length) {
+        const rl = createInterface({ input: process.stdin, output: process.stdout });
+        const answer = (await rl.question(
+          '\n  Run the interactive field-assignment wizard now to fix this yourself? [y/n] '
+        )).trim().toLowerCase();
+
+        if (answer === 'y' || answer === 'yes') {
+          await runAssignWizard(absPath, refFields, rl);
+          rl.close();
+
+          // Re-check: did the wizard leave a clean, unique set of ids?
+          const afterContent = await readFile(absPath, 'utf-8');
+          const afterTextCount = (afterContent.match(/<text\b/g) ?? []).length;
+          const afterIds = [...afterContent.matchAll(/<g\b[^>]*\bid="([A-Za-z][^"]*)"/g)].map(m => m[1]);
+          const afterDupes = afterIds.filter((id, i) => afterIds.indexOf(id) !== i);
+
+          if (afterIds.length !== afterTextCount || afterDupes.length) {
+            fail('Wizard finished but the result still doesn\'t line up ' +
+                 `(${afterIds.length} ids for ${afterTextCount} text elements` +
+                 (afterDupes.length ? `, duplicates: ${[...new Set(afterDupes)].join(', ')}` : '') +
+                 '). Re-run this script to try again.');
+          }
+
+          console.log('  ✓ wizard finished — continuing the pipeline.');
+          wizardSucceeded = true;
+        } else {
+          rl.close();
+        }
+      }
+
+      if (!wizardSucceeded) {
+        console.error(`\n  Reference template's own fields (${refPath ? path.relative(ROOT, refPath) : 'unknown'}):`);
+        console.error(refFields.map(f => `    ${f.id} -> ${JSON.stringify(f.text)}`).join('\n'));
+
+        fail('Compare the reference fields above against your file\'s current <g id> tags and fix\n' +
+             '  the IDs by hand, or re-run with --ack-field-mismatch if you\'ve confirmed the\n' +
+             '  assignment is correct.');
+      }
     }
   }
 }
