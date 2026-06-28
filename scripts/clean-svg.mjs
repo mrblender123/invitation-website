@@ -93,8 +93,10 @@ svg = svg.replace(/<tspan[^>]*>\s*<\/tspan>/g, '');
 svg = svg.replace(/@import\s+url\([^)]+\);?\s*/g, '');
 
 // Remove <image> tags (background comes from the PNG, not the SVG)
-svg = svg.replace(/<image[^/]*\/>/g, '');
-svg = svg.replace(/<image[^>]*>[\s\S]*?<\/image>/g, '');
+// Base64 payloads contain '/' constantly, so the self-closing match must not
+// stop at the first one — only '>' terminates an attribute list.
+svg = svg.replace(/<image\b[^>]*\/>/g, '');
+svg = svg.replace(/<image\b[^>]*>[\s\S]*?<\/image>/g, '');
 
 // ─── 4. Deduplicate font-weight per element ───────────────────────────────────
 // Font normalization can leave two font-weight attrs on the same element
@@ -109,7 +111,19 @@ svg = svg.replace(/<(text|tspan)(\s[^>]*)>/g, (match, tag, attrs) => {
   return `<${tag}${cleaned}>`;
 });
 
-// ─── 5. Centering ────────────────────────────────────────────────────────────
+// ─── 5. Strip transform cruft even in --side mode ─────────────────────────────
+// Centering (below) strips scale()/rotate()/skewX() as a side effect of
+// rewriting the translate(). In --side mode that rewrite never runs, so do it
+// here explicitly — otherwise raw Illustrator transform cruft survives.
+
+if (isSide) {
+  svg = svg.replace(
+    /transform="(translate\([^)]*\))[^"]*"/g,
+    (_, translate) => `transform="${translate}"`
+  );
+}
+
+// ─── 6. Centering ────────────────────────────────────────────────────────────
 
 if (!isSide) {
   // Derive center X from viewBox
@@ -148,7 +162,7 @@ if (!isSide) {
   });
 }
 
-// ─── 6. Report ───────────────────────────────────────────────────────────────
+// ─── 7. Report ───────────────────────────────────────────────────────────────
 
 const KNOWN_FONTS = [
   'Heebo', 'Playpen Sans Hebrew', 'Frank Ruhl Libre',

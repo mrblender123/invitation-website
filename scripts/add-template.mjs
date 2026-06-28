@@ -2,283 +2,241 @@
 /**
  * add-template.mjs
  *
- * Efficient workflow for assigning field IDs to SVG templates.
- * Uses a per-folder schema so you only answer questions ONCE per folder —
- * every other template in that folder is processed automatically.
+ * Orchestrates the full "add a new template" pipeline from CLAUDE.md as one
+ * fail-fast command, instead of running 5 separate scripts by hand and hoping
+ * none of the steps got skipped or run out of order.
+ *
+ * Stages (each is a hard gate — a failure stops the pipeline before the next stage runs):
+ *   1. Auto-detect multi-column layout (decides --side for you)
+ *   2. Clean SVG (fonts, junk, centering)              — scripts/clean-svg.mjs
+ *   3. Detect outlined/baked text masquerading as art   — new check, no existing script
+ *   4. Match field IDs against a reference in the folder — scripts/match-template.mjs
+ *      (hard stop on any field-count mismatch — silent guessing caused real bugs)
+ *   5. Wrap any remaining bare text                      — scripts/wrap-static-texts.mjs
+ *   6. Validate                                          — scripts/validate-templates.mjs
+ *   7. Render a PNG preview to the scratch dir for visual review
+ *   8. Print (not run) the exact git/sync-r2 commands — you stay in control of those
  *
  * Usage:
- *   node scripts/add-template.mjs <file.svg|folder> [--side] [--dry]
+ *   node scripts/add-template.mjs "public/templates/Category/Sub/FILE.svg"
+ *   node scripts/add-template.mjs "public/templates/Category/Sub/FILE.svg" --ack-static-art
+ *   node scripts/add-template.mjs "public/templates/Category/Sub/FILE.svg" --ack-field-mismatch
  *
- * --side  skip centering (for side-aligned designs)
- * --dry   preview without writing anything
- *
- * Schema file (_schema.json) is saved in each template subfolder.
- * It stores field order, IDs, and required/optional status.
+ * Flags:
+ *   --ack-static-art       proceed even though a possible outlined-text block was found
+ *   --ack-field-mismatch   proceed even though match-template found a field-count mismatch
+ *   --side                 force side mode (skip auto-detection)
  */
 
-import { readFile, writeFile, readdir, stat } from 'fs/promises';
+import { readFile, mkdir, writeFile } from 'fs/promises';
 import path from 'path';
-import readline from 'readline';
 import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
 
-// ── SVG parsing ───────────────────────────────────────────────────────────────
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.join(__dirname, '..');
 
-/**
- * Find all <text>...</text> blocks in the SVG.
- * Returns each block with its position, text preview, and whether it's
- * already inside a proper <g id="english_name"> wrapper.
- */
-function parseTextBlocks(svg) {
-  const blocks = [];
-  const re = /<text\b[^>]*>[\s\S]*?<\/text>/g;
-  let m;
+const args = process.argv.slice(2);
+const filePath = args.find(a => !a.startsWith('--'));
+const ackStaticArt = args.includes('--ack-static-art');
+const ackFieldMismatch = args.includes('--ack-field-mismatch');
+const forceSide = args.includes('--side');
 
-  while ((m = re.exec(svg)) !== null) {
-    const start = m.index;
-    const end   = start + m[0].length;
-    const block = m[0];
+if (!filePath) {
+  console.error('Usage: node scripts/add-template.mjs <file.svg> [--ack-static-art] [--ack-field-mismatch] [--side]');
+  process.exit(1);
+}
 
-    // Preview: first non-empty tspan content
-    const ts = block.match(/<tspan[^>]*>([^<]+)</);
-    const preview = ts ? ts[1].trim() : '';
-    if (!preview) continue; // skip blank/whitespace-only tspans
+const absPath = path.resolve(filePath);
+const relPath = path.relative(ROOT, absPath);
+const folder  = path.dirname(absPath);
 
-    blocks.push({ start, end, block, preview, wrapped: isInsideGId(svg, start) });
+function step(label) {
+  console.log(`\n→ ${label}`);
+}
+
+function fail(msg) {
+  console.error(`\n✗ ${msg}`);
+  console.error('  Nothing past this point ran.');
+  process.exit(1);
+}
+
+// ── Stage 1: auto-detect multi-column layout ──────────────────────────────────
+
+async function detectSide() {
+  if (forceSide) return true;
+  const content = await readFile(absPath, 'utf-8');
+  const translates = [...content.matchAll(/<text[^>]*\btransform="translate\(([^)]+)\)/g)]
+    .map(m => m[1].trim());
+  const seen = new Map();
+  for (const t of translates) seen.set(t, (seen.get(t) ?? 0) + 1);
+  return [...seen.values()].some(c => c > 1);
+}
+
+step('Checking for multi-column layout...');
+const side = await detectSide();
+console.log(side ? '  multi-column detected → using --side mode' : '  none found → centering mode');
+
+// ── Stage 2: clean ─────────────────────────────────────────────────────────────
+
+step('Cleaning SVG (fonts, junk, centering)...');
+try {
+  execSync(`node scripts/clean-svg.mjs "${relPath}"${side ? ' --side' : ''}`, { cwd: ROOT, stdio: 'pipe' });
+  console.log('  done.');
+} catch (e) {
+  fail(`clean-svg.mjs failed:\n${e.stdout?.toString() ?? e.message}`);
+}
+
+// ── Stage 3: detect outlined/baked text ────────────────────────────────────────
+
+step('Scanning for outlined/baked text passed off as artwork...');
+{
+  const content = await readFile(absPath, 'utf-8');
+  // Heuristic matching the CI-01..08 bug: an anonymous (no id, or an
+  // Illustrator auto-id) <g> containing many bare <path> children and no
+  // <text> descendant. Real decorative artwork tends to be either much
+  // smaller groups or have an explicit, human-named id.
+  const gBlocks = [...content.matchAll(/<g\b([^>]*)>([\s\S]*?)<\/g>/g)];
+  const suspects = [];
+  for (const [, attrs, inner] of gBlocks) {
+    const idMatch = attrs.match(/\bid="([^"]+)"/);
+    const id = idMatch?.[1] ?? '';
+    const hasHumanId = /^[A-Za-z]/.test(id) && !id.startsWith('_');
+    if (hasHumanId) continue; // explicitly named — trust the designer/earlier pass
+    if (/<text\b/.test(inner)) continue; // has real text — not a pure-path block
+    const pathCount = (inner.match(/<path\b/g) ?? []).length;
+    if (pathCount >= 8) suspects.push({ id: id || '(none)', pathCount });
   }
 
-  return blocks;
-}
-
-/**
- * Check if the <text> at `start` is already inside a <g id="englishName"> wrapper.
- * Strategy: find the nearest preceding <g or </g> tag.
- * If it's a <g> with an English-named id, we consider it wrapped.
- */
-function isInsideGId(svg, start) {
-  const before     = svg.slice(0, start);
-  const lastOpen   = before.lastIndexOf('<g');
-  const lastClose  = before.lastIndexOf('</g>');
-
-  if (lastOpen === -1)          return false; // no <g at all
-  if (lastClose > lastOpen)     return false; // the last thing was a closing tag
-
-  // Grab the opening tag text
-  const tagEnd = before.indexOf('>', lastOpen);
-  const tag    = before.slice(lastOpen, tagEnd + 1);
-
-  // Only consider it "wrapped" if the id starts with an ASCII letter
-  // (rules out Illustrator auto-IDs like "_חתן" or "g1234")
-  return /\bid="[A-Za-z]/.test(tag);
-}
-
-/**
- * Rewrite SVG wrapping the specified text blocks with <g id> tags.
- * Process in reverse order so earlier positions stay valid.
- */
-function applyIds(svg, assignments) {
-  const sorted = [...assignments]
-    .filter(a => a.id)
-    .sort((a, b) => b.start - a.start);
-
-  let result = svg;
-  for (const { start, end, block, id, required } of sorted) {
-    const fullId  = required ? `${id}*` : id;
-    const indent  = detectIndent(svg, start);
-    const wrapped = `<g id="${fullId}">\n${indent}  ${block}\n${indent}</g>`;
-    result = result.slice(0, start) + wrapped + result.slice(end);
+  if (suspects.length && !ackStaticArt) {
+    console.error('\n  ✗ FOUND possible outlined text:');
+    for (const s of suspects) {
+      console.error(`     <g id="${s.id}"> — ${s.pathCount} bare <path> elements, no <text> nearby`);
+    }
+    console.error('\n  This usually means real text got exported as vector outlines (Illustrator');
+    console.error('  "Create Outlines" or a missing font at export time) instead of staying editable.');
+    console.error('  Fix the source/SVG so it\'s real <text>, or if this really is decorative art,');
+    console.error('  re-run with --ack-static-art to proceed.');
+    fail('Stopped at the outlined-text check.');
   }
-  return result;
+  console.log(suspects.length ? '  found, but acknowledged via --ack-static-art' : '  none found.');
 }
 
-/** Detect the indentation before a position in the SVG. */
-function detectIndent(svg, pos) {
-  const lineStart = svg.lastIndexOf('\n', pos - 1) + 1;
-  const raw = svg.slice(lineStart, pos);
-  return raw.match(/^(\s*)/)?.[1] ?? '  ';
-}
+// ── Stage 4: match-template (only if a reference exists in the folder) ────────
 
-// ── schema ────────────────────────────────────────────────────────────────────
+step('Looking for a reference template in the folder...');
+{
+  const currentContent = await readFile(absPath, 'utf-8');
+  const textCount = (currentContent.match(/<text\b/g) ?? []).length;
+  const namedFieldCount = (currentContent.match(/<g\b[^>]*\bid="[A-Za-z][^"]*"/g) ?? []).length;
+  const alreadyFullyTagged = textCount > 0 && textCount === namedFieldCount;
 
-async function loadSchema(dir) {
-  try {
-    return JSON.parse(await readFile(path.join(dir, '_schema.json'), 'utf-8'));
-  } catch {
-    return null;
+  const { readdir } = await import('fs/promises');
+  const siblings = (await readdir(folder)).filter(f => /\.svg$/i.test(f) && path.join(folder, f) !== absPath);
+
+  let hasProcessedSibling = false;
+  for (const f of siblings) {
+    const c = await readFile(path.join(folder, f), 'utf-8');
+    const fieldCount = (c.match(/<g\b[^>]*\bid="[A-Za-z][^"]*"/g) ?? []).length;
+    if (fieldCount >= 2) { hasProcessedSibling = true; break; }
   }
-}
 
-async function saveSchema(dir, schema) {
-  await writeFile(path.join(dir, '_schema.json'), JSON.stringify(schema, null, 2));
-}
-
-// ── readline helpers ──────────────────────────────────────────────────────────
-
-function ask(rl, question) {
-  return new Promise(resolve => rl.question(question, a => resolve(a.trim())));
-}
-
-async function askField(rl, preview) {
-  console.log(`\n  ┌─ "${preview}"`);
-  const id = await ask(rl, `  │  Field ID (blank = static text): `);
-  if (!id) {
-    console.log(`  └─ static (will not be editable)`);
-    return { id: '', required: false };
-  }
-  const req = await ask(rl, `  │  Always visible? (y/n): `);
-  const required = req.toLowerCase().startsWith('y');
-  console.log(`  └─ ${id}${required ? '*' : ''} — ${required ? 'always shown' : 'hidden (Show all fields)'}`);
-  return { id, required };
-}
-
-// ── file processing ───────────────────────────────────────────────────────────
-
-async function processFile(filePath, rl, opts) {
-  const { side, dry } = opts;
-  const filename = path.basename(filePath);
-  const dir      = path.dirname(filePath);
-
-  console.log(`\n${'─'.repeat(64)}`);
-  console.log(`▶ ${path.relative(process.cwd(), filePath)}`);
-
-  // Step 1: clean fonts/centering
-  if (!dry) {
-    process.stdout.write('  Cleaning... ');
+  if (alreadyFullyTagged) {
+    console.log(`  every <text> in this file is already wrapped with a real <g id> (${namedFieldCount}/${textCount}) — skipping auto-match.`);
+  } else if (!hasProcessedSibling) {
+    console.log('  none found — this is the first template in this folder.');
+    console.log('  Assign field IDs manually per the category table in CLAUDE.md, then re-run');
+    console.log('  this script (it will skip this stage once a processed sibling exists).');
+  } else {
+    let out;
     try {
-      execSync(`node scripts/clean-svg.mjs "${filePath}"${side ? ' --side' : ''}`, { stdio: 'pipe' });
-      console.log('✓');
+      out = execSync(`node scripts/match-template.mjs "${relPath}"`, { cwd: ROOT, stdio: 'pipe' }).toString();
     } catch (e) {
-      console.log('(clean-svg not found, skipping)');
+      fail(`match-template.mjs failed:\n${e.stdout?.toString() ?? e.message}`);
     }
-  }
+    console.log(out.trim().split('\n').map(l => '  ' + l).join('\n'));
 
-  // Step 2: parse
-  const svg      = await readFile(filePath, 'utf-8');
-  const blocks   = parseTextBlocks(svg);
-  const needIds  = blocks.filter(b => !b.wrapped);
+    // Don't rely on match-template's own warning (it only fires when the
+    // diff is > 2) — parse the counts it printed and hard-stop on ANY
+    // mismatch. A diff of exactly 1-2 is exactly how the TKS+CS scrambled-ID
+    // bug slipped through before: it was below that threshold.
+    const countsMatch = out.match(/ref fields:\s*(\d+)\s+new fields:\s*(\d+)/);
+    const mismatch = countsMatch && countsMatch[1] !== countsMatch[2];
+    // Also catch duplicate field-id assignment within the same file — another
+    // way a count mismatch manifests as wrong (not just missing) ids.
+    const assignedIds = [...out.matchAll(/wrap\s+"([^"]+)"/g)].map(m => m[1]);
+    const dupes = assignedIds.filter((id, i) => assignedIds.indexOf(id) !== i);
 
-  if (needIds.length === 0) {
-    console.log('  ✓ All fields already assigned — skipping');
-    return;
-  }
-
-  console.log(`  ${needIds.length} text element(s) need IDs`);
-
-  // Step 3: schema
-  let schema       = await loadSchema(dir);
-  const assignments = [];
-
-  if (!schema) {
-    // ── Define schema (first template in this folder) ──────────────────
-    console.log(`\n  No schema yet. Defining schema for this folder.`);
-    console.log(`  You'll answer for each text element once — all other`);
-    console.log(`  templates in this folder will be done automatically.\n`);
-
-    const fields = [];
-    for (const b of needIds) {
-      const { id, required } = await askField(rl, b.preview);
-      fields.push(id ? { id, required } : null);
-      assignments.push({ ...b, id, required });
+    if ((mismatch || dupes.length) && !ackFieldMismatch) {
+      if (mismatch) console.error(`\n  ✗ Field count mismatch: ref=${countsMatch[1]}, new=${countsMatch[2]}`);
+      if (dupes.length) console.error(`  ✗ Same field id assigned more than once: ${[...new Set(dupes)].join(', ')}`);
+      fail('match-template\'s guesses are unreliable here (this is exactly how the TKS+CS\n' +
+           '  scrambled-ID bug happened — it slipped through match-template\'s own >2 threshold).\n' +
+           '  Review and fix field IDs manually, or re-run with --ack-field-mismatch if you\'ve\n' +
+           '  confirmed the assignment is correct.');
     }
-
-    schema = { fields };
-    if (!dry) {
-      await saveSchema(dir, schema);
-      console.log(`\n  → Schema saved (_schema.json)`);
-    }
-
-  } else {
-    // ── Auto-apply schema ──────────────────────────────────────────────
-    const { fields } = schema;
-
-    for (let i = 0; i < needIds.length; i++) {
-      const b = needIds[i];
-
-      if (i < fields.length) {
-        const field = fields[i];
-        if (field) {
-          console.log(`  ✓ ${field.id}${field.required ? '*' : ''}  ←  "${b.preview}"`);
-          assignments.push({ ...b, id: field.id, required: field.required });
-        } else {
-          console.log(`  —  static  ←  "${b.preview}"`);
-          assignments.push({ ...b, id: '', required: false });
-        }
-      } else {
-        // Extra field not covered by schema
-        console.log(`\n  ⚠ Extra field at position ${i + 1} (not in schema):`);
-        const { id, required } = await askField(rl, b.preview);
-        assignments.push({ ...b, id, required });
-      }
-    }
-
-    // Warn about schema fields that had no matching element
-    const expectedCount = fields.filter(Boolean).length;
-    const gotCount      = assignments.filter(a => a.id).length;
-    if (gotCount < expectedCount) {
-      const missing = fields.slice(needIds.length).filter(Boolean).map(f => f.id);
-      console.log(`\n  ⚠ ${missing.length} schema field(s) not found in this template: ${missing.join(', ')}`);
-      console.log(`     (template may have fewer elements than the schema defines)`);
-    }
-  }
-
-  // Step 4: write
-  if (!dry) {
-    const newSvg = applyIds(svg, assignments);
-    await writeFile(filePath, newSvg);
-    const applied = assignments.filter(a => a.id).length;
-    console.log(`\n  ✓ Saved — ${applied} field(s) wrapped`);
-  } else {
-    const applied = assignments.filter(a => a.id).length;
-    console.log(`\n  [dry] Would wrap ${applied} field(s)`);
   }
 }
 
-// ── entry ─────────────────────────────────────────────────────────────────────
+// ── Stage 5: wrap any remaining bare text ──────────────────────────────────────
 
-const args    = process.argv.slice(2);
-const side    = args.includes('--side');
-const dry     = args.includes('--dry');
-const targets = args.filter(a => !a.startsWith('--'));
-
-if (!targets.length) {
-  console.log('Usage: node scripts/add-template.mjs <file.svg|folder> [--side] [--dry]');
-  console.log('');
-  console.log('  file.svg   process a single file');
-  console.log('  folder     process all SVGs in folder (uses shared schema)');
-  console.log('  --side     skip centering (side-aligned designs)');
-  console.log('  --dry      preview without writing');
-  process.exit(1);
+step('Wrapping any remaining bare text...');
+try {
+  const out = execSync(`node scripts/wrap-static-texts.mjs "${path.relative(ROOT, folder)}"`, { cwd: ROOT, stdio: 'pipe' }).toString();
+  const fixedLine = out.split('\n').find(l => l.includes(path.basename(absPath)));
+  console.log('  ' + (fixedLine?.trim() ?? 'done.'));
+} catch (e) {
+  fail(`wrap-static-texts.mjs failed:\n${e.stdout?.toString() ?? e.message}`);
 }
 
-// Collect SVG files
-const svgFiles = [];
-for (const t of targets) {
-  let s;
-  try { s = await stat(t); } catch { console.error(`Not found: ${t}`); continue; }
+// ── Stage 6: validate ──────────────────────────────────────────────────────────
 
-  if (s.isDirectory()) {
-    const files = (await readdir(t))
-      .filter(f => f.toLowerCase().endsWith('.svg') && !f.startsWith('_'))
-      .sort()
-      .map(f => path.join(t, f));
-    svgFiles.push(...files);
-  } else {
-    svgFiles.push(t);
+step('Validating all templates...');
+{
+  let out = '';
+  let failed = false;
+  try {
+    out = execSync('npm run -s validate-templates', { cwd: ROOT, stdio: 'pipe' }).toString();
+  } catch (e) {
+    failed = true;
+    out = e.stdout?.toString() ?? e.message;
+  }
+  const fileBase = path.basename(absPath);
+  const relevant = out.split('\n').filter(l => l.includes(fileBase));
+  if (relevant.length) console.log(relevant.map(l => '  ' + l.trim()).join('\n'));
+  if (failed && relevant.some(l => l.includes('❌'))) {
+    fail('validate-templates found errors in this file — fix them and re-run.');
+  }
+  console.log(failed ? '  (other unrelated files have pre-existing errors — not blocking this run)' : '  0 errors.');
+}
+
+// ── Stage 7: render preview ────────────────────────────────────────────────────
+
+step('Rendering preview...');
+{
+  const scratchDir = process.env.CLAUDE_SCRATCHPAD ?? path.join(ROOT, '.scratch-previews');
+  try {
+    const { Resvg } = await import('@resvg/resvg-js');
+    await mkdir(scratchDir, { recursive: true });
+    const svg = await readFile(absPath, 'utf-8');
+    const resvg = new Resvg(svg, { background: 'white' });
+    const png = resvg.render().asPng();
+    const outPath = path.join(scratchDir, `${path.basename(absPath, '.svg')}-preview.png`);
+    await writeFile(outPath, png);
+    console.log(`  saved: ${path.relative(ROOT, outPath)}  ← open this and check it looks right`);
+  } catch (e) {
+    console.log(`  (skipped — ${e.message})`);
   }
 }
 
-if (!svgFiles.length) {
-  console.error('No SVG files found.');
-  process.exit(1);
-}
+// ── Stage 8: print next commands (does not run them) ──────────────────────────
 
-console.log(`Found ${svgFiles.length} SVG file(s).`);
-if (dry) console.log('(dry run — nothing will be written)');
+const stem = path.basename(absPath, '.svg');
+const folderRel = path.relative(path.join(ROOT, 'public', 'templates'), folder);
 
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-
-for (const f of svgFiles) {
-  await processFile(f, rl, { side, dry });
-}
-
-rl.close();
-console.log('\n✓ Done!');
+console.log(`\n✓ Pipeline passed. Review the preview, then run:\n`);
+console.log(`   git add -f "public/templates/${folderRel}/${stem}.png"`);
+console.log(`   git add "public/templates/${folderRel}/${stem}.svg" "public/templates/${folderRel}/${stem}-thumb.png"`);
+console.log(`   git commit -m "Add ${stem} template to ${folderRel}"`);
+console.log(`   node scripts/convert-thumbs-to-webp.mjs`);
+console.log(`   node scripts/sync-r2.mjs "${folderRel}"`);
