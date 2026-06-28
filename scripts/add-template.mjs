@@ -184,14 +184,15 @@ step('Scanning for outlined/baked text passed off as artwork...');
   // smaller groups or have an explicit, human-named id.
   const gBlocks = [...content.matchAll(/<g\b([^>]*)>([\s\S]*?)<\/g>/g)];
   const suspects = [];
-  for (const [, attrs, inner] of gBlocks) {
+  for (const m of gBlocks) {
+    const [full, attrs, inner] = m;
     const idMatch = attrs.match(/\bid="([^"]+)"/);
     const id = idMatch?.[1] ?? '';
     const hasHumanId = /^[A-Za-z]/.test(id) && !id.startsWith('_');
     if (hasHumanId) continue; // explicitly named — trust the designer/earlier pass
     if (/<text\b/.test(inner)) continue; // has real text — not a pure-path block
     const pathCount = (inner.match(/<path\b/g) ?? []).length;
-    if (pathCount >= 8) suspects.push({ id: id || '(none)', pathCount });
+    if (pathCount >= 8) suspects.push({ id: id || '(none)', pathCount, full, start: m.index, end: m.index + full.length, inner });
   }
 
   if (suspects.length && !ackStaticArt) {
@@ -201,11 +202,57 @@ step('Scanning for outlined/baked text passed off as artwork...');
     }
     console.error('\n  This usually means real text got exported as vector outlines (Illustrator');
     console.error('  "Create Outlines" or a missing font at export time) instead of staying editable.');
-    console.error('  Fix the source/SVG so it\'s real <text>, or if this really is decorative art,');
-    console.error('  re-run with --ack-static-art to proceed.');
-    fail('Stopped at the outlined-text check.');
+
+    const rl = createInterface({ input: process.stdin, output: process.stdout });
+    const answer = (await rl.question(
+      '\n  Rebuild these as real text now? You\'ll need to type what each line says\n' +
+      '  (read it off your design) — no XML editing needed. [y/n] '
+    )).trim().toLowerCase();
+
+    if (answer === 'y' || answer === 'yes') {
+      const viewBoxMatch = content.match(/viewBox="[\d.\s-]+?\s+([\d.]+)\s+[\d.]+"/);
+      const centerX = viewBoxMatch ? parseFloat(viewBoxMatch[1]) / 2 : 180;
+
+      // Real <text> elements already in the file — used both to find the
+      // nearest neighbor's styling and to anchor the new line's Y position.
+      const realTexts = [...content.matchAll(/<text\b([^>]*)>([\s\S]*?)<\/text>/g)].map(t => {
+        const yMatch = t[1].match(/translate\(\s*[-\d.]+[\s,]+(-?[\d.]+)\s*\)/);
+        return { y: yMatch ? parseFloat(yMatch[1]) : null, attrs: t[1] };
+      }).filter(t => t.y !== null);
+
+      let updated = content;
+      for (const s of suspects.slice().sort((a, b) => b.start - a.start)) {
+        // Approximate the block's own Y position from its path coordinates —
+        // these blocks keep their original (uncentered) artboard coordinates,
+        // which happen to live in the same coordinate space as everything else.
+        const coords = [...s.inner.matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map(c => parseFloat(c[2]));
+        const approxY = coords.length ? coords.sort((a, b) => a - b)[Math.floor(coords.length / 2)] : 0;
+
+        const nearest = realTexts.slice().sort((a, b) => Math.abs(a.y - approxY) - Math.abs(b.y - approxY))[0];
+        const fill = nearest?.attrs.match(/\bfill="([^"]+)"/)?.[1] ?? '#000';
+        const fontFamily = nearest?.attrs.match(/\bfont-family="([^"]+)"/)?.[1] ?? 'Heebo';
+        const fontWeightAttr = nearest?.attrs.match(/\bfont-weight="[^"]+"/)?.[0] ?? '';
+        const fontSize = nearest?.attrs.match(/\bfont-size="([^"]+)"/)?.[1] ?? '12';
+
+        console.log(`\n  Line ~y=${Math.round(approxY)} (style matched to nearest text: ${nearest ? JSON.stringify(nearest.attrs.match(/<tspan[^>]*>([^<]*)</)?.[1] ?? '') : 'none found'})`);
+        const text = (await rl.question('  What does this line say? > ')).trim();
+
+        const newText = `<text transform="translate(${centerX} ${approxY})" fill="${fill}" font-family="${fontFamily}" ${fontWeightAttr} font-size="${fontSize}" text-anchor="middle"><tspan x="0" y="0">${text}</tspan></text>`;
+        updated = updated.slice(0, s.start) + newText + updated.slice(s.end);
+      }
+      rl.close();
+
+      await writeFile(absPath, updated);
+      console.log('\n  ✓ rebuilt as real text — continuing the pipeline.');
+    } else {
+      rl.close();
+      console.error('\n  Fix the source/SVG so it\'s real <text>, or if this really is decorative art,');
+      console.error('  re-run with --ack-static-art to proceed.');
+      fail('Stopped at the outlined-text check.');
+    }
+  } else {
+    console.log(suspects.length ? '  found, but acknowledged via --ack-static-art' : '  none found.');
   }
-  console.log(suspects.length ? '  found, but acknowledged via --ack-static-art' : '  none found.');
 }
 
 // ── Stage 4: match-template (only if a reference exists in the folder) ────────

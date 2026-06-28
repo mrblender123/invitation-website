@@ -1,17 +1,21 @@
 /**
- * Convert all *-thumb.png files to WebP at 400px wide and upload to R2.
- * Run with: node scripts/convert-thumbs-to-webp.mjs
+ * Convert *-thumb.png files to WebP at 400px wide and upload to R2.
+ * Skips files already converted (by source mtime+size) so a normal run only
+ * touches new/changed thumbnails — pass --force to reconvert everything.
+ * Run with: node scripts/convert-thumbs-to-webp.mjs [--force]
  */
 
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { readdir } from 'fs/promises';
+import { readdir, stat } from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import sharp from 'sharp';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
+const force = process.argv.includes('--force');
+const CACHE_PATH = path.join(ROOT, '.thumb-webp-cache.json');
 
 // Load .env.local
 const envPath = path.join(ROOT, '.env.local');
@@ -49,15 +53,26 @@ async function collectThumbs(dir, base) {
   return files;
 }
 
+function loadCache() {
+  if (!existsSync(CACHE_PATH)) return {};
+  try { return JSON.parse(readFileSync(CACHE_PATH, 'utf-8')); } catch { return {}; }
+}
+
 async function main() {
   const templatesDir = path.join(ROOT, 'public', 'templates');
   const files = await collectThumbs(templatesDir, 'templates');
-  console.log(`Found ${files.length} thumb files to convert.\n`);
+  const cache = loadCache();
 
-  let converted = 0, failed = 0;
+  let converted = 0, failed = 0, skipped = 0;
 
   for (const { full, rel } of files) {
     const webpKey = rel.replace(/\\/g, '/').replace(/-thumb\.png$/i, '-thumb.webp');
+    const { mtimeMs, size } = await stat(full);
+
+    if (!force && cache[rel] && cache[rel].mtimeMs === mtimeMs && cache[rel].size === size) {
+      skipped++;
+      continue;
+    }
 
     try {
       const buffer = await sharp(full)
@@ -76,6 +91,7 @@ async function main() {
 
       const kb = Math.round(buffer.length / 1024);
       console.log(`✓ ${webpKey} (${kb} KB)`);
+      cache[rel] = { mtimeMs, size };
       converted++;
     } catch (err) {
       console.error(`✗ ${webpKey}:`, err.message);
@@ -83,7 +99,8 @@ async function main() {
     }
   }
 
-  console.log(`\nDone — converted & uploaded: ${converted}, failed: ${failed}`);
+  writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2));
+  console.log(`\nFound ${files.length} thumb files — converted & uploaded: ${converted}, skipped (unchanged): ${skipped}, failed: ${failed}`);
 }
 
 main().catch(err => { console.error(err); process.exit(1); });

@@ -90,7 +90,22 @@ function isProcessed(svg) {
 
 // ── Find reference SVG ────────────────────────────────────────────────────────
 
-async function findReference(folder, skipFile) {
+/**
+ * Detect whether an SVG's text content is mostly Hebrew or mostly Latin.
+ * Used to avoid matching an English template against a Hebrew sibling (or vice
+ * versa) just because it happens to share a folder — they use different field
+ * naming conventions even within the same category.
+ */
+function detectScript(svg) {
+  const texts = [...svg.matchAll(/<tspan[^>]*>([^<]+)</g)].map(m => m[1]);
+  const all = texts.join('');
+  const hebrew = (all.match(/[֐-׿]/g) ?? []).length;
+  const latin = (all.match(/[A-Za-z]/g) ?? []).length;
+  if (hebrew + latin < 3) return 'unknown';
+  return hebrew > latin ? 'hebrew' : 'latin';
+}
+
+async function findReference(folder, skipFile, newScript) {
   const entries = await readdir(folder);
   const svgFiles = entries
     .filter(f => f.toLowerCase().endsWith('.svg') && !f.startsWith('_') && path.join(folder, f) !== skipFile)
@@ -103,13 +118,24 @@ async function findReference(folder, skipFile) {
     const content = await readFile(f, 'utf-8');
     if (!isProcessed(content)) continue;
     const s = await stat(f);
-    candidates.push({ path: f, content, mtime: s.mtimeMs });
+    candidates.push({ path: f, content, mtime: s.mtimeMs, script: detectScript(content) });
   }
 
   if (!candidates.length) return null;
   candidates.sort((a, b) => b.mtime - a.mtime); // newest first
 
-  const best = candidates[0];
+  // Same-script siblings use the same field-naming convention — strongly
+  // prefer them over a same-folder sibling that happens to be a different
+  // language (this is exactly how an English template got matched against a
+  // Hebrew sibling's field ids).
+  const sameScript = newScript !== 'unknown'
+    ? candidates.filter(c => c.script === newScript || c.script === 'unknown')
+    : [];
+
+  const best = sameScript.length ? sameScript[0] : candidates[0];
+  if (sameScript.length && best !== candidates[0]) {
+    console.log(`  (skipping ${path.basename(candidates[0].path)} — different script/language; using a same-language sibling instead)`);
+  }
   return { path: best.path, content: best.content, texts: extractTexts(best.content) };
 }
 
@@ -243,7 +269,7 @@ console.log(`\nmatching: ${filePath}`);
 const newSvg  = await readFile(absPath, 'utf-8');
 const newTexts = extractTexts(newSvg);
 
-const ref = await findReference(folder, absPath);
+const ref = await findReference(folder, absPath, detectScript(newSvg));
 if (!ref) {
   console.error('\n✗ No processed reference template found in this folder.');
   console.error('  Process one template manually first, then run this script for the rest.');

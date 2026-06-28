@@ -51,3 +51,6 @@ next-env.d.ts
 *.mp4
 *.mp4.part
 *.zip
+
+# Local cache for thumbnail->webp conversion (skip-if-unchanged tracking)
+.thumb-webp-cache.json
