@@ -67,6 +67,9 @@ const FONT_RULES = [
   [/font-family="FrankRuhlLibre-Bold,\s*'Frank Ruhl Libre'"/,    'Frank Ruhl Libre', '700'],
   [/font-family="FrankRuhlLibre-Regular,\s*'Frank Ruhl Libre'"/, 'Frank Ruhl Libre', '400'],
   [/font-family="FrankRuhlLibre-Light,\s*'Frank Ruhl Libre'"/,   'Frank Ruhl Libre', '300'],
+  // Comic Sans MS — not a Google Font, mapped to its open-source replacement
+  [/font-family="ComicSansMS-Bold,\s*'Comic Sans MS'"/,  'Comic Neue', '700'],
+  [/font-family="ComicSansMS,\s*'Comic Sans MS'"/,       'Comic Neue', '400'],
 ];
 
 // Apply specific rules first
@@ -166,7 +169,7 @@ if (!isSide) {
 
 const KNOWN_FONTS = [
   'Heebo', 'Playpen Sans Hebrew', 'Frank Ruhl Libre',
-  'Dancing Script', 'Lora', 'Montserrat', 'Oswald', 'Secular One', 'Lexend',
+  'Dancing Script', 'Lora', 'Montserrat', 'Oswald', 'Secular One', 'Lexend', 'Comic Neue',
 ];
 
 const unknownFonts = new Set(

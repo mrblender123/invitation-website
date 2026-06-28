@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Dancing_Script, Frank_Ruhl_Libre, Heebo, Lexend, Lora, Montserrat, Oswald, Playpen_Sans_Hebrew, Secular_One } from "next/font/google";
+import { Comic_Neue, Dancing_Script, Frank_Ruhl_Libre, Heebo, Lexend, Lora, Montserrat, Oswald, Playpen_Sans_Hebrew, Secular_One } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./components/AuthProvider";
 
@@ -62,6 +62,13 @@ const lexend = Lexend({
   display: "fallback",
 });
 
+const comicNeue = Comic_Neue({
+  variable: "--font-comic-neue",
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  display: "fallback",
+});
+
 
 export const metadata: Metadata = {
   title: "Simcha Invitations",
@@ -118,7 +125,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable} ${heebo.variable} ${frankRuhlLibre.variable} ${playpenSansHebrew.variable} ${lexend.variable}`}>
+    <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable} ${heebo.variable} ${frankRuhlLibre.variable} ${playpenSansHebrew.variable} ${lexend.variable} ${comicNeue.variable}`}>
       <head>
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link rel="stylesheet" href="https://use.typekit.net/hat2kft.css" />
