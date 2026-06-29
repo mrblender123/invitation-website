@@ -1,0 +1,96 @@
+{
+  "fields": [
+    {
+      "id": "line_13",
+      "placeholder": "בעזרת השם יתברך"
+    },
+    {
+      "id": "line_12",
+      "placeholder": "קול ששון  -  וקול שמחה  -  קול חתן  -  וקול כלה"
+    },
+    {
+      "id": "line_11",
+      "placeholder": "ברוב שבח והודאה להשי״ת"
+    },
+    {
+      "id": "line_10",
+      "placeholder": "הננו מתכבדים להזמין את כבודינו"
+    },
+    {
+      "id": "line_9",
+      "placeholder": "להשתתף בשמחת כלולות בנינו היקרים"
+    },
+    {
+      "id": "line_8",
+      "placeholder": "החתן"
+    },
+    {
+      "id": "line_7",
+      "placeholder": "נ״י"
+    },
+    {
+      "id": "groom_name*",
+      "placeholder": "שלמה זלמן"
+    },
+    {
+      "id": "line_6",
+      "placeholder": "עב״ג"
+    },
+    {
+      "id": "line_5",
+      "placeholder": "הכלה"
+    },
+    {
+      "id": "bride_name*",
+      "placeholder": "שרה"
+    },
+    {
+      "id": "line_4",
+      "placeholder": "תחי׳"
+    },
+    {
+      "id": "line_3",
+      "placeholder": "שתתקיים אי״ה בשעה טובה ומוצלחת"
+    },
+    {
+      "id": "day*",
+      "placeholder": "ביום רביעי לפרשת יתרו"
+    },
+    {
+      "id": "date*",
+      "placeholder": "אור לי״ז שבט תשפ״ו לפ״ק"
+    },
+    {
+      "id": "reception_time*",
+      "placeholder": "קבלת פנים בשעה"
+    },
+    {
+      "id": "chupa_time*",
+      "placeholder": "החופה בשעה"
+    },
+    {
+      "id": "celebration_time",
+      "placeholder": "שמחת חתן וכלה בשעה"
+    },
+    {
+      "id": "hall*",
+      "placeholder": "באולם תפארת מרדכי"
+    },
+    {
+      "id": "address*",
+      "placeholder": "ברוקלין ניו יארק"
+    },
+    {
+      "id": "line_2",
+      "placeholder": "ובעזהשי״ת ביום שמחתכם ישמח ליבי גם אנו"
+    },
+    {
+      "id": "groom_parents*",
+      "placeholder": "הורי החתן שמאול זאנוויל שווארץ וריעיתו"
+    },
+    {
+      "id": "bride_parents*",
+      "placeholder": "הורי הכלה דוד ברעכער וריעיתו"
+    }
+  ]
+}

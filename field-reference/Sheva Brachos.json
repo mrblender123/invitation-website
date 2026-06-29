@@ -1,0 +1,29 @@
+{
+  "note": "CLAUDE.md documented pattern. Actual committed templates (SB-01) use a different set — see \"Sheva Brachos (actual, from SB-01)\".",
+  "fields": [
+    {
+      "id": "date*",
+      "placeholder": "ביום ג׳ פרשת שמות"
+    },
+    {
+      "id": "hebrew_date*",
+      "placeholder": "ט״ו טבת תשפ״ו"
+    },
+    {
+      "id": "location*",
+      "placeholder": "באולם פרדס נח"
+    },
+    {
+      "id": "address*",
+      "placeholder": "5015 15th Ave"
+    },
+    {
+      "id": "groom_name*",
+      "placeholder": "שמעון לוי"
+    },
+    {
+      "id": "groom_name_2*",
+      "placeholder": "ברענאוויטש"
+    }
+  ]
+}

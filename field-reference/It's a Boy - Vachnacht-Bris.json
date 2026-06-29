@@ -1,0 +1,56 @@
+{
+  "fields": [
+    {
+      "id": "line_2",
+      "placeholder": "מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו"
+    },
+    {
+      "id": "line_4",
+      "placeholder": "הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳"
+    },
+    {
+      "id": "line_3",
+      "placeholder": "לבוא להשתתף בשמחת"
+    },
+    {
+      "id": "line_5",
+      "placeholder": "שתתקיים אי״ה"
+    },
+    {
+      "id": "date*",
+      "placeholder": "בליל ג׳ פרשת שמות"
+    },
+    {
+      "id": "hall*",
+      "placeholder": "באולם פרדס נח"
+    },
+    {
+      "id": "street_2*",
+      "placeholder": "5015 15th Ave"
+    },
+    {
+      "id": "line_6",
+      "placeholder": "יתקיים למחרתו"
+    },
+    {
+      "id": "location*",
+      "placeholder": "בביהמ״ד קהל חסידי בעלזא"
+    },
+    {
+      "id": "street*",
+      "placeholder": "1247 38th St"
+    },
+    {
+      "id": "host_name*",
+      "placeholder": "שמעון לוי ברענאוויטש"
+    },
+    {
+      "id": "father_name_1*",
+      "placeholder": "ב״ר שמחה ברוך הי״וו"
+    },
+    {
+      "id": "father_name_2*",
+      "placeholder": "חתן יהודה גרינבערגער הי״וו"
+    }
+  ]
+}

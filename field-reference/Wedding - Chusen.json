@@ -1,0 +1,48 @@
+{
+  "fields": [
+    {
+      "id": "personal_intro",
+      "placeholder": "איך וויל דיך פרעזענליך"
+    },
+    {
+      "id": "invite_text",
+      "placeholder": "איינלאדענען צו מיין"
+    },
+    {
+      "id": "event_intro",
+      "placeholder": "וואס וועט אי״ה פארקומען"
+    },
+    {
+      "id": "day*",
+      "placeholder": "דינסטאג"
+    },
+    {
+      "id": "parasha*",
+      "placeholder": "פרשת מקץ"
+    },
+    {
+      "id": "hall_intro",
+      "placeholder": "אין די זאלן פון"
+    },
+    {
+      "id": "hall*",
+      "placeholder": "תפארת מרדכי"
+    },
+    {
+      "id": "address*",
+      "placeholder": "600-640 McDonald Ave"
+    },
+    {
+      "id": "groom_title",
+      "placeholder": "החתן"
+    },
+    {
+      "id": "groom_name*",
+      "placeholder": "שמאול יצחק"
+    },
+    {
+      "id": "groom_last*",
+      "placeholder": "ווייסמאן"
+    }
+  ]
+}

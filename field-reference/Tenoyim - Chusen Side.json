@@ -1,0 +1,60 @@
+{
+  "fields": [
+    {
+      "id": "line_1",
+      "placeholder": "With gratitude to hashem"
+    },
+    {
+      "id": "line_2",
+      "placeholder": "we would like to invite you to the"
+    },
+    {
+      "id": "line_3",
+      "placeholder": "Tenoyim"
+    },
+    {
+      "id": "line_4",
+      "placeholder": "of our children"
+    },
+    {
+      "id": "groom_name*",
+      "placeholder": "Baruch"
+    },
+    {
+      "id": "line_5",
+      "placeholder": "&amp;"
+    },
+    {
+      "id": "bride_name*",
+      "placeholder": "Chani"
+    },
+    {
+      "id": "day*",
+      "placeholder": "Monday Jan 8"
+    },
+    {
+      "id": "location*",
+      "placeholder": "Pardes Noach"
+    },
+    {
+      "id": "address*",
+      "placeholder": "5015 15th Ave"
+    },
+    {
+      "id": "time*",
+      "placeholder": "at eight in the evening"
+    },
+    {
+      "id": "greeting",
+      "placeholder": "looking forward on seeing you"
+    },
+    {
+      "id": "host_name*",
+      "placeholder": "Shloimy &amp; Chani"
+    },
+    {
+      "id": "last_name*",
+      "placeholder": "Wasserman"
+    }
+  ]
+}

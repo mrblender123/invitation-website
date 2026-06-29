@@ -1,0 +1,52 @@
+{
+  "fields": [
+    {
+      "id": "line_1",
+      "placeholder": "WIth Gratitude To Hashem"
+    },
+    {
+      "id": "line_2",
+      "placeholder": "We Would Like To Invite You To The"
+    },
+    {
+      "id": "line_3",
+      "placeholder": "Kiddush"
+    },
+    {
+      "id": "line_4",
+      "placeholder": "Of our Daughter"
+    },
+    {
+      "id": "line_5",
+      "placeholder": "That will take place"
+    },
+    {
+      "id": "day*",
+      "placeholder": "Shabbes Parshas Emor"
+    },
+    {
+      "id": "hall*",
+      "placeholder": "At Pardes Noach"
+    },
+    {
+      "id": "street*",
+      "placeholder": "5015 15th Ave"
+    },
+    {
+      "id": "time*",
+      "placeholder": "Davening at 9:30"
+    },
+    {
+      "id": "greeting",
+      "placeholder": "looking forward to see you"
+    },
+    {
+      "id": "host_name*",
+      "placeholder": "shmuel &amp; Raizy"
+    },
+    {
+      "id": "last_name*",
+      "placeholder": "grossman"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "fields": [
+    {
+      "id": "line_5",
+      "placeholder": "מתוך שבח והודאה להשי״ת"
+    },
+    {
+      "id": "line_4",
+      "placeholder": "הננו מתכבדים בזה להזמין את מע״כ"
+    },
+    {
+      "id": "line_3",
+      "placeholder": "לבוא להשתתף בשמחת"
+    },
+    {
+      "id": "line_2",
+      "placeholder": "אשר נערך לכבוד שמחת נישוא׳"
+    },
+    {
+      "id": "couple_name*",
+      "placeholder": "מנשה וחנה"
+    },
+    {
+      "id": "couple_family_name*",
+      "placeholder": "בערקאוויטש"
+    },
+    {
+      "id": "day*",
+      "placeholder": "ביום ג׳ פרשת שמות"
+    },
+    {
+      "id": "date*",
+      "placeholder": "ט״ו טבת תשפ״ו"
+    },
+    {
+      "id": "hall*",
+      "placeholder": "באולם פרדס נח"
+    },
+    {
+      "id": "address*",
+      "placeholder": "5015 15th Ave"
+    },
+    {
+      "id": "host_name*",
+      "placeholder": "שמעון לוי ברענאוויטש"
+    }
+  ]
+}

@@ -33,7 +33,7 @@ await s3.send(new PutBucketCorsCommand({
   CORSConfiguration: {
     CORSRules: [{
       AllowedOrigins: ['https://www.shareyoursimcha.com', 'https://shareyoursimcha.com', 'http://localhost:3000'],
-      AllowedMethods: ['PUT'],
+      AllowedMethods: ['GET', 'PUT'],
       AllowedHeaders: ['content-type'],
       MaxAgeSeconds: 3000,
     }],

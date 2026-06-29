@@ -1,0 +1,41 @@
+{
+  "note": "Generic pattern from CLAUDE.md for the Bavarfen/Father category overall. Actual subfolders (Father, Chusen invite, Schedule) have diverged — see their own files.",
+  "fields": [
+    {
+      "id": "day*",
+      "placeholder": "ביום שבת קודש"
+    },
+    {
+      "id": "parasha*",
+      "placeholder": "פרשת ויגש"
+    },
+    {
+      "id": "location*",
+      "placeholder": "בביהמ״ד קהל חסידי בעלזא"
+    },
+    {
+      "id": "street*",
+      "placeholder": "1247 38th St"
+    },
+    {
+      "id": "greeting*",
+      "placeholder": "ידידכם המצפה לקבל פניכם"
+    },
+    {
+      "id": "time",
+      "placeholder": "שחרית"
+    },
+    {
+      "id": "host_name*",
+      "placeholder": "ברוך זאב ראטנבערג"
+    },
+    {
+      "id": "father_name_1*",
+      "placeholder": "ב״ר בנימין משה הי״ו"
+    },
+    {
+      "id": "father_name_2*",
+      "placeholder": "חתן בערל גרינפעלד הי״ו"
+    }
+  ]
+}

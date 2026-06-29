@@ -1,0 +1,37 @@
+{
+  "note": "CLAUDE.md documented pattern. The actual committed Bar Mitzvah templates (BM-02 etc.) use a different/looser set of ids in practice — see \"Bar Mitzvah (actual, from BM-02)\" file for what is really in use.",
+  "fields": [
+    {
+      "id": "day*",
+      "placeholder": "ביום א׳ פרשת שמות"
+    },
+    {
+      "id": "location*",
+      "placeholder": "באולם פרדס נח"
+    },
+    {
+      "id": "address*",
+      "placeholder": "5015 15th Ave"
+    },
+    {
+      "id": "time*",
+      "placeholder": "7:00"
+    },
+    {
+      "id": "greeting",
+      "placeholder": "ידידכם המצפה לקבל פניכם"
+    },
+    {
+      "id": "host_name*",
+      "placeholder": "חייםמשה ראטה"
+    },
+    {
+      "id": "father_name_1*",
+      "placeholder": "ב״ר בנימין משה הי״ו"
+    },
+    {
+      "id": "father_name_2*",
+      "placeholder": "חתן בערל גרינפעלד הי״ו"
+    }
+  ]
+}

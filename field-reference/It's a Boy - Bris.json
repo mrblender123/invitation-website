@@ -1,0 +1,60 @@
+{
+  "fields": [
+    {
+      "id": "line_6",
+      "placeholder": "ברוב שמחה והודאה להשי״ת הננו מתכבדים להזמין את"
+    },
+    {
+      "id": "line_5",
+      "placeholder": "ידידינו וקרובינו ומכובדינו שיחיו"
+    },
+    {
+      "id": "line_4",
+      "placeholder": "להשתתף עמנו בשמחת"
+    },
+    {
+      "id": "line_3",
+      "placeholder": "לבננו בכורנו היקר"
+    },
+    {
+      "id": "line_2",
+      "placeholder": "שתתקיים אי״ה"
+    },
+    {
+      "id": "day*",
+      "placeholder": "ביום א׳ פרשת שמות"
+    },
+    {
+      "id": "hall*",
+      "placeholder": "באולם פרדס נח"
+    },
+    {
+      "id": "address*",
+      "placeholder": "5015 15th Ave"
+    },
+    {
+      "id": "shacharis_time*",
+      "placeholder": "שחרית בשעה 8:00"
+    },
+    {
+      "id": "bris_time*",
+      "placeholder": "ברית בשעה 9:00"
+    },
+    {
+      "id": "closing",
+      "placeholder": "ידידכם המצפה לקבל פניכם"
+    },
+    {
+      "id": "baby_name*",
+      "placeholder": "ברוך זאב ראטה"
+    },
+    {
+      "id": "father_line_1*",
+      "placeholder": "ב״ר בנימין משה הי״ו"
+    },
+    {
+      "id": "father_line_2*",
+      "placeholder": "חתן בערל גרינפעלד הי״ו"
+    }
+  ]
+}

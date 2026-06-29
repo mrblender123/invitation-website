@@ -1,0 +1,132 @@
+{
+  "fields": [
+    {
+      "id": "letter*",
+      "placeholder": "א"
+    },
+    {
+      "id": "text_1",
+      "placeholder": "הננו מתכבדים בזה להזמין את מע״כ לבוא להשתתף בשמחת"
+    },
+    {
+      "id": "text_2",
+      "placeholder": "שבת באווארפן"
+    },
+    {
+      "id": "chusen*",
+      "placeholder": "של החתן יצחק מנחם פריעדמאן ני״ו"
+    },
+    {
+      "id": "parsha*",
+      "placeholder": "שב״ק פרשת חקת"
+    },
+    {
+      "id": "hadlakat*",
+      "placeholder": "זמן הדלקת נירות"
+    },
+    {
+      "id": "motzei*",
+      "placeholder": "זמן מוצאי שבת"
+    },
+    {
+      "id": "toamehu*",
+      "placeholder": "טועמ׳"
+    },
+    {
+      "id": "toamehu_location*",
+      "placeholder": "באולם פרדס נח"
+    },
+    {
+      "id": "toamehu_address*",
+      "placeholder": "5015 15th Ave"
+    },
+    {
+      "id": "mincha*",
+      "placeholder": "מנחה וקבלת שבת"
+    },
+    {
+      "id": "mincha_location*",
+      "placeholder": "בביהמ״ד קהל חסידי בעלזא"
+    },
+    {
+      "id": "mincha_address*",
+      "placeholder": "1247 38th St"
+    },
+    {
+      "id": "night_meal*",
+      "placeholder": "סעודת ליל שב״ק"
+    },
+    {
+      "id": "night_meal_location*",
+      "placeholder": "באולם פרדס נח"
+    },
+    {
+      "id": "night_meal_address*",
+      "placeholder": "5015 15th Ave"
+    },
+    {
+      "id": "bagleiten*",
+      "placeholder": "באגלייטן דו חתן"
+    },
+    {
+      "id": "bagleiten_location*",
+      "placeholder": "בביתי"
+    },
+    {
+      "id": "bagleiten_address*",
+      "placeholder": "789 st"
+    },
+    {
+      "id": "shachrit*",
+      "placeholder": "תפילת שחרית"
+    },
+    {
+      "id": "shachrit_location*",
+      "placeholder": "בביהמ״ד קהל חסידי בעלזא"
+    },
+    {
+      "id": "shachrit_address*",
+      "placeholder": "1247 38th St"
+    },
+    {
+      "id": "morning_meal*",
+      "placeholder": "סעודת שב״ק"
+    },
+    {
+      "id": "morning_meal_location*",
+      "placeholder": "באולם פרדס נח"
+    },
+    {
+      "id": "morning_meal_address*",
+      "placeholder": "5015 15th Ave"
+    },
+    {
+      "id": "shaleshseudos*",
+      "placeholder": "מנחה ושל״ס"
+    },
+    {
+      "id": "shaleshseudos_location*",
+      "placeholder": "בביהמ״ד קהל חסידי בעלזא"
+    },
+    {
+      "id": "shaleshseudos_address*",
+      "placeholder": "1247 38th St"
+    },
+    {
+      "id": "havdala*",
+      "placeholder": "הבדלה"
+    },
+    {
+      "id": "havdala_location*",
+      "placeholder": "בביתי"
+    },
+    {
+      "id": "havdala_address*",
+      "placeholder": "789 st"
+    },
+    {
+      "id": "host_name*",
+      "placeholder": "משה אהרון הלוי בערקאוויטש"
+    }
+  ]
+}

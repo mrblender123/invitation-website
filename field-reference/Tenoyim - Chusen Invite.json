@@ -1,0 +1,48 @@
+{
+  "fields": [
+    {
+      "id": "line_9",
+      "placeholder": "החתן"
+    },
+    {
+      "id": "groom_name*",
+      "placeholder": "דוד ברוך"
+    },
+    {
+      "id": "groom_last*",
+      "placeholder": "ווייסמאן"
+    },
+    {
+      "id": "parasha*",
+      "placeholder": "פרשת וירא"
+    },
+    {
+      "id": "day*",
+      "placeholder": "דינסטאג"
+    },
+    {
+      "id": "line_3",
+      "placeholder": "אין די זאלן פון"
+    },
+    {
+      "id": "line_2",
+      "placeholder": "וואס וועט אי״ה פארקומען"
+    },
+    {
+      "id": "line_0",
+      "placeholder": "איך וויל דיך פרעזענליך"
+    },
+    {
+      "id": "line_1",
+      "placeholder": "איינלאדענען צו מיין"
+    },
+    {
+      "id": "address*",
+      "placeholder": "5015 15th Ave"
+    },
+    {
+      "id": "hall*",
+      "placeholder": "באולם פרדס נח"
+    }
+  ]
+}

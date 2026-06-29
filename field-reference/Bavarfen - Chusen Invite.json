@@ -1,0 +1,40 @@
+{
+  "fields": [
+    {
+      "id": "line_3",
+      "placeholder": "איינלאדענען צו מיין"
+    },
+    {
+      "id": "line_2",
+      "placeholder": "וואס וועט אי״ה פארקומען"
+    },
+    {
+      "id": "day*",
+      "placeholder": "שב״ק פרשת ויגש"
+    },
+    {
+      "id": "location*",
+      "placeholder": "בביהמ״ד קהל חסידי בעלזא"
+    },
+    {
+      "id": "street*",
+      "placeholder": "1247 38th St"
+    },
+    {
+      "id": "time*",
+      "placeholder": "שחרית"
+    },
+    {
+      "id": "line_1",
+      "placeholder": "החתן"
+    },
+    {
+      "id": "host_name*",
+      "placeholder": "דוד בער"
+    },
+    {
+      "id": "father_name_1*",
+      "placeholder": "ווייסמאן"
+    }
+  ]
+}

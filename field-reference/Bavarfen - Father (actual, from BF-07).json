@@ -1,0 +1,60 @@
+{
+  "fields": [
+    {
+      "id": "father_name*",
+      "placeholder": "חתן בערל גרינפעלד הי״ו"
+    },
+    {
+      "id": "grandfather*",
+      "placeholder": "ב״ר בנימין משה הי״ו"
+    },
+    {
+      "id": "baby_name*",
+      "placeholder": "ברוך זאב ראטנבערג"
+    },
+    {
+      "id": "host_line*",
+      "placeholder": "ידידכם המצפה לקבל פניכם"
+    },
+    {
+      "id": "davening_time*",
+      "placeholder": "שחרית"
+    },
+    {
+      "id": "address*",
+      "placeholder": "1247 38th St"
+    },
+    {
+      "id": "location*",
+      "placeholder": "בביהמ״ד קהל חסידי בעלזא"
+    },
+    {
+      "id": "parsha*",
+      "placeholder": "פרשת ויגש"
+    },
+    {
+      "id": "day*",
+      "placeholder": "ביום שבת קודש"
+    },
+    {
+      "id": "line_5",
+      "placeholder": "שתתקיים אי״ה"
+    },
+    {
+      "id": "line_4",
+      "placeholder": "של בני החתן בנימין זאב נ״י"
+    },
+    {
+      "id": "line_3",
+      "placeholder": "להשתתף עמנו בשמחת"
+    },
+    {
+      "id": "line_2",
+      "placeholder": "הננו מתכבדים להזמין את כבוד ידידנו"
+    },
+    {
+      "id": "line_1",
+      "placeholder": "ברוב שבח והודאה להשי״ת"
+    }
+  ]
+}
