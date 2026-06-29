@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
   <g id="groom_name*">
     <text transform="translate(180 153.6)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="6.8" text-anchor="middle"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
   </g>
@@ -10,51 +9,49 @@
     <text transform="translate(180 169.2)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="6.8" text-anchor="middle"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
   </g>
   <g id="vachnacht_address*">
-    <text transform="translate(180 255.2)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="6.6" text-anchor="middle"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+    <text transform="translate(312 256.3)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="6.6" text-anchor="end"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
   </g>
   <g id="_בליל_ג_פרשת_שמות" data-name=" * בליל ג׳ פרשת שמות">
     <g id="vachnacht_location*">
-      <text transform="translate(180 269.3)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="14.4" text-anchor="middle"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
+      <text transform="translate(312 271)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="11.5" text-anchor="end"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
     </g>
   </g>
   <g id="_בבאולם_פרדס_נח" data-name="* בבאולם פרדס נח">
     <g id="line_5">
-      <text transform="translate(180 283.2)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="10.3" text-anchor="middle"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+      <text transform="translate(312 284.9)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="10.3" text-anchor="end"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
     </g>
   </g>
   <g id="_5015_15th_Ave_" data-name="5015 15th Ave *">
     <g id="bris_address*">
-      <text transform="translate(180 294.4)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="10.3" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+      <text transform="translate(312 297.8)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="10.3" text-anchor="end"><tspan x="0" y="0">5015 15th Ave</tspan></text>
     </g>
   </g>
   <g id="bris_location*">
-    <text transform="translate(180 276.4)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="6.6" text-anchor="middle"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
+    <text transform="translate(184.3 276.4)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="6.6" text-anchor="end"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
   </g>
   <g id="_בביהמ_ד_קהל_חסידי_בעלזא" data-name="* בביהמ״ד קהל חסידי בעלזא">
     <g id="vachnacht_date*">
-      <text transform="translate(180 286.6)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="10.3" text-anchor="middle"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
+      <text transform="translate(184.3 286.6)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="10.3" text-anchor="end"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
     </g>
   </g>
   <g id="_1247_38th_St_" data-name="1247 38th St *">
     <g id="line_4">
-      <text transform="translate(180 297.5)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="10.3" text-anchor="middle"><tspan x="0" y="0">1247 38th St</tspan></text>
+      <text transform="translate(184.3 299.2)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="10.3" text-anchor="end"><tspan x="0" y="0">1247 38th St</tspan></text>
     </g>
   </g>
   <g id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה">
     <g id="line_3">
-      <text transform="translate(180 331.7)" fill="#114a84" font-family="Playpen Sans Hebrew" font-weight="600" font-size="24" text-anchor="middle"><tspan x="0" y="0">שמעון לוי ברענאוויטש</tspan></text>
+      <text transform="translate(312 327.4)" fill="#114a84" font-family="Playpen Sans Hebrew" font-weight="600" font-size="17" text-anchor="end"><tspan x="0" y="0">שמעון לוי ברענאוויטש</tspan></text>
     </g>
   </g>
-  <g id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו
-">
+  <g id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו ">
     <g id="line_2">
-      <text transform="translate(180 345.7)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="5.9" text-anchor="middle"><tspan x="0" y="0">ב״ר שמחה ברוך הי״וו</tspan></text>
+      <text transform="translate(312 340.6)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="5.9" text-anchor="end"><tspan x="0" y="0">ב״ר שמחה ברוך הי״וו</tspan></text>
     </g>
   </g>
-  <g id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו
-">
+  <g id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו ">
     <g id="line_1">
-      <text transform="translate(180 352.3)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="5.9" text-anchor="middle"><tspan x="0" y="0">חתן יהודה גרינבערגער הי״וו</tspan></text>
+      <text transform="translate(312 347.2)" fill="#114a84" font-family="Heebo" font-weight="700" font-size="5.9" text-anchor="end"><tspan x="0" y="0">חתן יהודה גרינבערגער הי״וו</tspan></text>
     </g>
   </g>
 </svg>
