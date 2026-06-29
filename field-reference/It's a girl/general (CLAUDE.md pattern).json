@@ -1,0 +1,45 @@
+{
+  "note": "Generic pattern from CLAUDE.md. Actual subcategories under It's a boy (Bris, Shulem Zucher, Vach Nacht, Vachnacht-Bris, Pidyon Haben) have their own established variants — see their own files in this folder.",
+  "fields": [
+    {
+      "id": "day*",
+      "placeholder": "ביום שבת קודש"
+    },
+    {
+      "id": "parasha*",
+      "placeholder": "פרשת ויגש"
+    },
+    {
+      "id": "location*",
+      "placeholder": "בביהמ״ד קהל חסידי בעלזא"
+    },
+    {
+      "id": "street*",
+      "placeholder": "1247 38th St"
+    },
+    {
+      "id": "greeting",
+      "placeholder": "ידידכם המצפה לקבל פניכם"
+    },
+    {
+      "id": "time*",
+      "placeholder": "שחרית"
+    },
+    {
+      "id": "shachrit_time*",
+      "placeholder": "9:30 (only if separate from time*)"
+    },
+    {
+      "id": "host_name*",
+      "placeholder": "ברוך זאב ראטנבערג"
+    },
+    {
+      "id": "father_name_1",
+      "placeholder": "ב״ר בנימין משה הי״ו"
+    },
+    {
+      "id": "father_name_2",
+      "placeholder": "חתן בערל גרינפעלד הי״ו"
+    }
+  ]
+}
