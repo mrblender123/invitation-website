@@ -206,16 +206,29 @@ const SvgCardPreview = forwardRef<HTMLDivElement, Props>(function SvgCardPreview
             crossOrigin="anonymous"
             onError={(e) => {
               const img = e.target as HTMLImageElement;
-              // Thumb fallback chain: thumb.webp → thumb.png → full backgroundSrc
-              if (thumb) {
-                const thumbPng = (template.thumbnailSrc ?? '').replace('.webp', '.png');
-                if (img.src !== thumbPng && thumbPng.endsWith('.png')) {
-                  img.src = thumbPng;
-                } else {
-                  img.src = template.backgroundSrc;
-                }
-              } else if (img.src.endsWith('.webp')) {
-                img.src = img.src.replace('.webp', '.png');
+
+              // Bounded fallback chain: each candidate is tried at most once.
+              // Progress is tracked on the element itself (data-fallback-step) so
+              // repeated onError firings (e.g. during an R2 outage where every
+              // candidate 404s) advance through the chain instead of bouncing
+              // between two URLs forever.
+              const step = Number(img.dataset.fallbackStep ?? '0');
+
+              const chain: string[] = thumb
+                ? [
+                    (template.thumbnailSrc ?? '').replace('.webp', '.png'), // thumb.png
+                    template.backgroundSrc, // full background
+                  ]
+                : img.src.endsWith('.webp')
+                  ? [img.src.replace('.webp', '.png')] // background.png
+                  : [];
+
+              if (step >= chain.length) return; // chain exhausted — give up silently
+
+              const next = chain[step];
+              img.dataset.fallbackStep = String(step + 1);
+              if (next && next !== img.src) {
+                img.src = next;
               }
             }}
           />
