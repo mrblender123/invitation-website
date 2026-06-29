@@ -1,17 +1,32 @@
 /**
- * Convert all full-size template PNGs to WebP and upload to R2.
+ * Convert full-size template PNGs to WebP and upload to R2.
  * Keeps full 1500px resolution but compresses with WebP (quality 90).
- * Run with: node scripts/convert-full-to-webp.mjs
+ * Skips files already converted (by source mtime+size) so a normal run only
+ * touches new/changed backgrounds — pass --force to reconvert everything.
+ * Run with: node scripts/convert-full-to-webp.mjs ["Category/Sub"] [--force]
  */
 
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { readdir } from 'fs/promises';
+import { readdir, stat } from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import sharp from 'sharp';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
+const force = process.argv.includes('--force');
+const scope = process.argv.slice(2).find(a => !a.startsWith('-'));
+const CACHE_PATH = path.join(ROOT, '.full-webp-cache.json');
+
+// Load .env.local
+const envPath = path.join(ROOT, '.env.local');
+if (existsSync(envPath)) {
+  for (const line of readFileSync(envPath, 'utf-8').split('\n')) {
+    const m = line.match(/^([^#=]+)=(.*)$/);
+    if (m) process.env[m[1].trim()] = m[2].trim();
+  }
+}
 
 const { R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET } = process.env;
 if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY || !R2_BUCKET) {
@@ -40,15 +55,29 @@ async function collectFullPngs(dir, base) {
   return files;
 }
 
+function loadCache() {
+  if (!existsSync(CACHE_PATH)) return {};
+  try { return JSON.parse(readFileSync(CACHE_PATH, 'utf-8')); } catch { return {}; }
+}
+
 async function main() {
   const templatesDir = path.join(ROOT, 'public', 'templates');
-  const files = await collectFullPngs(templatesDir, 'templates');
-  console.log(`Found ${files.length} full PNG files to convert.\n`);
+  const scanDir = scope ? path.join(templatesDir, scope) : templatesDir;
+  const base     = scope ? path.join('templates', scope) : 'templates';
+  const files = await collectFullPngs(scanDir, base);
+  const cache = loadCache();
+  console.log(`Found ${files.length} full PNG files.\n`);
 
-  let converted = 0, failed = 0;
+  let converted = 0, failed = 0, skipped = 0;
 
   for (const { full, rel } of files) {
     const webpKey = rel.replace(/\\/g, '/').replace(/\.png$/i, '.webp');
+    const { mtimeMs, size } = await stat(full);
+
+    if (!force && cache[rel] && cache[rel].mtimeMs === mtimeMs && cache[rel].size === size) {
+      skipped++;
+      continue;
+    }
 
     try {
       const buffer = await sharp(full)
@@ -64,9 +93,9 @@ async function main() {
         CacheControl: 'public, max-age=31536000, immutable',
       }));
 
-      const origKb = Math.round((await import('fs')).statSync(full).size / 1024);
-      const newKb  = Math.round(buffer.length / 1024);
-      console.log(`✓ ${webpKey.split('/').pop()} — ${origKb}KB → ${newKb}KB`);
+      const newKb = Math.round(buffer.length / 1024);
+      console.log(`✓ ${webpKey.split('/').pop()} (${newKb} KB)`);
+      cache[rel] = { mtimeMs, size };
       converted++;
     } catch (err) {
       console.error(`✗ ${rel}:`, err.message);
@@ -74,7 +103,8 @@ async function main() {
     }
   }
 
-  console.log(`\nDone — converted & uploaded: ${converted}, failed: ${failed}`);
+  writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2));
+  console.log(`\nDone — converted & uploaded: ${converted}, skipped (unchanged): ${skipped}, failed: ${failed}`);
 }
 
 main().catch(err => { console.error(err); process.exit(1); });

@@ -109,6 +109,16 @@ node scripts/convert-thumbs-to-webp.mjs
 
 This converts every `*-thumb.png` → `*-thumb.webp` (3-20KB) and uploads directly to R2. Without this step, thumbnails will load slowly for all users.
 
+#### Step 7b — Convert the full background to WebP (mandatory — prevents stale/missing background on live site)
+
+Production always requests the **full background** as `FILE.webp`, not `FILE.png` — `scripts/sync-r2.mjs` only uploads the raw `.png` (used as a dev/fallback asset). Without this step, a *new* template's background 404s and silently falls back to the PNG (slower, not broken) — but updating an **existing** template's PNG without re-running this leaves the live site serving the *old* WebP indefinitely, with no error to notice.
+
+```bash
+node scripts/convert-full-to-webp.mjs "Category/Sub"
+```
+
+Run this any time a background PNG is added OR replaced (not just brand-new templates). Skips unchanged files like the thumbnail script; pass `--force` to reconvert everything in scope.
+
 #### Step 8 — Sync to R2 (mandatory — prevents 404 on live site)
 
 The production site serves SVGs and PNGs from R2 (Cloudflare). Git/Vercel deploys the files to the server but does **not** upload them to R2 automatically. Always run this after committing new template files:
