@@ -72,6 +72,14 @@ const FONT_RULES = [
   [/font-family="ComicSansMS,\s*'Comic Sans MS'"/,       'Comic Neue', '400'],
   // Secular One — single weight, no bold variant
   [/font-family="SecularOne-Regular,\s*'Secular One'"/,  'Secular One', '400'],
+  // Lexend — named PostScript weights
+  [/font-family="Lexend-Black,\s*Lexend"/,      'Lexend', '900'],
+  [/font-family="Lexend-ExtraBold,\s*Lexend"/,  'Lexend', '800'],
+  [/font-family="Lexend-Bold,\s*Lexend"/,       'Lexend', '700'],
+  [/font-family="Lexend-SemiBold,\s*Lexend"/,   'Lexend', '600'],
+  [/font-family="Lexend-Medium,\s*Lexend"/,     'Lexend', '500'],
+  [/font-family="Lexend-Regular,\s*Lexend"/,    'Lexend', '400'],
+  [/font-family="Lexend-Light,\s*Lexend"/,      'Lexend', '300'],
 ];
 
 // Apply specific rules first
@@ -84,6 +92,11 @@ for (const [pattern, family, weight] of FONT_RULES) {
 // Generic Heebo_NNN fallback (any numeric weight not covered above)
 svg = svg.replace(/font-family="'Heebo_(\d+)[^']*',\s*Heebo"/g,
   (_, w) => `font-family="Heebo" font-weight="${w}"`
+);
+
+// Generic Lexend_NNN fallback (variable-font weight, e.g. 'Lexend_612.000wght')
+svg = svg.replace(/font-family="'Lexend_(\d+)[^']*',\s*Lexend"/g,
+  (_, w) => `font-family="Lexend" font-weight="${w}"`
 );
 
 // Generic PlaypenSansHebrew_NNN fallback (variable-font weight, any value not covered above)
