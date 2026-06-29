@@ -1,0 +1,64 @@
+{
+  "fields": [
+    {
+      "id": "line_8",
+      "placeholder": "מתוך שבח והודאה להשי״ת"
+    },
+    {
+      "id": "line_7",
+      "placeholder": "על כל הטוב אשר גמלנו"
+    },
+    {
+      "id": "line_6",
+      "placeholder": "בשמחת הולדת בני שיחי׳"
+    },
+    {
+      "id": "line_5",
+      "placeholder": "למזל טוב"
+    },
+    {
+      "id": "line_4",
+      "placeholder": "אתכבד בזה להזמין את כל קרובי וידידי"
+    },
+    {
+      "id": "line_3",
+      "placeholder": "לבוא ולהשתתף בשמחתי אצל"
+    },
+    {
+      "id": "line_2",
+      "placeholder": "שתקיים אי״ה בליל שבת קודש"
+    },
+    {
+      "id": "parsha*",
+      "placeholder": "פרשת נשא"
+    },
+    {
+      "id": "location*",
+      "placeholder": "בביהמ״ד לעלוב"
+    },
+    {
+      "id": "street*",
+      "placeholder": "1693 49th Street"
+    },
+    {
+      "id": "greeting",
+      "placeholder": "ידידכם המצפה לקבל פניכם"
+    },
+    {
+      "id": "host_name*",
+      "placeholder": "מרדכי זאב"
+    },
+    {
+      "id": "father_name_1*",
+      "placeholder": "ב״ר בנימין משה הי״ו"
+    },
+    {
+      "id": "father_name_2*",
+      "placeholder": "חתן בערל גרינפעלד הי״ו"
+    },
+    {
+      "id": "host_lastName",
+      "placeholder": "גאלדבערגער"
+    }
+  ]
+}

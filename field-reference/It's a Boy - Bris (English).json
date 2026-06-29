@@ -1,19 +1,27 @@
 {
   "fields": [
     {
-      "id": "line_1",
+      "id": "line_6",
       "placeholder": "WIth Gratitude To Hashem"
     },
     {
-      "id": "line_2",
+      "id": "line_5",
       "placeholder": "We Would Like To Invite You To The"
     },
     {
-      "id": "line_3",
-      "placeholder": "Of our Baby son"
+      "id": "line_4",
+      "placeholder": "BRIS"
     },
     {
-      "id": "line_4",
+      "id": "line_3",
+      "placeholder": "MILAH"
+    },
+    {
+      "id": "line_2",
+      "placeholder": "Of our son"
+    },
+    {
+      "id": "line_1",
       "placeholder": "That will take place"
     },
     {
@@ -29,19 +37,19 @@
       "placeholder": "At Pardes Noach"
     },
     {
-      "id": "street*",
+      "id": "address*",
       "placeholder": "5015 15th Ave"
     },
     {
-      "id": "greeting",
+      "id": "closing",
       "placeholder": "looking forward to see you"
     },
     {
       "id": "host_name*",
-      "placeholder": "Shmuel &amp; Raizy"
+      "placeholder": "Shmuel & Raizy"
     },
     {
-      "id": "last_name*",
+      "id": "host_last_name*",
       "placeholder": "Goldstien"
     }
   ]
