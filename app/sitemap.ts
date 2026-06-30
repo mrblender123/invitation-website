@@ -1,4 +1,6 @@
 import { MetadataRoute } from 'next';
+import { slugFromCategory } from '@/app/lib/slugs';
+import { CATEGORY_SUBS, SUB_DISPLAY_NAMES } from '@/lib/categories';
 
 const BASE = 'https://www.shareyoursimcha.com';
 
@@ -15,11 +17,20 @@ const CATEGORIES = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const categoryUrls = CATEGORIES.map(cat => ({
-    url: `${BASE}/templates?category=${encodeURIComponent(cat)}`,
+    url: `${BASE}/templates/${slugFromCategory(cat)}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }));
+
+  const subcategoryUrls = CATEGORIES.flatMap(cat =>
+    (CATEGORY_SUBS[cat] ?? []).map(sub => ({
+      url: `${BASE}/templates/${slugFromCategory(cat)}/${slugFromCategory(sub)}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }))
+  );
 
   return [
     {
@@ -47,5 +58,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
     ...categoryUrls,
+    ...subcategoryUrls,
   ];
 }

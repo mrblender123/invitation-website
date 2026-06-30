@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SvgCardPreview from './SvgCardPreview';
+import { slugFromCategory } from '@/app/lib/slugs';
 import InvitationCard from './InvitationCard';
 import type { Template } from '@/lib/templates';
 
@@ -18,7 +19,7 @@ function TemplateCard({ template }: { template: Template }) {
 
   return (
     <div
-      onClick={() => router.push(`/templates?category=${encodeURIComponent(template.category)}`)}
+      onClick={() => router.push(`/templates/${slugFromCategory(template.category)}`)}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{

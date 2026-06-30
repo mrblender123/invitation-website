@@ -2,6 +2,7 @@ import LandingHeader from './components/LandingHeader';
 import CategoryRows from './components/CategoryRows';
 import AnnouncementBanner from './components/AnnouncementBanner';
 import Footer from './components/Footer';
+import { slugFromCategory } from '@/app/lib/slugs';
 
 const schemaOrg = {
   '@context': 'https://schema.org',
@@ -37,14 +38,14 @@ const schemaOrg = {
       name: 'Jewish Simcha Invitation Categories',
       url: 'https://www.shareyoursimcha.com/templates',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: "It's a Boy — Bris & Shulem Zucher Invitations", url: "https://www.shareyoursimcha.com/templates?category=It's%20a%20Boy" },
-        { '@type': 'ListItem', position: 2, name: "It's a Girl — Kiddush Invitations",              url: "https://www.shareyoursimcha.com/templates?category=It's%20a%20Girl" },
-        { '@type': 'ListItem', position: 3, name: 'Bar Mitzvah Invitation Templates',               url: 'https://www.shareyoursimcha.com/templates?category=Bar%20Mitzvah' },
-        { '@type': 'ListItem', position: 4, name: 'Upsherin Invitation Templates',                  url: 'https://www.shareyoursimcha.com/templates?category=Upsherin' },
-        { '@type': 'ListItem', position: 5, name: 'Tenoyim Invitation Templates',                   url: 'https://www.shareyoursimcha.com/templates?category=Tenoyim' },
-        { '@type': 'ListItem', position: 6, name: 'Bavarfen Invitation Templates',                  url: 'https://www.shareyoursimcha.com/templates?category=Bavarfen' },
-        { '@type': 'ListItem', position: 7, name: 'Jewish Wedding Invitation Templates',            url: 'https://www.shareyoursimcha.com/templates?category=Wedding' },
-        { '@type': 'ListItem', position: 8, name: 'Sheva Brachos Invitation Templates',             url: 'https://www.shareyoursimcha.com/templates?category=Sheva%20Brachos' },
+        { '@type': 'ListItem', position: 1, name: "It's a Boy — Bris & Shulem Zucher Invitations", url: `https://www.shareyoursimcha.com/templates/${slugFromCategory("It's a Boy")}` },
+        { '@type': 'ListItem', position: 2, name: "It's a Girl — Kiddush Invitations",              url: `https://www.shareyoursimcha.com/templates/${slugFromCategory("It's a Girl")}` },
+        { '@type': 'ListItem', position: 3, name: 'Bar Mitzvah Invitation Templates',               url: `https://www.shareyoursimcha.com/templates/${slugFromCategory('Bar Mitzvah')}` },
+        { '@type': 'ListItem', position: 4, name: 'Upsherin Invitation Templates',                  url: `https://www.shareyoursimcha.com/templates/${slugFromCategory('Upsherin')}` },
+        { '@type': 'ListItem', position: 5, name: 'Tenoyim Invitation Templates',                   url: `https://www.shareyoursimcha.com/templates/${slugFromCategory('Tenoyim')}` },
+        { '@type': 'ListItem', position: 6, name: 'Bavarfen Invitation Templates',                  url: `https://www.shareyoursimcha.com/templates/${slugFromCategory('Bavarfen')}` },
+        { '@type': 'ListItem', position: 7, name: 'Jewish Wedding Invitation Templates',            url: `https://www.shareyoursimcha.com/templates/${slugFromCategory('Wedding')}` },
+        { '@type': 'ListItem', position: 8, name: 'Sheva Brachos Invitation Templates',             url: `https://www.shareyoursimcha.com/templates/${slugFromCategory('Sheva Brachos')}` },
       ],
     },
     {

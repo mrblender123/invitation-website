@@ -2,7 +2,8 @@
 
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, useParams } from 'next/navigation';
+import { categoryFromSlug, slugify, categoryPath } from '@/app/lib/slugs';
 import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements } from '@stripe/react-stripe-js';
@@ -292,14 +293,20 @@ function TemplatesContent() {
   const router = useRouter();
   const { user } = useAuth();
   const searchParams = useSearchParams();
-  const category    = searchParams.get('category');
-  const subcategory = searchParams.get('subcategory');
+  const pathParams  = useParams();
+  // Path params take priority (e.g. /templates/bar-mitzvah); fall back to legacy query params
+  const pathCategory = typeof pathParams.category === 'string' ? categoryFromSlug(pathParams.category) : null;
+  const pathSubSlug  = typeof pathParams.subcategory === 'string' ? pathParams.subcategory : null;
+  const category    = pathCategory ?? searchParams.get('category');
+  const subs        = category ? (CATEGORY_SUBS[category] ?? []) : [];
+  // Resolve subcategory slug → actual folder name by matching against known subs
+  const pathSubcategory = pathSubSlug ? (subs.find(s => slugify(s) === pathSubSlug) ?? null) : null;
+  const subcategory = pathSubcategory ?? searchParams.get('subcategory');
   const templateParam = searchParams.get('template');
   const tokenParam  = searchParams.get('token');
   const restoreParam = searchParams.get('restore');
   const piParam     = searchParams.get('pi');
   const draftParam  = searchParams.get('draft');
-  const subs        = category ? (CATEGORY_SUBS[category] ?? []) : [];
 
   const [watermarks, setWatermarks] = useState<Record<string, WatermarkConfig>>({});
   const [wmSvgText, setWmSvgText] = useState('');
@@ -527,9 +534,10 @@ const [windowWidth, setWindowWidth] = useState(1200);
   }, [templateParam, templates]);
 
   const handleSelectTemplate = (template: Template) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams();
     params.set('template', template.id);
-    router.push(`/templates?${params.toString()}`);
+    const basePath = category ? categoryPath(category) : '/templates';
+    router.push(`${basePath}?${params.toString()}`);
     setSelected(template);
     // Reset payment state so a new template always requires a new purchase
     setDownloadAllowed(false);
@@ -824,7 +832,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
           '@type': 'CollectionPage',
           name: `${category} Invitation Templates — Share Your Simcha`,
           description: `Browse ${category} Jewish simcha invitation templates. Customize and download for $8.99.`,
-          url: `https://www.shareyoursimcha.com/templates?category=${encodeURIComponent(category)}`,
+          url: `https://www.shareyoursimcha.com${categoryPath(category)}`,
           isPartOf: { '@type': 'WebSite', name: 'Share Your Simcha', url: 'https://www.shareyoursimcha.com' },
           ...(templates.length > 0 && {
             mainEntity: {
@@ -985,7 +993,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 <>
                   <GlassPill
                     text="All"
-                    href={`/templates?category=${encodeURIComponent(category!)}`}
+                    href={categoryPath(category!)}
                     active={!subcategory}
                     variant="flat"
                     tinted
@@ -995,7 +1003,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     <GlassPill
                       key={sub}
                       text={SUB_DISPLAY_NAMES[sub] ?? sub}
-                      href={`/templates?category=${encodeURIComponent(category!)}&subcategory=${encodeURIComponent(sub)}`}
+                      href={categoryPath(category!, sub)}
                       active={subcategory === sub}
                       variant="flat"
                       tinted

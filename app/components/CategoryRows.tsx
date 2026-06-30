@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { categoryPath, slugFromCategory } from '@/app/lib/slugs';
 
 
 interface Template {
@@ -202,7 +203,7 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
           {category}
         </h2>
         <a
-          href={`/templates?category=${encodeURIComponent(category)}`}
+          href={`/templates/${slugFromCategory(category)}`}
           onMouseDown={addViewAllRipple}
           style={{ position: 'relative', overflow: 'hidden', background: 'none', border: 'none', borderRadius: 9999, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '4px 6px', display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}
         >

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { slugFromCategory } from '@/app/lib/slugs';
 
 const CATEGORIES = [
   { key: "It's a Boy",    label: "It's a Boy",   icon: '👶🏻', description: 'Bris & baby boy celebration' },
@@ -19,7 +20,7 @@ function CategoryCard({ category }: { category: typeof CATEGORIES[0] }) {
 
   return (
     <Link
-      href={`/templates?category=${encodeURIComponent(category.key)}`}
+      href={`/templates/${slugFromCategory(category.key)}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{

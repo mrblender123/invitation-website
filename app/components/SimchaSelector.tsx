@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { slugFromCategory } from '@/app/lib/slugs';
 
 interface SimchaSelectorProps {
   forceOpen?: boolean;
@@ -183,7 +184,7 @@ export default function SimchaSelector({ forceOpen, onClose, hideButton, scrollT
                   key={s.key}
                   simcha={s}
                   onClick={() => {
-                    const href = `/templates?category=${encodeURIComponent(s.key)}`;
+                    const href = `/templates/${slugFromCategory(s.key)}`;
                     setVisible(false);
                     setTimeout(() => { setOpen(false); onClose?.(); router.push(href); }, 280);
                   }}

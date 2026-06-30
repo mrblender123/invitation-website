@@ -1,3 +1,5 @@
+import { slugFromCategory } from '@/app/lib/slugs';
+
 export default function Footer() {
   return (
     <footer style={{
@@ -25,7 +27,7 @@ export default function Footer() {
                 Browse
               </p>
               {["It's a Boy", "It's a Girl", 'Bar Mitzvah', 'Wedding', 'Bavarfen'].map(cat => (
-                <a key={cat} href={`/templates?category=${encodeURIComponent(cat)}`} className="footer-link">
+                <a key={cat} href={`/templates/${slugFromCategory(cat)}`} className="footer-link">
                   {cat}
                 </a>
               ))}

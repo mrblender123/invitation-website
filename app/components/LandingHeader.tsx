@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import GlassPill from './GlassPill';
+import { slugFromCategory } from '@/app/lib/slugs';
 
 const HEADER = {
   height:    52,
@@ -185,7 +186,7 @@ export default function LandingHeader() {
               <GlassPill
                 text={cat.key}
                 emoji={cat.emoji}
-                href={`/templates?category=${encodeURIComponent(cat.key)}`}
+                href={`/templates/${slugFromCategory(cat.key)}`}
                 velocity={scrollVelocity}
                 subcategories={cat.subcategories}
                 fullWidth={windowWidth < 640}
