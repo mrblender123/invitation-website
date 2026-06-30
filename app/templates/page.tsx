@@ -387,7 +387,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
       'Sheva Brachos': { title: "Sheva Brachos Invitation Templates | Share Your Simcha",                              description: "Sheva brachos invitation templates in Hebrew and Yiddish. Customize and download instantly for $8.99." },
     };
     const DEFAULT = {
-      title: 'Jewish Simcha Invitation Templates | Share Your Simcha',
+      title: 'Simcha Invitation Templates | Share Your Simcha',
       description: 'Create beautiful Jewish simcha invitations for bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding and more. Personalize and download for $8.99.',
     };
     const meta = (category && META[category]) ? META[category] : DEFAULT;
