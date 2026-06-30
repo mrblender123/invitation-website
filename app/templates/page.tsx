@@ -191,7 +191,7 @@ function CheckoutForm({ clientSecret, onSuccess }: { clientSecret: string; onSuc
       <button
         type="submit"
         disabled={!stripe || paying}
-        style={{ background: '#0f172a', color: '#fff', border: 'none', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: paying ? 'wait' : 'pointer', opacity: paying ? 0.7 : 1, marginTop: 4 }}
+        style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: paying ? 'wait' : 'pointer', opacity: paying ? 0.7 : 1, marginTop: 4 }}
       >
         {paying ? 'Processing…' : 'Pay $8.99'}
       </button>
@@ -1245,6 +1245,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                       <GlassPill
                         text={showAllFields ? '− Hide extra fields' : '+ Show all fields'}
                         onClick={() => setShowAllFields(v => !v)}
+                        variant="flat"
                       />
                     )}
                   </div>
@@ -1412,6 +1413,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                       text="Buy – $8.99"
                       onClick={() => { setCheckoutClientSecret(null); setBuyStep('email'); setBuyError(''); setBuyEmail(user?.email ?? ''); setShowBuyModal(true); }}
                       fullWidth
+                      variant="flat"
+                      bg="#2563eb"
                     />
                   )}
                   <button

@@ -75,10 +75,10 @@
   /* Category pill border radius — change to e.g. 12px for rounded-rect pills */
   --pill-radius: 9999px;
   /* Category row heading ("It's a Boy", "It's a Girl", …) */
-  --row-heading-color: rgba(80, 80, 80, 0.713);
+  --row-heading-color: #808080;
   --row-heading-opacity: 1;
   /* Carousel label ("Browse our collection") */
-  --carousel-text-color: rgba(135, 135, 135, 0.504);
+  --carousel-text-color: #d0bf98;
   --carousel-text-opacity: 1;
   /* Pill click ripple */
   --pill-ripple-color: rgba(100,116,139,0.35);

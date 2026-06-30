@@ -21,12 +21,16 @@ interface GlassPillProps {
   variant?: 'glass' | 'flat';
   /** Adds a white tint to the flat variant's background so it stays visible over dark images. */
   tinted?: boolean;
+  /** Solid background color for the flat variant (e.g. a primary CTA). Overrides the default tinted/bordered look. */
+  bg?: string;
+  /** Text color to pair with `bg`. Defaults to white. */
+  textColor?: string;
 }
 
 export default function GlassPill({
   text, emoji, href, onClick, velocity = 0, subcategories, fullWidth,
   isOpen: controlledOpen, onToggle, disabled, active, replace, hoverColor,
-  variant = 'glass', tinted,
+  variant = 'glass', tinted, bg, textColor,
 }: GlassPillProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [internalOpen, setInternalOpen] = useState(false);
@@ -104,7 +108,7 @@ export default function GlassPill({
         fontWeight: 625,
         fontStyle: 'normal',
         letterSpacing: '0.03em',
-        color: '#0f172a',
+        color: bg ? (textColor ?? '#fff') : '#0f172a',
         lineHeight: 1,
         whiteSpace: 'nowrap',
       }}>
@@ -139,10 +143,13 @@ export default function GlassPill({
         minHeight: fullWidth ? 44 : undefined,
         padding: fullWidth ? '10px 16px' : '9px 16px',
         borderRadius: 'var(--pill-radius)',
-        border: active ? '1.5px solid rgba(0,0,0,0.22)' : '1.5px solid rgba(0,0,0,0.18)',
-        background: tinted
+        border: bg ? `1.5px solid ${bg}` : (active ? '1.5px solid rgba(0,0,0,0.22)' : '1.5px solid rgba(0,0,0,0.18)'),
+        background: bg
+          ? bg
+          : tinted
           ? (active ? 'rgba(255,255,255,0.35)' : isHovered ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.20)')
           : (active ? 'rgba(0,0,0,0.07)' : isHovered ? 'rgba(0,0,0,0.04)' : 'transparent'),
+        filter: bg && isHovered ? 'brightness(1.08)' : 'none',
         cursor: disabled ? 'not-allowed' : 'pointer',
         userSelect: 'none',
         display: 'flex',
@@ -152,7 +159,7 @@ export default function GlassPill({
         opacity: disabled ? 0.5 : scrollOpacity,
         pointerEvents: scrollOpacity < 0.1 ? 'none' : 'auto',
         transform: `translateY(${scrollOffset}px)`,
-        transition: 'background 180ms, opacity 0.2s ease-out',
+        transition: 'background 180ms, filter 150ms, opacity 0.2s ease-out',
       }}
     >
       {ripples.map(r => (
@@ -162,7 +169,7 @@ export default function GlassPill({
           style={{
             left: r.x - r.size / 2, top: r.y - r.size / 2,
             width: r.size, height: r.size,
-            background: hoverColor ?? 'var(--pill-ripple-color)',
+            background: hoverColor ?? (bg ? 'rgba(255,255,255,0.45)' : 'var(--pill-ripple-color)'),
           }}
         />
       ))}
