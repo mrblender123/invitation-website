@@ -5,7 +5,7 @@ import { useState } from 'react';
 const FAQS = [
   {
     q: 'How much does it cost?',
-    a: 'Browsing and customizing is completely free. When you\'re happy with your design, you pay $8.99 to download — your finished invitation arrives as a high-quality PNG straight to your email.',
+    a: 'Browsing and customizing is completely free. When you\'re happy with your design, you pay $25.99 to download — your finished invitation arrives as a high-quality PNG straight to your email.',
   },
   {
     q: 'Do I need to create an account?',

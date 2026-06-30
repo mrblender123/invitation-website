@@ -7,7 +7,7 @@ export async function POST(req: Request) {
     const { templateId, templateName, fieldValues, email } = await req.json();
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 899,
+      amount: 2599,
       currency: 'usd',
       payment_method_types: ['card'],
       description: `Share Your Simcha – ${templateName}`,

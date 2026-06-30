@@ -15,7 +15,7 @@ export async function POST(req: Request) {
             name: `Share Your Simcha – ${templateName}`,
             description: 'Custom invitation — download link sent by email after payment',
           },
-          unit_amount: 899,
+          unit_amount: 2599,
         },
         quantity: 1,
       }],

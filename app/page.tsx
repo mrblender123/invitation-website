@@ -11,7 +11,7 @@ const schemaOrg = {
       '@type': 'WebSite',
       name: 'Share Your Simcha',
       url: 'https://www.shareyoursimcha.com',
-      description: 'Create beautiful Jewish simcha invitations for bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding and more. Personalize and download for $8.99.',
+      description: 'Create beautiful Jewish simcha invitations for bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding and more. Personalize and download for $25.99.',
       potentialAction: {
         '@type': 'SearchAction',
         target: {
@@ -56,7 +56,7 @@ const schemaOrg = {
       image: 'https://www.shareyoursimcha.com/og-image.png',
       offers: {
         '@type': 'Offer',
-        price: '8.99',
+        price: '25.99',
         priceCurrency: 'USD',
         availability: 'https://schema.org/InStock',
         url: 'https://www.shareyoursimcha.com/templates',
@@ -74,7 +74,7 @@ export default function Home() {
       {/* Visually hidden SEO content */}
       <div style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 }}>
         <h1>Jewish Simcha Invitation Templates</h1>
-        <p>Professional Hebrew and Yiddish invitation designs for bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding and more. Customize with your details and download instantly for $8.99.</p>
+        <p>Professional Hebrew and Yiddish invitation designs for bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding and more. Customize with your details and download instantly for $25.99.</p>
       </div>
 
       {/* Ambient gradient orbs */}

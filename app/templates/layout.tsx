@@ -22,7 +22,7 @@ const schema = {
       description: 'Customizable invitation templates for every Jewish lifecycle event — bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding and more.',
       offers: {
         '@type': 'Offer',
-        price: '8.99',
+        price: '25.99',
         priceCurrency: 'USD',
         availability: 'https://schema.org/InStock',
         url: 'https://www.shareyoursimcha.com/templates',

@@ -194,7 +194,7 @@ function CheckoutForm({ clientSecret, onSuccess }: { clientSecret: string; onSuc
         disabled={!stripe || paying}
         style={{ background: '#2563eb', color: '#fff', border: 'none', borderRadius: 9999, padding: '14px 0', fontSize: 15, fontWeight: 600, cursor: paying ? 'wait' : 'pointer', opacity: paying ? 0.7 : 1, marginTop: 4 }}
       >
-        {paying ? 'Processing…' : 'Pay $8.99'}
+        {paying ? 'Processing…' : 'Pay $25.99'}
       </button>
     </form>
   );
@@ -384,18 +384,18 @@ const [windowWidth, setWindowWidth] = useState(1200);
 
   useEffect(() => {
     const META: Record<string, { title: string; description: string }> = {
-      "It's a Boy":    { title: "It's a Boy Invitation Templates — Bris, Shulem Zucher & More | Share Your Simcha",   description: "Beautiful bris, shulem zucher, vachnacht and kiddush invitation templates. Customize in Hebrew or Yiddish and download instantly for $8.99." },
-      "It's a Girl":   { title: "It's a Girl Kiddush Invitation Templates | Share Your Simcha",                        description: "Elegant kiddush invitation templates for a baby girl. Customize in Hebrew or Yiddish and download instantly for $8.99." },
-      'Bar Mitzvah':   { title: "Bar Mitzvah Invitation Templates | Share Your Simcha",                                description: "Professional bar mitzvah invitation templates in Hebrew, Yiddish and English. Customize and download instantly for $8.99." },
-      'Upsherin':      { title: "Upsherin Invitation Templates | Share Your Simcha",                                   description: "Upsherin invitation templates in Hebrew and Yiddish. Customize and download instantly for $8.99." },
-      'Tenoyim':       { title: "Tenoyim Invitation Templates | Share Your Simcha",                                    description: "Beautiful tenoyim invitation templates for the chusen and kallah side. Customize in Hebrew or Yiddish and download for $8.99." },
-      'Bavarfen':      { title: "Bavarfen Invitation Templates | Share Your Simcha",                                   description: "Bavarfen and chusen invite templates in Hebrew and Yiddish. Customize and download instantly for $8.99." },
-      'Wedding':       { title: "Jewish Wedding Invitation Templates | Share Your Simcha",                             description: "Elegant Jewish wedding invitation templates in Hebrew, Yiddish and English. Customize and download instantly for $8.99." },
-      'Sheva Brachos': { title: "Sheva Brachos Invitation Templates | Share Your Simcha",                              description: "Sheva brachos invitation templates in Hebrew and Yiddish. Customize and download instantly for $8.99." },
+      "It's a Boy":    { title: "It's a Boy Invitation Templates — Bris, Shulem Zucher & More | Share Your Simcha",   description: "Beautiful bris, shulem zucher, vachnacht and kiddush invitation templates. Customize in Hebrew or Yiddish and download instantly for $25.99." },
+      "It's a Girl":   { title: "It's a Girl Kiddush Invitation Templates | Share Your Simcha",                        description: "Elegant kiddush invitation templates for a baby girl. Customize in Hebrew or Yiddish and download instantly for $25.99." },
+      'Bar Mitzvah':   { title: "Bar Mitzvah Invitation Templates | Share Your Simcha",                                description: "Professional bar mitzvah invitation templates in Hebrew, Yiddish and English. Customize and download instantly for $25.99." },
+      'Upsherin':      { title: "Upsherin Invitation Templates | Share Your Simcha",                                   description: "Upsherin invitation templates in Hebrew and Yiddish. Customize and download instantly for $25.99." },
+      'Tenoyim':       { title: "Tenoyim Invitation Templates | Share Your Simcha",                                    description: "Beautiful tenoyim invitation templates for the chusen and kallah side. Customize in Hebrew or Yiddish and download for $25.99." },
+      'Bavarfen':      { title: "Bavarfen Invitation Templates | Share Your Simcha",                                   description: "Bavarfen and chusen invite templates in Hebrew and Yiddish. Customize and download instantly for $25.99." },
+      'Wedding':       { title: "Jewish Wedding Invitation Templates | Share Your Simcha",                             description: "Elegant Jewish wedding invitation templates in Hebrew, Yiddish and English. Customize and download instantly for $25.99." },
+      'Sheva Brachos': { title: "Sheva Brachos Invitation Templates | Share Your Simcha",                              description: "Sheva brachos invitation templates in Hebrew and Yiddish. Customize and download instantly for $25.99." },
     };
     const DEFAULT = {
       title: 'Simcha Invitation Templates | Share Your Simcha',
-      description: 'Create beautiful Jewish simcha invitations for bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding and more. Personalize and download for $8.99.',
+      description: 'Create beautiful Jewish simcha invitations for bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding and more. Personalize and download for $25.99.',
     };
     const meta = (category && META[category]) ? META[category] : DEFAULT;
     document.title = meta.title;
@@ -831,7 +831,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
           name: `${category} Invitation Templates — Share Your Simcha`,
-          description: `Browse ${category} Jewish simcha invitation templates. Customize and download for $8.99.`,
+          description: `Browse ${category} Jewish simcha invitation templates. Customize and download for $25.99.`,
           url: `https://www.shareyoursimcha.com${categoryPath(category)}`,
           isPartOf: { '@type': 'WebSite', name: 'Share Your Simcha', url: 'https://www.shareyoursimcha.com' },
           ...(templates.length > 0 && {
@@ -847,7 +847,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   image: t.thumbnailSrc,
                   offers: {
                     '@type': 'Offer',
-                    price: '8.99',
+                    price: '25.99',
                     priceCurrency: 'USD',
                     availability: 'https://schema.org/InStock',
                     seller: { '@type': 'Organization', name: 'Share Your Simcha' },
@@ -1080,7 +1080,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     <TemplateThumbnail template={template} onClick={() => handleSelectTemplate(template)} targetW={mobileCardW} />
                     <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `0 ${isMobileGallery ? 8 : 12}px` }}>
                       <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 600, color: 'var(--foreground)', margin: 0 }}>{template.name}</p>
-                      <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 500, color: 'var(--muted)', margin: 0 }}>$8.99</p>
+                      <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 500, color: 'var(--muted)', margin: 0 }}>$25.99</p>
                     </div>
                   </div>
                 );
@@ -1439,7 +1439,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     </div>
                   ) : (
                     <GlassPill
-                      text="Buy – $8.99"
+                      text="Buy – $25.99"
                       onClick={() => { setCheckoutClientSecret(null); setBuyStep('email'); setBuyError(''); setBuyEmail(user?.email ?? ''); setShowBuyModal(true); }}
                       fullWidth
                       variant="flat"
@@ -1649,7 +1649,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
             ) : (
               /* Step 2 — card */
               <div>
-                <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 24px' }}>Pay $8.99</h2>
+                <h2 style={{ fontSize: 20, fontWeight: 700, margin: '0 0 24px' }}>Pay $25.99</h2>
                 <Elements stripe={stripePromise} options={{ clientSecret: checkoutClientSecret ?? undefined }}>
                   <CheckoutForm clientSecret={checkoutClientSecret!} onSuccess={async () => {
                     setBuyStep('success');
@@ -1660,7 +1660,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                       if (piId && typeof window !== 'undefined' && window.gtag) {
                         window.gtag('event', 'purchase', {
                           transaction_id: piId,
-                          value: 8.99,
+                          value: 25.99,
                           currency: 'USD',
                           items: [{ item_name: selected?.category ?? 'invitation_template' }],
                         });

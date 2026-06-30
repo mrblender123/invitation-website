@@ -13,7 +13,7 @@ export async function generateMetadata(
   const subName = SUB_DISPLAY_NAMES[titleCase(subSlug)] ?? titleCase(subSlug);
   return {
     title: `${subName} Invitations | Share Your Simcha`,
-    description: `${subName} invitation templates. Customize in Hebrew or Yiddish and download instantly for $8.99.`,
+    description: `${subName} invitation templates. Customize in Hebrew or Yiddish and download instantly for $25.99.`,
     alternates: { canonical: `/templates/${catSlug}/${subSlug}` },
   };
 }

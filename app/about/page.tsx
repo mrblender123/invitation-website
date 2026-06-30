@@ -12,7 +12,7 @@ const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   mainEntity: [
-    { '@type': 'Question', name: 'How much does it cost?', acceptedAnswer: { '@type': 'Answer', text: 'Browsing and customizing is completely free. When you\'re happy with your design, you pay $8.99 to download — your finished invitation arrives as a high-quality PNG straight to your email.' } },
+    { '@type': 'Question', name: 'How much does it cost?', acceptedAnswer: { '@type': 'Answer', text: 'Browsing and customizing is completely free. When you\'re happy with your design, you pay $25.99 to download — your finished invitation arrives as a high-quality PNG straight to your email.' } },
     { '@type': 'Question', name: 'Do I need to create an account?', acceptedAnswer: { '@type': 'Answer', text: 'No account needed. Browse, customize, pay, and receive your invitation — all without signing up.' } },
     { '@type': 'Question', name: 'Can I make changes after I download?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Every purchase includes up to 3 edits within 7 days. A link in your confirmation email lets you reopen your invitation, make changes, and re-download.' } },
     { '@type': 'Question', name: "I paid but didn't receive my invitation email — what should I do?", acceptedAnswer: { '@type': 'Answer', text: "Check your Promotions tab (in Gmail) or your Spam folder — the email sometimes lands there. If you still can't find it, contact us and we'll resend it." } },
@@ -37,7 +37,7 @@ const STEPS = [
   {
     number: '03',
     title: 'Download',
-    body: 'Pay once ($8.99) and receive your finished invitation as a high-quality PNG straight to your email. Share it on WhatsApp, print it, or post it — ready in minutes.',
+    body: 'Pay once ($25.99) and receive your finished invitation as a high-quality PNG straight to your email. Share it on WhatsApp, print it, or post it — ready in minutes.',
   },
 ];
 
