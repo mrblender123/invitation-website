@@ -1657,6 +1657,14 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     setEmailError(false);
                     try {
                       const piId = checkoutClientSecret?.split('_secret_')[0];
+                      if (piId && typeof window !== 'undefined' && window.gtag) {
+                        window.gtag('event', 'purchase', {
+                          transaction_id: piId,
+                          value: 8.99,
+                          currency: 'USD',
+                          items: [{ item_name: selected?.category ?? 'invitation_template' }],
+                        });
+                      }
                       const blob = await generateBlob();
                       successBlobRef.current = blob;
                       if (blob && piId) {
