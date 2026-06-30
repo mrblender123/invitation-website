@@ -914,10 +914,27 @@ const [windowWidth, setWindowWidth] = useState(1200);
               padding: '16px 0',
               marginBottom: 24,
             }}>
-              <div style={{ marginBottom: 24 }}>
-                <button onClick={() => router.back()} style={{ background: 'rgba(255,255,255,0.20)', border: 'none', borderRadius: 9999, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 16 }}>
+                <button onClick={() => router.back()} style={{ background: 'rgba(255,255,255,0.20)', border: 'none', borderRadius: 9999, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
                   ← Back
                 </button>
+                {category && (
+                  <h1 style={{ margin: 0, fontSize: '1rem', fontWeight: 600, color: '#808080', fontFamily: 'var(--font-montserrat)', letterSpacing: '0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {(() => {
+                      const H1S: Record<string, string> = {
+                        "It's a Boy":    "It's a Boy Invitations",
+                        "It's a Girl":   "It's a Girl Invitations",
+                        'Bar Mitzvah':   'Bar Mitzvah Invitations',
+                        'Upsherin':      'Upsherin Invitations',
+                        'Tenoyim':       'Tenoyim Invitations',
+                        'Bavarfen':      'Bavarfen Invitations',
+                        'Wedding':       'Jewish Wedding Invitations',
+                        'Sheva Brachos': 'Sheva Brachos Invitations',
+                      };
+                      return H1S[category] ?? `${category} Invitations`;
+                    })()}
+                  </h1>
+                )}
               </div>
 
             {/* Language toggle + sub-category filter — same row */}
