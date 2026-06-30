@@ -72,6 +72,16 @@
   --border: rgba(0,0,0,0.08);
   --card-bg: rgba(0,0,0,0.025);
   --card-hover: rgba(0,0,0,0.05);
+  /* Category pill border radius — change to e.g. 12px for rounded-rect pills */
+  --pill-radius: 9999px;
+  /* Category row heading ("It's a Boy", "It's a Girl", …) */
+  --row-heading-color: rgba(80, 80, 80, 0.713);
+  --row-heading-opacity: 1;
+  /* Carousel label ("Browse our collection") */
+  --carousel-text-color: rgba(135, 135, 135, 0.504);
+  --carousel-text-opacity: 1;
+  /* Pill click ripple */
+  --pill-ripple-color: rgba(100,116,139,0.35);
   /* Font family variables — point to self-hosted fonts */
   --font-playfair: 'Playfair Display', serif;
   --font-inter: 'Inter', system-ui, sans-serif;
@@ -166,6 +176,21 @@ body {
 .marquee-track {
   animation: marquee 35s linear infinite;
   will-change: transform;
+}
+
+/* ── Pill click ripple ── */
+@keyframes pill-ripple {
+  from { transform: scale(0);   opacity: 0.55; }
+  to   { transform: scale(1);   opacity: 0; }
+}
+
+.pill-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--pill-ripple-color);
+  transform: scale(0);
+  pointer-events: none;
+  animation: pill-ripple 550ms ease-out forwards;
 }
 
 

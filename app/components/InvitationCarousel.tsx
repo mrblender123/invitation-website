@@ -22,7 +22,7 @@ export default function InvitationCarousel() {
     <section style={{ padding: '0 0 100px', overflow: 'hidden', position: 'relative', zIndex: 1 }}>
       <p style={{
         textAlign: 'center', fontSize: 13, fontWeight: 500, letterSpacing: '0.1em',
-        color: 'var(--muted-faint)', textTransform: 'uppercase', marginBottom: 48,
+        color: 'var(--carousel-text-color)', opacity: 'var(--carousel-text-opacity)' as never, textTransform: 'uppercase', marginBottom: 48,
       }}>
         Browse our collection
       </p>

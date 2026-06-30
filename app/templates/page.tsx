@@ -12,6 +12,7 @@ import { useAuth } from '../components/AuthProvider';
 import VirtualKeyboard from '../components/VirtualKeyboard';
 import { CATEGORY_SUBS, SUB_DISPLAY_NAMES } from '@/lib/categories';
 import GlassPill from '../components/GlassPill';
+import Footer from '../components/Footer';
 import type { Template, WatermarkConfig } from '@/lib/templates';
 import { measureAndTightenSvg } from '@/lib/watermark-utils';
 
@@ -316,6 +317,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const [showKeyboard, setShowKeyboard] = useState(false);
   const [keyboardRect, setKeyboardRect] = useState<DOMRect | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const [gridEl, setGridEl] = useState<HTMLDivElement | null>(null);
+  const [gridOffset, setGridOffset] = useState(0);
+  const [gridWidth, setGridWidth] = useState(0);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const editConsumedThisSession = useRef(false);
   const successBlobRef = useRef<Blob | null>(null);    // cached PNG from payment flow
@@ -348,6 +352,28 @@ const [windowWidth, setWindowWidth] = useState(1200);
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
   }, []);
+
+  // Track where the first card in the grid starts so pills align with it.
+  // gridEl is set via callback ref, so this re-runs the moment the grid div
+  // actually mounts (it doesn't exist yet while loadingTemplates is true).
+  useEffect(() => {
+    if (!gridEl) { setGridOffset(0); setGridWidth(0); return; }
+    const measure = () => {
+      // When cards are grouped into per-row wrappers (data-row), the first
+      // child is a full-width row div — drill one level deeper for the card.
+      let firstCard = gridEl.firstElementChild as HTMLElement | null;
+      if (firstCard?.dataset.row === 'true') {
+        firstCard = firstCard.firstElementChild as HTMLElement | null;
+      }
+      if (!firstCard) { setGridOffset(0); setGridWidth(0); return; }
+      setGridOffset(firstCard.getBoundingClientRect().left - gridEl.getBoundingClientRect().left);
+      setGridWidth(gridEl.getBoundingClientRect().width);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(gridEl);
+    return () => ro.disconnect();
+  }, [gridEl, category, subcategory, lang, templates, windowWidth]);
 
   useEffect(() => {
     const META: Record<string, { title: string; description: string }> = {
@@ -837,26 +863,29 @@ const [windowWidth, setWindowWidth] = useState(1200);
     <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)', fontFamily: 'var(--font-inter), system-ui, sans-serif' }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schemaJson }} />
 
-      {/* Header */}
-      <header>
+      {/* Header — same logo size/position as the main page, but scrolls away with the page (not pinned) */}
+      <header style={{ position: 'relative', zIndex: 50 }}>
         <div style={{
-          maxWidth: 1200,
-          margin: '0 auto',
-          height: 56,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0 24px',
+          maxWidth: 1100,
+          margin: '12px auto 0',
+          width: 'calc(100% - 48px)',
+          height: 52,
+          display: 'flex', alignItems: 'center',
         }}>
-          <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.svg" alt="Share Your Simcha" style={{ height: 52, width: 'auto', marginTop: 12 }} />
+          <Link href="/" style={{ paddingLeft: 20, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+            <img src="/logo.svg" alt="Share Your Simcha" style={{ height: 60, width: 'auto' }} />
           </Link>
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 16 }} />
         </div>
       </header>
 
       {/* Content */}
-      <div className="page-content" style={{ maxWidth: 1200, margin: '0 auto', padding: '44px 24px 80px' }}>
+      {/* Editor view uses the same maxWidth/left-padding as the logo header so the
+          live preview lines up with the logo; the gallery grid keeps its wider column. */}
+      <div className="page-content" style={{
+        maxWidth: selected ? 1100 : 1200,
+        margin: '0 auto',
+        padding: selected ? '44px 20px 80px' : '44px 24px 80px',
+      }}>
 
         {selected === null && templateParam && loadingTemplates ? (
           /* Loading a specific template — blank to avoid gallery flash */
@@ -864,57 +893,102 @@ const [windowWidth, setWindowWidth] = useState(1200);
         ) : selected === null ? (
           /* ── Gallery view ── */
           <>
-            <div style={{ marginBottom: 36 }}>
-              <button onClick={() => router.back()} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '6px 16px', display: 'flex', alignItems: 'center', gap: 6 }}>
-                ← Back
-              </button>
-            </div>
+            {/* Frosted blur backdrop behind the sticky header section — same effect as the main page's sticky pills */}
+            <div style={{
+              position: 'fixed', top: 0, left: 0, right: 0,
+              height: 140,
+              zIndex: 39,
+              pointerEvents: 'none',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              maskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)',
+            }} />
 
+            {/* Header section — centered to match card grid; sticks below the fixed logo on scroll */}
+            <div style={{
+              position: 'sticky',
+              top: 0,
+              zIndex: 40,
+              margin: `0 ${gridOffset}px`,
+              padding: '16px 0',
+              marginBottom: 24,
+            }}>
+              <div style={{ marginBottom: 24 }}>
+                <button onClick={() => router.back()} style={{ background: 'rgba(255,255,255,0.20)', border: 'none', borderRadius: 9999, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '6px 12px', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  ← Back
+                </button>
+              </div>
 
-            {/* Language filter */}
-            <div style={{ marginBottom: 20 }}>
-              <select
-                value={lang}
-                onChange={e => setLang(e.target.value as 'all' | 'he' | 'en')}
-                style={{
-                  padding: '4px 28px 4px 10px',
-                  borderRadius: 6,
-                  border: '1.5px solid rgba(0,0,0,0.18)',
-                  background: 'white',
-                  color: '#666',
-                  fontWeight: 500,
-                  fontSize: 13,
-                  cursor: 'pointer',
-                  appearance: 'auto',
-                }}
-              >
-                <option value="" disabled>Language</option>
-                <option value="all">All</option>
-                <option value="he">Hebrew</option>
-                <option value="en">English</option>
-              </select>
-            </div>
+            {/* Language toggle + sub-category filter — same row */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>
+              {/* Language toggle switch */}
+              <div style={{
+                display: 'inline-flex',
+                borderRadius: 9999,
+                border: '1.5px solid rgba(0,0,0,0.15)',
+                background: 'rgba(255,255,255,0.20)',
+                padding: 3,
+                flexShrink: 0,
+              }}>
+                {(['en', 'he'] as const).map(l => {
+                  const active = lang === l || (l === 'he' && (!lang || lang === 'all'));
+                  return (
+                    <button
+                      key={l}
+                      onClick={() => setLang(l)}
+                      style={{
+                        padding: '4px 14px',
+                        borderRadius: 9999,
+                        border: 'none',
+                        background: active ? '#b8922a' : 'transparent',
+                        color: active ? '#fff' : '#666',
+                        fontFamily: 'var(--font-montserrat)',
+                        fontWeight: 600,
+                        fontSize: 12,
+                        letterSpacing: '0.05em',
+                        cursor: 'pointer',
+                        transition: 'background 200ms, color 200ms',
+                        outline: 'none',
+                      }}
+                    >
+                      {l === 'en' ? 'EN' : 'HEB'}
+                    </button>
+                  );
+                })}
+              </div>
 
-            {/* Sub-category filter tabs */}
-            {subs.length > 0 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 40 }}>
-                <GlassPill
-                  text="All"
-                  href={`/templates?category=${encodeURIComponent(category!)}`}
-                  active={!subcategory}
-                  replace
-                />
-                {subs.map(sub => (
+              {/* Divider spacer */}
+              {subs.length > 0 && (
+                <div style={{ width: 1, height: 20, background: 'rgba(0,0,0,0.15)', marginLeft: 8, marginRight: 8, flexShrink: 0 }} />
+              )}
+
+              {/* Sub-category pills */}
+              {subs.length > 0 && (
+                <>
                   <GlassPill
-                    key={sub}
-                    text={SUB_DISPLAY_NAMES[sub] ?? sub}
-                    href={`/templates?category=${encodeURIComponent(category!)}&subcategory=${encodeURIComponent(sub)}`}
-                    active={subcategory === sub}
+                    text="All"
+                    href={`/templates?category=${encodeURIComponent(category!)}`}
+                    active={!subcategory}
+                    variant="flat"
+                    tinted
                     replace
                   />
-                ))}
-              </div>
-            )}
+                  {subs.map(sub => (
+                    <GlassPill
+                      key={sub}
+                      text={SUB_DISPLAY_NAMES[sub] ?? sub}
+                      href={`/templates?category=${encodeURIComponent(category!)}&subcategory=${encodeURIComponent(sub)}`}
+                      active={subcategory === sub}
+                      variant="flat"
+                      tinted
+                      replace
+                    />
+                  ))}
+                </>
+              )}
+            </div>{/* end filter row */}
+            </div>{/* end header section */}
 
             {loadingTemplates ? (
               <div style={{ textAlign: 'center', padding: '80px 0' }}>
@@ -942,53 +1016,97 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 const isMobileGallery = windowWidth < 640;
                 // 32px total horizontal padding on mobile (16px each side via .page-content), 12px gap between 2 cols
                 const mobileCardW = isMobileGallery ? Math.floor((windowWidth - 32 - 12) / 2) : undefined;
+                const GAP = isMobileGallery ? 12 : 24;
+
+                const cardWidthOf = (template: Template) => {
+                  const ts = mobileCardW ? mobileCardW / template.style.canvasWidth : THUMB_TARGET_H / template.style.canvasHeight;
+                  return mobileCardW ?? Math.round(template.style.canvasWidth * ts);
+                };
+
+                const renderCard = (template: Template, cardW: number) => (
+                  <div key={template.id} style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center',
+                    gap: 10,
+                    width: isMobileGallery ? `calc(50% - 6px)` : cardW,
+                    background: 'rgba(255,255,255,0.62)',
+                    backdropFilter: 'blur(14px) saturate(1.5)',
+                    WebkitBackdropFilter: 'blur(14px) saturate(1.5)',
+                    border: '1px solid rgba(255,255,255,0.82)',
+                    borderBottom: '1px solid rgba(0,0,0,0.07)',
+                    borderRadius: 16,
+                    padding: 0,
+                    paddingBottom: isMobileGallery ? 8 : 12,
+                    overflow: 'hidden',
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.82)';
+                    e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.95), 0 8px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06)';
+                    e.currentTarget.style.transform = 'translateY(-3px)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.62)';
+                    e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)';
+                    e.currentTarget.style.transform = 'none';
+                  }}
+                  >
+                    <TemplateThumbnail template={template} onClick={() => handleSelectTemplate(template)} targetW={mobileCardW} />
+                    <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `0 ${isMobileGallery ? 8 : 12}px` }}>
+                      <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 600, color: 'var(--foreground)', margin: 0 }}>{template.name}</p>
+                      <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 500, color: 'var(--muted)', margin: 0 }}>$8.99</p>
+                    </div>
+                  </div>
+                );
+
+                if (isMobileGallery) {
+                  return (
+                    <div ref={setGridEl} style={{ display: 'flex', flexWrap: 'wrap', gap: GAP }}>
+                      {filtered.map(template => renderCard(template, cardWidthOf(template)))}
+                    </div>
+                  );
+                }
+
+                // Pack cards into rows the same way flex-wrap would, so we can
+                // center full rows but left-align a trailing partial row.
+                const rows: Template[][] = [];
+                if (gridWidth > 0) {
+                  let current: Template[] = [];
+                  let currentWidth = 0;
+                  filtered.forEach(template => {
+                    const w = cardWidthOf(template);
+                    const widthIfAdded = current.length === 0 ? w : currentWidth + GAP + w;
+                    if (current.length > 0 && widthIfAdded > gridWidth) {
+                      rows.push(current);
+                      current = [template];
+                      currentWidth = w;
+                    } else {
+                      current.push(template);
+                      currentWidth = widthIfAdded;
+                    }
+                  });
+                  if (current.length) rows.push(current);
+                } else {
+                  // Not measured yet — render as a single centered block to avoid a layout flash.
+                  rows.push(filtered);
+                }
+
                 return (
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: isMobileGallery ? 'repeat(2, 1fr)' : `repeat(auto-fill, minmax(185px, 1fr))`,
-                  gap: isMobileGallery ? 12 : 28,
-                  justifyItems: 'center',
-                }}>
-                  {filtered.map(template => {
-                    const ts = mobileCardW ? mobileCardW / template.style.canvasWidth : THUMB_TARGET_H / template.style.canvasHeight;
-                    const cardW = mobileCardW ?? Math.round(template.style.canvasWidth * ts);
-                    return (
-                      <div key={template.id} style={{
-                        display: 'flex', flexDirection: 'column', alignItems: 'center',
-                        gap: 10, width: cardW,
-                        background: 'rgba(255,255,255,0.62)',
-                        backdropFilter: 'blur(14px) saturate(1.5)',
-                        WebkitBackdropFilter: 'blur(14px) saturate(1.5)',
-                        border: '1px solid rgba(255,255,255,0.82)',
-                        borderBottom: '1px solid rgba(0,0,0,0.07)',
-                        borderRadius: 16,
-                        padding: 0,
-                        paddingBottom: isMobileGallery ? 8 : 12,
-                        overflow: 'hidden',
-                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                      }}
-                      onMouseEnter={e => {
-                        e.currentTarget.style.background = 'rgba(255,255,255,0.82)';
-                        e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.95), 0 8px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06)';
-                        e.currentTarget.style.transform = 'translateY(-3px)';
-                      }}
-                      onMouseLeave={e => {
-                        e.currentTarget.style.background = 'rgba(255,255,255,0.62)';
-                        e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.92), 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)';
-                        e.currentTarget.style.transform = 'none';
-                      }}
-                      >
-                        <TemplateThumbnail template={template} onClick={() => handleSelectTemplate(template)} targetW={mobileCardW} />
-                        <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: `0 ${isMobileGallery ? 8 : 12}px` }}>
-                          <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 600, color: 'var(--foreground)', margin: 0 }}>{template.name}</p>
-                          <p style={{ fontSize: isMobileGallery ? 11 : 13, fontWeight: 500, color: 'var(--muted)', margin: 0 }}>$8.99</p>
+                  <div ref={setGridEl} style={{ display: 'flex', flexDirection: 'column', gap: GAP }}>
+                    {rows.map((rowTemplates, rowIdx) => {
+                      const isTrailingPartialRow = rows.length > 1 && rowIdx === rows.length - 1;
+                      return (
+                        <div key={rowIdx} data-row="true" style={{
+                          display: 'flex',
+                          gap: GAP,
+                          justifyContent: isTrailingPartialRow ? 'flex-start' : 'center',
+                        }}>
+                          {rowTemplates.map(template => renderCard(template, cardWidthOf(template)))}
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
                 );
               })();
             })()}
@@ -998,7 +1116,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
           <>
             {/* Back button */}
             <div style={{ marginBottom: 40, display: 'inline-block' }}>
-              <button onClick={() => router.back()} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '6px 16px', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <button onClick={() => router.back()} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
                 ← Back
               </button>
             </div>
@@ -1323,6 +1441,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
           </>
         )}
       </div>
+
+      <Footer />
 
       {/* Save for Later — email draft modal */}
       {showDraftModal && (

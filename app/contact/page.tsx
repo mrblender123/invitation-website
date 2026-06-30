@@ -1,4 +1,5 @@
 import LandingHeader from '../components/LandingHeader';
+import Footer from '../components/Footer';
 
 export const metadata = {
   title: 'Contact — Share Your Simcha',
@@ -49,11 +50,7 @@ export default function ContactPage() {
         </p>
       </section>
 
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '32px 24px', textAlign: 'center' }}>
-        <p style={{ fontSize: 12, color: 'var(--muted-faint)', margin: 0 }}>
-          © {new Date().getFullYear()} Share Your Simcha. All rights reserved.
-        </p>
-      </footer>
+      <Footer />
 
     </div>
   );

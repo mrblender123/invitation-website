@@ -17,23 +17,29 @@ interface GlassPillProps {
   disabled?: boolean;
   active?: boolean;
   replace?: boolean;
+  hoverColor?: string;
+  variant?: 'glass' | 'flat';
+  /** Adds a white tint to the flat variant's background so it stays visible over dark images. */
+  tinted?: boolean;
 }
 
 export default function GlassPill({
   text, emoji, href, onClick, velocity = 0, subcategories, fullWidth,
-  isOpen: controlledOpen, onToggle, disabled, active, replace,
+  isOpen: controlledOpen, onToggle, disabled, active, replace, hoverColor,
+  variant = 'glass', tinted,
 }: GlassPillProps) {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
-  const [isPressed, setIsPressed] = useState(false);
   const [internalOpen, setInternalOpen] = useState(false);
   const [scrollOpacity, setScrollOpacity] = useState(1);
   const [scrollOffset, setScrollOffset] = useState(0);
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number; size: number }[]>([]);
   const pillRef = useRef<HTMLDivElement>(null);
+  const rippleId = useRef(0);
 
   const hasDropdown = subcategories && subcategories.length > 0;
   const isControlled = onToggle !== undefined;
   const dropOpen = isControlled ? (controlledOpen ?? false) : internalOpen;
+  const isFlat = variant === 'flat';
 
   useEffect(() => {
     const handleFade = () => {
@@ -55,10 +61,15 @@ export default function GlassPill({
     return () => window.removeEventListener('scroll', handleFade);
   }, []);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const addRipple = (e: React.MouseEvent) => {
     if (!pillRef.current) return;
     const rect = pillRef.current.getBoundingClientRect();
-    setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const size = Math.max(rect.width, rect.height) * 2.2;
+    const id = rippleId.current++;
+    setRipples(r => [...r, { id, x, y, size }]);
+    setTimeout(() => setRipples(r => r.filter(rp => rp.id !== id)), 550);
   };
 
   const handleClick = () => {
@@ -74,23 +85,98 @@ export default function GlassPill({
 
   const absVelocity = Math.abs(velocity);
   const cappedVelocity = Math.min(absVelocity, 0.1);
-  const interactionScale = isPressed ? 0.92 : isHovered ? 1.06 : 1.0;
   const isNumeric = emoji === '⓭';
 
-  const pillEl = (
+  const contentEl = (
+    <div style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: 6 }}>
+      {emoji && (
+        isNumeric ? (
+          <span style={{ fontSize: '1rem', fontFamily: 'var(--font-playfair)', fontWeight: 675, lineHeight: 1 }}>{emoji}</span>
+        ) : (
+          <span style={{ lineHeight: 1 }}>
+            <Emoji char={emoji} size="1.1rem" />
+          </span>
+        )
+      )}
+      <span style={{
+        fontSize: fullWidth ? '0.84rem' : '0.78rem',
+        fontFamily: 'var(--font-montserrat)',
+        fontWeight: 625,
+        fontStyle: 'normal',
+        letterSpacing: '0.03em',
+        color: '#0f172a',
+        lineHeight: 1,
+        whiteSpace: 'nowrap',
+      }}>
+        {text}
+      </span>
+      {hasDropdown && (
+        <svg
+          width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke={dropOpen ? 'rgba(100,116,139,0.9)' : 'rgba(100,116,139,0.7)'}
+          strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          style={{ transform: dropOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 300ms', flexShrink: 0 }}
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      )}
+    </div>
+  );
+
+  const sharedPointerProps = {
+    ref: pillRef,
+    onMouseEnter: () => setIsHovered(true),
+    onMouseLeave: () => setIsHovered(false),
+    onMouseDown: addRipple,
+  };
+
+  const pillEl = isFlat ? (
     <div
-      ref={pillRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => { setIsHovered(false); setIsPressed(false); }}
-      onMouseDown={() => setIsPressed(true)}
-      onMouseUp={() => setIsPressed(false)}
+      {...sharedPointerProps}
       style={{
         position: 'relative',
         width: fullWidth ? '100%' : undefined,
         minHeight: fullWidth ? 44 : undefined,
         padding: fullWidth ? '10px 16px' : '9px 16px',
-        borderRadius: 9999,
+        borderRadius: 'var(--pill-radius)',
+        border: active ? '1.5px solid rgba(0,0,0,0.22)' : '1.5px solid rgba(0,0,0,0.18)',
+        background: tinted
+          ? (active ? 'rgba(255,255,255,0.35)' : isHovered ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.20)')
+          : (active ? 'rgba(0,0,0,0.07)' : isHovered ? 'rgba(0,0,0,0.04)' : 'transparent'),
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        userSelect: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: fullWidth ? 'center' : undefined,
+        overflow: 'hidden',
+        opacity: disabled ? 0.5 : scrollOpacity,
+        pointerEvents: scrollOpacity < 0.1 ? 'none' : 'auto',
+        transform: `translateY(${scrollOffset}px)`,
+        transition: 'background 180ms, opacity 0.2s ease-out',
+      }}
+    >
+      {ripples.map(r => (
+        <span
+          key={r.id}
+          className="pill-ripple"
+          style={{
+            left: r.x - r.size / 2, top: r.y - r.size / 2,
+            width: r.size, height: r.size,
+            background: hoverColor ?? 'var(--pill-ripple-color)',
+          }}
+        />
+      ))}
+      {contentEl}
+    </div>
+  ) : (
+    <div
+      {...sharedPointerProps}
+      style={{
+        position: 'relative',
+        width: fullWidth ? '100%' : undefined,
+        minHeight: fullWidth ? 44 : undefined,
+        padding: fullWidth ? '10px 16px' : '9px 16px',
+        borderRadius: 'var(--pill-radius)',
         cursor: disabled ? 'not-allowed' : 'pointer',
         userSelect: 'none',
         display: 'flex',
@@ -100,10 +186,8 @@ export default function GlassPill({
         zIndex: 50,
         opacity: disabled ? 0.5 : scrollOpacity,
         pointerEvents: scrollOpacity < 0.1 ? 'none' : 'auto',
-        transform: `scale(${interactionScale + cappedVelocity * 0.08}) translateY(${scrollOffset}px)`,
-        transition: isPressed
-          ? 'transform 0.1s ease-out, opacity 0.1s ease-out'
-          : 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease-out',
+        transform: `scale(${1 + cappedVelocity * 0.08}) translateY(${scrollOffset}px)`,
+        transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease-out',
       }}
     >
       {/* 0. Lens distortion */}
@@ -117,7 +201,7 @@ export default function GlassPill({
       }} />
       {/* 1. Chromatic aberration */}
       <div style={{
-        position: 'absolute', inset: 0, borderRadius: 9999,
+        position: 'absolute', inset: 0, borderRadius: 'var(--pill-radius)',
         pointerEvents: 'none', overflow: 'hidden',
         filter: 'blur(8px)',
         opacity: isHovered ? 0.50 : 0.20,
@@ -128,30 +212,34 @@ export default function GlassPill({
       </div>
       {/* 2. Base glass body */}
       <div style={{
-        position: 'absolute', inset: 0, borderRadius: 9999,
-        background: active ? 'rgba(148,163,184,0.18)' : 'rgba(255,255,255,0.50)',
+        position: 'absolute', inset: 0, borderRadius: 'var(--pill-radius)',
+        background: active
+          ? 'rgba(148,163,184,0.18)'
+          : isHovered ? (hoverColor ?? 'rgba(0,0,0,0.10)') : 'rgba(255,255,255,0.50)',
         backdropFilter: 'blur(60px)',
         WebkitBackdropFilter: 'blur(60px)',
-        border: isPressed ? '1.5px solid rgba(148,163,184,0.50)' : active ? '1.5px solid rgba(148,163,184,0.60)' : '1.5px solid rgba(255,255,255,0.90)',
-        boxShadow: isPressed
-          ? 'inset 0 8px 20px rgba(148,163,184,0.20), inset 0 -2px 10px rgba(255,255,255,0.9)'
-          : active
+        border: active ? '1.5px solid rgba(148,163,184,0.60)' : '1.5px solid rgba(255,255,255,0.90)',
+        boxShadow: active
           ? 'inset 0 8px 20px rgba(148,163,184,0.15), inset 0 -4px 12px rgba(255,255,255,0.9)'
           : 'inset 0 12px 24px rgba(255,255,255,1), inset 0 -10px 20px rgba(0,0,0,0.05), 0 10px 30px -10px rgba(0,0,0,0.10)',
-        transition: 'box-shadow 300ms, border 300ms',
+        transition: 'box-shadow 300ms, border 300ms, background 250ms',
       }} />
-      {/* 3. Click bubble */}
+      {/* 3. Ripple click effect */}
       <div style={{
-        position: 'absolute', inset: 0, borderRadius: 9999,
-        background: 'rgba(148,163,184,0.20)',
-        filter: 'blur(16px)',
-        opacity: isPressed ? 1 : 0,
-        transition: 'opacity 300ms',
-        pointerEvents: 'none',
-      }} />
+        position: 'absolute', inset: 0, borderRadius: 'var(--pill-radius)',
+        overflow: 'hidden', pointerEvents: 'none',
+      }}>
+        {ripples.map(r => (
+          <span
+            key={r.id}
+            className="pill-ripple"
+            style={{ left: r.x - r.size / 2, top: r.y - r.size / 2, width: r.size, height: r.size }}
+          />
+        ))}
+      </div>
       {/* 4. Fresnel top rim */}
       <div style={{
-        position: 'absolute', inset: 0.5, borderRadius: 9999,
+        position: 'absolute', inset: 0.5, borderRadius: 'var(--pill-radius)',
         borderTop: '1.5px solid white', pointerEvents: 'none', zIndex: 20,
       }} />
       {/* 5. Surface glare */}
@@ -160,42 +248,12 @@ export default function GlassPill({
         borderRadius: '100% 100% 0 0',
         background: 'linear-gradient(to bottom, rgba(255,255,255,0.95), transparent)',
         pointerEvents: 'none', zIndex: 20,
-        opacity: isPressed ? 0.40 : 1,
-        transform: isPressed ? 'translateY(4px) scale(0.95)' : 'none',
-        transition: 'opacity 300ms, transform 300ms',
       }} />
-      {/* 6. Subsurface scatter */}
-      <div style={{
-        position: 'absolute', inset: 0, borderRadius: 9999,
-        pointerEvents: 'none', overflow: 'hidden', mixBlendMode: 'overlay',
-      }}>
-        <div style={{
-          position: 'absolute', width: 160, height: 160, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(148,163,184,0.4) 0%, transparent 70%)',
-          left: mousePosition.x - 80, top: mousePosition.y - 80,
-          filter: 'blur(36px)',
-          opacity: isHovered && !isPressed ? 0.8 : 0,
-          transition: 'opacity 500ms',
-        }} />
-      </div>
-      {/* 7. Content */}
-      <div style={{
-        position: 'relative', zIndex: 30,
-        display: 'flex', alignItems: 'center',
-        gap: 6,
-        transform: isPressed ? 'scale(0.90)' : 'scale(1)',
-        opacity: isPressed ? 0.70 : 1,
-        transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s',
-      }}>
+      {/* Content */}
+      <div style={{ position: 'relative', zIndex: 30, display: 'flex', alignItems: 'center', gap: 6 }}>
         {emoji && (
           isNumeric ? (
-            <span style={{
-              fontSize: '1rem',
-              fontFamily: 'var(--font-playfair)',
-              fontWeight: 675,
-              lineHeight: 1,
-              filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.15))',
-            }}>{emoji}</span>
+            <span style={{ fontSize: '1rem', fontFamily: 'var(--font-playfair)', fontWeight: 675, lineHeight: 1, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.15))' }}>{emoji}</span>
           ) : (
             <span style={{ lineHeight: 1, filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.15))' }}>
               <Emoji char={emoji} size="1.1rem" />
@@ -216,18 +274,10 @@ export default function GlassPill({
         </span>
         {hasDropdown && (
           <svg
-            width="14" height="14"
-            viewBox="0 0 24 24"
-            fill="none"
+            width="14" height="14" viewBox="0 0 24 24" fill="none"
             stroke={dropOpen ? 'rgba(100,116,139,0.9)' : 'rgba(100,116,139,0.7)'}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{
-              transform: dropOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: 'transform 300ms, stroke 300ms',
-              flexShrink: 0,
-            }}
+            strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+            style={{ transform: dropOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 300ms, stroke 300ms', flexShrink: 0 }}
           >
             <polyline points="6 9 12 15 18 9" />
           </svg>
@@ -235,7 +285,7 @@ export default function GlassPill({
       </div>
       {/* 8. Outer rim */}
       <div style={{
-        position: 'absolute', inset: -0.8, borderRadius: 9999,
+        position: 'absolute', inset: -0.8, borderRadius: 'var(--pill-radius)',
         border: '1px solid rgba(203,213,225,0.20)', pointerEvents: 'none',
       }} />
     </div>
@@ -275,13 +325,13 @@ export default function GlassPill({
           <Link
             href={href ?? '/'}
             style={{
-              padding: '10px 20px', borderRadius: 9999,
+              padding: '10px 20px', borderRadius: 'var(--pill-radius)',
               fontSize: 13, fontFamily: 'var(--font-montserrat)', fontWeight: 600, fontStyle: 'normal', letterSpacing: '0.04em',
               color: '#334155', textDecoration: 'none', whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center',
-              transition: 'background 0.15s, color 0.15s, transform 0.15s',
+              transition: 'background 0.15s, color 0.15s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.80)'; e.currentTarget.style.color = 'rgb(71,85,105)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; e.currentTarget.style.transform = 'scale(1)'; }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.80)'; e.currentTarget.style.color = 'rgb(71,85,105)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; }}
           >
             All {text}
           </Link>
@@ -290,13 +340,13 @@ export default function GlassPill({
               key={sub}
               href={`${href}&subcategory=${encodeURIComponent(sub)}`}
               style={{
-                padding: '10px 20px', borderRadius: 9999,
+                padding: '10px 20px', borderRadius: 'var(--pill-radius)',
                 fontSize: 13, fontFamily: 'var(--font-montserrat)', fontWeight: 600, fontStyle: 'normal', letterSpacing: '0.04em',
                 color: '#334155', textDecoration: 'none', whiteSpace: 'nowrap', display: 'flex', justifyContent: 'center',
-                transition: `background 0.15s ${idx * 30}ms, color 0.15s, transform 0.15s`,
+                transition: `background 0.15s ${idx * 30}ms, color 0.15s`,
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.80)'; e.currentTarget.style.color = 'rgb(71,85,105)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; e.currentTarget.style.transform = 'scale(1)'; }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.80)'; e.currentTarget.style.color = 'rgb(71,85,105)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#334155'; }}
             >
               {sub}
             </Link>

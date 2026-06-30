@@ -9,15 +9,17 @@ const HEADER = {
   fontSize:  20,
 };
 
+const RIPPLE_GOLD = 'rgba(184,146,42,0.32)';
+
 const CATEGORIES = [
-  { key: "It's a Boy",    emoji: '👶🏻', subcategories: ['Bris', 'Pidyon Haben', "Shlishi L'milah", 'Shulem Zucher', 'Vachnacht-Bris'] },
-  { key: "It's a Girl",   emoji: '🎀' },
-  { key: 'Upsherin',      emoji: '✂️' },
-  { key: 'Bar Mitzvah',   emoji: '⓭' },
-  { key: 'Tenoyim',       emoji: '📜' },
-  { key: 'Bavarfen',      emoji: '🥂' },
-  { key: 'Wedding',       emoji: '💍' },
-  { key: 'Sheva Brachos', emoji: '🍷' },
+  { key: "It's a Boy",    emoji: '👶🏻', subcategories: ['Bris', 'Pidyon Haben', "Shlishi L'milah", 'Shulem Zucher', 'Vachnacht-Bris'], hoverColor: RIPPLE_GOLD },
+  { key: "It's a Girl",   emoji: '🎀', hoverColor: RIPPLE_GOLD },
+  { key: 'Upsherin',      emoji: '✂️', hoverColor: RIPPLE_GOLD },
+  { key: 'Bar Mitzvah',   emoji: '⓭', hoverColor: RIPPLE_GOLD },
+  { key: 'Tenoyim',       emoji: '📜', hoverColor: RIPPLE_GOLD },
+  { key: 'Bavarfen',      emoji: '🥂', hoverColor: RIPPLE_GOLD },
+  { key: 'Wedding',       emoji: '💍', hoverColor: RIPPLE_GOLD },
+  { key: 'Sheva Brachos', emoji: '🍷', hoverColor: RIPPLE_GOLD },
 ];
 
 
@@ -27,6 +29,17 @@ export default function LandingHeader() {
   const [activeCategory, setActiveCategory] = useState<number | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1200);
+  const [aboutRipples, setAboutRipples] = useState<{ id: number; x: number; y: number; size: number }[]>([]);
+  const aboutRippleId = useRef(0);
+  const addAboutRipple = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const size = Math.max(rect.width, rect.height) * 2.2;
+    const id = aboutRippleId.current++;
+    setAboutRipples(r => [...r, { id, x, y, size }]);
+    setTimeout(() => setAboutRipples(r => r.filter(rp => rp.id !== id)), 550);
+  };
 
   const pillsRef = useRef<HTMLDivElement>(null);
 
@@ -123,7 +136,14 @@ export default function LandingHeader() {
 
         {/* Right — About + WhatsApp */}
         <div style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <a href="/about" style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '6px 16px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
+          <a
+            href="/about"
+            onMouseDown={addAboutRipple}
+            style={{ position: 'relative', overflow: 'hidden', background: 'none', border: 'none', borderRadius: 9999, fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '6px 8px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+          >
+            {aboutRipples.map(r => (
+              <span key={r.id} className="pill-ripple" style={{ left: r.x - r.size / 2, top: r.y - r.size / 2, width: r.size, height: r.size }} />
+            ))}
             About
           </a>
           <a
@@ -171,6 +191,8 @@ export default function LandingHeader() {
                 fullWidth={windowWidth < 640}
                 isOpen={activeCategory === i}
                 onToggle={() => setActiveCategory(activeCategory === i ? null : i)}
+                hoverColor={cat.hoverColor}
+                variant="flat"
               />
             </div>
           ))}

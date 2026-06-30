@@ -74,6 +74,17 @@ function TemplateThumb({ template }: { template: Template }) {
 }
 
 function CategoryRow({ category, templates }: { category: string; templates: Template[] }) {
+  const [viewAllRipples, setViewAllRipples] = useState<{ id: number; x: number; y: number; size: number }[]>([]);
+  const viewAllRippleId = useRef(0);
+  const addViewAllRipple = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const size = Math.max(rect.width, rect.height) * 2.2;
+    const id = viewAllRippleId.current++;
+    setViewAllRipples(r => [...r, { id, x, y, size }]);
+    setTimeout(() => setViewAllRipples(r => r.filter(rp => rp.id !== id)), 550);
+  };
   const scrollRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
   const hasDragged = useRef(false);
@@ -186,14 +197,18 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
       }}>
         <h2 style={{
           fontSize: 16, fontWeight: 700,
-          color: 'var(--foreground)', margin: 0,
+          color: 'var(--row-heading-color)', opacity: 'var(--row-heading-opacity)' as never, margin: 0,
         }}>
           {category}
         </h2>
         <a
           href={`/templates?category=${encodeURIComponent(category)}`}
-          style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '6px 16px', display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}
+          onMouseDown={addViewAllRipple}
+          style={{ position: 'relative', overflow: 'hidden', background: 'none', border: 'none', borderRadius: 9999, cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500, color: '#555', padding: '4px 6px', display: 'inline-flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}
         >
+          {viewAllRipples.map(r => (
+            <span key={r.id} className="pill-ripple" style={{ left: r.x - r.size / 2, top: r.y - r.size / 2, width: r.size, height: r.size }} />
+          ))}
           View all →
         </a>
       </div>

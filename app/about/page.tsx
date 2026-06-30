@@ -1,6 +1,7 @@
 import LandingHeader from '../components/LandingHeader';
 import FaqAccordion from '../components/FaqAccordion';
 import GlassPill from '../components/GlassPill';
+import Footer from '../components/Footer';
 
 export const metadata = {
   title: 'About Share Your Simcha | Jewish Simcha Invitations Made Easy',
@@ -115,12 +116,7 @@ export default function AboutPage() {
       </section>
 
 
-      {/* Footer */}
-      <footer style={{ borderTop: '1px solid var(--border)', padding: '32px 24px', textAlign: 'center' }}>
-        <p style={{ fontSize: 12, color: 'var(--muted-faint)', margin: 0 }}>
-          © {new Date().getFullYear()} Share Your Simcha. All rights reserved.
-        </p>
-      </footer>
+      <Footer />
 
     </div>
   );
