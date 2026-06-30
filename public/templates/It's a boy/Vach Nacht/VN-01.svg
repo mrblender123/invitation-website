@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
   <g id="groom_name*">
-    <text transform="translate(180 430.7)" fill="#4b7ca3" font-family="Heebo" font-weight="600" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">חתן יהודה גרינבערגער הי״וו</tspan></text>
+    <text transform="translate(180 430.7)" fill="#e5e5e5" font-family="Heebo" font-weight="636" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">חתן יהודה גרינבערגער הי״וו</tspan></text>
   </g>
   <g id="groom_father*">
-    <text transform="translate(180 420.2)" fill="#4b7ca3" font-family="Heebo" font-weight="600" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">ב״ר שמחה ברוך הי״וו</tspan></text>
+    <text transform="translate(180 420.2)" fill="#e5e5e5" font-family="Heebo" font-weight="636" font-size="8.1" text-anchor="middle"><tspan x="0" y="0">ב״ר שמחה ברוך הי״וו</tspan></text>
   </g>
   <g id="host_last_name*">
-    <text transform="translate(180 405.9)" fill="#1b5384" font-family="Heebo" font-weight="600" font-size="30.7" text-anchor="middle"><tspan x="0" y="0">ברענאוויטש</tspan></text>
+    <text transform="translate(180 405.9)" fill="#fdfdfd" font-family="Heebo" font-weight="636" font-size="30.7" text-anchor="middle"><tspan x="0" y="0">ברענאוויטש</tspan></text>
   </g>
   <g id="host_name*">
-    <text transform="translate(180 373.3)" fill="#1b5384" font-family="Heebo" font-weight="600" font-size="30.7" text-anchor="middle"><tspan x="0" y="0">שמעון לוי</tspan></text>
+    <text transform="translate(180 373.3)" fill="#fdfdfd" font-family="Heebo" font-weight="636" font-size="30.7" text-anchor="middle"><tspan x="0" y="0">שמעון לוי</tspan></text>
   </g>
   <g id="street*">
     <text transform="translate(180 379)" fill="#224d77" font-family="Heebo" font-weight="600" font-size="17.9" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Comic_Neue, Dancing_Script, Frank_Ruhl_Libre, Heebo, Lexend, Lora, Montserrat, Oswald, Playpen_Sans_Hebrew, Secular_One } from "next/font/google";
+import { Alex_Brush, Comic_Neue, Dancing_Script, Frank_Ruhl_Libre, Great_Vibes, Heebo, Lexend, Lora, Luxurious_Script, Montserrat, Nunito, Oswald, Playpen_Sans_Hebrew, Satisfy, Secular_One } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./components/AuthProvider";
 
@@ -69,6 +69,41 @@ const comicNeue = Comic_Neue({
   display: "fallback",
 });
 
+const alexBrush = Alex_Brush({
+  variable: "--font-alex-brush",
+  subsets: ["latin"],
+  weight: "400",
+  display: "fallback",
+});
+
+const greatVibes = Great_Vibes({
+  variable: "--font-great-vibes",
+  subsets: ["latin"],
+  weight: "400",
+  display: "fallback",
+});
+
+const luxuriousScript = Luxurious_Script({
+  variable: "--font-luxurious-script",
+  subsets: ["latin"],
+  weight: "400",
+  display: "fallback",
+});
+
+const nunito = Nunito({
+  variable: "--font-nunito",
+  subsets: ["latin"],
+  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
+  display: "fallback",
+});
+
+const satisfy = Satisfy({
+  variable: "--font-satisfy",
+  subsets: ["latin"],
+  weight: "400",
+  display: "fallback",
+});
+
 
 export const metadata: Metadata = {
   title: "Simcha Invitations",
@@ -125,7 +160,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable} ${heebo.variable} ${frankRuhlLibre.variable} ${playpenSansHebrew.variable} ${lexend.variable} ${comicNeue.variable}`}>
+    <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable} ${heebo.variable} ${frankRuhlLibre.variable} ${playpenSansHebrew.variable} ${lexend.variable} ${comicNeue.variable} ${alexBrush.variable} ${greatVibes.variable} ${luxuriousScript.variable} ${nunito.variable} ${satisfy.variable}`}>
       <head>
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link rel="stylesheet" href="https://use.typekit.net/hat2kft.css" />

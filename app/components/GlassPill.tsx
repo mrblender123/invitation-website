@@ -146,9 +146,11 @@ export default function GlassPill({
         border: bg ? `1.5px solid ${bg}` : (active ? '1.5px solid rgba(0,0,0,0.22)' : '1.5px solid rgba(0,0,0,0.18)'),
         background: bg
           ? bg
+          : active
+          ? '#d4d4d4'
           : tinted
-          ? (active ? 'rgba(255,255,255,0.35)' : isHovered ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.20)')
-          : (active ? 'rgba(0,0,0,0.07)' : isHovered ? 'rgba(0,0,0,0.04)' : 'transparent'),
+          ? (isHovered ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.20)')
+          : (isHovered ? 'rgba(0,0,0,0.04)' : 'transparent'),
         filter: bg && isHovered ? 'brightness(1.08)' : 'none',
         cursor: disabled ? 'not-allowed' : 'pointer',
         userSelect: 'none',

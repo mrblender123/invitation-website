@@ -1068,8 +1068,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   );
                 }
 
-                // Pack cards into rows the same way flex-wrap would, so we can
-                // center full rows but left-align a trailing partial row.
+                // Pack cards into rows the same way flex-wrap would, so rows
+                // share a common left edge (a trailing partial row lines up
+                // under the row above it) while the whole block is centered.
                 const rows: Template[][] = [];
                 if (gridWidth > 0) {
                   let current: Template[] = [];
@@ -1092,20 +1093,23 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   rows.push(filtered);
                 }
 
+                const rowWidth = (rowTemplates: Template[]) =>
+                  rowTemplates.reduce((sum, t, i) => sum + cardWidthOf(t) + (i === 0 ? 0 : GAP), 0);
+                const maxRowWidth = Math.max(...rows.map(rowWidth));
+
                 return (
                   <div ref={setGridEl} style={{ display: 'flex', flexDirection: 'column', gap: GAP }}>
-                    {rows.map((rowTemplates, rowIdx) => {
-                      const isTrailingPartialRow = rows.length > 1 && rowIdx === rows.length - 1;
-                      return (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: GAP, width: maxRowWidth, margin: '0 auto' }}>
+                      {rows.map((rowTemplates, rowIdx) => (
                         <div key={rowIdx} data-row="true" style={{
                           display: 'flex',
                           gap: GAP,
-                          justifyContent: isTrailingPartialRow ? 'flex-start' : 'center',
+                          justifyContent: 'flex-start',
                         }}>
                           {rowTemplates.map(template => renderCard(template, cardWidthOf(template)))}
                         </div>
-                      );
-                    })}
+                      ))}
+                    </div>
                   </div>
                 );
               })();

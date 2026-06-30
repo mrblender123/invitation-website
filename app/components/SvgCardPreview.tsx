@@ -97,6 +97,11 @@ function injectFieldValues(
     [font-family="Playpen Sans Hebrew"] { font-family: var(--font-playpen-sans-hebrew, "Playpen Sans Hebrew"), cursive; }
     [font-family="Lexend"]             { font-family: var(--font-lexend, Lexend), sans-serif; }
     [font-family="Comic Neue"]         { font-family: var(--font-comic-neue, "Comic Neue"), cursive; }
+    [font-family="Alex Brush"]         { font-family: var(--font-alex-brush, "Alex Brush"), cursive; }
+    [font-family="Great Vibes"]        { font-family: var(--font-great-vibes, "Great Vibes"), cursive; }
+    [font-family="Luxurious Script"]   { font-family: var(--font-luxurious-script, "Luxurious Script"), cursive; }
+    [font-family="Nunito"]             { font-family: var(--font-nunito, Nunito), sans-serif; }
+    [font-family="Satisfy"]            { font-family: var(--font-satisfy, Satisfy), cursive; }
   `;
   root.insertBefore(fontMapStyle, root.firstChild);
 
