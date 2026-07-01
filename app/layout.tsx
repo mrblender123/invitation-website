@@ -168,7 +168,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: `try{localStorage.setItem('theme','light');}catch(e){}document.documentElement.removeAttribute('data-theme');` }} />
         {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-M9CSBEK4CT" />
-        <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-M9CSBEK4CT');` }} />
+        <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-M9CSBEK4CT');gtag('config','AW-18234591643');` }} />
       </head>
       <body className="antialiased"><AuthProvider>{children}</AuthProvider></body>
     </html>
