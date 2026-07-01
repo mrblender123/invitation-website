@@ -202,6 +202,7 @@ export default function TemplateEditorPage() {
   const [keyboardInset, setKeyboardInset] = useState(0);
   const [windowWidth, setWindowWidth] = useState(420);
   const [mobilePanel, setMobilePanel] = useState<'list' | 'canvas' | 'layers'>('canvas');
+  const [multiSelectMode, setMultiSelectMode] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   // ── watermark state ───────────────────────────────────────────────────────────
@@ -1568,6 +1569,13 @@ export default function TemplateEditorPage() {
                 {/* Layer list */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
                   <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', margin: 0, flex: 1 }}>Layers</p>
+                  {isMobile && (
+                    <button
+                      onClick={() => setMultiSelectMode(v => !v)}
+                      title="Toggle multi-select mode"
+                      style={{ fontSize: 10, padding: '2px 8px', borderRadius: 4, background: multiSelectMode ? 'rgba(99,200,255,0.18)' : 'rgba(255,255,255,0.06)', border: `1px solid ${multiSelectMode ? 'rgba(99,200,255,0.6)' : 'rgba(255,255,255,0.1)'}`, color: multiSelectMode ? 'rgba(99,200,255,0.9)' : 'rgba(255,255,255,0.5)', cursor: 'pointer', whiteSpace: 'nowrap', fontWeight: multiSelectMode ? 700 : 400 }}
+                    >{multiSelectMode ? '✓ Multi' : 'Multi'}</button>
+                  )}
                   <button
                     onClick={() => setSelection(new Set(layers.map((_, i) => i)))}
                     title="Select all (⌘A)"
@@ -1634,11 +1642,11 @@ export default function TemplateEditorPage() {
                         onDragLeave={() => setDragOverIdx(null)}
                         onDrop={e => { e.preventDefault(); if (dragLayerIdx !== null) handleLayerReorder(dragLayerIdx, idx); setDragLayerIdx(null); setDragOverIdx(null); }}
                         onDragEnd={() => { setDragLayerIdx(null); setDragOverIdx(null); }}
-                        onClick={e => { e.stopPropagation(); toggleSelect(idx, e.shiftKey); }}
+                        onClick={e => { e.stopPropagation(); toggleSelect(idx, e.shiftKey || multiSelectMode); }}
                         onMouseEnter={() => setHoveredIdx(idx)}
                         onMouseLeave={() => setHoveredIdx(null)}
                         style={{
-                          padding: '5px 10px', borderRadius: 6, cursor: 'grab',
+                          padding: isMobile ? '10px 10px' : '5px 10px', borderRadius: 6, cursor: 'grab',
                           opacity: isDragging ? 0.4 : 1,
                           background: isDragOver ? 'rgba(99,200,255,0.1)' : isSel ? 'rgba(255,255,255,0.07)' : isHov ? 'rgba(255,255,255,0.03)' : 'transparent',
                           border: `1px solid ${isDragOver ? 'rgba(99,200,255,0.5)' : isSel ? (isMultiSel ? 'rgba(99,200,255,0.3)' : 'rgba(255,255,255,0.2)') : 'transparent'}`,
