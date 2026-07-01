@@ -7,7 +7,6 @@ import type { Template, WatermarkConfig } from '@/lib/templates';
 import { measureAndTightenSvg } from '@/lib/watermark-utils';
 
 const ADMIN_EMAIL = 'bycheshin@gmail.com';
-const CARD_DISPLAY_WIDTH = 420;
 const SNAP_PX = 6;
 const MAX_HISTORY = 50;
 
@@ -201,6 +200,8 @@ export default function TemplateEditorPage() {
   const [imageDrag, setImageDrag] = useState<{ id: string; startMouseX: number; startMouseY: number; startX: number; startY: number } | null>(null);
   const [imageResize, setImageResize] = useState<{ id: string; startMouseX: number; startMouseY: number; startW: number; startH: number } | null>(null);
   const [keyboardInset, setKeyboardInset] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(420);
+  const [mobilePanel, setMobilePanel] = useState<'list' | 'canvas' | 'layers'>('canvas');
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   // ── watermark state ───────────────────────────────────────────────────────────
@@ -252,6 +253,14 @@ export default function TemplateEditorPage() {
     vv.addEventListener('resize', handler);
     vv.addEventListener('scroll', handler);
     return () => { vv.removeEventListener('resize', handler); vv.removeEventListener('scroll', handler); };
+  }, []);
+
+  // Track window width for responsive layout
+  useEffect(() => {
+    const update = () => setWindowWidth(window.innerWidth);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
   }, []);
 
   // Auth guard
@@ -322,8 +331,10 @@ export default function TemplateEditorPage() {
       });
   }, [selected]);
 
-  const scale = selected ? CARD_DISPLAY_WIDTH / selected.style.canvasWidth : 1;
-  const cardDisplayHeight = selected ? selected.style.canvasHeight * scale : CARD_DISPLAY_WIDTH * 1.4;
+  const isMobile = windowWidth < 768;
+  const cardDisplayWidth = isMobile ? Math.max(windowWidth - 24, 280) : 420;
+  const scale = selected ? cardDisplayWidth / selected.style.canvasWidth : 1;
+  const cardDisplayHeight = selected ? selected.style.canvasHeight * scale : cardDisplayWidth * 1.4;
   const svgW = selected?.style.canvasWidth ?? 360;
   const svgH = selected?.style.canvasHeight ?? 504;
 
@@ -351,6 +362,24 @@ export default function TemplateEditorPage() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // Forward touch events to mouse events so all drag handlers work on mobile
+  useEffect(() => {
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.cancelable) e.preventDefault();
+      const t = e.touches[0];
+      if (!t) return;
+      window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, cancelable: true, clientX: t.clientX, clientY: t.clientY }));
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      const t = e.changedTouches[0];
+      if (!t) return;
+      window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, clientX: t.clientX, clientY: t.clientY }));
+    };
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
+    window.addEventListener('touchend', onTouchEnd);
+    return () => { window.removeEventListener('touchmove', onTouchMove); window.removeEventListener('touchend', onTouchEnd); };
   }, []);
 
   // ── selection helpers ────────────────────────────────────────────────────────
@@ -925,22 +954,22 @@ export default function TemplateEditorPage() {
 
       {/* Header */}
       <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(9,9,11,0.9)', backdropFilter: 'blur(12px)', borderBottom: border }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 24px', height: 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <button onClick={() => router.push('/admin')} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontSize: 13, padding: 0 }}>← Admin</button>
-            <span style={{ color: 'rgba(255,255,255,0.15)' }}>/</span>
+        <div style={{ maxWidth: 1400, margin: '0 auto', padding: isMobile ? '0 10px' : '0 24px', height: isMobile ? 48 : 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 12, minWidth: 0 }}>
+            <button onClick={() => router.push('/admin')} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontSize: isMobile ? 12 : 13, padding: 0, flexShrink: 0 }}>← Admin</button>
+            {!isMobile && <span style={{ color: 'rgba(255,255,255,0.15)' }}>/</span>}
             {/* Tab buttons */}
             {(['editor', 'fields'] as const).map(tab => (
               <button key={tab} onClick={() => setMainTab(tab)} style={{
-                fontSize: 13, fontWeight: 600, padding: '4px 12px', borderRadius: 6, border: 'none', cursor: 'pointer',
+                fontSize: isMobile ? 12 : 13, fontWeight: 600, padding: isMobile ? '4px 8px' : '4px 12px', borderRadius: 6, border: 'none', cursor: 'pointer',
                 background: mainTab === tab ? 'rgba(255,255,255,0.12)' : 'transparent',
                 color: mainTab === tab ? '#fff' : 'rgba(255,255,255,0.35)',
-                transition: 'all 0.15s',
+                transition: 'all 0.15s', whiteSpace: 'nowrap',
               }}>
-                {tab === 'editor' ? 'Template Editor' : 'Field Manager'}
+                {tab === 'editor' ? (isMobile ? 'Editor' : 'Template Editor') : (isMobile ? 'Fields' : 'Field Manager')}
               </button>
             ))}
-            {mainTab === 'editor' && selected && <><span style={{ color: 'rgba(255,255,255,0.15)' }}>/</span><span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>{selected.subcategory ?? selected.category} — {selected.name}</span></>}
+            {!isMobile && mainTab === 'editor' && selected && <><span style={{ color: 'rgba(255,255,255,0.15)' }}>/</span><span style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{selected.subcategory ?? selected.category} — {selected.name}</span></>}
           </div>
           {mainTab === 'fields' && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -954,23 +983,23 @@ export default function TemplateEditorPage() {
             </div>
           )}
           {mainTab === 'editor' && selected && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 12, flexShrink: 0 }}>
               {history.length > 0 && (
                 <button
                   onClick={() => { const h = historyRef.current; if (!h.length) return; setLayers(h[h.length - 1]); setHistory(h.slice(0, -1)); }}
-                  style={{ fontSize: 12, padding: '4px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}
+                  style={{ fontSize: 12, padding: '4px 8px', borderRadius: 6, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', whiteSpace: 'nowrap' }}
                   title="Undo (⌘Z)"
                 >
-                  ↩ Undo ({history.length})
+                  ↩ {!isMobile && `Undo (${history.length})`}
                 </button>
               )}
-              {saveMsg && <span style={{ fontSize: 13, color: saveMsg.includes('Error') ? '#f87171' : '#4ade80' }}>{saveMsg}</span>}
-              <button onClick={handleSave} disabled={saving || !svgSource} style={{ padding: '7px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600, background: saving ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.15)', color: saving ? 'rgba(255,255,255,0.3)' : '#fff', cursor: saving ? 'not-allowed' : 'pointer' }}>
-                {saving ? 'Saving…' : 'Save to SVG'}
+              {saveMsg && !isMobile && <span style={{ fontSize: 13, color: saveMsg.includes('Error') ? '#f87171' : '#4ade80' }}>{saveMsg}</span>}
+              <button onClick={handleSave} disabled={saving || !svgSource} style={{ padding: isMobile ? '6px 12px' : '7px 20px', borderRadius: 8, fontSize: isMobile ? 12 : 13, fontWeight: 600, background: saving ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.15)', color: saving ? 'rgba(255,255,255,0.3)' : '#fff', cursor: saving ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap' }}>
+                {saving ? 'Saving…' : 'Save'}
               </button>
-              <button onClick={handleRevalidate} style={{ padding: '7px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }} title="Bust the /api/templates cache so changes appear immediately">
+              {!isMobile && <button onClick={handleRevalidate} style={{ padding: '7px 14px', borderRadius: 8, fontSize: 13, fontWeight: 600, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }} title="Bust the /api/templates cache so changes appear immediately">
                 ↺ Refresh cache
-              </button>
+              </button>}
             </div>
           )}
         </div>
@@ -1235,7 +1264,7 @@ export default function TemplateEditorPage() {
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
 
         {/* Left: template list */}
-        <div style={{ width: 240, borderRight: border, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ width: isMobile ? '100%' : 240, borderRight: isMobile ? 'none' : border, overflowY: 'auto', display: isMobile && mobilePanel !== 'list' ? 'none' : 'flex', flexDirection: 'column' }}>
           <div style={{ padding: '8px 10px 4px', flexShrink: 0 }}>
             <input
               type="text"
@@ -1305,7 +1334,7 @@ export default function TemplateEditorPage() {
                             {subOpen && items.map(t => (
                               <button
                                 key={t.id}
-                                onClick={() => setSelected(t)}
+                                onClick={() => { setSelected(t); if (isMobile) setMobilePanel('canvas'); }}
                                 style={{
                                   width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 6,
                                   padding: '6px 12px 6px 44px',
@@ -1325,7 +1354,7 @@ export default function TemplateEditorPage() {
                           items.map(t => (
                             <button
                               key={t.id}
-                              onClick={() => setSelected(t)}
+                              onClick={() => { setSelected(t); if (isMobile) setMobilePanel('canvas'); }}
                               style={{
                                 width: '100%', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 6,
                                 padding: '6px 12px 6px 28px',
@@ -1352,16 +1381,16 @@ export default function TemplateEditorPage() {
         </div>
 
         {/* Center: workspace */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: 0, background: '#1a1a1a', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: 0, background: '#1a1a1a', display: isMobile && mobilePanel !== 'canvas' ? 'none' : 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
 
           {!selected && <div style={{ color: 'rgba(255,255,255,0.2)', fontSize: 15, margin: 'auto', paddingTop: 80 }}>Select a template to start editing</div>}
 
           {selected && (
-              <div style={{ background: '#3a3a3a', padding: 24, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8 }}>
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
+              <div style={{ background: '#3a3a3a', padding: isMobile ? 8 : 24, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+                  {!isMobile && <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
                     Click · Shift+click · drag to box-select · ⌘A all · arrow keys · ⌘Z undo
-                  </span>
+                  </span>}
                   <input ref={imageInputRef} type="file" accept="image/png,image/jpeg,image/webp" style={{ display: 'none' }} onChange={handleImageInsert} />
                   <button onClick={() => imageInputRef.current?.click()} style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>
                     + Image
@@ -1383,7 +1412,8 @@ export default function TemplateEditorPage() {
                 <div
                   ref={canvasRef}
                   onMouseDown={handleCanvasMouseDown}
-                  style={{ position: 'relative', width: CARD_DISPLAY_WIDTH, height: cardDisplayHeight, borderRadius: 8, overflow: 'hidden', userSelect: 'none', cursor: dragging ? 'grabbing' : guideDrag ? (guideDrag.axis === 'x' ? 'ew-resize' : 'ns-resize') : marquee ? 'crosshair' : 'default' }}
+                  onTouchStart={e => { const t = e.touches[0]; handleCanvasMouseDown({ clientX: t.clientX, clientY: t.clientY, shiftKey: false, metaKey: false, button: 0, preventDefault: () => {}, stopPropagation: () => {} } as unknown as React.MouseEvent); }}
+                  style={{ position: 'relative', width: cardDisplayWidth, height: cardDisplayHeight, borderRadius: 8, overflow: 'hidden', userSelect: 'none', cursor: dragging ? 'grabbing' : guideDrag ? (guideDrag.axis === 'x' ? 'ew-resize' : 'ns-resize') : marquee ? 'crosshair' : 'default' }}
                 >
                   <img src={selected.backgroundSrc} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} draggable={false} />
                   {displaySvg && <div style={{ position: 'absolute', inset: 0 }} dangerouslySetInnerHTML={{ __html: displaySvg }} />}
@@ -1499,6 +1529,7 @@ export default function TemplateEditorPage() {
                       <div
                         key={idx}
                         onMouseDown={e => { e.stopPropagation(); handleMouseDown(e, idx); }}
+                        onTouchStart={e => { e.stopPropagation(); const t = e.touches[0]; handleMouseDown({ clientX: t.clientX, clientY: t.clientY, shiftKey: false, stopPropagation: () => {}, preventDefault: () => {} } as unknown as React.MouseEvent, idx); }}
                         onClick={e => e.stopPropagation()}
                         onMouseEnter={() => setHoveredIdx(idx)}
                         onMouseLeave={() => setHoveredIdx(null)}
@@ -1506,8 +1537,8 @@ export default function TemplateEditorPage() {
                           position: 'absolute',
                           left: layer.tx * scale, top: layer.ty * scale,
                           transform: 'translate(-50%, -50%)',
-                          width: isActive || isHov || isSel ? 20 : 14,
-                          height: isActive || isHov || isSel ? 20 : 14,
+                          width: isActive || isHov || isSel ? (isMobile ? 36 : 20) : (isMobile ? 28 : 14),
+                          height: isActive || isHov || isSel ? (isMobile ? 36 : 20) : (isMobile ? 28 : 14),
                           borderRadius: '50%',
                           background: visible ? (isField ? '#f09b00' : 'rgba(255,255,255,0.7)') : 'transparent',
                           border: visible ? `2px solid ${isSel ? '#fff' : 'rgba(0,0,0,0.5)'}` : '2px solid transparent',
@@ -1530,7 +1561,7 @@ export default function TemplateEditorPage() {
         </div>
 
         {/* Right panel */}
-        <div ref={rightPanelRef} style={{ width: 230, borderLeft: border, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+        <div ref={rightPanelRef} style={{ width: isMobile ? '100%' : 230, borderLeft: isMobile ? 'none' : border, overflowY: 'auto', display: isMobile && mobilePanel !== 'layers' ? 'none' : 'flex', flexDirection: 'column' }}>
           {selected && (
             <div style={{ padding: '12px 16px', paddingBottom: 12 + keyboardInset }}>
 
@@ -1867,6 +1898,33 @@ export default function TemplateEditorPage() {
           )}
         </div>
       </div>
+
+      {/* Mobile bottom tab bar */}
+      {isMobile && (
+        <div style={{ flexShrink: 0, display: 'flex', borderTop: border, background: 'rgba(9,9,11,0.97)', paddingBottom: keyboardInset > 0 ? 0 : 'env(safe-area-inset-bottom, 0px)' }}>
+          {([
+            { key: 'list',   label: 'Templates', icon: '📁' },
+            { key: 'canvas', label: 'Editor',    icon: '🖼' },
+            { key: 'layers', label: 'Layers',    icon: '⚙︎' },
+          ] as const).map(({ key, label, icon }) => (
+            <button
+              key={key}
+              onClick={() => setMobilePanel(key)}
+              style={{
+                flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                gap: 3, padding: '8px 0', border: 'none', cursor: 'pointer',
+                background: mobilePanel === key ? 'rgba(255,255,255,0.08)' : 'transparent',
+                color: mobilePanel === key ? '#fff' : 'rgba(255,255,255,0.4)',
+                borderTop: mobilePanel === key ? '2px solid rgba(255,255,255,0.5)' : '2px solid transparent',
+                fontSize: 10, fontWeight: 600, letterSpacing: '0.05em',
+              }}
+            >
+              <span style={{ fontSize: 18, lineHeight: 1 }}>{icon}</span>
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
       </>}
     </div>
   );
