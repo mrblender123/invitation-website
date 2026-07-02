@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { createAuthenticatedClient } from '@/lib/supabase';
 import { clearTemplateCache } from '@/app/api/templates/route';
 
@@ -12,5 +13,6 @@ export async function POST(req: NextRequest) {
   if (error || user?.email !== ADMIN_EMAIL) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   clearTemplateCache();
+  revalidatePath('/api/templates');
   return NextResponse.json({ ok: true });
 }

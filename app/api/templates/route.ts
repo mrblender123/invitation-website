@@ -4,8 +4,9 @@ import path from 'path';
 import type { Template, SvgField } from '@/lib/templates';
 import { FOLDER_TO_CATEGORY } from '@/lib/categories';
 
-export const dynamic    = 'force-dynamic';
-export const revalidate = 0;
+// Cache the template list at Vercel's CDN edge for 1 hour.
+// Invalidated automatically when admin saves a template (revalidatePath call in update-svg).
+export const revalidate = 3600;
 
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL?.replace(/\/$/, '') ?? '';
 const IS_DEV = process.env.NODE_ENV === 'development';
