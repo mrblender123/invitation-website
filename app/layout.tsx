@@ -71,8 +71,8 @@ const comicNeue = Comic_Neue({
 
 
 export const metadata: Metadata = {
-  title: "Simcha Invitations",
-  description: "Create beautiful Jewish simcha invitations in minutes. Professional templates for bris, bar mitzvah, tenoyim, upsherin, sheva brachos, wedding & more. Personalize and download instantly for $25.99.",
+  title: "Heimishe Simcha Cards | Share Your Simcha",
+  description: "Beautiful heimishe invitations for every simcha — chasunah, bar mitzvah, shalom zachar & more. Customize your details and send in minutes.",
   keywords: [
     "Jewish simcha invitation",
     "simcha invitation template",
