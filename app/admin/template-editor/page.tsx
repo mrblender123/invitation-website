@@ -243,6 +243,9 @@ export default function TemplateEditorPage() {
   const imageResizeRef = useRef(imageResize);
   useEffect(() => { imageResizeRef.current = imageResize; }, [imageResize]);
 
+  // Tracks whether any drag/marquee is active — used by touch forwarder to conditionally prevent scroll
+  const anyDragActiveRef = useRef(false);
+
   // Track keyboard height via visualViewport (iOS Safari doesn't resize layout viewport)
   useEffect(() => {
     const vv = window.visualViewport;
@@ -365,15 +368,19 @@ export default function TemplateEditorPage() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // Forward touch events to mouse events so all drag handlers work on mobile
+  // Forward touch events to mouse events so all drag handlers work on mobile.
+  // Only prevents default scroll when a drag is actually in progress — otherwise
+  // the layers list and template list would be un-scrollable on touch.
   useEffect(() => {
     const onTouchMove = (e: TouchEvent) => {
+      if (!anyDragActiveRef.current) return; // let normal scroll through when idle
       if (e.cancelable) e.preventDefault();
       const t = e.touches[0];
       if (!t) return;
       window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, cancelable: true, clientX: t.clientX, clientY: t.clientY }));
     };
     const onTouchEnd = (e: TouchEvent) => {
+      anyDragActiveRef.current = false;
       const t = e.changedTouches[0];
       if (!t) return;
       window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, clientX: t.clientX, clientY: t.clientY }));
@@ -951,7 +958,7 @@ export default function TemplateEditorPage() {
 
 
   return (
-    <div style={{ height: '100vh', overflow: 'hidden', background: '#09090b', color: '#fff', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100dvh', overflow: 'hidden', background: '#09090b', color: '#fff', display: 'flex', flexDirection: 'column' } as React.CSSProperties}>
 
       {/* Header */}
       <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(9,9,11,0.9)', backdropFilter: 'blur(12px)', borderBottom: border }}>
@@ -1413,7 +1420,7 @@ export default function TemplateEditorPage() {
                 <div
                   ref={canvasRef}
                   onMouseDown={handleCanvasMouseDown}
-                  onTouchStart={e => { const t = e.touches[0]; handleCanvasMouseDown({ clientX: t.clientX, clientY: t.clientY, shiftKey: false, metaKey: false, button: 0, preventDefault: () => {}, stopPropagation: () => {} } as unknown as React.MouseEvent); }}
+                  onTouchStart={e => { e.preventDefault(); anyDragActiveRef.current = true; const t = e.touches[0]; handleCanvasMouseDown({ clientX: t.clientX, clientY: t.clientY, shiftKey: false, metaKey: false, button: 0, preventDefault: () => {}, stopPropagation: () => {} } as unknown as React.MouseEvent); }}
                   style={{ position: 'relative', width: cardDisplayWidth, height: cardDisplayHeight, borderRadius: 8, overflow: 'hidden', userSelect: 'none', cursor: dragging ? 'grabbing' : guideDrag ? (guideDrag.axis === 'x' ? 'ew-resize' : 'ns-resize') : marquee ? 'crosshair' : 'default' }}
                 >
                   <img src={selected.backgroundSrc} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} draggable={false} />
@@ -1530,7 +1537,7 @@ export default function TemplateEditorPage() {
                       <div
                         key={idx}
                         onMouseDown={e => { e.stopPropagation(); handleMouseDown(e, idx); }}
-                        onTouchStart={e => { e.stopPropagation(); const t = e.touches[0]; handleMouseDown({ clientX: t.clientX, clientY: t.clientY, shiftKey: false, stopPropagation: () => {}, preventDefault: () => {} } as unknown as React.MouseEvent, idx); }}
+                        onTouchStart={e => { e.stopPropagation(); e.preventDefault(); anyDragActiveRef.current = true; const t = e.touches[0]; handleMouseDown({ clientX: t.clientX, clientY: t.clientY, shiftKey: false, stopPropagation: () => {}, preventDefault: () => {} } as unknown as React.MouseEvent, idx); }}
                         onClick={e => e.stopPropagation()}
                         onMouseEnter={() => setHoveredIdx(idx)}
                         onMouseLeave={() => setHoveredIdx(null)}
@@ -1636,7 +1643,7 @@ export default function TemplateEditorPage() {
                     return (
                       <div
                         key={idx}
-                        draggable
+                        draggable={!isMobile}
                         onDragStart={e => { e.stopPropagation(); setDragLayerIdx(idx); e.dataTransfer.effectAllowed = 'move'; }}
                         onDragOver={e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; setDragOverIdx(idx); }}
                         onDragLeave={() => setDragOverIdx(null)}
