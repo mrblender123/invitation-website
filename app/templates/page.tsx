@@ -331,6 +331,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   const editConsumedThisSession = useRef(false);
   const successBlobRef = useRef<Blob | null>(null);    // cached PNG from payment flow
   const successPdfRef  = useRef<Blob | null>(null);    // cached PDF from payment flow
+  const preRenderRef   = useRef<Promise<Blob | null> | null>(null); // render started at Buy click, awaited after payment
 
   // Draft modal state
   const [showDraftModal, setShowDraftModal] = useState(false);
@@ -540,6 +541,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
     router.push(`${basePath}?${params.toString()}`);
     setSelected(template);
     // Reset payment state so a new template always requires a new purchase
+    preRenderRef.current = null;
     setDownloadAllowed(false);
     setEditsExhausted(false);
     setEditsRemaining(null);
@@ -1440,7 +1442,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   ) : (
                     <GlassPill
                       text="Buy – $25.99"
-                      onClick={() => { setCheckoutClientSecret(null); setBuyStep('email'); setBuyError(''); setBuyEmail(user?.email ?? ''); setShowBuyModal(true); }}
+                      onClick={() => { setCheckoutClientSecret(null); setBuyStep('email'); setBuyError(''); setBuyEmail(user?.email ?? ''); setShowBuyModal(true); preRenderRef.current = generateBlob().catch(() => null); }}
                       fullWidth
                       variant="flat"
                       bg="#2563eb"
@@ -1563,11 +1565,11 @@ const [windowWidth, setWindowWidth] = useState(1200);
       {/* Buy modal */}
       {showBuyModal && (
         <div
-          onClick={e => { if (e.target === e.currentTarget) { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); } }}
+          onClick={e => { if (e.target === e.currentTarget) { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); preRenderRef.current = null; } }}
           style={{ position: 'fixed', inset: 0, zIndex: 200, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
         >
           <div style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: 16, padding: '32px', width: '100%', maxWidth: 440, position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.12)', maxHeight: '90vh', overflowY: 'auto' }}>
-            <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); }} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: 'var(--muted)', fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 4 }}>×</button>
+            <button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); preRenderRef.current = null; }} style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', color: 'var(--muted)', fontSize: 20, cursor: 'pointer', lineHeight: 1, padding: 4 }}>×</button>
 
             {buyStep === 'success' ? (
               <div style={{ textAlign: 'center', padding: '16px 0' }}>
@@ -1617,7 +1619,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   Download PDF
                 </button>
 
-<button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 24px', cursor: 'pointer', fontSize: 14, marginTop: 16 }}>Done</button>
+<button onClick={() => { setShowBuyModal(false); setCheckoutClientSecret(null); setBuyStep('email'); preRenderRef.current = null; }} style={{ background: 'none', border: '1px solid rgba(0,0,0,0.18)', borderRadius: 9999, padding: '8px 24px', cursor: 'pointer', fontSize: 14, marginTop: 16 }}>Done</button>
               </div>
             ) : buyStep === 'email' ? (
               /* Step 1 — email */
@@ -1665,7 +1667,9 @@ const [windowWidth, setWindowWidth] = useState(1200);
                           items: [{ item_name: selected?.category ?? 'invitation_template' }],
                         });
                       }
-                      const blob = await generateBlob();
+                      // Use the render started at Buy click if available; fall back to a fresh render
+                      const blob = (preRenderRef.current ? await preRenderRef.current : null) ?? await generateBlob();
+                      preRenderRef.current = null;
                       successBlobRef.current = blob;
                       if (blob && piId) {
                         // Pre-generate PDF for download buttons
