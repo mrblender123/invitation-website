@@ -68,7 +68,7 @@ function isRtlText(text: string): boolean {
   return rtl >= latin; // ties go RTL (Hebrew numerals, mixed abbrevs)
 }
 
-function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' | 'fields' | 'style' | 'language'> {
+function parseSvg(content: string, publicUrl: string, stem: string): Pick<Template, 'textSvg' | 'fields' | 'style' | 'language'> {
   // Extract viewBox → canvas size
   let canvasWidth = 444, canvasHeight = 630;
   const vbMatch = content.match(/viewBox=["']([^"']+)["']/);
@@ -139,9 +139,10 @@ function parseSvg(content: string, publicUrl: string): Pick<Template, 'textSvg' 
     ...(anyHasStar && !e.hasStar && { optional: true }),
   }));
 
-  // Detect language: if all non-empty placeholders are LTR → English, else Hebrew
-  const textFields = fields.filter(f => f.placeholder.trim().length > 0);
-  const language: 'he' | 'en' = textFields.length > 0 && textFields.every(f => !f.rtl) ? 'en' : 'he';
+  // Language comes from the filename convention: "E" prefix = English (EK-01, ESZ-02, …),
+  // everything else is Hebrew/Yiddish. This is authoritative — placeholder text analysis
+  // misfires on mixed-language templates (e.g. an English design with one Hebrew name field).
+  const language: 'he' | 'en' = /^e/i.test(stem) ? 'en' : 'he';
 
   return {
     textSvg: publicUrl,
@@ -210,7 +211,7 @@ export async function GET() {
               ? r2Url(R2_PUBLIC_URL, 'templates', folder, subDir.name, svgFile)
               : `${localBase}/${svgFile}`;
             const content   = await readFile(svgPath, 'utf-8');
-            const svgData   = parseSvg(content, svgPublic);
+            const svgData   = parseSvg(content, svgPublic, stem);
 
             templates.push({
               id,
@@ -255,7 +256,7 @@ export async function GET() {
             ? r2Url(R2_PUBLIC_URL, 'templates', folder, svgFile)
             : `${localBase}/${svgFile}`;
           const content   = await readFile(svgPath, 'utf-8');
-          const svgData   = parseSvg(content, svgPublic);
+          const svgData   = parseSvg(content, svgPublic, stem);
 
           templates.push({
             id,
