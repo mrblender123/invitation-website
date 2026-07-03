@@ -1,8 +1,18 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { readdir, readFile, stat } from 'fs/promises';
 import path from 'path';
+import { createAuthenticatedClient } from '@/lib/supabase';
 
 const TEMPLATES_DIR = path.join(process.cwd(), 'public', 'templates');
+const ADMIN_EMAIL = 'bycheshin@gmail.com';
+
+async function verifyAdmin(req: NextRequest): Promise<boolean> {
+  const auth = req.headers.get('Authorization');
+  if (!auth?.startsWith('Bearer ')) return false;
+  const token = auth.slice(7);
+  const { data: { user }, error } = await createAuthenticatedClient(token).auth.getUser();
+  return !error && user?.email === ADMIN_EMAIL;
+}
 
 function findMatchingClose(svg: string, start: number): number {
   let depth = 0, i = start;
@@ -62,7 +72,10 @@ async function getSvgFolders(): Promise<string[]> {
   return folders.sort();
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  if (!await verifyAdmin(req)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
   try {
     const folders = await getSvgFolders();
     const result = [];

@@ -96,3 +96,19 @@ export async function resetEmailSent(piId: string): Promise<void> {
       .eq('payment_intent_id', piId);
   } catch { /* best-effort */ }
 }
+
+// Read-only: has the purchase email already been sent for this payment?
+// Fails "true" (assume sent) so a DB blip can't cause duplicate emails.
+export async function wasEmailSent(piId: string): Promise<boolean> {
+  try {
+    const { data, error } = await db()
+      .from('invitation_edits')
+      .select('email_sent')
+      .eq('payment_intent_id', piId)
+      .single();
+    if (error) return false; // no record → nothing sent yet
+    return !!data?.email_sent;
+  } catch {
+    return true;
+  }
+}

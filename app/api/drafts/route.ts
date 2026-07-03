@@ -5,6 +5,9 @@ import { createServiceClient } from '@/lib/supabase';
 const resend = new Resend(process.env.RESEND_API_KEY ?? '');
 const EMAIL_LOGO_SRC = 'https://i.imgur.com/t8uy4eg.png';
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const MAX_DRAFTS_PER_EMAIL_PER_HOUR = 5;
+
 export async function POST(req: NextRequest) {
   try {
     const { templateId, fieldValues, email } = await req.json();
@@ -12,6 +15,23 @@ export async function POST(req: NextRequest) {
     if (!templateId || !email) {
       return NextResponse.json({ error: 'Missing templateId or email' }, { status: 400 });
     }
+    if (typeof email !== 'string' || !EMAIL_RE.test(email) || email.length > 254) {
+      return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
+    }
+
+    // Rate limit: cap draft emails per address per hour (anti-spam — protects domain reputation)
+    try {
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+      const { count } = await createServiceClient()
+        .from('orders')
+        .select('id', { count: 'exact', head: true })
+        .eq('type', 'draft')
+        .eq('email', email)
+        .gte('created_at', oneHourAgo);
+      if ((count ?? 0) >= MAX_DRAFTS_PER_EMAIL_PER_HOUR) {
+        return NextResponse.json({ error: 'Too many drafts sent to this email. Please try again later.' }, { status: 429 });
+      }
+    } catch { /* rate-limit check failed — allow rather than block real users */ }
 
     const token = createDraftToken(templateId, fieldValues ?? {}, email);
     const draftUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://shareyoursimcha.com'}/draft/${token}`;

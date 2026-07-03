@@ -883,9 +883,10 @@ export default function TemplateEditorPage() {
 
   // ── field manager: load overview ─────────────────────────────────────────
   useEffect(() => {
-    if (mainTab !== 'fields' || fmData) return;
-    fetch('/api/admin/field-overview').then(r => r.json()).then(setFmData);
-  }, [mainTab, fmData]);
+    if (mainTab !== 'fields' || fmData || !accessToken) return;
+    fetch('/api/admin/field-overview', { headers: { Authorization: `Bearer ${accessToken}` } })
+      .then(r => r.json()).then(setFmData);
+  }, [mainTab, fmData, accessToken]);
 
   const fmSelectFolder = (row: FolderData) => {
     setFmFolder(row);
