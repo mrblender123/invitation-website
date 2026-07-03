@@ -27,8 +27,11 @@ export function verifyDraftToken(token: string): {
   if (dotIndex === -1) return null;
   const payload = token.slice(0, dotIndex);
   const sig = token.slice(dotIndex + 1);
-  if (!timingSafeEqual(Buffer.from(sig), Buffer.from(sign(payload)))) return null;
   try {
+    // timingSafeEqual throws on length mismatch — must stay inside the try
+    const sigBuf = Buffer.from(sig);
+    const expectedBuf = Buffer.from(sign(payload));
+    if (sigBuf.length !== expectedBuf.length || !timingSafeEqual(sigBuf, expectedBuf)) return null;
     const { templateId, fieldValues, email, exp } = JSON.parse(
       Buffer.from(payload, 'base64url').toString(),
     );
