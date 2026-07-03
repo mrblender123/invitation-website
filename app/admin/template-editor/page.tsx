@@ -204,7 +204,7 @@ export default function TemplateEditorPage() {
   const [mobilePanel, setMobilePanel] = useState<'list' | 'canvas' | 'layers'>('canvas');
   const [mobileZoom, setMobileZoom] = useState(1);
   const [nudgeStep, setNudgeStep] = useState(1);
-  const [multiSelectMode, setMultiSelectMode] = useState(false);
+  const [multiSelectMode, setMultiSelectMode] = useState(false); // mobile: taps act like shift+click
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   // ── watermark state ───────────────────────────────────────────────────────────
@@ -1416,6 +1416,11 @@ export default function TemplateEditorPage() {
                       🔍 {mobileZoom}×
                     </button>
                   )}
+                  {isMobile && (
+                    <button onClick={() => setMultiSelectMode(v => !v)} style={{ fontSize: 12, padding: '5px 12px', borderRadius: 6, background: multiSelectMode ? 'rgba(99,200,255,0.18)' : 'rgba(255,255,255,0.04)', border: `1px solid ${multiSelectMode ? 'rgba(99,200,255,0.6)' : 'rgba(255,255,255,0.1)'}`, color: multiSelectMode ? 'rgba(99,200,255,0.9)' : 'rgba(255,255,255,0.5)', cursor: 'pointer', fontWeight: 600 }}>
+                      {multiSelectMode ? '✓ Multi' : 'Multi'}
+                    </button>
+                  )}
                   <button onClick={() => imageInputRef.current?.click()} style={{ fontSize: isMobile ? 12 : 11, padding: isMobile ? '5px 12px' : '3px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>
                     + Image
                   </button>
@@ -1553,7 +1558,7 @@ export default function TemplateEditorPage() {
                       <div
                         key={idx}
                         onMouseDown={e => { e.stopPropagation(); handleMouseDown(e, idx); }}
-                        onTouchStart={e => { e.stopPropagation(); e.preventDefault(); anyDragActiveRef.current = true; const t = e.touches[0]; handleMouseDown({ clientX: t.clientX, clientY: t.clientY, shiftKey: false, stopPropagation: () => {}, preventDefault: () => {} } as unknown as React.MouseEvent, idx); }}
+                        onTouchStart={e => { e.stopPropagation(); e.preventDefault(); anyDragActiveRef.current = true; const t = e.touches[0]; handleMouseDown({ clientX: t.clientX, clientY: t.clientY, shiftKey: multiSelectMode, stopPropagation: () => {}, preventDefault: () => {} } as unknown as React.MouseEvent, idx); }}
                         onClick={e => e.stopPropagation()}
                         onMouseEnter={() => setHoveredIdx(idx)}
                         onMouseLeave={() => setHoveredIdx(null)}
