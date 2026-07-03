@@ -202,6 +202,8 @@ export default function TemplateEditorPage() {
   const [keyboardInset, setKeyboardInset] = useState(0);
   const [windowWidth, setWindowWidth] = useState(420);
   const [mobilePanel, setMobilePanel] = useState<'list' | 'canvas' | 'layers'>('canvas');
+  const [mobileZoom, setMobileZoom] = useState(1);
+  const [nudgeStep, setNudgeStep] = useState(1);
   const [multiSelectMode, setMultiSelectMode] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
@@ -336,7 +338,7 @@ export default function TemplateEditorPage() {
   }, [selected]);
 
   const isMobile = windowWidth < 768;
-  const cardDisplayWidth = isMobile ? Math.max(windowWidth - 24, 280) : 420;
+  const cardDisplayWidth = isMobile ? Math.max(windowWidth - 24, 280) * mobileZoom : 420;
   const scale = selected ? cardDisplayWidth / selected.style.canvasWidth : 1;
   const cardDisplayHeight = selected ? selected.style.canvasHeight * scale : cardDisplayWidth * 1.4;
   const svgW = selected?.style.canvasWidth ?? 360;
@@ -613,6 +615,13 @@ export default function TemplateEditorPage() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
+  }, [selection, pushHistory]);
+
+  // On-screen nudge (mobile) — same behavior as the arrow keys
+  const nudgeSelection = useCallback((dx: number, dy: number) => {
+    if (selection.size === 0) return;
+    pushHistory();
+    setLayers(prev => prev.map((l, i) => selection.has(i) ? { ...l, tx: l.tx + dx, ty: l.ty + dy } : l));
   }, [selection, pushHistory]);
 
   // ── alignment ────────────────────────────────────────────────────────────────
@@ -1122,6 +1131,7 @@ export default function TemplateEditorPage() {
       <div style={{
         borderBottom: border, background: 'rgba(9,9,11,0.97)', flexShrink: 0,
         height: 44, display: 'flex', alignItems: 'center', gap: 0, paddingLeft: 8, paddingRight: 8, overflowX: 'auto',
+        ...(isMobile ? { zoom: 1.2, WebkitOverflowScrolling: 'touch' as const } : {}),
       }}>
         {!hasSelection || !selected ? (
           <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', paddingLeft: 8 }}>
@@ -1390,18 +1400,23 @@ export default function TemplateEditorPage() {
         </div>
 
         {/* Center: workspace */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: 0, background: '#1a1a1a', display: isMobile && mobilePanel !== 'canvas' ? 'none' : 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1, overflow: 'auto', padding: 0, background: '#1a1a1a', display: isMobile && mobilePanel !== 'canvas' ? 'none' : 'flex', justifyContent: isMobile && mobileZoom > 1 ? 'flex-start' : 'center', alignItems: 'flex-start' }}>
 
           {!selected && <div style={{ color: 'rgba(255,255,255,0.2)', fontSize: 15, margin: 'auto', paddingTop: 80 }}>Select a template to start editing</div>}
 
           {selected && (
-              <div style={{ background: '#3a3a3a', padding: isMobile ? 8 : 24, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+              <div style={{ background: '#3a3a3a', padding: isMobile ? 8 : 24, display: 'flex', flexDirection: 'column', alignItems: 'center', width: 'max-content', minWidth: '100%', boxSizing: 'border-box' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
                   {!isMobile && <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>
                     Click · Shift+click · drag to box-select · ⌘A all · arrow keys · ⌘Z undo
                   </span>}
                   <input ref={imageInputRef} type="file" accept="image/png,image/jpeg,image/webp" style={{ display: 'none' }} onChange={handleImageInsert} />
-                  <button onClick={() => imageInputRef.current?.click()} style={{ fontSize: 11, padding: '3px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>
+                  {isMobile && (
+                    <button onClick={() => setMobileZoom(z => z >= 2 ? 1 : z + 0.5)} style={{ fontSize: 12, padding: '5px 12px', borderRadius: 6, background: mobileZoom > 1 ? 'rgba(99,200,255,0.15)' : 'rgba(255,255,255,0.04)', border: `1px solid ${mobileZoom > 1 ? 'rgba(99,200,255,0.4)' : 'rgba(255,255,255,0.1)'}`, color: mobileZoom > 1 ? 'rgba(99,200,255,0.9)' : 'rgba(255,255,255,0.5)', cursor: 'pointer', fontWeight: 600 }}>
+                      🔍 {mobileZoom}×
+                    </button>
+                  )}
+                  <button onClick={() => imageInputRef.current?.click()} style={{ fontSize: isMobile ? 12 : 11, padding: isMobile ? '5px 12px' : '3px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>
                     + Image
                   </button>
                   <button onClick={() => setShowDots(v => !v)} style={{ marginLeft: 'auto', fontSize: 11, padding: '3px 10px', borderRadius: 6, background: showDots ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }}>
@@ -1914,6 +1929,40 @@ export default function TemplateEditorPage() {
           )}
         </div>
       </div>
+
+      {/* Mobile nudge bar — fine positioning without arrow keys */}
+      {isMobile && mobilePanel === 'canvas' && selected && hasSelection && (() => {
+        const nBtn: React.CSSProperties = {
+          width: 42, height: 38, borderRadius: 8, border: '1px solid rgba(255,255,255,0.15)',
+          background: 'rgba(255,255,255,0.08)', color: '#fff', fontSize: 16, cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, padding: 0,
+        };
+        return (
+          <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderTop: border, background: 'rgba(9,9,11,0.97)', overflowX: 'auto' }}>
+            <button style={nBtn} onClick={() => nudgeSelection(-nudgeStep, 0)}>←</button>
+            <button style={nBtn} onClick={() => nudgeSelection(nudgeStep, 0)}>→</button>
+            <button style={nBtn} onClick={() => nudgeSelection(0, -nudgeStep)}>↑</button>
+            <button style={nBtn} onClick={() => nudgeSelection(0, nudgeStep)}>↓</button>
+            <button
+              onClick={() => setNudgeStep(s => s === 1 ? 10 : s === 10 ? 0.1 : 1)}
+              style={{ ...nBtn, width: 52, fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.7)' }}
+              title="Nudge step size"
+            >{nudgeStep}px</button>
+            <div style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.12)', flexShrink: 0 }} />
+            <button style={{ ...nBtn, width: 48, fontSize: 12, fontWeight: 600, color: 'rgba(99,200,255,0.9)', background: 'rgba(99,200,255,0.08)', border: '1px solid rgba(99,200,255,0.25)' }} onClick={() => align('cx')}>⊕ X</button>
+            <button style={{ ...nBtn, width: 48, fontSize: 12, fontWeight: 600, color: 'rgba(99,200,255,0.9)', background: 'rgba(99,200,255,0.08)', border: '1px solid rgba(99,200,255,0.25)' }} onClick={() => align('cy')}>⊕ Y</button>
+            <button
+              style={{ ...nBtn, width: 44, opacity: history.length ? 1 : 0.35 }}
+              onClick={() => { const h = historyRef.current; if (!h.length) return; setLayers(h[h.length - 1]); setHistory(h.slice(0, -1)); }}
+            >↩</button>
+            {firstSel && (
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap', marginLeft: 'auto', paddingLeft: 6 }}>
+                {Math.round(firstSel.tx * 10) / 10}, {Math.round(firstSel.ty * 10) / 10}
+              </span>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Mobile bottom tab bar */}
       {isMobile && (
