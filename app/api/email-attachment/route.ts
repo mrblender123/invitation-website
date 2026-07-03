@@ -2,7 +2,10 @@ import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { PDFDocument } from 'pdf-lib';
 import { createDownloadToken } from '@/lib/download-token';
-import { initEditRecord, markEmailSent } from '@/lib/edit-tracking';
+import { initEditRecord, markEmailSent, resetEmailSent } from '@/lib/edit-tracking';
+
+// Attachments are ~4MB and Resend upload can be slow — don't let the default 10s timeout kill it
+export const maxDuration = 60;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
@@ -96,10 +99,12 @@ export async function POST(req: Request) {
     });
     if (sendError) {
       console.error('[email-attachment] Resend error for pi=%s: %s', piId, sendError.message);
+      await resetEmailSent(piId); // release dedup claim so a retry can actually send
       return new Response(JSON.stringify({ error: 'email_failed', piId }), { status: 500 });
     }
   } catch (e) {
     console.error('[email-attachment] Unexpected send error for pi=%s:', piId, e);
+    await resetEmailSent(piId); // release dedup claim so a retry can actually send
     return new Response(JSON.stringify({ error: 'email_failed', piId }), { status: 500 });
   }
 

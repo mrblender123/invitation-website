@@ -1683,13 +1683,22 @@ const [windowWidth, setWindowWidth] = useState(1200);
                           const pdfBytes = await pdf.save();
                           successPdfRef.current = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
                         } catch { /* PDF pre-gen failed — PDF button will fallback */ }
-                        // Send email with PNG + PDF attachments
-                        const res = await fetch('/api/email-attachment', {
-                          method: 'POST',
-                          headers: { 'x-pi-id': piId },
-                          body: blob,
-                        });
-                        if (!res.ok) setEmailError(true);
+                        // Send email with PNG + PDF attachments — retry twice on transient
+                        // failures (mobile network drops, serverless cold starts). Safe to
+                        // retry: the server dedups by payment ID so no double emails.
+                        let sent = false;
+                        for (let attempt = 0; attempt < 3 && !sent; attempt++) {
+                          if (attempt > 0) await new Promise(r => setTimeout(r, attempt * 3000));
+                          try {
+                            const res = await fetch('/api/email-attachment', {
+                              method: 'POST',
+                              headers: { 'x-pi-id': piId },
+                              body: blob,
+                            });
+                            sent = res.ok;
+                          } catch { /* network error — retry */ }
+                        }
+                        if (!sent) setEmailError(true);
                       } else {
                         setEmailError(true);
                       }
