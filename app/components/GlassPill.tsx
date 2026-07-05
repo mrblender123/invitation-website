@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Emoji from './Emoji';
+import { slugify } from '@/app/lib/slugs';
 
 interface GlassPillProps {
   text: string;
@@ -347,7 +348,7 @@ export default function GlassPill({
           {subcategories!.map((sub, idx) => (
             <Link
               key={sub}
-              href={`${href}&subcategory=${encodeURIComponent(sub)}`}
+              href={`${href}/${slugify(sub)}`}
               style={{
                 padding: '10px 20px', borderRadius: 'var(--pill-radius)',
                 fontSize: 13, fontFamily: 'var(--font-montserrat)', fontWeight: 600, fontStyle: 'normal', letterSpacing: '0.04em',
