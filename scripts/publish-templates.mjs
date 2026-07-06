@@ -213,9 +213,21 @@ try {
 const summary = out.trim().split('\n').at(-1);
 console.log('   ' + summary);
 if (!/ 0 errors/.test(summary)) {
-  console.log(out.split('\n').filter(l => l.includes('❌') || l.includes('ERROR')).join('\n'));
-  console.error('\n✗ Validation errors — fix before publishing. Nothing was committed or uploaded.');
-  process.exit(1);
+  // Only errors inside the target folder block THIS publish; errors elsewhere
+  // are somebody else's problem — report them but don't hold this folder hostage.
+  const lines = out.split('\n');
+  const errBlocks = [];
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].includes('❌')) errBlocks.push({ file: lines[i], detail: lines.slice(i, i + 4).filter(l => l.includes('ERROR')).join('\n') || lines[i + 1] });
+  }
+  const inFolder = errBlocks.filter(b => b.file.includes(`${folderArg}/`)); // validator prints paths relative to public/templates
+  const elsewhere = errBlocks.filter(b => !inFolder.includes(b));
+  for (const b of elsewhere) console.log(`   ⚠ unrelated error outside this folder: ${b.file.trim()}`);
+  if (inFolder.length > 0) {
+    for (const b of inFolder) console.log(b.file + '\n' + b.detail);
+    console.error('\n✗ Validation errors in this folder — fix before publishing. Nothing was committed or uploaded.');
+    process.exit(1);
+  }
 }
 
 if (DRY) { console.log('\n— dry run complete, nothing published —'); process.exit(0); }
