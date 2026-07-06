@@ -235,7 +235,9 @@ if (DRY) { console.log('\n— dry run complete, nothing published —'); process
 // ── 7. git ───────────────────────────────────────────────────────────────────
 step(6, 'Commit & push');
 const relFolder = `public/templates/${folderArg}`;
-run(`git add "${relFolder}"/*.svg 2>/dev/null || true`, { shell: '/bin/zsh' });
+// Add SVGs individually — glob "path with apostrophe"/*.svg silently fails in
+// both bash and zsh because the shell quoting boundary interferes with glob expansion.
+for (const f of svgs) run(`git add "${relFolder}/${f}"`);
 // force-add PNGs for stems that have an SVG (gitignore blocks them otherwise)
 for (const f of readdirSync(folderAbs)) {
   if (!/\.png$/i.test(f)) continue;
