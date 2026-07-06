@@ -19,12 +19,16 @@
 import { readFile, writeFile, readdir, stat } from 'fs/promises';
 import path from 'path';
 
-const args     = process.argv.slice(2);
+const args = process.argv.slice(2);
+// --ref <file>: force a specific reference template instead of auto-picking
+const refFlagIdx = args.indexOf('--ref');
+const forcedRefPath = refFlagIdx !== -1 ? args[refFlagIdx + 1] : null;
+if (refFlagIdx !== -1) args.splice(refFlagIdx, 2);
 const filePath = args.find(a => !a.startsWith('--'));
 const isDry    = args.includes('--dry');
 
 if (!filePath) {
-  console.error('Usage: node scripts/match-template.mjs <file.svg> [--dry]');
+  console.error('Usage: node scripts/match-template.mjs <file.svg> [--dry] [--ref <reference.svg>]');
   process.exit(1);
 }
 
@@ -269,7 +273,15 @@ console.log(`\nmatching: ${filePath}`);
 const newSvg  = await readFile(absPath, 'utf-8');
 const newTexts = extractTexts(newSvg);
 
-const ref = await findReference(folder, absPath, detectScript(newSvg));
+let ref;
+if (forcedRefPath) {
+  const refAbs = path.resolve(forcedRefPath);
+  const refContent = await readFile(refAbs, 'utf-8');
+  ref = { path: refAbs, content: refContent, texts: extractTexts(refContent) };
+  console.log(`  (using forced reference: ${path.basename(refAbs)})`);
+} else {
+  ref = await findReference(folder, absPath, detectScript(newSvg));
+}
 if (!ref) {
   console.error('\n✗ No processed reference template found in this folder.');
   console.error('  Process one template manually first, then run this script for the rest.');

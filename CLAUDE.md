@@ -17,6 +17,16 @@ When the user says "add this template" or provides new PNG/SVG files, follow thi
 
 ### 2. Script-Based Processing Workflow
 
+**Preferred: one command does everything.** After dropping/replacing any files in a template folder:
+
+```bash
+node scripts/publish-templates.mjs "Category[/Sub]"        # add --dry to preview
+```
+
+It normalizes filenames, backs up raw exports to `_originals/`, runs clean-svg + match-template (auto `--side` when duplicate translate positions are detected; replaced templates are matched against their own previous git version), wraps static texts, verifies each file immediately (auto-restores the backup if matching produced duplicate ids or malformed XML), validates strictly (including real XML parsing via xmllint), commits + pushes, converts backgrounds and thumbs to WebP, and syncs the folder to R2. Files it flags with ✗ need manual review — usually a design deviation like a split/renamed line; fix the ids by hand, then re-run.
+
+The individual steps below remain available for manual/edge-case use.
+
 **Always use the scripts — never manually edit SVG attributes that the scripts handle.**
 
 #### Step 1 — Run `clean-svg.mjs` first (mandatory)

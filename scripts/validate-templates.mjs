@@ -5,8 +5,25 @@
  */
 
 import { readdir, readFile } from 'fs/promises';
+import { execFileSync } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+// xmllint is the same class of strict parser browsers use — regex checks below
+// can miss malformed XML that renders as a blank error page for customers.
+let hasXmllint = true;
+try { execFileSync('xmllint', ['--version'], { stdio: 'ignore' }); } catch { hasXmllint = false; }
+
+function xmlParseError(filePath) {
+  if (!hasXmllint) return null;
+  try {
+    execFileSync('xmllint', ['--noout', filePath], { stdio: ['ignore', 'ignore', 'pipe'] });
+    return null;
+  } catch (e) {
+    const msg = (e.stderr?.toString() ?? '').split('\n')[1]?.trim() || 'XML parse error';
+    return msg;
+  }
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEMPLATES_DIR = path.join(__dirname, '..', 'public', 'templates');
@@ -43,6 +60,12 @@ function parseFields(content) {
 function validateSvg(content, filePath) {
   const errors = [];
   const warnings = [];
+
+  // 0. Must be well-formed XML — browsers refuse to render anything after a parse error
+  const xmlErr = xmlParseError(filePath);
+  if (xmlErr) {
+    errors.push(`Malformed XML (browser will fail to render): ${xmlErr}`);
+  }
 
   // 1. Must have a viewBox
   if (!/<svg[^>]+viewBox/.test(content)) {

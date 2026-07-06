@@ -58,3 +58,7 @@ next-env.d.ts
 
 # Scratch preview renders from add-template.mjs's pipeline
 .scratch-previews/
+
+# template pipeline working dirs
+_originals/
+_staging/
