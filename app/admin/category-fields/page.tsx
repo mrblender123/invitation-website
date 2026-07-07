@@ -36,13 +36,14 @@ const FOLDERS = [
 export default function CategoryFieldsPage() {
   const [token, setToken] = useState<string | null>(null);
   const [folder, setFolder] = useState(FOLDERS[0]);
+  const [lang, setLang] = useState<'he' | 'en'>('he');
+  const [hasEnglish, setHasEnglish] = useState(false);
   const [fields, setFields] = useState<FieldRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
 
-  // drag state
   const dragIdx = useRef<number | null>(null);
   const [dragOver, setDragOver] = useState<number | null>(null);
 
@@ -52,16 +53,18 @@ export default function CategoryFieldsPage() {
     });
   }, []);
 
-  const loadFolder = useCallback(async (f: string, tok: string) => {
+  const loadFolder = useCallback(async (f: string, l: 'he' | 'en', tok: string) => {
     setLoading(true);
     setError('');
     setSaved(false);
     try {
-      const res = await fetch(`/api/admin/category-fields?folder=${encodeURIComponent(f)}`, {
-        headers: { Authorization: `Bearer ${tok}` },
-      });
+      const res = await fetch(
+        `/api/admin/category-fields?folder=${encodeURIComponent(f)}&language=${l}`,
+        { headers: { Authorization: `Bearer ${tok}` } },
+      );
       if (!res.ok) throw new Error(await res.text());
       const data = await res.json();
+      setHasEnglish(data.hasEnglish ?? false);
       setFields(data.fields ?? []);
     } catch (e) {
       setError(String(e));
@@ -71,8 +74,14 @@ export default function CategoryFieldsPage() {
   }, []);
 
   useEffect(() => {
-    if (token) loadFolder(folder, token);
-  }, [folder, token, loadFolder]);
+    if (token) loadFolder(folder, lang, token);
+  }, [folder, lang, token, loadFolder]);
+
+  // When folder changes, reset to Hebrew tab
+  const handleFolderChange = (f: string) => {
+    setFolder(f);
+    setLang('he');
+  };
 
   const toggleRequired = (idx: number) => {
     setFields(prev => prev.map((f, i) => i === idx ? { ...f, required: !f.required } : f));
@@ -89,6 +98,7 @@ export default function CategoryFieldsPage() {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({
           folder,
+          language: lang,
           fields: fields.map((f, i) => ({ id: f.id, required: f.required, order: i })),
         }),
       });
@@ -101,7 +111,6 @@ export default function CategoryFieldsPage() {
     }
   };
 
-  // ── drag-and-drop (mouse) ─────────────────────────────────────────────────
   const onDragStart = (e: React.DragEvent, idx: number) => {
     dragIdx.current = idx;
     e.dataTransfer.effectAllowed = 'move';
@@ -135,15 +144,41 @@ export default function CategoryFieldsPage() {
         </div>
 
         {/* Folder selector */}
-        <div style={{ marginBottom: 24 }}>
+        <div style={{ marginBottom: 20 }}>
           <label style={{ fontSize: 13, fontWeight: 600, display: 'block', marginBottom: 6 }}>Category / Folder</label>
           <select
             value={folder}
-            onChange={e => setFolder(e.target.value)}
+            onChange={e => handleFolderChange(e.target.value)}
             style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #ddd', fontSize: 14, background: '#fff' }}
           >
             {FOLDERS.map(f => <option key={f} value={f}>{f}</option>)}
           </select>
+        </div>
+
+        {/* Language tabs — only show English tab if the folder has E-prefix templates */}
+        <div style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: '2px solid #e0ddd5' }}>
+          {(['he', 'en'] as const)
+            .filter(l => l === 'he' || hasEnglish)
+            .map(l => (
+              <button
+                key={l}
+                onClick={() => setLang(l)}
+                style={{
+                  padding: '8px 20px',
+                  border: 'none',
+                  borderBottom: `2px solid ${lang === l ? '#1a1a1a' : 'transparent'}`,
+                  marginBottom: -2,
+                  background: 'transparent',
+                  fontSize: 13,
+                  fontWeight: lang === l ? 700 : 500,
+                  color: lang === l ? '#1a1a1a' : '#999',
+                  cursor: 'pointer',
+                  transition: 'color 0.15s',
+                }}
+              >
+                {l === 'he' ? 'Hebrew' : 'English'}
+              </button>
+            ))}
         </div>
 
         {loading && <div style={{ color: '#888', fontSize: 14 }}>Loading fields…</div>}
@@ -152,7 +187,7 @@ export default function CategoryFieldsPage() {
         {!loading && fields.length > 0 && (
           <>
             <div style={{ fontSize: 12, color: '#999', marginBottom: 12 }}>
-              Drag to reorder · Toggle Required / Optional · Changes apply to all templates in this folder
+              Drag to reorder · Toggle Required / Optional · Applies to {lang === 'en' ? 'English (E-prefix)' : 'Hebrew'} templates in this folder
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 20 }}>
@@ -173,15 +208,13 @@ export default function CategoryFieldsPage() {
                     opacity: dragIdx.current === idx ? 0.4 : 1,
                   }}
                 >
-                  {/* drag handle */}
                   <span style={{ cursor: 'grab', color: '#bbb', fontSize: 16, userSelect: 'none', lineHeight: 1 }}>⠿</span>
 
-                  {/* field info */}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
                       <span style={{ fontWeight: 600, fontSize: 14 }}>{field.label}</span>
                       {field.placeholder && (
-                        <span style={{ fontSize: 12, color: '#888', direction: 'rtl', fontFamily: 'serif' }}>
+                        <span style={{ fontSize: 12, color: '#888', direction: lang === 'he' ? 'rtl' : 'ltr', fontFamily: 'serif' }}>
                           {field.placeholder}
                         </span>
                       )}
@@ -191,7 +224,6 @@ export default function CategoryFieldsPage() {
                     </div>
                   </div>
 
-                  {/* req/opt toggle */}
                   <button
                     onClick={() => toggleRequired(idx)}
                     style={{
@@ -226,7 +258,7 @@ export default function CategoryFieldsPage() {
         )}
 
         {!loading && fields.length === 0 && !error && (
-          <div style={{ color: '#999', fontSize: 14 }}>No fields found in this folder.</div>
+          <div style={{ color: '#999', fontSize: 14 }}>No {lang === 'en' ? 'English' : 'Hebrew'} templates found in this folder.</div>
         )}
       </div>
     </div>

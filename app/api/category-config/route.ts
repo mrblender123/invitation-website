@@ -5,12 +5,14 @@ import { createServiceClient } from '@/lib/supabase';
 // Used by the customer-facing template editor to apply category config.
 export async function GET(req: NextRequest) {
   const folder = req.nextUrl.searchParams.get('folder');
+  const language = req.nextUrl.searchParams.get('language') ?? 'he';
   if (!folder) return NextResponse.json([]);
 
   const { data, error } = await createServiceClient()
     .from('category_field_config')
     .select('field_id, required, sort_order')
     .eq('folder', folder)
+    .eq('language', language)
     .order('sort_order');
 
   if (error) return NextResponse.json([]);

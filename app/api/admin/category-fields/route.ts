@@ -39,25 +39,33 @@ function extractFields(svg: string): Array<{ id: string; placeholder: string }> 
   return results;
 }
 
+const isEnglishFile = (filename: string) => /^e/i.test(filename);
+
 // GET — returns union of all field IDs from SVGs in the folder, merged with Supabase config.
-// Used by the admin category-fields editor.
+// ?language=he|en filters to Hebrew-only or English-only SVGs.
+// Also returns hasEnglish so the UI knows whether to show the English tab.
 export async function GET(req: NextRequest) {
   if (!await verifyAdmin(req)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const folder = req.nextUrl.searchParams.get('folder');
+  const language = (req.nextUrl.searchParams.get('language') ?? 'he') as 'he' | 'en';
   if (!folder) return NextResponse.json({ error: 'folder required' }, { status: 400 });
 
   const folderAbs = path.join(TEMPLATES_DIR, folder);
 
-  // Collect all unique named field IDs across all SVGs in the folder
   let files: string[] = [];
   try { files = await readdir(folderAbs); } catch {
     return NextResponse.json({ error: 'Folder not found' }, { status: 404 });
   }
-  const svgFiles = files.filter(f => /\.svg$/i.test(f) && !/-thumb\.svg$/i.test(f));
+
+  const allSvgs = files.filter(f => /\.svg$/i.test(f) && !/-thumb\.svg$/i.test(f));
+  const hasEnglish = allSvgs.some(isEnglishFile);
+
+  // Filter to the requested language
+  const svgFiles = allSvgs.filter(f => language === 'en' ? isEnglishFile(f) : !isEnglishFile(f));
 
   const allIds = new Set<string>();
-  const placeholderMap: Record<string, string> = {}; // first seen placeholder per field id
+  const placeholderMap: Record<string, string> = {};
   const perTemplate: Record<string, string[]> = {};
   for (const f of svgFiles) {
     try {
@@ -71,25 +79,23 @@ export async function GET(req: NextRequest) {
     } catch { /* skip unreadable files */ }
   }
 
-  // Count how many templates have each field
   const templateCount = svgFiles.length;
   const fieldCounts: Record<string, number> = {};
   for (const ids of Object.values(perTemplate)) {
     for (const id of ids) fieldCounts[id] = (fieldCounts[id] ?? 0) + 1;
   }
 
-  // Load saved config from Supabase
   const { data: configRows } = await createServiceClient()
     .from('category_field_config')
     .select('field_id, required, sort_order')
     .eq('folder', folder)
+    .eq('language', language)
     .order('sort_order');
 
   const configMap = new Map(
     (configRows ?? []).map(r => [r.field_id, { required: r.required, sort_order: r.sort_order }])
   );
 
-  // Merge: configured fields first (in order), then unconfigured fields at the end
   const configured = (configRows ?? []).map(r => r.field_id);
   const unconfigured = [...allIds].filter(id => !configMap.has(id));
   const orderedIds = [...configured.filter(id => allIds.has(id)), ...unconfigured];
@@ -104,29 +110,31 @@ export async function GET(req: NextRequest) {
     templateCount,
   }));
 
-  return NextResponse.json({ folder, fields });
+  return NextResponse.json({ folder, language, hasEnglish, fields });
 }
 
-// POST — save category field config to Supabase
+// POST — save category field config for a specific folder + language
 export async function POST(req: NextRequest) {
   if (!await verifyAdmin(req)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
-  const { folder, fields } = await req.json() as {
+  const { folder, language, fields } = await req.json() as {
     folder: string;
+    language: 'he' | 'en';
     fields: Array<{ id: string; required: boolean; order: number }>;
   };
 
-  if (!folder || !Array.isArray(fields)) {
+  if (!folder || !language || !Array.isArray(fields)) {
     return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
 
   const db = createServiceClient();
 
-  // Delete old config for this folder, then insert new
-  await db.from('category_field_config').delete().eq('folder', folder);
+  // Delete old config for this folder+language, then insert new
+  await db.from('category_field_config').delete().eq('folder', folder).eq('language', language);
 
   const rows = fields.map((f, i) => ({
     folder,
+    language,
     field_id: f.id,
     required: f.required,
     sort_order: f.order ?? i,

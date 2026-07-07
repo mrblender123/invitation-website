@@ -366,7 +366,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
   // Config overrides field order + required/optional from the SVG.
   useEffect(() => {
     if (!selected?.folder) { setCategoryConfig([]); return; }
-    fetch(`/api/category-config?folder=${encodeURIComponent(selected.folder)}`)
+    fetch(`/api/category-config?folder=${encodeURIComponent(selected.folder)}&language=${selected.language ?? 'he'}`)
       .then(r => r.json())
       .then(data => setCategoryConfig(Array.isArray(data) ? data : []))
       .catch(() => setCategoryConfig([]));
