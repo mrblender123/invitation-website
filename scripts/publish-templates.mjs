@@ -175,6 +175,11 @@ step(3, 'Wrap remaining bare text');
 if (!DRY) run(`node scripts/wrap-static-texts.mjs "public/templates/${folderArg}"`);
 else console.log('   (skipped — dry run)');
 
+// ── 4b. normalize required/optional marking ───────────────────────────────────
+step('4b', 'Normalize required/optional field marking');
+if (!DRY) run(`node scripts/normalize-fields.mjs "${folderArg}"`);
+else console.log('   (skipped — dry run)');
+
 // ── 5. field-set deviation check ─────────────────────────────────────────────
 step(4, 'Field-set consistency check');
 const fieldSet = (file) => {

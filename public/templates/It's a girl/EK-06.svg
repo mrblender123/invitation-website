@@ -8,7 +8,7 @@
   <g id="greeting">
     <text transform="translate(180 402.9)" fill="#fff" font-family="Lexend" font-weight="400" font-size="15.4" text-anchor="middle"><tspan x="0" y="0">looking forward to see you</tspan></text>
   </g>
-  <g id="time*">
+  <g id="time">
     <text transform="translate(180 268.7)" fill="#c59393" font-family="Lexend" font-weight="400" font-size="10.6" text-anchor="middle"><tspan x="0" y="0">Davening at 9:30</tspan></text>
   </g>
   <g id="street*">

@@ -24,7 +24,7 @@
     <g id="street*">
   <text transform="translate(180 292.2)" fill="#73716f" font-family="Montserrat" font-weight="400" font-size="11.1" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
-    <g id="time*">
+    <g id="time">
   <text transform="translate(180 305.3)" fill="#73716f" font-family="Montserrat" font-weight="400" font-size="11.1" text-anchor="middle"><tspan x="0" y="0">Davening at 9:30</tspan></text>
   </g>
     <g id="greeting">

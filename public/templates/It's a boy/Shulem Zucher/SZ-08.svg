@@ -32,7 +32,7 @@
   <g id="street*">
     <text transform="translate(180 350.4) scale(1.1 1)" text-anchor="middle" fill="#fff" font-family="Heebo" font-size="11.5"><tspan x="0" y="0">1693 49th Street</tspan></text>
   </g>
-  <g id="greeting*">
+  <g id="greeting">
     <text transform="translate(180 380.5) scale(1.1 1)" text-anchor="middle" fill="#fff" font-family="Heebo" font-size="14"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
   <g id="host_name*">

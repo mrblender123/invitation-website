@@ -26,7 +26,7 @@
   <g id="street*">
     <text transform="translate(180 313.1) scale(.9 1)" text-anchor="middle" fill="#bca18f" font-family="Secular One" font-size="6.5"><tspan x="0" y="0">1693 49th Street</tspan></text>
   </g>
-  <g id="greeting*">
+  <g id="greeting">
     <text transform="translate(180 327) scale(.9 1)" text-anchor="middle" fill="#bca18f" font-family="Secular One" font-size="8.1"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
   <g id="host_name*">
