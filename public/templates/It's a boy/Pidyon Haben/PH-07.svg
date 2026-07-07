@@ -1,12 +1,12 @@
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
   <g id="invite_line_1">
-    <text transform="translate(180 174.9)" fill="#414042" font-family="Heebo" font-size="8" font-weight="500" text-anchor="middle"><tspan x="0" y="0">ברוב שבח והודאה להשי״ת הננו מתכבדים להזמין את</tspan></text>
+    <text transform="translate(180 176.9)" fill="#414042" font-family="Heebo" font-size="7.5" font-weight="500" text-anchor="middle"><tspan x="0" y="0">ברוב שבח והודאה להשי״ת הננו מתכבדים להזמין את</tspan></text>
   </g>
   <g id="invite_line_2">
-    <text transform="translate(180 188.3)" fill="#414042" font-family="Heebo" font-size="12" font-weight="500" text-anchor="middle"><tspan x="0" y="0">ידידינו וקרובינו מכובדינו שיחי׳</tspan></text>
+    <text transform="translate(180 188.3)" fill="#414042" font-family="Heebo" font-size="7.5" font-weight="500" text-anchor="middle"><tspan x="0" y="0">ידידינו וקרובינו מכובדינו שיחי׳</tspan></text>
   </g>
   <g id="invite_line_3">
-    <text transform="translate(180 199.2)" fill="#414042" font-family="Heebo" font-size="8" font-weight="500" text-anchor="middle"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
+    <text transform="translate(180 199.2)" fill="#414042" font-family="Heebo" font-size="7.5" font-weight="500" text-anchor="middle"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
   </g>
   <g id="son_label">
     <text transform="translate(180 283.6)" fill="#414042" font-family="Heebo" font-size="9.8" font-weight="500" text-anchor="middle"><tspan x="0" y="0">לבננו בכורנו היקר</tspan></text>
@@ -33,7 +33,7 @@
     <text transform="translate(180 385.4)" fill="#414042" font-family="Heebo" font-size="6.9" font-weight="500" text-anchor="middle"><tspan x="0" y="0">הפדיון בשעה 7:00</tspan></text>
   </g>
   <g id="host_label">
-    <text transform="translate(180 457.5)" fill="#414042" font-family="Heebo" font-size="6.3" font-weight="500" text-anchor="middle"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
+    <text transform="translate(180 456.5)" fill="#414042" font-family="Heebo" font-size="6.3" font-weight="500" text-anchor="middle"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
   <g id="host_name*">
     <text transform="translate(180 468.9) scale(.8 1)" fill="#939598" font-family="Heebo" font-size="14.4" font-weight="700" text-anchor="middle"><tspan x="0" y="0">ברוך זאב ראטה</tspan></text>
