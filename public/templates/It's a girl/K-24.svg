@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
-  <g id="father_name*" data-name="* חתן בערל גרינפעלד הי״וו ">
+  <g id="father_name_1*" data-name="* חתן בערל גרינפעלד הי״וו ">
     <text text-anchor="middle" transform="translate(180 400.4)" fill="#a6aaac" font-family="Heebo" font-size="10.3"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
   </g>
   <g id="grandfather*" data-name="* ב״ר בנימין משה הי״וו ">
@@ -14,13 +14,13 @@
   <g id="davening_time*" data-name="1247 38th St *">
     <text text-anchor="middle" transform="translate(180 328.9)" fill="#414042" font-family="Heebo" font-size="10.3"><tspan x="0" y="0">שחרית</tspan></text>
   </g>
-  <g id="address*" data-name="1247 38th St *">
+  <g id="street*" data-name="1247 38th St *">
     <text text-anchor="middle" transform="translate(180 315.6)" fill="#414042" font-family="Heebo" font-size="10.3"><tspan x="0" y="0">1247 38th St</tspan></text>
   </g>
   <g id="line_5">
     <text text-anchor="middle" transform="translate(180 249.3)" fill="#a6aaac" font-family="Heebo" font-size="7"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
   </g>
-  <g id="parsha*" data-name=" * בליל ג׳ פרשת שמות">
+  <g id="parasha*" data-name=" * בליל ג׳ פרשת שמות">
     <text text-anchor="middle" transform="translate(180 280.6)" fill="#414042" font-family="Heebo" font-size="15.3"><tspan x="0" y="0">פרשת ויגש</tspan></text>
   </g>
   <g id="line_4">
@@ -38,7 +38,7 @@
     <g id="location*" data-name="* בביהמ״ד קהל חסידי בעלזא">
     <text text-anchor="middle" transform="translate(180 299.3)" fill="#a6aaac" font-family="Heebo" font-size="10.3"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
   </g>
-    <g id="line_1">
+    <g id="line_6">
     <text text-anchor="middle" transform="translate(180 125)" fill="#a6aaac" font-family="Heebo" font-size="7"><tspan x="0" y="0">ברוב שבח והודאה להשי״ת</tspan></text>
   </g>
 <g id="shachrit_time*"><text font-family="Heebo" font-size="10.3" font-weight="500" fill="#414042" text-anchor="middle" transform="translate(180 338.5)"><tspan x="0">בשעה 9:00</tspan></text></g></svg>
