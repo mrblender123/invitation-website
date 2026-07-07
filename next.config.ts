@@ -12,6 +12,17 @@ const CATEGORY_SLUGS: Record<string, string> = {
 };
 
 const nextConfig: NextConfig = {
+  // field-overview reads SVGs from public/templates via fs. Without this,
+  // Vercel bundles every PNG/WebP in that folder too (~500 MB).
+  outputFileTracingExcludes: {
+    '/api/admin/field-overview': [
+      './public/templates/**/*.png',
+      './public/templates/**/*.webp',
+      './public/templates/**/*.ai',
+      './public/templates/**/*.jpg',
+    ],
+  },
+
   async redirects() {
     return Object.entries(CATEGORY_SLUGS).map(([cat, slug]) => ({
       source: '/templates',
