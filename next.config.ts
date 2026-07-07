@@ -12,39 +12,19 @@ const CATEGORY_SLUGS: Record<string, string> = {
 };
 
 const nextConfig: NextConfig = {
-  // Several routes read public/templates via fs — Vercel traces every file in
-  // that folder into each function bundle. Excluding non-SVG assets keeps the
-  // bundle under the 250 MB limit (PNGs/WebPs alone are ~500 MB).
+  // PNGs/WebPs in public/templates are served from R2, never from function
+  // bundles. Any route that reads public/templates via fs causes Vercel to
+  // trace the whole folder (~500 MB) into that function. Exclude binary assets
+  // globally so no function hits the 250 MB limit.
   outputFileTracingExcludes: {
-    '/api/templates': [
+    '**': [
       './public/templates/**/*.png',
       './public/templates/**/*.webp',
       './public/templates/**/*.ai',
       './public/templates/**/*.jpg',
-    ],
-    '/api/admin/field-overview': [
-      './public/templates/**/*.png',
-      './public/templates/**/*.webp',
-      './public/templates/**/*.ai',
-      './public/templates/**/*.jpg',
-    ],
-    '/api/admin/revalidate-templates': [
-      './public/templates/**/*.png',
-      './public/templates/**/*.webp',
-      './public/templates/**/*.ai',
-      './public/templates/**/*.jpg',
-    ],
-    '/api/admin/sync-r2': [
-      './public/templates/**/*.png',
-      './public/templates/**/*.webp',
-      './public/templates/**/*.ai',
-      './public/templates/**/*.jpg',
-    ],
-    '/api/admin/update-svg': [
-      './public/templates/**/*.png',
-      './public/templates/**/*.webp',
-      './public/templates/**/*.ai',
-      './public/templates/**/*.jpg',
+      './public/**/*.png',
+      './public/**/*.webp',
+      './public/**/*.jpg',
     ],
   },
 
