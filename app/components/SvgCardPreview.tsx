@@ -57,10 +57,9 @@ function injectFieldValues(
 
     tspan.textContent = value; // '' clears the text
 
-    // Hide secondary text elements so they don't overlay the edited primary text
-    for (let i = 1; i < textEls.length; i++) {
-      (textEls[i] as Element).setAttribute('display', 'none');
-    }
+    // Do NOT hide secondary text elements — they are often static companions to
+    // the editable field (e.g. "9:30" paired with "שחרית"). Hiding them caused
+    // those values to disappear when the user edited the primary tspan.
 
     // Skip multi-tspan elements — centering logic only handles single-tspan fields
     const tspanCount = textEl.querySelectorAll('tspan').length;

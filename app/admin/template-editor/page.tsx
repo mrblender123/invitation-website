@@ -975,6 +975,7 @@ export default function TemplateEditorPage() {
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: isMobile ? '0 10px' : '0 24px', height: isMobile ? 48 : 56, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 12, minWidth: 0 }}>
             <button onClick={() => router.push('/admin')} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontSize: isMobile ? 12 : 13, padding: 0, flexShrink: 0 }}>← Admin</button>
+            <button onClick={() => router.push('/admin/category-fields')} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', fontSize: isMobile ? 12 : 13, padding: 0, flexShrink: 0 }}>Category Fields</button>
             {!isMobile && <span style={{ color: 'rgba(255,255,255,0.15)' }}>/</span>}
             {/* Tab buttons */}
             {(['editor', 'fields'] as const).map(tab => (

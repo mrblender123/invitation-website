@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import { categoryFromSlug, slugify, categoryPath } from '@/app/lib/slugs';
@@ -321,6 +321,7 @@ function TemplatesContent() {
   const [hoveredField, setHoveredField] = useState<string | null>(null);
 const [windowWidth, setWindowWidth] = useState(1200);
   const [showAllFields, setShowAllFields] = useState(false);
+  const [categoryConfig, setCategoryConfig] = useState<Array<{ field_id: string; required: boolean; sort_order: number }>>([]);
   const [showKeyboard, setShowKeyboard] = useState(false);
   const [keyboardRect, setKeyboardRect] = useState<DOMRect | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -360,6 +361,33 @@ const [windowWidth, setWindowWidth] = useState(1200);
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
   }, []);
+
+  // Fetch category field config whenever the selected template's folder changes.
+  // Config overrides field order + required/optional from the SVG.
+  useEffect(() => {
+    if (!selected?.folder) { setCategoryConfig([]); return; }
+    fetch(`/api/category-config?folder=${encodeURIComponent(selected.folder)}`)
+      .then(r => r.json())
+      .then(data => setCategoryConfig(Array.isArray(data) ? data : []))
+      .catch(() => setCategoryConfig([]));
+  }, [selected?.folder]);
+
+  // Apply category config (order + req/opt) on top of the raw SVG fields.
+  const displayFields = useMemo(() => {
+    if (!selected?.fields) return undefined;
+    if (!categoryConfig.length) return selected.fields;
+    const configMap = new Map(categoryConfig.map(c => [c.field_id, c]));
+    return selected.fields
+      .map(f => ({
+        ...f,
+        optional: configMap.has(f.id) ? !configMap.get(f.id)!.required : f.optional,
+      }))
+      .sort((a, b) => {
+        const aOrd = configMap.get(a.id)?.sort_order ?? 9999;
+        const bOrd = configMap.get(b.id)?.sort_order ?? 9999;
+        return aOrd - bOrd;
+      });
+  }, [selected?.fields, categoryConfig]);
 
   // Track where the first card in the grid starts so pills align with it.
   // gridEl is set via callback ref, so this re-runs the moment the grid div
@@ -1272,7 +1300,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 {/* Text inputs — dynamic for SVG templates, legacy for InvitationCard */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
                   <div>
-                    {selected.fields?.some(f => f.optional) && (
+                    {displayFields?.some(f => f.optional) && (
                       <GlassPill
                         text={showAllFields ? '− Hide extra fields' : '+ Show all fields'}
                         onClick={() => setShowAllFields(v => !v)}
@@ -1320,8 +1348,8 @@ const [windowWidth, setWindowWidth] = useState(1200);
                   scrollbarWidth: 'thin',
                   scrollbarColor: 'rgba(0,0,0,0.12) transparent',
                 }}>
-                  {selected.fields ? (
-                    selected.fields.filter(f => !f.optional || showAllFields).map(field => {
+                  {displayFields ? (
+                    displayFields.filter(f => !f.optional || showAllFields).map(field => {
                       const isActive = activeField?.id === field.id;
                       return (
                       <div key={field.id} style={{ position: 'relative' }}>

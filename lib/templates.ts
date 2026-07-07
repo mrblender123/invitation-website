@@ -36,6 +36,7 @@ export type Template = {
   name: string;
   category: string;
   subcategory?: string;
+  folder: string; // relative path used to look up category config, e.g. "It's a boy/Bris"
   thumbnailSrc: string;  // shown in listings (may be a separate -thumb.png)
   backgroundSrc: string; // full-resolution PNG used as the editor background
   textSvg?: string;    // path to SVG text overlay in /public/templates/{category}/
