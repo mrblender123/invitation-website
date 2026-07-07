@@ -16,8 +16,8 @@ async function verifyAdmin(req: NextRequest): Promise<boolean> {
 
 const SKIP_IDS = new Set(['static_text', 'layer_1', 'layer 1', 'background', 'layer']);
 
-function extractFieldIds(svg: string): string[] {
-  const ids: string[] = [];
+function extractFields(svg: string): Array<{ id: string; placeholder: string }> {
+  const results: Array<{ id: string; placeholder: string }> = [];
   const seen = new Set<string>();
   const re = /<g\b[^>]*\bid="([^"]+)"/g;
   let m: RegExpExecArray | null;
@@ -27,12 +27,16 @@ function extractFieldIds(svg: string): string[] {
     if (!id || !/^[A-Za-z]/.test(id)) continue;
     if (SKIP_IDS.has(id.toLowerCase())) continue;
     if (/^layer/i.test(id)) continue;
-    if (/^line_\d/.test(id)) continue; // static text lines, not real fields
+    if (/^line_\d/.test(id)) continue;
     if (seen.has(id)) continue;
     seen.add(id);
-    ids.push(id);
+    // grab the first tspan text after this group tag as placeholder
+    const after = svg.slice(m.index + m[0].length);
+    const tspan = after.match(/<tspan[^>]*>([^<]+)</);
+    const placeholder = tspan?.[1]?.trim() ?? '';
+    results.push({ id, placeholder });
   }
-  return ids;
+  return results;
 }
 
 // GET — returns union of all field IDs from SVGs in the folder, merged with Supabase config.
@@ -53,13 +57,17 @@ export async function GET(req: NextRequest) {
   const svgFiles = files.filter(f => /\.svg$/i.test(f) && !/-thumb\.svg$/i.test(f));
 
   const allIds = new Set<string>();
+  const placeholderMap: Record<string, string> = {}; // first seen placeholder per field id
   const perTemplate: Record<string, string[]> = {};
   for (const f of svgFiles) {
     try {
       const content = await readFile(path.join(folderAbs, f), 'utf-8');
-      const ids = extractFieldIds(content);
-      perTemplate[f] = ids;
-      ids.forEach(id => allIds.add(id));
+      const fields = extractFields(content);
+      perTemplate[f] = fields.map(fld => fld.id);
+      for (const { id, placeholder } of fields) {
+        allIds.add(id);
+        if (!placeholderMap[id] && placeholder) placeholderMap[id] = placeholder;
+      }
     } catch { /* skip unreadable files */ }
   }
 
@@ -89,6 +97,7 @@ export async function GET(req: NextRequest) {
   const fields = orderedIds.map((id, i) => ({
     id,
     label: id.replace(/[-_]/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+    placeholder: placeholderMap[id] ?? '',
     required: configMap.get(id)?.required ?? true,
     sort_order: configMap.get(id)?.sort_order ?? (configured.length + i),
     inTemplates: fieldCounts[id] ?? 0,

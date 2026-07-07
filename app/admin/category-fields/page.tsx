@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase';
 type FieldRow = {
   id: string;
   label: string;
+  placeholder: string;
   required: boolean;
   inTemplates: number;
   templateCount: number;
@@ -177,9 +178,16 @@ export default function CategoryFieldsPage() {
 
                   {/* field info */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontWeight: 600, fontSize: 14 }}>{field.label}</div>
-                    <div style={{ fontSize: 11, color: '#aaa' }}>
-                      id: {field.id} · {field.inTemplates}/{field.templateCount} templates
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                      <span style={{ fontWeight: 600, fontSize: 14 }}>{field.label}</span>
+                      {field.placeholder && (
+                        <span style={{ fontSize: 12, color: '#888', direction: 'rtl', fontFamily: 'serif' }}>
+                          {field.placeholder}
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ fontSize: 11, color: '#bbb' }}>
+                      {field.id} · {field.inTemplates}/{field.templateCount} templates
                     </div>
                   </div>
 
