@@ -20,7 +20,7 @@
   <g id="day*">
     <text transform="translate(180 261)" text-anchor="middle" fill="#b5aa9b" font-family="Heebo" font-size="17.5" font-weight="800"><tspan x="0" y="0">ביום א׳ פרשת שמות</tspan></text>
   </g>
-  <g id="hall*">
+  <g id="location*">
     <text transform="translate(180 279.4)" text-anchor="middle" fill="#bdb6ae" font-family="Heebo" font-size="13.3" font-weight="600"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
   </g>
   <g id="address*">
@@ -37,10 +37,10 @@
   </g><g id="host_name_copy*">
     <text transform="translate(180 385.9)" text-anchor="middle" fill="#b5aa9b" font-family="Heebo" font-size="20.3" font-weight="800"><tspan x="0" y="0">ראטה </tspan></text>
   </g>
-  <g id="father_line_1*">
+  <g id="father_name_1*">
     <text transform="translate(180 398.9)" text-anchor="middle" fill="#bdb6ae" font-family="Heebo" font-size="7.8" font-weight="600"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
   </g>
-  <g id="father_line_2*">
+  <g id="father_name_2*">
     <text transform="translate(180 407)" text-anchor="middle" fill="#bdb6ae" font-family="Heebo" font-size="7.8" font-weight="600"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
   </g>
 </svg>
