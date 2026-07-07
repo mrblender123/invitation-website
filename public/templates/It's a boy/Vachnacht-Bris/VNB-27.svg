@@ -1,51 +1,50 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
   <g>
     <g id="_1247_38th_St_" data-name="1247 38th St *">
       <g id="line_1">
-        <text transform="translate(61.5 336.3) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="8.8"><tspan x="0" y="0">1247 38th St</tspan></text>
+        <text transform="translate(80.6 336.3) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="8.8" text-anchor="middle"><tspan x="0" y="0">1247 38th St</tspan></text>
       </g>
     </g>
     <g id="_בביהמ_ד_קהל_חסידי_בעלזא" data-name="* בביהמ״ד קהל חסידי בעלזא">
       <g id="vachnacht_date*">
-        <text transform="translate(41.5 323.4) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="8.8"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
+        <text transform="translate(80.6 323.4) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="8.8" text-anchor="middle"><tspan x="0" y="0">בביהמ״ד קהל חסידי בעלזא</tspan></text>
       </g>
     </g>
     <g id="bris_location*">
-      <text transform="translate(59.4 312.7) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="8.8"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
+      <text transform="translate(80.6 312.7) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="500" font-size="8.8" text-anchor="middle"><tspan x="0" y="0">יתקיים למחרתו</tspan></text>
     </g>
   </g>
   <g>
     <g id="bris_address*">
-      <text id="_5015_15th_Ave_" data-name="5015 15th Ave *" transform="translate(168.3 323.6) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="10.8"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+      <text id="_5015_15th_Ave_" data-name="5015 15th Ave *" transform="translate(219.4 323.6) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="10.8" text-anchor="end"><tspan x="0" y="0">5015 15th Ave</tspan></text>
     </g>
     <g id="line_5">
-      <text id="_בבאולם_פרדס_נח" data-name="* בבאולם פרדס נח" transform="translate(169.7 310.9) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="10.8"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+      <text id="_בבאולם_פרדס_נח" data-name="* בבאולם פרדס נח" transform="translate(219.4 310.9) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="10.8" text-anchor="end"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
     </g>
   </g>
   <g>
     <g id="_בליל_ג_פרשת_שמות" data-name=" * בליל ג׳ פרשת שמות">
       <g id="vachnacht_location*">
-        <text transform="translate(253.2 323.4) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="10.8"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
+        <text transform="translate(310.3 323.4) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="10.8" text-anchor="end"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
       </g>
     </g>
     <g id="vachnacht_address*">
-      <text transform="translate(262.6 311.1) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="10.8"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
+      <text transform="translate(310.3 311.1) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-weight="400" font-size="10.8" text-anchor="end"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
     </g>
   </g>
   <g id="groom_father*">
-    <text transform="translate(197.6 153) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-size="5" font-weight="300"><tspan x="0" y="0">הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳</tspan></text>
+    <text transform="translate(234 153) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-size="5" font-weight="300" text-anchor="middle"><tspan x="0" y="0">הננו מזמינים בזה את ידידינו קרובינו ומכובדינו שיחי׳</tspan></text>
   </g>
   <g id="host_name*">
-    <text transform="translate(219.2 158.5) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-size="5" font-weight="300"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
+    <text transform="translate(234 158.5) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-size="5" font-weight="300" text-anchor="middle"><tspan x="0" y="0">לבוא להשתתף בשמחת</tspan></text>
   </g>
   <g id="groom_name*">
-    <text transform="translate(198.8 147.5) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-size="5" font-weight="300"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
+    <text transform="translate(234 147.5) scale(.7 1)" fill="#7799c9" font-family="Playpen Sans Hebrew" font-size="5" font-weight="300" text-anchor="middle"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
   </g>
   <g id="line_4">
-    <text id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה" transform="translate(65.6 196.2) scale(.7 1)" fill="#7799c9" font-family="Heebo" font-size="24" font-weight="800" opacity=".8"><tspan x="0" y="0">שמעון לוי</tspan></text>
+    <text id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה" transform="translate(101.1 196.2) scale(.7 1)" fill="#7799c9" font-family="Heebo" font-size="24" font-weight="800" opacity=".8" text-anchor="middle"><tspan x="0" y="0">שמעון לוי</tspan></text>
   </g>
   <g id="line_3">
-    <text id="_מרדכי_זאב_ראטה-2" data-name="* מרדכי זאב ראטה" transform="translate(56.4 223.3) scale(.7 1)" fill="#7799c9" font-family="Heebo" font-size="24" font-weight="800" opacity=".8"><tspan x="0" y="0">ברענאוויטש</tspan></text>
+    <text id="_מרדכי_זאב_ראטה-2" data-name="* מרדכי זאב ראטה" transform="translate(101.1 223.3) scale(.7 1)" fill="#7799c9" font-family="Heebo" font-size="24" font-weight="800" opacity=".8" text-anchor="middle"><tspan x="0" y="0">ברענאוויטש</tspan></text>
   </g>
 </svg>

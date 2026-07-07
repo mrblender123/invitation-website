@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
   <g id="groom_name*">
     <text transform="translate(180 158.6)" fill="#d3ac6b" font-family="Heebo" font-weight="600" font-size="6" text-anchor="middle"><tspan x="0" y="0">מתוך שבח והודאה להשי״ת על כל הטוב אשר גמלנו</tspan></text>
   </g>
@@ -17,11 +16,11 @@
   </g>
   <g id="_בליל_ג_פרשת_שמות" data-name=" * בליל ג׳ פרשת שמות">
     <g id="vachnacht_location*">
-      <text transform="translate(180 253.5)" fill="#d3ac6b" font-family="Heebo" font-weight="600" font-size="11" text-anchor="middle"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
+      <text transform="translate(180 252)" fill="#d3ac6b" font-family="Heebo" font-weight="600" font-size="11" text-anchor="middle"><tspan x="0" y="0">בליל ג׳ פרשת שמות</tspan></text>
     </g>
   </g>
   <g id="_בבאולם_פרדס_נח" data-name="* בבאולם פרדס נח">
-    <g id="line_5">
+    <g id="line_5*">
       <text transform="translate(180 263.8)" fill="#d3ac6b" font-family="Heebo" font-weight="600" font-size="8" text-anchor="middle"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
     </g>
   </g>
@@ -39,24 +38,22 @@
     </g>
   </g>
   <g id="_1247_38th_St_" data-name="1247 38th St *">
-    <g id="line_4">
+    <g id="line_4*">
       <text transform="translate(180 361)" fill="#d3ac6b" font-family="Heebo" font-weight="600" font-size="8" text-anchor="middle"><tspan x="0" y="0">1247 38th St</tspan></text>
     </g>
   </g>
   <g id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה">
-    <g id="line_3">
+    <g id="line_3*">
       <text transform="translate(180 457.8)" fill="#f3e9d1" font-family="Heebo" font-weight="800" font-size="25.3" text-anchor="middle"><tspan x="0" y="0">שמעון לוי ברענאוויטש</tspan></text>
     </g>
   </g>
-  <g id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו
-">
-    <g id="line_2">
+  <g id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו ">
+    <g id="line_2*">
       <text transform="translate(180 471.6)" fill="#f3e9d1" font-family="Heebo" font-weight="600" font-size="9.3" text-anchor="middle"><tspan x="0" y="0">ב״ר שמחה ברוך הי״וו</tspan></text>
     </g>
   </g>
-  <g id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו
-">
-    <g id="line_1">
+  <g id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו ">
+    <g id="line_1*">
       <text transform="translate(180 481.8)" fill="#f3e9d1" font-family="Heebo" font-weight="600" font-size="9.3" text-anchor="middle"><tspan x="0" y="0">חתן יהודה גרינבערגער הי״וו</tspan></text>
     </g>
   </g>
