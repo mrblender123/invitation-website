@@ -27,7 +27,7 @@ function extractFields(svg: string): Array<{ id: string; placeholder: string }> 
     if (!id || !/^[A-Za-z]/.test(id)) continue;
     if (SKIP_IDS.has(id.toLowerCase())) continue;
     if (/^layer/i.test(id)) continue;
-    if (/^line_\d/.test(id)) continue;
+    // line_N fields are kept — user needs to control their req/opt in the manager
     if (seen.has(id)) continue;
     seen.add(id);
     // grab the first tspan text after this group tag as placeholder
