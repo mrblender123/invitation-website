@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-    <g id="line_10">
+    <g id="line_6">
     <text transform="translate(127.4 98)" fill="#607a91" font-family="Lexend-Light, Lexend" font-size="7.8" font-variation-settings="&apos;wght&apos; 300" font-weight="300"><tspan x="0" y="0">WIth Gratitude To Hashem</tspan></text>
   </g>
-    <g id="line_9">
+    <g id="line_5">
     <text transform="translate(112.1 109.2)" fill="#607a91" font-family="Lexend-Light, Lexend" font-size="7.8" font-variation-settings="&apos;wght&apos; 300" font-weight="300"><tspan x="0" y="0">We Would Like To Invite You To The</tspan></text>
   </g>
-    <g id="line_8">
+    <g id="line_2">
     <text transform="translate(156.1 270.1)" fill="#607a91" font-family="Lexend-Regular, Lexend" font-size="9.7" font-variation-settings="&apos;wght&apos; 400"><tspan x="0" y="0">Of our son </tspan></text>
   </g>
-    <g id="line_7">
+    <g id="line_1">
     <text transform="translate(136.2 291.9)" fill="#607a91" font-family="Lexend-Light, Lexend" font-size="9.8" font-variation-settings="&apos;wght&apos; 300" font-weight="300"><tspan x="0" y="0">That will take place</tspan></text>
   </g>
   <g>
@@ -20,22 +20,22 @@
     <path d="M193.6,306.7c-.5,0-1-.2-1.5-.5s-.8-.7-1.1-1.2c-.3-.5-.4-1.1-.4-1.8s.1-1.3.4-1.8c.3-.5.6-.9,1.1-1.2s1-.4,1.6-.4.6,0,.9.1c.3,0,.5.2.7.4.2.2.4.4.5.6.1.2.2.5.3.7h-.3v-1.7h1.6v6.6h-1.6v-1.6h.4c0,.2-.2.4-.3.6-.2.2-.3.4-.6.6-.2.2-.5.3-.8.4-.3.1-.6.2-.9.2ZM194.1,305.3c.4,0,.7,0,1-.3.3-.2.5-.4.6-.7.2-.3.2-.7.2-1.1s0-.8-.2-1.1c-.2-.3-.4-.6-.6-.7-.3-.2-.6-.3-1-.3s-.7,0-.9.3c-.3.2-.5.4-.6.7-.2.3-.2.7-.2,1.1s0,.8.2,1.1c.2.3.4.6.6.7.3.2.6.3.9.3Z" fill="#607a91"/>
     <path d="M200,309.4l1.4-3.3v1s-3.3-7.3-3.3-7.3h1.8l1.8,4.3c0,.1.1.3.2.4,0,.2.1.4.2.5h-.3c0,0,.1-.2.2-.4,0-.2.1-.4.2-.6l1.6-4.3h1.8l-2.8,6.6-1.1,2.9h-1.6Z" fill="#607a91"/>
   </g>
-    <g id="line_6">
+    <g id="date*">
     <text transform="translate(143.6 319.8)" fill="#607a91" font-family="Lexend-Regular, Lexend" font-size="11.7" font-variation-settings="&apos;wght&apos; 400"><tspan x="0" y="0">December 21</tspan></text>
   </g>
-    <g id="line_5">
+    <g id="hall*">
     <text transform="translate(128.7 341.5)" fill="#607a91" font-family="Lexend-Medium, Lexend" font-size="12.6" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">At Pardes Noach</tspan></text>
   </g>
-    <g id="line_4">
+    <g id="address*">
     <text transform="translate(141.7 357.4)" fill="#607a91" font-family="Lexend-Regular, Lexend" font-size="11.7" font-variation-settings="&apos;wght&apos; 400"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
-    <g id="line_3">
+    <g id="closing">
     <text transform="translate(106.1 439.3)" fill="#fff" font-family="Lexend-Light, Lexend" font-size="11.8" font-variation-settings="&apos;wght&apos; 300" font-weight="300"><tspan x="0" y="0">looking forward to see you</tspan></text>
   </g>
-    <g id="line_2">
+    <g id="host_name*">
     <text transform="translate(89 458.2)" fill="#fff" font-family="Lexend-SemiBold, Lexend" font-size="16.8" font-variation-settings="&apos;wght&apos; 600" font-weight="600"><tspan x="0" y="0">Shmuel &amp; Raizy gross</tspan></text>
   </g>
-    <g id="line_1">
+    <g id="host_last_name*">
     <text transform="translate(140.3 475.7)" fill="#fff" font-family="Lexend-SemiBold, Lexend" font-size="16.8" font-variation-settings="&apos;wght&apos; 600" font-weight="600"><tspan x="0" y="0">Goldstien</tspan></text>
   </g>
 </svg>
