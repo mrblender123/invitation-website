@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 
 type FieldRow = {
@@ -44,13 +44,17 @@ export default function CategoryFieldsPage() {
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
 
-  const dragIdx = useRef<number | null>(null);
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dragOver, setDragOver] = useState<number | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setToken(data.session?.access_token ?? null);
     });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setToken(session?.access_token ?? null);
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
   const loadFolder = useCallback(async (f: string, l: 'he' | 'en', tok: string) => {
@@ -112,28 +116,30 @@ export default function CategoryFieldsPage() {
   };
 
   const onDragStart = (e: React.DragEvent, idx: number) => {
-    dragIdx.current = idx;
+    setDragIdx(idx);
     e.dataTransfer.effectAllowed = 'move';
   };
   const onDragOver = (e: React.DragEvent, idx: number) => {
     e.preventDefault();
     setDragOver(idx);
   };
-  const onDrop = (e: React.DragEvent, idx: number) => {
+  const onDrop = (e: React.DragEvent, toIdx: number) => {
     e.preventDefault();
-    const from = dragIdx.current;
-    if (from === null || from === idx) { setDragOver(null); return; }
-    setFields(prev => {
-      const next = [...prev];
-      const [moved] = next.splice(from, 1);
-      next.splice(idx, 0, moved);
-      return next;
+    setDragIdx(prev => {
+      const from = prev;
+      if (from === null || from === toIdx) { setDragOver(null); return null; }
+      setFields(f => {
+        const next = [...f];
+        const [moved] = next.splice(from, 1);
+        next.splice(toIdx, 0, moved);
+        return next;
+      });
+      setDragOver(null);
+      setSaved(false);
+      return null;
     });
-    dragIdx.current = null;
-    setDragOver(null);
-    setSaved(false);
   };
-  const onDragEnd = () => { dragIdx.current = null; setDragOver(null); };
+  const onDragEnd = () => { setDragIdx(null); setDragOver(null); };
 
   return (
     <div style={{ minHeight: '100vh', background: '#f7f6f2', padding: '32px 24px', fontFamily: 'system-ui, sans-serif' }}>
@@ -205,7 +211,7 @@ export default function CategoryFieldsPage() {
                     border: `1px solid ${dragOver === idx ? '#4a90e2' : '#e0ddd5'}`,
                     borderRadius: 8, padding: '10px 12px',
                     cursor: 'default', transition: 'background 0.1s, border-color 0.1s',
-                    opacity: dragIdx.current === idx ? 0.4 : 1,
+                    opacity: dragIdx === idx ? 0.4 : 1,
                   }}
                 >
                   <span style={{ cursor: 'grab', color: '#bbb', fontSize: 16, userSelect: 'none', lineHeight: 1 }}>⠿</span>

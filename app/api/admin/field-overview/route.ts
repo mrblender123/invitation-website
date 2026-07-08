@@ -81,10 +81,18 @@ export async function GET(req: NextRequest) {
     const result = [];
     for (const folder of folders) {
       const entries = await readdir(folder);
-      const svgFile = entries.find(f => f.toLowerCase().endsWith('.svg') && !f.startsWith('_'));
-      if (!svgFile) continue;
-      const svg = await readFile(path.join(folder, svgFile), 'utf-8');
-      const fields = extractFields(svg);
+      const svgFiles = entries.filter(f => f.toLowerCase().endsWith('.svg') && !f.startsWith('_'));
+      if (!svgFiles.length) continue;
+      // Union fields across all templates; first occurrence of each id wins (preserves order)
+      const fieldMap = new Map<string, { id: string; required: boolean; placeholder: string }>();
+      for (const svgFile of svgFiles) {
+        const svg = await readFile(path.join(folder, svgFile), 'utf-8').catch(() => null);
+        if (!svg) continue;
+        for (const field of extractFields(svg)) {
+          if (!fieldMap.has(field.id)) fieldMap.set(field.id, field);
+        }
+      }
+      const fields = [...fieldMap.values()];
       const rel   = path.relative(TEMPLATES_DIR, folder);
       const parts = rel.split(path.sep);
       result.push({

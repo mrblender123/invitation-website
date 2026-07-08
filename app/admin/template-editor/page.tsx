@@ -818,7 +818,7 @@ export default function TemplateEditorPage() {
       body: JSON.stringify({ svgPublicPath: selected.textSvg, svgContent: content }),
     });
     setSaving(false);
-    if (res.ok) { setSvgSource(content); setLayers(parseLayers(content)); setSaveMsg('Saved ✓'); setTimeout(() => setSaveMsg(''), 3000); }
+    if (res.ok) { setSvgSource(content); setLayers(parseLayers(content)); setHistory([]); setSaveMsg('Saved ✓'); setTimeout(() => setSaveMsg(''), 3000); }
     else setSaveMsg('Error saving');
   };
 
