@@ -114,11 +114,12 @@ async function uploadToR2(relativePath: string, content: string): Promise<void> 
   const signature   = createHmac('sha256', signingKey).update(stringToSign).digest('hex');
   const authorization = `AWS4-HMAC-SHA256 Credential=${r2AccessKey}/${credentialScope}, SignedHeaders=${signedHeaders}, Signature=${signature}`;
 
-  await fetch(`https://${host}/${encodeURIComponent(r2Key).replace(/%2F/g, '/')}`, {
+  const r2Res = await fetch(`https://${host}/${encodeURIComponent(r2Key).replace(/%2F/g, '/')}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'image/svg+xml', 'x-amz-content-sha256': payloadHash, 'x-amz-date': amzDate, Authorization: authorization, 'Cache-Control': 'public, max-age=0, must-revalidate' },
     body: bodyBytes,
   });
+  if (!r2Res.ok) throw new Error(`R2 upload failed: ${r2Res.status}`);
 }
 
 async function writeFileToGitHub(relativePath: string, content: string): Promise<void> {
@@ -134,8 +135,9 @@ async function writeFileToGitHub(relativePath: string, content: string): Promise
     'Content-Type': 'application/json',
   };
   const getRes  = await fetch(`${apiUrl}?ref=${branch}`, { headers });
+  if (!getRes.ok) throw new Error(`GitHub GET failed: ${getRes.status}`);
   const getJson = await getRes.json();
-  await fetch(apiUrl, {
+  const putRes  = await fetch(apiUrl, {
     method: 'PUT', headers,
     body: JSON.stringify({
       message: `Update ${filePath} via field manager`,
@@ -144,6 +146,10 @@ async function writeFileToGitHub(relativePath: string, content: string): Promise
       branch,
     }),
   });
+  if (!putRes.ok) {
+    const body = await putRes.text().catch(() => '');
+    throw new Error(`GitHub PUT failed: ${putRes.status} — ${body.slice(0, 200)}`);
+  }
 }
 
 // ── Route ─────────────────────────────────────────────────────────────────────
@@ -162,7 +168,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid body' }, { status: 400 });
   }
 
-  const absFolder = path.join(process.cwd(), folderPath);
+  const absFolder   = path.join(process.cwd(), folderPath);
+  const allowedBase = path.join(process.cwd(), 'public', 'templates');
+  if (!absFolder.startsWith(allowedBase + path.sep)) {
+    return NextResponse.json({ error: 'Invalid folder path' }, { status: 400 });
+  }
+
   const entries   = await readdir(absFolder);
   const svgFiles  = entries.filter(f => f.toLowerCase().endsWith('.svg') && !f.startsWith('_'));
 

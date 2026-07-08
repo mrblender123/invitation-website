@@ -52,6 +52,9 @@ export async function GET(req: NextRequest) {
   if (!folder) return NextResponse.json({ error: 'folder required' }, { status: 400 });
 
   const folderAbs = path.join(TEMPLATES_DIR, folder);
+  if (!folderAbs.startsWith(TEMPLATES_DIR + path.sep)) {
+    return NextResponse.json({ error: 'Folder not found' }, { status: 404 });
+  }
 
   let files: string[] = [];
   try { files = await readdir(folderAbs); } catch {

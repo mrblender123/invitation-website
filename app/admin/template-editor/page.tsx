@@ -922,6 +922,20 @@ export default function TemplateEditorPage() {
     setFmDirty(true); setFmStatus('Unsaved changes');
   };
 
+  const syncToSupabase = async (folderPath: string, fields: FolderField[]) => {
+    // folderPath is like "public/templates/It's a girl"; category-fields expects "It's a girl"
+    const categoryFolder = folderPath.replace(/^public\/templates\//, '');
+    await fetch('/api/admin/category-fields', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify({
+        folder: categoryFolder,
+        language: 'he',
+        fields: fields.map((f, i) => ({ id: f.id, required: f.required, order: i })),
+      }),
+    });
+  };
+
   const fmSave = async () => {
     if (!fmFolder || !accessToken) return;
     setFmSaving(true);
@@ -933,8 +947,9 @@ export default function TemplateEditorPage() {
     });
     if (!res.ok) { setFmSaving(false); setFmStatus(`✗ Server error ${res.status}`); return; }
     const data = await res.json();
-    setFmSaving(false);
     if (data.ok) {
+      // Mirror required/optional into Supabase so user-facing editor sees the change
+      await syncToSupabase(fmFolder.folder, fmFields).catch(() => {});
       setFmDirty(false);
       setFmStatus(data.count === 0 ? '✗ 0 files changed — field IDs may be stale, click Refresh' : `✓ Saved ${data.count} file${data.count === 1 ? '' : 's'}`);
       // update local fmData cache
@@ -942,25 +957,26 @@ export default function TemplateEditorPage() {
     } else {
       setFmStatus(`✗ ${data.error}`);
     }
-    } catch (e) { setFmSaving(false); setFmStatus(`✗ ${e instanceof Error ? e.message : 'Network error'}`); }
+    } catch (e) { setFmStatus(`✗ ${e instanceof Error ? e.message : 'Network error'}`); }
+    setFmSaving(false);
   };
 
   const fmToggleOverview = async (folderPath: string, fieldId: string, required: boolean) => {
     if (!accessToken) return;
     try {
+    const updatedFields = (fmData?.find(d => d.folder === folderPath)?.fields ?? []).map(f =>
+      f.id === fieldId ? { ...f, required } : f
+    );
     const res  = await fetch('/api/admin/update-folder-fields', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
-      body: JSON.stringify({
-        folderPath,
-        fields: (fmData?.find(d => d.folder === folderPath)?.fields ?? []).map(f =>
-          f.id === fieldId ? { ...f, required } : f
-        ),
-      }),
+      body: JSON.stringify({ folderPath, fields: updatedFields }),
     });
     if (!res.ok) { setFmStatus(`✗ Server error ${res.status}`); return; }
     const data = await res.json();
     if (data.ok) {
+      // Mirror into Supabase so user-facing editor sees the change
+      await syncToSupabase(folderPath, updatedFields).catch(() => {});
       setFmData(prev => prev ? prev.map(d => d.folder === folderPath
         ? { ...d, fields: d.fields.map(f => f.id === fieldId ? { ...f, required } : f) }
         : d
