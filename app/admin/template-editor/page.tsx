@@ -51,6 +51,12 @@ type ImageOverlay = {
 
 // ─── SVG helpers ──────────────────────────────────────────────────────────────
 
+function escapeXml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+const TRANSLATE_RE = /translate\(\s*[+-]?[\d.]+[\s,]+[+-]?[\d.]+\s*\)/;
+
 function parseLayers(svgText: string): Layer[] {
   if (typeof document === 'undefined') return [];
   const doc = new DOMParser().parseFromString(svgText, 'image/svg+xml');
@@ -75,13 +81,15 @@ function parseLayers(svgText: string): Layer[] {
 
 function buildSvgForSave(svgSource: string, layers: Layer[], imageOverlays: ImageOverlay[]): string {
   const doc = new DOMParser().parseFromString(svgSource, 'image/svg+xml');
-  doc.querySelectorAll('text').forEach((textEl, idx) => {
-    const layer = layers[idx];
+  let layerIdx = 0;
+  doc.querySelectorAll('text').forEach((textEl) => {
+    const transform = textEl.getAttribute('transform') ?? '';
+    if (!TRANSLATE_RE.test(transform)) return;
+    const layer = layers[layerIdx++];
     if (!layer) return;
     // Position
-    const transform = textEl.getAttribute('transform') ?? '';
     const updated = transform.replace(
-      /translate\(\s*[+-]?[\d.]+[\s,]+[+-]?[\d.]+\s*\)/,
+      TRANSLATE_RE,
       `translate(${Math.round(layer.tx * 10) / 10} ${Math.round(layer.ty * 10) / 10})`,
     );
     textEl.setAttribute('transform', updated);
@@ -126,12 +134,14 @@ function buildSvgForSave(svgSource: string, layers: Layer[], imageOverlays: Imag
 function buildSvgForDisplay(svgSource: string, layers: Layer[]): string {
   const doc = new DOMParser().parseFromString(svgSource, 'image/svg+xml');
   const root = doc.documentElement;
-  doc.querySelectorAll('text').forEach((textEl, idx) => {
-    const layer = layers[idx];
-    if (!layer) return;
+  let layerIdx = 0;
+  doc.querySelectorAll('text').forEach((textEl) => {
     const transform = textEl.getAttribute('transform') ?? '';
+    if (!TRANSLATE_RE.test(transform)) return;
+    const layer = layers[layerIdx++];
+    if (!layer) return;
     const updated = transform.replace(
-      /translate\(\s*[+-]?[\d.]+[\s,]+[+-]?[\d.]+\s*\)/,
+      TRANSLATE_RE,
       `translate(${Math.round(layer.tx * 10) / 10} ${Math.round(layer.ty * 10) / 10})`,
     );
     textEl.setAttribute('transform', updated);
@@ -174,7 +184,7 @@ export default function TemplateEditorPage() {
   const [selected, setSelected] = useState<Template | null>(null);
   const [svgSource, setSvgSource] = useState<string | null>(null);
   const [layers, setLayers] = useState<Layer[]>([]);
-  const [history, setHistory] = useState<Layer[][]>([]);
+  const [history, setHistory] = useState<{ layers: Layer[]; svgSource: string }[]>([]);
   const [dragging, setDragging] = useState<DragState | null>(null);
   const [guideDrag, setGuideDrag] = useState<GuideDrag | null>(null);
   const [guideX, setGuideX] = useState(180);
@@ -236,7 +246,9 @@ export default function TemplateEditorPage() {
   // Refs for undo (avoid stale closures)
   const layersRef = useRef(layers);
   useEffect(() => { layersRef.current = layers; }, [layers]);
-  const historyRef = useRef<Layer[][]>([]);
+  const svgSourceRef = useRef(svgSource);
+  useEffect(() => { svgSourceRef.current = svgSource; }, [svgSource]);
+  const historyRef = useRef<{ layers: Layer[]; svgSource: string }[]>([]);
   useEffect(() => { historyRef.current = history; }, [history]);
 
   // Refs for image drag/resize (avoid stale closures in mousemove useEffect)
@@ -352,7 +364,7 @@ export default function TemplateEditorPage() {
   // ── undo ─────────────────────────────────────────────────────────────────────
 
   const pushHistory = useCallback(() => {
-    setHistory(h => [...h.slice(-(MAX_HISTORY - 1)), layersRef.current]);
+    setHistory(h => [...h.slice(-(MAX_HISTORY - 1)), { layers: layersRef.current, svgSource: svgSourceRef.current ?? '' }]);
   }, []);
 
   // Cmd/Ctrl+Z undo
@@ -362,7 +374,8 @@ export default function TemplateEditorPage() {
         e.preventDefault();
         const h = historyRef.current;
         if (h.length === 0) return;
-        setLayers(h[h.length - 1]);
+        setLayers(h[h.length - 1].layers);
+        setSvgSource(h[h.length - 1].svgSource);
         setHistory(h.slice(0, -1));
       }
     };
@@ -450,8 +463,8 @@ export default function TemplateEditorPage() {
       setHistory(h => {
         // Replace the just-pushed entry with the actual pre-drag state
         const last = h[h.length - 1];
-        if (last === dragging.preDragLayers) return h;
-        return [...h.slice(0, -1), dragging.preDragLayers];
+        if (last?.layers === dragging.preDragLayers) return h;
+        return [...h.slice(0, -1), { layers: dragging.preDragLayers, svgSource: svgSourceRef.current ?? '' }];
       });
       setDragging(null);
       setSnapActive({ x: false, y: false });
@@ -718,8 +731,8 @@ export default function TemplateEditorPage() {
     const cx = svgW / 2;
     const cy = svgH / 2;
     pushHistory();
-    const el = `<g id="${id}"><text font-family="Heebo" font-size="24" font-weight="400" fill="#000000" text-anchor="middle" transform="translate(${cx} ${cy})"><tspan x="0">${placeholder}</tspan></text></g>`;
-    const newSvg = svgSource.replace(/<\/svg>/, `${el}</svg>`);
+    const el = `<g id="${id}"><text font-family="Heebo" font-size="24" font-weight="400" fill="#000000" text-anchor="middle" transform="translate(${cx} ${cy})"><tspan x="0">${escapeXml(placeholder)}</tspan></text></g>`;
+    const newSvg = svgSource.replace(/<\/svg>/, () => `${el}</svg>`);
     const newLayer: Layer = {
       index: layers.length, id, originalId: id, label: placeholder, placeholder,
       tx: cx, ty: cy, restTransform: '',
@@ -1005,7 +1018,7 @@ export default function TemplateEditorPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 6 : 12, flexShrink: 0 }}>
               {history.length > 0 && (
                 <button
-                  onClick={() => { const h = historyRef.current; if (!h.length) return; setLayers(h[h.length - 1]); setHistory(h.slice(0, -1)); }}
+                  onClick={() => { const h = historyRef.current; if (!h.length) return; setLayers(h[h.length - 1].layers); setSvgSource(h[h.length - 1].svgSource); setHistory(h.slice(0, -1)); }}
                   style={{ fontSize: 12, padding: '4px 8px', borderRadius: 6, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', whiteSpace: 'nowrap' }}
                   title="Undo (⌘Z)"
                 >
@@ -1959,7 +1972,7 @@ export default function TemplateEditorPage() {
             <button style={{ ...nBtn, width: 48, fontSize: 12, fontWeight: 600, color: 'rgba(99,200,255,0.9)', background: 'rgba(99,200,255,0.08)', border: '1px solid rgba(99,200,255,0.25)' }} onClick={() => align('cy')}>⊕ Y</button>
             <button
               style={{ ...nBtn, width: 44, opacity: history.length ? 1 : 0.35 }}
-              onClick={() => { const h = historyRef.current; if (!h.length) return; setLayers(h[h.length - 1]); setHistory(h.slice(0, -1)); }}
+              onClick={() => { const h = historyRef.current; if (!h.length) return; setLayers(h[h.length - 1].layers); setSvgSource(h[h.length - 1].svgSource); setHistory(h.slice(0, -1)); }}
             >↩</button>
             {firstSel && (
               <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap', marginLeft: 'auto', paddingLeft: 6 }}>
