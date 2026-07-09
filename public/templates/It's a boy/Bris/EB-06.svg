@@ -1,16 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
     <g id="line_6">
-    <text transform="translate(127.4 98)" fill="#607a91" font-family="Lexend-Light, Lexend" font-size="7.8" font-variation-settings="&apos;wght&apos; 300" font-weight="300"><tspan x="0" y="0">WIth Gratitude To Hashem</tspan></text>
+    <text transform="translate(180 98)" fill="#607a91" font-family="Lexend-Light, Lexend" font-size="7.8" font-variation-settings="'wght' 300" font-weight="300" text-anchor="middle"><tspan x="0" y="0">WIth Gratitude To Hashem</tspan></text>
   </g>
     <g id="line_5">
-    <text transform="translate(112.1 109.2)" fill="#607a91" font-family="Lexend-Light, Lexend" font-size="7.8" font-variation-settings="&apos;wght&apos; 300" font-weight="300"><tspan x="0" y="0">We Would Like To Invite You To The</tspan></text>
+    <text transform="translate(180 109.2)" fill="#607a91" font-family="Lexend-Light, Lexend" font-size="7.8" font-variation-settings="'wght' 300" font-weight="300" text-anchor="middle"><tspan x="0" y="0">We Would Like To Invite You To The</tspan></text>
   </g>
     <g id="line_2">
-    <text transform="translate(156.1 270.1)" fill="#607a91" font-family="Lexend-Regular, Lexend" font-size="9.7" font-variation-settings="&apos;wght&apos; 400"><tspan x="0" y="0">Of our son </tspan></text>
+    <text transform="translate(180 270.1)" fill="#607a91" font-family="Lexend-Regular, Lexend" font-size="9.7" font-variation-settings="'wght' 400" text-anchor="middle"><tspan x="0" y="0">Of our son</tspan></text>
   </g>
     <g id="line_1">
-    <text transform="translate(136.2 291.9)" fill="#607a91" font-family="Lexend-Light, Lexend" font-size="9.8" font-variation-settings="&apos;wght&apos; 300" font-weight="300"><tspan x="0" y="0">That will take place</tspan></text>
+    <text transform="translate(180 291.9)" fill="#607a91" font-family="Lexend-Light, Lexend" font-size="9.8" font-variation-settings="'wght' 300" font-weight="300" text-anchor="middle"><tspan x="0" y="0">That will take place</tspan></text>
   </g>
   <g>
     <path d="M156.9,306.6v-8.8h1.5l3.2,5.2h-.9s3.2-5.2,3.2-5.2h1.5v8.8h-1.6v-3.3c0-.8,0-1.4,0-2,0-.6.1-1.2.2-1.8l.2.5-2.7,4.2h-.8l-2.6-4.2.2-.6c0,.6.2,1.1.2,1.7,0,.6,0,1.3,0,2.1v3.3h-1.6Z" fill="#607a91"/>
@@ -21,21 +20,21 @@
     <path d="M200,309.4l1.4-3.3v1s-3.3-7.3-3.3-7.3h1.8l1.8,4.3c0,.1.1.3.2.4,0,.2.1.4.2.5h-.3c0,0,.1-.2.2-.4,0-.2.1-.4.2-.6l1.6-4.3h1.8l-2.8,6.6-1.1,2.9h-1.6Z" fill="#607a91"/>
   </g>
     <g id="date*">
-    <text transform="translate(143.6 319.8)" fill="#607a91" font-family="Lexend-Regular, Lexend" font-size="11.7" font-variation-settings="&apos;wght&apos; 400"><tspan x="0" y="0">December 21</tspan></text>
+    <text transform="translate(180 319.8)" fill="#607a91" font-family="Lexend-Regular, Lexend" font-size="11.7" font-variation-settings="'wght' 400" text-anchor="middle"><tspan x="0" y="0">December 21</tspan></text>
   </g>
     <g id="hall*">
-    <text transform="translate(128.7 341.5)" fill="#607a91" font-family="Lexend-Medium, Lexend" font-size="12.6" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">At Pardes Noach</tspan></text>
+    <text transform="translate(180 341.5)" fill="#607a91" font-family="Lexend-Medium, Lexend" font-size="12.6" font-variation-settings="'wght' 500" font-weight="500" text-anchor="middle"><tspan x="0" y="0">At Pardes Noach</tspan></text>
   </g>
     <g id="address*">
-    <text transform="translate(141.7 357.4)" fill="#607a91" font-family="Lexend-Regular, Lexend" font-size="11.7" font-variation-settings="&apos;wght&apos; 400"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+    <text transform="translate(180 357.4)" fill="#607a91" font-family="Lexend-Regular, Lexend" font-size="11.7" font-variation-settings="'wght' 400" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
     <g id="closing">
-    <text transform="translate(106.1 439.3)" fill="#fff" font-family="Lexend-Light, Lexend" font-size="11.8" font-variation-settings="&apos;wght&apos; 300" font-weight="300"><tspan x="0" y="0">looking forward to see you</tspan></text>
+    <text transform="translate(180 439.3)" fill="#fff" font-family="Lexend-Light, Lexend" font-size="11.8" font-variation-settings="'wght' 300" font-weight="300" text-anchor="middle"><tspan x="0" y="0">looking forward to see you</tspan></text>
   </g>
     <g id="host_name*">
-    <text transform="translate(89 458.2)" fill="#fff" font-family="Lexend-SemiBold, Lexend" font-size="16.8" font-variation-settings="&apos;wght&apos; 600" font-weight="600"><tspan x="0" y="0">Shmuel &amp; Raizy gross</tspan></text>
+    <text transform="translate(180 458.2)" fill="#fff" font-family="Lexend-SemiBold, Lexend" font-size="16.8" font-variation-settings="'wght' 600" font-weight="600" text-anchor="middle"><tspan x="0" y="0">Shmuel &amp; Raizy</tspan></text>
   </g>
     <g id="host_last_name*">
-    <text transform="translate(140.3 475.7)" fill="#fff" font-family="Lexend-SemiBold, Lexend" font-size="16.8" font-variation-settings="&apos;wght&apos; 600" font-weight="600"><tspan x="0" y="0">Goldstien</tspan></text>
+    <text transform="translate(180 475.7)" fill="#fff" font-family="Lexend-SemiBold, Lexend" font-size="16.8" font-variation-settings="'wght' 600" font-weight="600" text-anchor="middle"><tspan x="0" y="0">Goldstien</tspan></text>
   </g>
 </svg>
