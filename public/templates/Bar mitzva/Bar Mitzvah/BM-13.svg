@@ -1,18 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <g id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 360 504">
+  <g id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו ">
     <g id="line_6">
-    <text transform="translate(180 135.2)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="9.1" text-anchor="middle"><tspan x="0" y="0">ברוב שמחה והודאה להשי״ת הננו מתכבדים להזמין את</tspan></text>
+    <text transform="translate(180 142.1)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="9.1" text-anchor="middle"><tspan x="0" y="0">ברוב שמחה והודאה להשי״ת הננו מתכבדים להזמין את</tspan></text>
   </g>
   </g>
-  <g id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו">
+  <g id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו ">
     <g id="line_5">
-    <text transform="translate(180 146.1)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="9.1" text-anchor="middle"><tspan x="0" y="0">ידידינו וקרובינו ומכובדינו שיחיו</tspan></text>
+    <text transform="translate(180 153)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="9.1" text-anchor="middle"><tspan x="0" y="0">ידידינו וקרובינו ומכובדינו שיחיו</tspan></text>
   </g>
   </g>
   <g id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה">
     <g id="line_4">
-    <text transform="translate(180 157)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="9.1" text-anchor="middle"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
+    <text transform="translate(180 163.9)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="9.1" text-anchor="middle"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
   </g>
   </g>
   <g id="_ידידכם_המצפה_לקבל_פניכם" data-name="* ידידכם המצפה לקבל פניכם">
@@ -44,18 +43,20 @@
       <text transform="translate(180 367.3)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="9.9" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>
     </g>
   <g id="time*">
-      <text transform="translate(180 381.6)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="9.6" text-anchor="middle"><tspan x="0" y="0">בשעה </tspan></text>
+      <text transform="translate(180 381.6)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="9.6" text-anchor="middle"><tspan x="0" y="0">בשעה</tspan></text>
     </g>
   <g id="time_copy*">
-      <text transform="translate(180 413.7)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="8.6" text-anchor="middle"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
+      <text transform="translate(180 403.7)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="8.6" text-anchor="middle"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
     </g>
-  <g id="line_1">
-      <text transform="translate(180 430.3)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="19.6" text-anchor="middle"><tspan x="0" y="0">חיים משה ראטה</tspan></text>
+  <g id="line_1*">
+      <text transform="translate(180 424.3)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="19.6" text-anchor="middle"><tspan x="0" y="0">חיים משה</tspan></text>
+    </g><g id="line_1_copy*">
+      <text transform="translate(180 444.3)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="19.6" text-anchor="middle"><tspan x="0" y="0">ראטה</tspan></text>
     </g>
   <g id="host_name*">
-      <text transform="translate(180 440.7)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="7.5" text-anchor="middle"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
+      <text transform="translate(180 457.7)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="7.5" text-anchor="middle"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
     </g>
   <g id="son_of*">
-      <text transform="translate(180 448.5)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="7.5" text-anchor="middle"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
+      <text transform="translate(180 467.5)" fill="#deab89" font-family="Heebo" font-weight="800" font-size="7.5" text-anchor="middle"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
     </g>
 </svg>
