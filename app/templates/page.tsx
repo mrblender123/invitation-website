@@ -986,7 +986,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
                 padding: 3,
                 flexShrink: 0,
               }}>
-                {(['en', 'he'] as const).map(l => {
+                {(['he', 'en'] as const).map(l => {
                   const active = lang === l;
                   return (
                     <button
