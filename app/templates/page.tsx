@@ -456,9 +456,13 @@ const [windowWidth, setWindowWidth] = useState(1200);
     };
 
     if (cached) {
-      const { valid, editsRemaining: rem } = JSON.parse(cached);
-      apply(valid, rem);
-      return;
+      try {
+        const { valid, editsRemaining: rem } = JSON.parse(cached);
+        apply(valid, rem);
+        return;
+      } catch {
+        // Malformed cache — fall through to server verification
+      }
     }
 
     const url = `/api/verify-token?token=${encodeURIComponent(tokenParam)}&template=${encodeURIComponent(templateParam)}${piParam ? `&pi=${encodeURIComponent(piParam)}` : ''}`;
@@ -570,6 +574,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
     setSelected(template);
     // Reset payment state so a new template always requires a new purchase
     preRenderRef.current = null;
+    editConsumedThisSession.current = false;
     setDownloadAllowed(false);
     setEditsExhausted(false);
     setEditsRemaining(null);
@@ -622,9 +627,13 @@ const [windowWidth, setWindowWidth] = useState(1200);
     await document.fonts.ready;
     await ensureFontsRegisteredUnderOriginalNames();
     if (selected.textSvg) {
-      // Reuse the already-loaded <img> from the card DOM — avoids CORS re-fetch issues
+      // Reuse the already-loaded <img> from the card DOM — avoids CORS re-fetch issues.
+      // Only reuse if the img already shows the full background (SvgCardPreview starts with
+      // thumbnailSrc and upgrades to backgroundSrc asynchronously — using the thumbnail
+      // would size the canvas at thumbnail dimensions).
       const domImg = cardRef.current.querySelector('img') as HTMLImageElement | null;
-      const imgReady = domImg && domImg.complete && domImg.naturalWidth > 0 ? domImg : null;
+      const bgAbsUrl = new URL(selected.backgroundSrc, window.location.href).href;
+      const imgReady = domImg && domImg.complete && domImg.naturalWidth > 0 && domImg.src === bgAbsUrl ? domImg : null;
       const img = imgReady ?? await new Promise<HTMLImageElement>(resolve => {
         const i = new Image();
         i.crossOrigin = 'anonymous';
@@ -711,7 +720,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
         setEditsRemaining(newRemaining);
         // Keep session cache in sync so refresh shows correct count
         const cacheKey = `shareyoursimcha-edit-${piParam}`;
-        sessionStorage.setItem(cacheKey, JSON.stringify({ valid: newRemaining > 0, editsRemaining: newRemaining }));
+        sessionStorage.setItem(cacheKey, JSON.stringify({ valid: true, editsRemaining: newRemaining }));
       }
       return true;
     } catch {
