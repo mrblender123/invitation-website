@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Comic_Neue, Dancing_Script, Frank_Ruhl_Libre, Heebo, Lexend, Lora, Montserrat, Oswald, Playpen_Sans_Hebrew, Secular_One } from "next/font/google";
+import { Comic_Neue, Dancing_Script, Frank_Ruhl_Libre, Heebo, Lexend, Lora, Montserrat, Noto_Sans_Hebrew, Oswald, Playpen_Sans_Hebrew, Secular_One } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./components/AuthProvider";
 
@@ -69,6 +69,13 @@ const comicNeue = Comic_Neue({
   display: "fallback",
 });
 
+const notoSansHebrew = Noto_Sans_Hebrew({
+  variable: "--font-noto-sans-hebrew",
+  subsets: ["hebrew", "latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "fallback",
+});
+
 
 export const metadata: Metadata = {
   title: "Heimishe Simcha Cards | Share Your Simcha",
@@ -125,7 +132,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable} ${heebo.variable} ${frankRuhlLibre.variable} ${playpenSansHebrew.variable} ${lexend.variable} ${comicNeue.variable}`}>
+    <html lang="en" className={`${dancingScript.variable} ${lora.variable} ${montserrat.variable} ${oswald.variable} ${secularOne.variable} ${heebo.variable} ${frankRuhlLibre.variable} ${playpenSansHebrew.variable} ${lexend.variable} ${comicNeue.variable} ${notoSansHebrew.variable}`}>
       <head>
         {/* Preconnect to R2 CDN where all template images/SVGs are served from */}
         <link rel="preconnect" href="https://pub-7e7d567ff2644e4e98449049dc763863.r2.dev" crossOrigin="anonymous" />

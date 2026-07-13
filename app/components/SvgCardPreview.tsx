@@ -96,6 +96,7 @@ function injectFieldValues(
     [font-family="Playpen Sans Hebrew"] { font-family: var(--font-playpen-sans-hebrew, "Playpen Sans Hebrew"), cursive; }
     [font-family="Lexend"]             { font-family: var(--font-lexend, Lexend), sans-serif; }
     [font-family="Comic Neue"]         { font-family: var(--font-comic-neue, "Comic Neue"), cursive; }
+    [font-family="Noto Sans Hebrew"]   { font-family: var(--font-noto-sans-hebrew, "Noto Sans Hebrew"), sans-serif; }
   `;
   root.insertBefore(fontMapStyle, root.firstChild);
 

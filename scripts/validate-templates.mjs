@@ -30,7 +30,7 @@ const TEMPLATES_DIR = path.join(__dirname, '..', 'public', 'templates');
 
 const SUPPORTED_FONTS = new Set([
   'Heebo', 'Secular One', 'Dancing Script', 'Lora',
-  'Montserrat', 'Oswald', 'Frank Ruhl Libre', 'Playpen Sans Hebrew', 'Lexend', 'Comic Neue',
+  'Montserrat', 'Oswald', 'Frank Ruhl Libre', 'Playpen Sans Hebrew', 'Lexend', 'Comic Neue', 'Noto Sans Hebrew',
 ]);
 
 const SKIP_IDS = new Set(['static_text', 'layer_1', 'layer 1', 'background']);

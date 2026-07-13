@@ -1,36 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-  <g id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו">
-    <text transform="translate(145.2 457.2) scale(.8 1)" fill="#a9785d" font-family="NotoSansHebrew-Medium, &apos;Noto Sans Hebrew&apos;" font-size="10" font-variation-settings="&apos;wght&apos; 500, &apos;wdth&apos; 100" font-weight="500"><tspan x="0" y="0">חתן בערל גרינפעלד הי״וו</tspan></text>
+  <g id="father_name_2*" data-name="* חתן בערל גרינפעלד הי״וו
+">
+    <text transform="translate(180 457.2)" fill="#a9785d" font-family="Noto Sans Hebrew" font-size="10" font-weight="500" text-anchor="middle"><tspan x="0" y="0">חתן בערל גרינפעלד הי״וו</tspan></text>
   </g>
-  <g id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו">
-    <text transform="translate(152.3 443.2) scale(.8 1)" fill="#a9785d" font-family="NotoSansHebrew-Medium, &apos;Noto Sans Hebrew&apos;" font-size="10" font-variation-settings="&apos;wght&apos; 500, &apos;wdth&apos; 100" font-weight="500"><tspan x="0" y="0">ב״ר בנימין משה הי״וו</tspan></text>
+  <g id="father_name_1*" data-name="* ב״ר בנימין משה הי״וו
+">
+    <text transform="translate(180 443.2)" fill="#a9785d" font-family="Noto Sans Hebrew" font-size="10" font-weight="500" text-anchor="middle"><tspan x="0" y="0">ב״ר בנימין משה הי״וו</tspan></text>
   </g>
-  <g id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה">
-    <text transform="translate(141.2 409.5) scale(.8 1)" fill="#a9785d" font-family="NotoSansHebrew-SemiBold, &apos;Noto Sans Hebrew&apos;" font-size="25.9" font-variation-settings="&apos;wght&apos; 600, &apos;wdth&apos; 100" font-weight="600"><tspan x="0" y="0">מרדכי זאב</tspan><tspan x="115.7" y="0"> </tspan></text>
+  <g id="host_name*" data-name="* מרדכי זאב ראטה">
+    <text transform="translate(180 409.5)" fill="#a9785d" font-family="Noto Sans Hebrew" font-size="25.9" font-weight="600" text-anchor="middle"><tspan x="0" y="0">מרדכי זאב</tspan></text>
   </g>
-  <g id="_מרדכי_זאב_ראטה-2" data-name="* מרדכי זאב ראטה">
-    <text transform="translate(162.1 432.9) scale(.8 1)" fill="#a9785d" font-family="NotoSansHebrew-SemiBold, &apos;Noto Sans Hebrew&apos;" font-size="25.9" font-variation-settings="&apos;wght&apos; 600, &apos;wdth&apos; 100" font-weight="600"><tspan x="0" y="0">ראטה</tspan></text>
+  <g id="host_last_name*" data-name="* מרדכי זאב ראטה">
+    <text transform="translate(180 432.9)" fill="#a9785d" font-family="Noto Sans Hebrew" font-size="25.9" font-weight="600" text-anchor="middle"><tspan x="0" y="0">ראטה</tspan></text>
   </g>
-  <g id="_ידידכם_המצפה_לקבל_פניכם" data-name="* ידידכם המצפה לקבל פניכם">
-    <text transform="translate(129.6 386.2) scale(.8 1)" fill="#a9785d" font-family="NotoSansHebrew-Medium, &apos;Noto Sans Hebrew&apos;" font-size="12.4" font-variation-settings="&apos;wght&apos; 500, &apos;wdth&apos; 100" font-weight="500"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan><tspan x="144.1" y="0"> </tspan></text>
+  <g id="greeting" data-name="* ידידכם המצפה לקבל פניכם">
+    <text transform="translate(180 386.2)" fill="#a9785d" font-family="Noto Sans Hebrew" font-size="12.4" font-weight="500" text-anchor="middle"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
-  <g id="_1693_49th_Steet_" data-name="1693 49th Steet *">
-    <text transform="translate(150.3 356.5) scale(.8 1)" fill="#a9785d" font-family="NotoSansHebrew-Medium, &apos;Noto Sans Hebrew&apos;" font-size="12.4" font-variation-settings="&apos;wght&apos; 500, &apos;wdth&apos; 100" font-weight="500"><tspan x="0" y="0">1693 49th Steet</tspan></text>
+  <g id="street*" data-name="1693 49th Steet *">
+    <text transform="translate(180 356.5)" fill="#a9785d" font-family="Noto Sans Hebrew" font-size="12.4" font-weight="500" text-anchor="middle"><tspan x="0" y="0">1693 49th Steet</tspan></text>
   </g>
-  <g id="_בביהמ_ד_לעלוב_" data-name="* בביהמ״ד לעלוב ">
-    <text transform="translate(155.3 344.2) scale(.8 1)" fill="#a9785d" font-family="NotoSansHebrew-Medium, &apos;Noto Sans Hebrew&apos;" font-size="12.4" font-variation-settings="&apos;wght&apos; 500, &apos;wdth&apos; 100" font-weight="500"><tspan x="0" y="0">בביהמ״ד לעלוב</tspan><tspan x="81.3" y="0"> </tspan></text>
+  <g id="location*" data-name="* בביהמ״ד לעלוב 
+">
+    <text transform="translate(180 344.2)" fill="#a9785d" font-family="Noto Sans Hebrew" font-size="12.4" font-weight="500" text-anchor="middle"><tspan x="0" y="0">בביהמ״ד לעלוב</tspan></text>
   </g>
-  <g id="_פרשת_נשא" data-name="* פרשת נשא">
-    <text transform="translate(138.5 324.4) scale(.8 1)" fill="#a9785d" font-family="NotoSansHebrew-SemiBold, &apos;Noto Sans Hebrew&apos;" font-size="25.9" font-variation-settings="&apos;wght&apos; 600, &apos;wdth&apos; 100" font-weight="600"><tspan x="0" y="0">פרשת נשא</tspan></text>
+  <g id="parsha*" data-name="* פרשת נשא">
+    <text transform="translate(180 324.4)" fill="#a9785d" font-family="Noto Sans Hebrew" font-size="25.9" font-weight="600" text-anchor="middle"><tspan x="0" y="0">פרשת נשא</tspan></text>
   </g>
     <g id="line_3">
-    <text transform="translate(114.7 300.5) scale(.8 1)" fill="#a9785d" font-family="NotoSansHebrew-Medium, &apos;Noto Sans Hebrew&apos;" font-size="14.3" font-variation-settings="&apos;wght&apos; 500, &apos;wdth&apos; 100" font-weight="500"><tspan x="0" y="0">שתקיים אי״ה בליל שבת קודש</tspan><tspan x="180.5" y="0"> </tspan></text>
+    <text transform="translate(180 300.5)" fill="#a9785d" font-family="Noto Sans Hebrew" font-size="14.3" font-weight="500" text-anchor="middle"><tspan x="0" y="0">שתקיים אי״ה בליל שבת קודש</tspan></text>
   </g>
     <g id="line_2">
-    <text transform="translate(168 75.5) scale(1 1)" fill="#f1f2f2" font-family="Pauza-Medium, Pauza" font-size="6.1" font-weight="500"><tspan x="0" y="0">לבוא ולהשתתף בשמחתי אצל</tspan><tspan x="59.9" y="0"> </tspan></text>
+    <text transform="translate(180 75.5)" fill="#f1f2f2" font-family="Heebo" font-size="6.1" font-weight="500" text-anchor="middle"><tspan x="0" y="0">לבוא ולהשתתף בשמחתי אצל</tspan></text>
   </g>
     <g id="line_1">
-    <text transform="translate(159.7 67.3) scale(1 1)" fill="#f1f2f2" font-family="Pauza-Medium, Pauza" font-size="6.1" font-weight="500"><tspan x="0" y="0">אתכבד בזה להזמין את כל קרובי וידידי</tspan><tspan x="76.7" y="0"> </tspan></text>
+    <text transform="translate(180 67.3)" fill="#f1f2f2" font-family="Heebo" font-size="6.1" font-weight="500" text-anchor="middle"><tspan x="0" y="0">אתכבד בזה להזמין את כל קרובי וידידי</tspan></text>
   </g>
 </svg>
