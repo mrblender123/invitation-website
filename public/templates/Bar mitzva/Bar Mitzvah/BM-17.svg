@@ -1,48 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 504">
-    <g id="line_14">
-    <text id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו" transform="translate(83.7 418.2) scale(.8 1)" fill="#776436" font-family="Heebo-Medium, Heebo" font-size="8.3" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
+    <g id="father_in_law*">
+    <text id="_חתן_בערל_גרינפעלד_הי_וו_" data-name="* חתן בערל גרינפעלד הי״וו
+" transform="translate(180 418.2)" fill="#776436" font-family="Heebo" font-weight="500" font-size="8.3" text-anchor="middle"><tspan x="0" y="0">חתן בערל גרינפעלד הי״ו</tspan></text>
   </g>
-    <g id="line_13">
-    <text id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו" transform="translate(94.8 408.8) scale(.8 1)" fill="#776436" font-family="Heebo-Medium, Heebo" font-size="8.3" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
+    <g id="son_of*">
+    <text id="_ב_ר_בנימין_משה_הי_וו_" data-name="* ב״ר בנימין משה הי״וו
+" transform="translate(180 408.8)" fill="#776436" font-family="Heebo" font-weight="500" font-size="8.3" text-anchor="middle"><tspan x="0" y="0">ב״ר בנימין משה הי״ו</tspan></text>
   </g>
-    <g id="line_12">
-    <text id="_ראטה" data-name="ראטה" transform="translate(86.9 397)" fill="#776436" font-family="FrankRuhlLibre-Black, &apos;Frank Ruhl Libre&apos;" font-size="29.6" font-weight="800"><tspan x="0" y="0">ראטה</tspan></text>
+    <g id="host_last_name*">
+    <text id="_ראטה" data-name="ראטה" transform="translate(180 397)" fill="#776436" font-family="Frank Ruhl Libre" font-weight="900" font-size="29.6" text-anchor="middle"><tspan x="0" y="0">ראטה</tspan></text>
   </g>
-    <g id="line_11">
-    <text id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה" transform="translate(40.5 369.2)" fill="#776436" font-family="FrankRuhlLibre-Black, &apos;Frank Ruhl Libre&apos;" font-size="29.6" font-weight="800"><tspan x="0" y="0">חיים משה</tspan><tspan x="109.9" y="0"> </tspan></text>
+    <g id="host_name*">
+    <text id="_מרדכי_זאב_ראטה" data-name="* מרדכי זאב ראטה" transform="translate(180 369.2)" fill="#776436" font-family="Frank Ruhl Libre" font-weight="900" font-size="29.6" text-anchor="middle"><tspan x="0" y="0">חיים משה</tspan></text>
   </g>
-    <g id="line_10">
-    <text id="_ידידכם_המצפה_לקבל_פניכם" data-name="* ידידכם המצפה לקבל פניכם" transform="translate(42.7 343.1)" fill="#776436" font-family="Heebo-Regular, Heebo" font-size="9.6" font-variation-settings="&apos;wght&apos; 400"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan><tspan x="107.6" y="0"> </tspan></text>
+    <g id="time_copy*">
+    <text id="_ידידכם_המצפה_לקבל_פניכם" data-name="* ידידכם המצפה לקבל פניכם" transform="translate(180 343.1)" fill="#776436" font-family="Heebo" font-weight="400" font-size="9.6" text-anchor="middle"><tspan x="0" y="0">ידידכם המצפה לקבל פניכם</tspan></text>
   </g>
-    <g id="line_9">
-    <text transform="translate(233.1 271.8)" fill="#917a42" font-family="FrankRuhlLibre-Black, &apos;Frank Ruhl Libre&apos;" font-size="29.6" font-weight="800"><tspan x="0" y="0">אברהם</tspan><tspan x="78.3" y="0"> </tspan></text>
+    <g id="name_of_boy*">
+    <text transform="translate(180 271.8)" fill="#917a42" font-family="Frank Ruhl Libre" font-weight="900" font-size="29.6" text-anchor="middle"><tspan x="0" y="0">אברהם</tspan></text>
   </g>
     <g id="line_8">
-    <text transform="translate(260.7 245.6)" fill="#917a42" font-family="Heebo-Medium, Heebo" font-size="9.9" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">של בני היקר</tspan><tspan x="50.5" y="0"> </tspan></text>
+    <text transform="translate(180 245.6)" fill="#917a42" font-family="Heebo" font-weight="500" font-size="9.9" text-anchor="middle"><tspan x="0" y="0">של בני היקר</tspan></text>
   </g>
-    <g id="line_7">
-    <text id="_נטילת_ידיים_בשעה_7:00" data-name=" * נטילת ידיים בשעה 7:00" transform="translate(121.4 312.8)" fill="#917a42" font-family="Heebo-Medium, Heebo" font-size="10.3" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">בשעה </tspan><tspan x="28.7" y="0" xml:space="preserve">  </tspan></text>
+    <g id="time*">
+    <text id="_נטילת_ידיים_בשעה_7:00" data-name=" * נטילת ידיים בשעה 7:00" transform="translate(180 312.8)" fill="#917a42" font-family="Heebo" font-weight="500" font-size="10.3" text-anchor="middle"><tspan x="0" y="0">בשעה </tspan></text>
   </g>
-    <g id="line_6">
-    <text id="_1693_49th_Steet_" data-name="1693 49th Steet *" transform="translate(81.6 300.4)" fill="#917a42" font-family="Heebo-Medium, Heebo" font-size="10.6" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">5015 15th Ave</tspan></text>
+    <g id="address*">
+    <text id="_1693_49th_Steet_" data-name="1693 49th Steet *" transform="translate(180 300.4)" fill="#917a42" font-family="Heebo" font-weight="500" font-size="10.6" text-anchor="middle"><tspan x="0" y="0">5015 15th Ave</tspan></text>
   </g>
-    <g id="line_5">
-    <text id="_באולם_פרדס_נח" data-name="* באולם פרדס נח" transform="translate(81.5 287.8)" fill="#917a42" font-family="Heebo-Medium, Heebo" font-size="10.6" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
+    <g id="location*">
+    <text id="_באולם_פרדס_נח" data-name="* באולם פרדס נח" transform="translate(180 287.8)" fill="#917a42" font-family="Heebo" font-weight="500" font-size="10.6" text-anchor="middle"><tspan x="0" y="0">באולם פרדס נח</tspan></text>
   </g>
-  <g id="_ביום_א_פרשת_שמות" data-name="* ביום א׳ פרשת שמות">
-    <text transform="translate(61.4 275)" fill="#917a42" font-family="Heebo-Medium, Heebo" font-size="10.6" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">ביום א׳ פרשת שמות</tspan><tspan x="88.7" y="0"> </tspan></text>
+  <g id="date*" data-name="* ביום א׳ פרשת שמות">
+    <text transform="translate(180 275)" fill="#917a42" font-family="Heebo" font-weight="500" font-size="10.6" text-anchor="middle"><tspan x="0" y="0">ביום א׳ פרשת שמות</tspan></text>
   </g>
     <g id="line_4">
-    <text transform="translate(106.5 263.1)" fill="#917a42" font-family="Heebo-Medium, Heebo" font-size="7.1" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">שתתקיים אי״ה</tspan><tspan x="43.5" y="0" xml:space="preserve">  </tspan></text>
+    <text transform="translate(180 263.1)" fill="#917a42" font-family="Heebo" font-weight="500" font-size="7.1" text-anchor="middle"><tspan x="0" y="0">שתתקיים אי״ה</tspan></text>
   </g>
     <g id="line_3">
-    <text transform="translate(197.5 69.4)" fill="#917a42" font-family="Heebo-Medium, Heebo" font-size="6.2" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
+    <text transform="translate(180 69.4)" fill="#917a42" font-family="Heebo" font-weight="500" font-size="6.2" text-anchor="middle"><tspan x="0" y="0">להשתתף עמנו בשמחת</tspan></text>
   </g>
     <g id="line_2">
-    <text transform="translate(186.9 61.8)" fill="#917a42" font-family="Heebo-Medium, Heebo" font-size="6.2" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">ידידינו וקרובינו ומכובדינו שיחיו</tspan></text>
+    <text transform="translate(180 61.8)" fill="#917a42" font-family="Heebo" font-weight="500" font-size="6.2" text-anchor="middle"><tspan x="0" y="0">ידידינו וקרובינו ומכובדינו שיחיו</tspan></text>
   </g>
     <g id="line_1">
-    <text transform="translate(157.8 54.3)" fill="#917a42" font-family="Heebo-Medium, Heebo" font-size="6.2" font-variation-settings="&apos;wght&apos; 500" font-weight="500"><tspan x="0" y="0">ברוב שמחה והודאה להשי״ת הננו מתכבדים להזמין את</tspan><tspan x="136.7" y="0"> </tspan></text>
+    <text transform="translate(180 54.3)" fill="#917a42" font-family="Heebo" font-weight="500" font-size="6.2" text-anchor="middle"><tspan x="0" y="0">ברוב שמחה והודאה להשי״ת הננו מתכבדים להזמין את</tspan></text>
   </g>
 </svg>
