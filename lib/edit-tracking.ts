@@ -8,10 +8,11 @@ function db() {
 }
 
 export async function initEditRecord(piId: string, templateId: string) {
-  await db().from('invitation_edits').upsert(
+  const { error } = await db().from('invitation_edits').upsert(
     { payment_intent_id: piId, template_id: templateId, edits_remaining: 3, email_sent: false },
     { onConflict: 'payment_intent_id', ignoreDuplicates: true },
   );
+  if (error) throw new Error(`Failed to initialize edit record: ${error.message}`);
 }
 
 // Read-only check — does NOT decrement. Used by verify-token on page load.
@@ -71,18 +72,25 @@ export async function consumeEdit(
   return { allowed: false, editsRemaining: final?.edits_remaining ?? 0 };
 }
 
-// Atomically mark email as sent — returns false if already sent (dedup guard).
+// Atomically claim delivery. Only skip when the database confirms an existing
+// claim; Supabase returns errors in the result rather than always throwing.
 export async function markEmailSent(piId: string): Promise<boolean> {
   try {
-    const { data } = await db()
+    const { data, error } = await db()
       .from('invitation_edits')
       .update({ email_sent: true })
       .eq('payment_intent_id', piId)
       .eq('email_sent', false)   // only update if not already sent
       .select('payment_intent_id');
 
-    return !!(data && data.length > 0);
-  } catch {
+    if (error) throw new Error(error.message);
+    if (data && data.length > 0) return true;
+
+    // No updated row can also mean initialization failed or the row is missing.
+    // Neither is proof that a purchase email was sent.
+    return !await wasEmailSent(piId);
+  } catch (error) {
+    console.error('[email-delivery] Unable to claim delivery for pi=%s; allowing send:', piId, error);
     return true; // if DB fails, allow send so user isn't left without their file
   }
 }
@@ -90,15 +98,18 @@ export async function markEmailSent(piId: string): Promise<boolean> {
 // Reset email_sent flag so the email can be retried after a send failure.
 export async function resetEmailSent(piId: string): Promise<void> {
   try {
-    await db()
+    const { error } = await db()
       .from('invitation_edits')
       .update({ email_sent: false })
       .eq('payment_intent_id', piId);
-  } catch { /* best-effort */ }
+    if (error) throw new Error(error.message);
+  } catch (error) {
+    console.error('[email-delivery] Unable to release delivery claim for pi=%s:', piId, error);
+  }
 }
 
 // Read-only: has the purchase email already been sent for this payment?
-// Fails "true" (assume sent) so a DB blip can't cause duplicate emails.
+// A database outage is not proof of delivery: allow the backup email to run.
 export async function wasEmailSent(piId: string): Promise<boolean> {
   try {
     const { data, error } = await db()
@@ -106,9 +117,10 @@ export async function wasEmailSent(piId: string): Promise<boolean> {
       .select('email_sent')
       .eq('payment_intent_id', piId)
       .single();
-    if (error) return false; // no record → nothing sent yet
-    return !!data?.email_sent;
-  } catch {
-    return true;
+    if (error) throw new Error(error.message);
+    return data?.email_sent === true;
+  } catch (error) {
+    console.error('[email-delivery] Unable to verify delivery for pi=%s; treating as unsent:', piId, error);
+    return false;
   }
 }
