@@ -95,7 +95,7 @@ export default function Home() {
 <LandingHeader />
 <div style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 16px 0' }}>
-          <Image src="/Banner_01.png" alt="Share Your Simcha — Beautiful invitations for every simcha" width={1920} height={600} style={{ width: '100%', height: 'auto', borderRadius: 16 }} priority />
+          <Image src="/home-banner.png" alt="Share Your Simcha — Customize, Download, and Share" width={1920} height={600} style={{ width: '100%', height: 'auto', borderRadius: 16 }} priority />
         </div>
         <CategoryRows />
       </div>
