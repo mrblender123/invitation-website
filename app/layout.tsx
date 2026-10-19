@@ -100,7 +100,7 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://www.shareyoursimcha.com'),
   openGraph: {
     title: "Share Your Simcha | Jewish Simcha Invitation Templates",
-    description: "Create beautiful Jewish simcha invitations in minutes. Templates for bris, bar mitzvah, tenoyim, upsherin, sheva brachos & more. Personalize and download for $25.99.",
+    description: "Create beautiful Jewish simcha invitations in minutes. Templates for bris, bar mitzvah, tenoyim, upsherin, sheva brachos & more. Personalize and download for $9.99.",
     type: "website",
     url: "https://www.shareyoursimcha.com",
     siteName: "Share Your Simcha",
@@ -116,7 +116,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Share Your Simcha | Jewish Simcha Invitation Templates",
-    description: "Create beautiful Jewish simcha invitations in minutes. Templates for every occasion. Personalize and download for $25.99.",
+    description: "Create beautiful Jewish simcha invitations in minutes. Templates for every occasion. Personalize and download for $9.99.",
     images: ["/og-image.png"],
   },
 };
