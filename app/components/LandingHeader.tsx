@@ -15,7 +15,6 @@ const RIPPLE_GOLD = 'rgba(184,146,42,0.32)';
 const CATEGORIES = [
   { key: "It's a Boy",    emoji: '👶🏻', subcategories: ['Bris', 'Pidyon Haben', "Shlishi L'milah", 'Shulem Zucher', 'Vachnacht-Bris'], hoverColor: RIPPLE_GOLD },
   { key: "It's a Girl",   emoji: '🎀', hoverColor: RIPPLE_GOLD },
-  { key: 'Upsherin',      emoji: '✂️', hoverColor: RIPPLE_GOLD },
   { key: 'Bar Mitzvah',   emoji: '⓭', hoverColor: RIPPLE_GOLD },
   { key: 'Tenoyim',       emoji: '📜', hoverColor: RIPPLE_GOLD },
   { key: 'Bavarfen',      emoji: '🥂', hoverColor: RIPPLE_GOLD },

@@ -1,10 +1,15 @@
 import Stripe from 'stripe';
+import { CHECKOUT_EMAIL_ERROR, normalizeCheckoutEmail } from '@/lib/checkout-email';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: Request) {
   try {
     const { templateId, templateName, fieldValues, email } = await req.json();
+    const checkoutEmail = normalizeCheckoutEmail(email);
+    if (!checkoutEmail) {
+      return Response.json({ error: CHECKOUT_EMAIL_ERROR }, { status: 400 });
+    }
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: 999,
@@ -12,7 +17,7 @@ export async function POST(req: Request) {
       payment_method_types: ['card'],
       description: `Share Your Simcha – ${templateName}`,
       metadata: (() => {
-        const chunks: Record<string, string> = { templateId, email: email || '' };
+        const chunks: Record<string, string> = { templateId, email: checkoutEmail };
         // Stripe limits: 500 chars/value, 50 keys, 8KB total. Cap each field value and
         // the chunk count so extreme input can never make PaymentIntent creation fail.
         const capped: Record<string, string> = {};

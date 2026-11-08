@@ -16,6 +16,7 @@ import GlassPill from '../components/GlassPill';
 import Footer from '../components/Footer';
 import type { Template, WatermarkConfig } from '@/lib/templates';
 import { measureAndTightenSvg } from '@/lib/watermark-utils';
+import { CHECKOUT_EMAIL_ERROR, normalizeCheckoutEmail } from '@/lib/checkout-email';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -593,7 +594,13 @@ const [windowWidth, setWindowWidth] = useState(1200);
 
 
   const handleBuy = async (email: string) => {
-    if (!selected) return;
+    if (!selected || isBuying) return;
+    const checkoutEmail = normalizeCheckoutEmail(email);
+    if (!checkoutEmail) {
+      setBuyError(CHECKOUT_EMAIL_ERROR);
+      return;
+    }
+    setBuyEmail(checkoutEmail);
     setIsBuying(true);
     setBuyError('');
     try {
@@ -604,7 +611,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
           templateId: selected.id,
           templateName: selected.name,
           fieldValues,
-          email,
+          email: checkoutEmail,
         }),
       });
       const data = await res.json();
@@ -1670,12 +1677,15 @@ const [windowWidth, setWindowWidth] = useState(1200);
                     type="email"
                     placeholder="your@email.com"
                     value={buyEmail}
-                    onChange={e => setBuyEmail(e.target.value)}
+                    onChange={e => { setBuyEmail(e.target.value); setBuyError(''); }}
+                    aria-label="Email for your download link"
+                    aria-invalid={buyError === CHECKOUT_EMAIL_ERROR}
+                    aria-describedby={buyError ? 'checkout-email-error' : undefined}
                     onKeyDown={e => { if (e.key === 'Enter' && buyEmail.trim()) handleBuy(buyEmail.trim()); }}
                     autoFocus
                     style={{ ...inputStyle, fontSize: 15, padding: '12px 16px' }}
                   />
-                  {buyError && <p style={{ color: '#ef4444', fontSize: 13, margin: 0 }}>{buyError}</p>}
+                  {buyError && <p id="checkout-email-error" role="alert" style={{ color: '#ef4444', fontSize: 13, margin: 0 }}>{buyError}</p>}
                   <button
                     onClick={() => { if (buyEmail.trim()) handleBuy(buyEmail.trim()); }}
                     disabled={isBuying || !buyEmail.trim()}
