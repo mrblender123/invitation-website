@@ -32,10 +32,6 @@ function injectFieldValues(
   root.setAttribute('width', '100%');
   root.setAttribute('height', '100%');
 
-  // Get SVG viewBox for centering calculations
-  const viewBox = root.getAttribute('viewBox')?.split(/[\s,]+/) ?? [];
-  const svgWidth = parseFloat(viewBox[2] ?? '0');
-
   for (const field of fields) {
     const group = doc.getElementById(field.id);
     if (!group) continue;
@@ -61,24 +57,9 @@ function injectFieldValues(
     // the editable field (e.g. "9:30" paired with "שחרית"). Hiding them caused
     // those values to disappear when the user edited the primary tspan.
 
-    // Skip multi-tspan elements — centering logic only handles single-tspan fields
-    const tspanCount = textEl.querySelectorAll('tspan').length;
-    if (svgWidth <= 0 || tspanCount > 1) continue;
-
-    const originalAnchor = textEl.getAttribute('text-anchor') ?? 'start';
-    const hasUserValue = value !== '';
-
-    // For non-centered anchors: only adjust once the user has typed something.
-    if (originalAnchor !== 'middle' && !hasUserValue) continue;
-
-    // Trust the SVG's text-anchor and translate-X exactly as saved (by admin or original design).
-    // For middle: text centers at translate-X.
-    // For start/end: text flows from translate-X in the anchored direction.
-    // Always zero out tspan x so positioning is purely from the parent transform.
-    tspan.setAttribute('x', '0');
-    if (originalAnchor === 'middle') {
-      textEl.setAttribute('text-anchor', 'middle');
-    }
+    // Preserve all position and anchor attributes when replacing text. Templates
+    // can use either a parent translate() or absolute tspan x/y coordinates.
+    // Resetting tspan x would move absolute-positioned fields to the left edge.
   }
 
   // Map font-family names to next/font CSS variables so the self-hosted fonts
