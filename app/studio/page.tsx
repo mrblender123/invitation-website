@@ -182,7 +182,7 @@ function StudioContent() {
         padding: '0 20px', gap: 14, zIndex: 40,
       }}>
         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-          <img src="/logo.svg" alt="Share Your Simcha" style={{ height: 32, width: 'auto', filter: 'brightness(0) invert(1)' }} />
+          <img src="/brand-logo.png" alt="Share Your Simcha" style={{ height: 32, width: 'auto' }} />
         </Link>
         <div style={{ width: 1, height: 18, background: 'rgba(255,255,255,0.1)' }} />
         <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Studio</span>

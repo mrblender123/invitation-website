@@ -26,7 +26,7 @@ const schemaOrg = {
       '@type': 'Organization',
       name: 'Share Your Simcha',
       url: 'https://www.shareyoursimcha.com',
-      logo: 'https://www.shareyoursimcha.com/logo.svg',
+      logo: 'https://www.shareyoursimcha.com/brand-logo.png',
       description: 'Jewish simcha invitation templates for every lifecycle occasion.',
       contactPoint: {
         '@type': 'ContactPoint',

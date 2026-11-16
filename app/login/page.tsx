@@ -25,7 +25,7 @@ export default function LoginPage() {
 
       {/* Logo */}
       <Link href="/" style={{ textDecoration: 'none', marginBottom: 48, display: 'block' }}>
-        <img src="/logo.svg" alt="Share Your Simcha" style={{ height: 40, width: 'auto', filter: 'brightness(0) invert(1)' }} />
+        <img src="/brand-logo.png" alt="Share Your Simcha" style={{ height: 40, width: 'auto' }} />
       </Link>
 
       {/* Card */}

@@ -927,7 +927,7 @@ const [windowWidth, setWindowWidth] = useState(1200);
           display: 'flex', alignItems: 'center',
         }}>
           <Link href="/" style={{ paddingLeft: 20, textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.svg" alt="Share Your Simcha" style={{ height: 60, width: 'auto' }} />
+            <img src="/brand-logo.png" alt="Share Your Simcha" style={{ height: 60, width: 'auto' }} />
           </Link>
         </div>
       </header>
