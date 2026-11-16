@@ -26,7 +26,7 @@ export default function Footer() {
               <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted-faint)', margin: '0 0 14px' }}>
                 Browse
               </p>
-              {["It's a Boy", "It's a Girl", 'Bar Mitzvah', 'Wedding', 'Bavarfen'].map(cat => (
+              {["It's a Boy", "It's a Girl", 'Upsherin', 'Bar Mitzvah', 'Wedding', 'Bavarfen'].map(cat => (
                 <a key={cat} href={`/templates/${slugFromCategory(cat)}`} className="footer-link">
                   {cat}
                 </a>

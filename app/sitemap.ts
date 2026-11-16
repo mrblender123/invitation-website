@@ -7,6 +7,7 @@ const BASE = 'https://www.shareyoursimcha.com';
 const CATEGORIES = [
   "It's a Boy",
   "It's a Girl",
+  'Upsherin',
   'Bar Mitzvah',
   'Tenoyim',
   'Bavarfen',

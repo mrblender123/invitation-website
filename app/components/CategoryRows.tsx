@@ -214,6 +214,12 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
         </a>
       </div>
 
+      {templates.length === 0 && (
+        <p style={{ margin: '0 24px', padding: '24px 0', color: 'var(--muted)', fontSize: 14 }}>
+          No {category} templates available yet.
+        </p>
+      )}
+
       {/* Horizontal scroll */}
       <div
         ref={scrollRef}
@@ -242,6 +248,7 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
 
 export default function CategoryRows() {
   const [byCategory, setByCategory] = useState<Record<string, Template[]>>({});
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     fetch('/api/templates', { cache: 'no-store' })
@@ -253,10 +260,11 @@ export default function CategoryRows() {
           grouped[t.category].push(t);
         }
         setByCategory(grouped);
+        setLoaded(true);
       });
   }, []);
 
-  const categories = CATEGORY_ORDER.filter(c => (byCategory[c]?.length ?? 0) > 0);
+  const categories = CATEGORY_ORDER.filter(c => (byCategory[c]?.length ?? 0) > 0 || (loaded && c === 'Upsherin'));
   // Also include any categories from the API not in CATEGORY_ORDER
   for (const c of Object.keys(byCategory)) {
     if (!categories.includes(c)) categories.push(c);
@@ -269,7 +277,7 @@ export default function CategoryRows() {
   return (
     <div style={{ paddingTop: 40, paddingBottom: 80, maxWidth: 1100, margin: '0 auto' }}>
       {categories.map(cat => (
-        <CategoryRow key={cat} category={cat} templates={byCategory[cat]} />
+        <CategoryRow key={cat} category={cat} templates={byCategory[cat] ?? []} />
       ))}
     </div>
   );
