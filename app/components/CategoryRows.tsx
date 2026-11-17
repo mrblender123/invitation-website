@@ -214,12 +214,6 @@ function CategoryRow({ category, templates }: { category: string; templates: Tem
         </a>
       </div>
 
-      {templates.length === 0 && (
-        <p style={{ margin: '0 24px', padding: '24px 0', color: 'var(--muted)', fontSize: 14 }}>
-          No {category} templates available yet.
-        </p>
-      )}
-
       {/* Horizontal scroll */}
       <div
         ref={scrollRef}
