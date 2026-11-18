@@ -121,3 +121,33 @@ test('recording provider IDs cannot turn a successful send into failure',async()
   const recorder=load('lib/purchase-email-status.ts',{stripe:class{paymentIntents={update:async()=>{throw Error('metadata offline');}};}});
   assert.equal(await recorder.recordPurchaseEmail('pi_test','message-1','support_link'),false);
 });
+function listHandler({admin=true,error=null,warning}={}) {
+  const db=query({data:error?null:[base],count:26,error});
+  const route=load('app/api/admin/orders/route.ts',{
+    'next/server':{NextResponse:{json:(data,options)=>Response.json(data,options)}},
+    '@/lib/supabase':{createServiceClient:()=>({from:()=>db.q})},
+    '@/lib/admin/auth':{requireAdmin:async()=>admin,privateHeaders:{'Cache-Control':'private, no-store'}},
+    '@/lib/admin/order-data':{ORDER_COLUMNS:'id,type,email,created_at',addTracking:async rows=>({orders:rows,warning})},
+    '@/lib/admin/orders':orders,
+  });
+  return {...db,get:queryString=>route.GET({nextUrl:new URL(`https://example.test/api/admin/orders?${queryString}`)})};
+}
+test('order search preserves apostrophes and literal payment ID underscores',async()=>{
+  for(const search of ["It's a boy",'pi_test_1']) {
+    const h=listHandler();const res=await h.get(new URLSearchParams({q:search,page:'2'}));
+    assert.equal(res.status,200);
+    const filter=h.calls.find(([method])=>method==='or')[1];
+    assert.ok(filter.includes(search.replaceAll('_','\\_')));
+    assert.deepEqual(h.calls.find(([method])=>method==='range'),['range',25,49]);
+  }
+});
+test('orders API surfaces outages instead of claiming there are zero orders',async()=>{
+  assert.equal((await listHandler({error:{message:'database offline'}}).get('')).status,503);
+  const h=listHandler({warning:'Tracking unavailable'});const res=await h.get('');const result=await res.json();
+  assert.equal(result.orders.length,1);assert.equal(result.warning,'Tracking unavailable');
+  assert.equal(res.headers.get('cache-control'),'private, no-store');
+});
+test('orders API rejects unsigned users and invalid date filters',async()=>{
+  const h=listHandler({admin:false});assert.equal((await h.get('')).status,403);assert.equal(h.calls.length,0);
+  assert.equal((await listHandler().get('from=invalid-date')).status,400);
+});

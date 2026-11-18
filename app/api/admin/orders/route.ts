@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
     const type = p.get('type');
     if (type === 'purchase' || type === 'draft') query = query.eq('type', type);
     // Strip PostgREST filter syntax; the query remains a literal search term.
-    const q = (p.get('q') ?? '').replace(/[^\p{L}\p{N}@ .+_-]/gu, '').slice(0, 120).trim().replace(/_/g, '\\_');
+    const q = (p.get('q') ?? '').replace(/[^\p{L}\p{N}@ .+'_-]/gu, '').slice(0, 120).trim().replace(/_/g, '\\_');
     if (q) query = query.or(`email.ilike.%${q}%,template_id.ilike.%${q}%,template_name.ilike.%${q}%,payment_intent_id.ilike.%${q}%`);
     for (const [param, op] of [['from', 'gte'], ['to', 'lte']] as const) {
       const value = p.get(param);
