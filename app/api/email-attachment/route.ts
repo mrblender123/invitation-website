@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { recordPurchaseEmail } from '@/lib/purchase-email-status';
 import { Resend } from 'resend';
 import { PDFDocument } from 'pdf-lib';
 import { createDownloadToken } from '@/lib/download-token';
@@ -70,7 +71,7 @@ export async function POST(req: Request) {
   const downloadUrl = `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${encodeURIComponent(templateId)}&token=${token}&restore=${restoreParam}&pi=${encodeURIComponent(piId)}`;
 
   try {
-    const { error: sendError } = await resend.emails.send({
+    const { data: sentEmail, error: sendError } = await resend.emails.send({
       from: process.env.RESEND_FROM ?? 'Share Your Simcha <info@shareyoursimcha.com>',
       to: email,
       subject: 'Your invitation is ready',
@@ -102,6 +103,7 @@ export async function POST(req: Request) {
       await resetEmailSent(piId); // release dedup claim so a retry can actually send
       return new Response(JSON.stringify({ error: 'email_failed', piId }), { status: 500 });
     }
+    if (sentEmail?.id) await recordPurchaseEmail(piId, sentEmail.id, 'attachments');
   } catch (e) {
     console.error('[email-attachment] Unexpected send error for pi=%s:', piId, e);
     await resetEmailSent(piId); // release dedup claim so a retry can actually send

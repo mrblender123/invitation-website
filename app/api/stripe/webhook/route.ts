@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { recordPurchaseEmail } from '@/lib/purchase-email-status';
 import { waitUntil } from '@vercel/functions';
 import { Resend } from 'resend';
 import { initEditRecord, wasEmailSent, markEmailSent, resetEmailSent } from '@/lib/edit-tracking';
@@ -25,7 +26,7 @@ async function sendBackupLinkEmail(piId: string, templateId: string, email: stri
     const token = createDownloadToken(templateId);
     const restoreParam = encodeURIComponent(Buffer.from(JSON.stringify(fieldValues)).toString('base64'));
     const downloadUrl = `${process.env.NEXT_PUBLIC_APP_URL}/templates?template=${encodeURIComponent(templateId)}&token=${token}&restore=${restoreParam}&pi=${encodeURIComponent(piId)}`;
-    const { error } = await resend.emails.send({
+    const { data: sentEmail, error } = await resend.emails.send({
       from: process.env.RESEND_FROM ?? 'Share Your Simcha <info@shareyoursimcha.com>',
       to: email,
       subject: 'Your invitation is ready',
@@ -50,6 +51,7 @@ async function sendBackupLinkEmail(piId: string, templateId: string, email: stri
       console.error('[webhook] backup email failed for pi=%s: %s', piId, error.message);
       await resetEmailSent(piId);
     } else {
+      if (sentEmail?.id) await recordPurchaseEmail(piId, sentEmail.id, 'backup_link');
       console.log('[webhook] backup link email sent for pi=%s', piId);
     }
   } catch (e) {

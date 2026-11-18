@@ -1,0 +1,24 @@
+'use client';
+import Link from 'next/link';
+import { RefreshCw, ArrowUpRight, CircleCheck, MailWarning } from 'lucide-react';
+import { money,orderDate,type Overview } from '@/lib/admin/orders';
+import { type AdminApi,useAdminQuery } from './useAdminApi';
+export default function AdminOverview({api}:{api:AdminApi}) {
+  const {data,error,loading,reload}=useAdminQuery<Overview>(api,'/api/admin/orders?overview=1');
+  const max=data?Math.max(1,...data.days.map(d=>d.revenue)):1;
+  return <main className="admin-page"><div className="admin-page-header"><div><p className="admin-kicker">Your business at a glance</p><h1>Overview</h1><p className="admin-subtitle">Sales, recent customers, and orders to check. Times shown in New York time.</p></div><button className="admin-btn" onClick={reload} disabled={loading}><RefreshCw size={14}/>Refresh</button></div>
+    {error&&<div role="alert" className="admin-banner admin-banner-error">{error} <button className="admin-text-btn" onClick={reload}>Retry</button></div>}
+    {loading&&<div role="status" className="admin-loading">Loading your overview…</div>}
+    {data&&<>{data.warnings.map(w=><div key={w} role="status" className="admin-banner">{w}</div>)}
+    <div className="admin-stats">{[
+      ["Today's sales",money(data.today.revenue),`${data.today.purchases} ${data.today.purchases===1?'purchase':'purchases'} today`],
+      ['Sales · 30 days',money(data.revenue),'Recorded purchases, before refunds'],
+      ['Purchases · 30 days',String(data.purchases),'Completed purchase records'],
+      ['Saved drafts · 30 days',String(data.drafts),'Customers who saved for later'],
+    ].map(([label,value,note])=><div className="admin-stat" key={label}><p className="admin-stat-label">{label}</p><div className="admin-stat-value">{value}</div><p className="admin-stat-note">{note}</p></div>)}</div>
+    <div className="admin-grid"><section className="admin-panel"><div className="admin-panel-header"><h2>Sales over time</h2><span className="admin-badge">Last 30 days</span></div><div className="admin-panel-body"><p className="admin-muted" style={{marginBottom:18}}>Daily recorded sales · peak {money(max===1&&data.revenue===0?0:max)}</p><svg className="admin-chart" viewBox="0 0 600 180" role="img" aria-label="Daily sales for the last 30 days">{[0,1,2,3].map(i=><line key={i} x1="0" x2="600" y1={i*55+10} y2={i*55+10} stroke="#e9edf2"/>)}{data.days.map((d,i)=><rect key={d.date} x={i*20+2} y={175-d.revenue/max*155} width="13" height={Math.max(2,d.revenue/max*155)} rx="3" fill={d.date===data.days[29].date?'#b99550':'#718ba5'}><title>{d.date}: {money(d.revenue)} · {d.sales} purchases</title></rect>)}</svg><div className="admin-chart-labels"><span>{data.days[0].date}</span><span>{data.days[14].date}</span><span>Today</span></div></div></section>
+    <section className="admin-panel"><div className="admin-panel-header"><h2>Email checks</h2><span className={`admin-badge ${data.needsReview.length?'admin-badge-warn':'admin-badge-good'}`}>{data.needsReview.length} to review</span></div><div className="admin-panel-body"><p className="admin-muted">Purchases older than 3 minutes with no recorded send claim. Open an order to verify its payment and delivery status.</p>{data.needsReview.length===0?<div className="admin-empty"><CircleCheck size={26} style={{margin:'0 auto 12px',color:'#3b8061'}}/><strong>No missing send claims</strong>Delivery details are available in Orders.</div>:data.needsReview.slice(0,4).map(o=><div className="admin-health-item" key={o.id}><div><strong style={{fontSize:12}}>{o.email}</strong><p>{o.template_name||o.template_id}</p></div><Link href={`/admin/orders?order=${encodeURIComponent(o.id)}`} className="admin-btn" aria-label={`Review order for ${o.email}`}><MailWarning size={14}/>Review</Link></div>)}</div></section></div>
+    <section className="admin-panel"><div className="admin-panel-header"><h2>Recent activity</h2><Link className="admin-btn" href="/admin/orders">All orders <ArrowUpRight size={14}/></Link></div>{data.recent.length===0?<div className="admin-empty"><strong>No activity in the last 30 days</strong>Purchases and saved drafts will appear here.</div>:<div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Customer</th><th>Invitation</th><th>Amount</th><th>Type</th><th>Created</th><th></th></tr></thead><tbody>{data.recent.map(o=><tr key={o.id}><td><span className="admin-customer">{o.email}</span></td><td>{o.template_name||o.template_id}</td><td>{o.type==='purchase'?money(o.amount_cents??0):'—'}</td><td><span className={`admin-badge ${o.type==='purchase'?'admin-badge-good':'admin-badge-info'}`}>{o.type==='purchase'?'Purchase':'Draft'}</span></td><td>{orderDate(o.created_at)}</td><td><Link className="admin-btn" href={`/admin/orders?order=${encodeURIComponent(o.id)}`}>Details</Link></td></tr>)}</tbody></table></div>}</section>
+    </>}
+  </main>;
+}

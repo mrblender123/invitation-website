@@ -997,7 +997,7 @@ export default function TemplateEditorPage() {
 
 
   return (
-    <div style={{ height: '100dvh', overflow: 'hidden', background: '#09090b', color: '#fff', display: 'flex', flexDirection: 'column' } as React.CSSProperties}>
+    <div className="admin-editor-root" style={{ height: '100dvh', overflow: 'hidden', background: '#09090b', color: '#fff', display: 'flex', flexDirection: 'column' } as React.CSSProperties}>
 
       {/* Header */}
       <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(9,9,11,0.9)', backdropFilter: 'blur(12px)', borderBottom: border }}>

@@ -3,8 +3,7 @@ import { createHmac, timingSafeEqual } from 'crypto';
 const SECRET = process.env.DOWNLOAD_TOKEN_SECRET!;
 const TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
-export function createDownloadToken(templateId: string): string {
-  const exp = Date.now() + TTL_MS;
+export function createDownloadToken(templateId: string, exp = Date.now() + TTL_MS): string {
   const payload = Buffer.from(JSON.stringify({ templateId, exp })).toString('base64url');
   const sig = createHmac('sha256', SECRET).update(payload).digest('base64url');
   return `${payload}.${sig}`;
