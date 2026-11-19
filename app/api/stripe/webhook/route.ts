@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { notifyOwnerOfPurchase } from '@/lib/purchase-owner-notification';
 import { recordPurchaseEmail } from '@/lib/purchase-email-status';
 import { waitUntil } from '@vercel/functions';
 import { Resend } from 'resend';
@@ -6,7 +7,7 @@ import { initEditRecord, wasEmailSent, markEmailSent, resetEmailSent } from '@/l
 import { createDownloadToken } from '@/lib/download-token';
 import { createServiceClient } from '@/lib/supabase';
 
-// Response returns immediately; maxDuration covers the delayed backup-email task below
+// maxDuration covers notification handling and the delayed buyer backup-email task.
 export const maxDuration = 180;
 
 const BACKUP_EMAIL_DELAY_MS = 120_000; // give the browser's attachment email 2 minutes to land
@@ -116,6 +117,15 @@ export async function POST(req: Request) {
       // Backup delivery — runs after the response is returned (see sendBackupLinkEmail)
       if (email) {
         waitUntil(sendBackupLinkEmail(pi.id, templateId, email, fieldValues));
+      }
+
+      // Keep owner alerts separate from customer delivery. A failed alert asks
+      // Stripe to retry the webhook; it does not undo or repeat the payment.
+      try {
+        await notifyOwnerOfPurchase(pi);
+      } catch {
+        console.error('[webhook] Owner purchase notification needs retry for pi=%s', pi.id);
+        return new Response('Purchase notification temporarily unavailable', { status: 503 });
       }
     }
   }
